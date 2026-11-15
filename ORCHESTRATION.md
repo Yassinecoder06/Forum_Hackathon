@@ -27,3 +27,11 @@ Ces descriptions ne constituent pas une comparaison directe sur ce projet. Le ma
 ## Limites de validation
 
 Un mouvement synthétique original peut vérifier le lecteur et les contrats, mais ne démontre pas une traduction LSF correcte. Le corpus Dicta-Sign et les modèles optionnels nécessitent une installation et des ressources appropriées. L'approbation linguistique et la validation d'animation restent des étapes humaines ; leur statut ne doit pas être inventé.
+
+## Intégration et vérification du lead
+
+Les quatre branches ont été intégrées sur `main` après revue. Les erreurs d'interface identifiées (routage des assets, format de réponse de rendu, mise à jour des revues, lecture limitée au premier clip et remplacement silencieux lors d'erreurs API) ont été corrigées. Les worktrees sont conservés pour reprise ; leurs branches représentent leurs contributions, pas nécessairement le dernier état intégré.
+
+Vérifications locales : 54 tests Python, dont inférence spaCy française réelle ; lint TypeScript/React ; build de production ; 7 smoke tests contre FastAPI réel ; parcours navigateur réel sur desktop et mobile. Un avertissement de dépréciation Starlette/httpx et un avertissement de taille de bundle Vite restent présents. Aucun quota épuisé n'a été observé.
+
+Restent à effectuer : collecte autorisée de vrais signes, validation linguistique et cinématique avec des signants compétents, articulation complète des doigts/visage, exécution du modèle emotion2vec, retargeting Animics testé et export vidéo signé côté application. Aucun de ces résultats n'est revendiqué par les fixtures.

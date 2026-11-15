@@ -96,11 +96,11 @@ export interface MotionFile {
 }
 
 export interface ReviewRecord {
-  plan_id: string;
   reviewer: string;
   status: 'approved' | 'rejected';
   notes: string;
-  created_at?: string;
+  version: string;
+  date: string;
 }
 
 export interface RenderRequest {

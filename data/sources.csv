@@ -1,2 +1,4 @@
 source_id,origin,license,rights_status,captured_performance,linguistic_review,animation_review
 SRC_ORIGINAL_FIXTURES,Original programmatically authored joint trajectories,CC0-1.0,cleared,false,pending,pending
+SRC_DICTASIGN_LEXICON_CANDIDATE,https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/concepts_fre.html,individual_researcher_agreement,pending,true,pending,pending
+SRC_DICTASIGN_LSF_V2_CANDIDATE,https://hdl.handle.net/11403/dicta-sign-lsf-v2/v1,CC-BY-NC-SA-4.0_reported_registration_required,pending,true,pending,pending

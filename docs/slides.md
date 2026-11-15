@@ -100,7 +100,7 @@ Audio WAV ──> DSP CPU (F0 estimé / RMS / Pauses) ───────┼�
 | **Analyse Audio** | DSP réel sur CPU (F0 estimé, RMS, pauses) | Expérimentation d'un modèle d'émotion local |
 | **Mouvements 3D** | 6 fixtures techniques synthétiques (non validées LSF) | Intégration de mouvements mocap autorisés |
 | **Validation Humaine** | Protocole d'évaluation méthodologique rédigé | Sessions d'évaluation avec des locuteurs sourds natifs |
-| **Vidéo Démo & Dépôt** | Script minuté rédigé (90s) ; code sous Git local | Captation vidéo finale et mise en ligne publique |
+| **Vidéo Démo & Dépôt** | Walkthrough local de 75 s avec voix synthétique ; code sous Git local | Relecture de la vidéo et mise en ligne publique |
 
 ---
 

@@ -82,7 +82,11 @@ fi
 
 # 2. Demarrage du frontend Vite avec --strictPort sur port configurable
 echo "[DEV] Demarrage Vite frontend sur http://127.0.0.1:${FRONTEND_PORT} (--strictPort)..."
-npm --prefix "${REPO_ROOT}/frontend" run dev -- --host 127.0.0.1 --port "${FRONTEND_PORT}" --strictPort &
+(
+    cd "${REPO_ROOT}/frontend"
+    export SIGNACULTURE_API_TARGET="http://127.0.0.1:${BACKEND_PORT}"
+    exec node node_modules/vite/bin/vite.js --host 127.0.0.1 --port "${FRONTEND_PORT}" --strictPort
+) &
 FRONTEND_PID=$!
 
 sleep 1
@@ -92,4 +96,4 @@ if ! kill -0 "${FRONTEND_PID}" 2>/dev/null; then
 fi
 
 echo "[DEV] Services actifs (Backend: ${BACKEND_PORT}, Frontend: ${FRONTEND_PORT}). Ctrl+C pour quitter."
-wait
+wait -n "${BACKEND_PID}" "${FRONTEND_PID}"

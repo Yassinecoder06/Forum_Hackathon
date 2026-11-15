@@ -359,16 +359,6 @@ export const AvatarCanvas: React.FC<AvatarCanvasProps> = ({
       {/* 3D Canvas Container */}
       <div ref={mountRef} className="w-full flex-1 cursor-grab active:cursor-grabbing outline-none" />
 
-      {/* Explicit limitation notice banner: Body-only prototype (no finger data in fixture) */}
-      <div className="absolute top-3 left-3 max-w-sm pointer-events-none z-10">
-        <div className="bg-slate-900/90 border border-slate-700/60 rounded-xl px-3 py-1.5 text-[11px] text-slate-300 shadow backdrop-blur leading-tight">
-          <span className="font-semibold text-amber-300 block mb-0.5">
-            Prototype corps & bras uniquement :
-          </span>
-          Les fixtures actuelles signaculture-v1 ne comportent pas de données sur les doigts. Ne constitue pas un avatar complet de LSF.
-        </div>
-      </div>
-
       {/* Floating View Controls */}
       <div className="absolute top-3 right-3 flex items-center gap-2 z-10">
         <button

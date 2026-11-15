@@ -5,7 +5,7 @@
 
 > **Projet :** SignaCulture AI — Génération d'animations 3D en Langue des Signes Française (LSF), enrichies par l'analyse de la prosodie et de l'expressivité vocale.  
 > **Cadre :** Hackathon IA Éthique 360 (13–25 novembre 2026) — Première remise : 15 novembre 2026  
-> **Avertissement de transparence :** Ce projet constitue un prototype de recherche en cours de développement. Les fonctionnalités présentées correspondent à un MVP vérifiable. Aucune validation humaine native par des personnes sourdes, ni aucune publication publique définitive ou enregistrement vidéo finalisé n'est revendiqué comme achevé à ce jour.
+> **Avertissement de transparence :** Ce projet constitue un prototype de recherche en cours de développement. Les fonctionnalités présentées correspondent à un MVP vérifiable. Aucune validation humaine native par des personnes sourdes. Le walkthrough local utilise une voix et des mouvements synthétiques ; aucune publication publique définitive n'est revendiquée.
 
 ---
 
@@ -98,7 +98,7 @@ Conformément à nos exigences éthiques de vérité scientifique, nous distingu
 | **Analyse Audio (CPU)** | **Opérationnel** : DSP déterministe sur CPU (RMS, pauses, F0 estimé testé à ~220 Hz et ~440 Hz). | Expérimentation d'un modèle local emotion2vec+ | [docs/methodology.md](docs/methodology.md) |
 | **Lexique & Mouvements** | **Opérationnel** : 6 concepts contrôlés et 6 fixtures cinématiques synthétiques non validées LSF. | Extension à 50+ concepts issus de corpus autorisés | [docs/data_governance.md](docs/data_governance.md) |
 | **Validation Humaine LSF** | **En attente** : Protocole méthodologique formalisé ; relecteurs réels non encore mobilisés. | Sessions d'évaluation formelles avec des locuteurs sourds natifs | [docs/validation.md](docs/validation.md) |
-| **Vidéo de Démonstration** | **En attente** : Scénario et narration minutés rédigés (90s) ; captation studio à réaliser. | Enregistrement de la vidéo finale de démo | [docs/demo_narration.md](docs/demo_narration.md) |
+| **Vidéo de Démonstration** | **Walkthrough local disponible** : capture de 75 s avec narration française synthétique ; contenu non validé LSF. | Enregistrement de la vidéo finale de démo | [docs/demo_narration.md](docs/demo_narration.md) |
 | **Dépôt GitHub Public** | **En attente** : Configuration Git et CI locales prêtes ; mise en ligne sous contrôle du lead. | Publication publique du code source | [.github/workflows/ci.yml](.github/workflows/ci.yml) |
 
 ---
@@ -124,3 +124,11 @@ Le projet a été développé en parallèle sur 4 worktrees Git sous la coordina
 2. **Worktree 2 (`feat/backend`) :** API FastAPI, NLP spaCy, analyse du signal audio DSP sur CPU, base SQLite de revues (exécuté sur GPT 6.1 Sol low, `.worktrees/wt-luna-2`).
 3. **Worktree 3 (`feat/frontend`) :** Interface React, lecteur 3D Three.js, visualiseur de signal et panneau de révision (exécuté sur Gemini 3.8 Flash high, `.worktrees/wt-gemini-1`).
 4. **Worktree 4 (`feat/qa`) :** Configuration racine, GitHub Actions CI, suite de tests d'intégration, outillage et documentation complète (exécuté sur Gemini 3.8 Flash high, `.worktrees/wt-gemini-2`).
+
+## Vérification navigateur et livrables locaux
+
+Le contrôle navigateur reproductible se trouve dans [e2e/README.md](e2e/README.md). Il couvre la lecture de deux clips, le déplacement dans la timeline, les inconnus, le WAV, le format mobile et les erreurs API sans remplacement silencieux.
+
+La lemmatisation française réelle est optionnelle : voir [backend/README.md](backend/README.md) pour installer spaCy et `fr_core_news_sm` explicitement. Sans modèle installé, l'API indique son mode de repli dans `X-NLP-Backend`.
+
+Les documents et captures livrés sont dans [artifacts/](artifacts/). La vidéo de présentation utilise une voix française synthétique et des mouvements techniques synthétiques ; elle ne démontre aucune traduction LSF approuvée. Les sorties du lecteur restent des aperçus interactifs ; l'endpoint `/render` ne génère pas de fichier vidéo.

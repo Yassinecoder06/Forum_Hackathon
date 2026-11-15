@@ -50,17 +50,13 @@ flowchart TD
 
 ---
 
-## 3. Positionnement Scientifique face à l'État de l'Art (T5-GAN 2026)
+## 3. Références et limites de comparaison
 
-Le travail de référence de **Muanji et al. (2026)** (*Signing Avatar Synthesis via a Hybrid T5-GAN Approach: Automatic Speech-to-French Sign Language Translation*, Procedia Computer Science) propose une chaîne neuronale de bout en bout (T5 pour le texte-vers-gloss et GAN pour la synthèse de poses 2D).
+L'article [Dicta-Sign-LSF-v2 (Belissen et al., LREC 2020)](https://aclanthology.org/2020.lrec-1.740/) présente un corpus de dialogues LSF et une baseline de reconnaissance. Il constitue une référence pour les données et leurs annotations ; il ne valide pas notre synthèse gestuelle.
 
-| Critère d'Analyse | T5-GAN (Muanji et al. 2026) | SignaCulture AI (Notre Approche) |
-|---|---|---|
-| **Espace de Rendu** | Poses 2D stylisées (OpenPose / MediaPipe) | Rig squelettique 3D normalisé (`signaculture-v1`) sous WebGL / Three.js |
-| **Gouvernance & Droits** | Modèle boîte noire sans registre de droits explicite | Registre traçable des sources, licences et consentements (`source_id`, `motion_id`) |
-| **Garde-fous de Publication** | Génération automatique directe | Gating strict (`render_allowed_for_publication: false`) bloquant tout usage public non validé |
-| **Prosodie & Voix** | Absent (traduction textuelle pure) | Analyse acoustique temporelle corrélée aux segments signés |
-| **Posture Éthique** | Revendication de traduction automatique | Système d'aide à la pré-production avec primauté de la grammaire LSF |
+Le plan fourni décrit aussi un travail nommé *Signing Avatar Synthesis via a Hybrid T5-GAN Approach*. Le document intégral correspondant n'est pas présent dans ce dépôt et n'a pas été examiné durant cette implémentation. Aucune attribution d'auteur, comparaison de performances ou conclusion sur ses droits et sa gouvernance n'est donc revendiquée ici.
+
+L'état réel de SignaCulture est un lecteur de positions 3D avec six fixtures synthétiques, une recherche de concepts contrôlés et une analyse audio indépendante. La mise en correspondance linguistique des segments audio avec les gestes, l'adaptation automatique du rythme et l'évaluation de l'intelligibilité restent à réaliser. Le curseur expressif est une expérience manuelle d'amplitude, sans garantie linguistique.
 
 ---
 

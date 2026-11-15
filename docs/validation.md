@@ -8,7 +8,7 @@
 
 ## 1. Niveaux de Contrôle Qualité
 
-Le système SignaCulture AI implémente une validation en quatre couches successives garantissant qu'aucune animation non vérifiée ne puisse être publiée comme accessible en LSF :
+Le prototype vérifie les fichiers et bloque l'endpoint de publication lorsque les approbations manquent. Les validations linguistiques et cinématiques décrites ci-dessous restent des étapes humaines à réaliser ; le logiciel local ne certifie pas l'identité des réviseurs.
 
 ```mermaid
 graph TD
@@ -31,7 +31,7 @@ graph TD
 ### Niveau 2 — Validation Cinématique & Rig 3D
 - **Conformité `signaculture-v1` :** Présence des 9 articulations indispensables (`head`, `neck`, `hips`, épaules, coudes, poignets).
 - **Repère spatial :** Coordonnées en mètres (Y vers le haut, X droite, Z avant).
-- **Détection des discontinuités :** Vérification de l'absence de téléportations d'articulations ou d'inversions droite/gauche lors de l'enchaînement des segments.
+- **Contrôles actuels :** coordonnées finies, joints déclarés présents et timestamps cohérents. La détection automatique des discontinuités et des inversions anatomiques reste à développer.
 
 ### Niveau 3 — Validation Juridique & Droits d'Auteur
 - **Attribution des sources :** Chaque mouvement doit être rattaché à un `source_id` documenté dans `data/sources.csv`.
@@ -44,7 +44,7 @@ graph TD
   2. Orientation de la paume et direction du mouvement.
   3. Emplacement dans l'espace de signation (thorax, visage, espace neutre).
   4. Marqueurs non manuels : sourcils, direction du regard, mimique faciale grammaticale.
-- **Réviseur assermenté :** Enregistrement dans SQLite via `POST /review` (`reviewer`, `status`, `notes`).
+- **Journal local :** Enregistrement dans SQLite via `POST /review` (`reviewer`, `status`, `notes`). L'API locale n'authentifie pas les réviseurs et ne délivre aucune certification.
 
 ---
 
@@ -53,15 +53,10 @@ graph TD
 Le contrat d'intégration distingue formellement deux finalités de rendu :
 
 ```python
-# Comportement garanti par le contrat
-if purpose == "preview":
-    # Autorise l'affichage dans le lecteur 3D local pour revue technique
-    return {"status": "preview_ready", "render_allowed_for_publication": False}
-
-elif purpose == "publication":
-    # VERROUILLÉ : bloque la génération de vidéo finale
-    if not (linguistic_review == "approved" and animation_review == "approved" and rights_status == "cleared"):
-        raise HTTPException(status_code=403, detail="Publication blocked until ALL approvals and rights checked")
+# Aperçu : fichiers vérifiés ; aucun export vidéo applicatif.
+return {"plan": plan, "assets": assets, "video_exported": False}
+# Publication : HTTP 403 si inconnus, fixtures synthétiques ou approbations manquantes.
+# Si tous les contrôles passent : HTTP 501, car l'export vidéo reste à implémenter.
 ```
 
 ### Règle Anti-Bypass
@@ -73,10 +68,10 @@ L'approbation isolée d'un réviseur via `POST /review` **ne peut pas outrepasse
 
 | Processus de Validation | Statut Réel Actuel (MVP) | Statut Cible / En Attente | Preuve / Livrable Associé |
 |---|---|---|---|
-| **Contrôle d'Intégration API** | Opérationnel et testé à 100% via `scripts/smoke_test.py` | Surveillance continue en production | `python3 scripts/smoke_test.py` (7/7 tests validés) |
+| **Contrôle d'Intégration API** | Sept scénarios HTTP vérifiés via `scripts/smoke_test.py` | Surveillance continue en production | `python3 scripts/smoke_test.py` (7/7 tests validés) |
 | **Gating de Rendu Publication** | Opérationnel : HTTP 403 strict sur toute tentative de publication | Déblocage conditionné par double validation certifiée (relecteur sourd + droits) | Testé dans la suite de smoke tests |
 | **Sécurité d'Accès aux Assets** | Opérationnel : blocage 403/404 des assets non approuvés | Quotas et contrôle de session | Endpoint `GET /assets/{filename}` |
 | **Revue Linguistique LSF** | **En attente** (protocole défini, statut `pending` par défaut) | Séances d'évaluation avec experts sourds natifs | Grille d'évaluation chiremique et spatiale |
-| **Validation Droits Corpus** | Fixtures synthétiques libres (CC0), sources réelles tracées | Audit juridique formalisé des licences tierces | Registre `data/sources.csv` |
-| **Enregistrement Démo Vidéo** | Script minuté formalisé (`docs/demo_narration.md`) | Enregistrement de la démo 1–2 minutes | Script prêt pour captation finale |
+| **Validation Droits Corpus** | Fixtures synthétiques libres (CC0), aucun corpus réel ingéré | Audit juridique formalisé des licences tierces | Registre `data/sources.csv` |
+| **Enregistrement Démo Vidéo** | Walkthrough local de 75 s avec voix française de synthèse (`artifacts/SignaCulture_Demo_FR.mp4`) | Enregistrement de la démo 1–2 minutes | Script prêt pour captation finale |
 | **Dépôt Public GitHub** | Dépôt Git local et CI configurés | Mise en ligne publique après validation lead | `.github/workflows/ci.yml` configuré |

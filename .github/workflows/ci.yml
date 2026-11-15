@@ -77,3 +77,35 @@ jobs:
 
       - name: Run Frontend Build
         run: npm run build
+
+  browser-integration:
+    name: Real browser and API integration
+    runs-on: ubuntu-latest
+    needs: [backend-and-schemas, frontend-check]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install runtime and browser dependencies
+        run: |
+          python3 -m pip install -r backend/requirements.txt
+          npm ci --prefix frontend
+          npm ci --prefix e2e
+          cd e2e
+          npx playwright install --with-deps chromium
+      - name: Verify full application
+        run: |
+          python3 -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000 &
+          api_pid=$!
+          (cd frontend && exec node node_modules/vite/bin/vite.js --host 127.0.0.1 --port 5173 --strictPort) &
+          ui_pid=$!
+          trap 'kill "$api_pid" "$ui_pid" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8000/health && curl -fsS http://127.0.0.1:5173/ >/dev/null; then break; fi
+            sleep 1
+          done
+          npm --prefix e2e test

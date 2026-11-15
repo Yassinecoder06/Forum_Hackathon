@@ -20,7 +20,7 @@ export const PlayerOverlay: React.FC<PlayerOverlayProps> = ({
   isSynthetic = true,
 }) => {
   return (
-    <div className="pointer-events-none absolute inset-x-0 top-0 p-3 flex flex-wrap items-start justify-between gap-2 z-10">
+    <div className="mb-3 flex flex-wrap items-start justify-between gap-2 text-wrap">
       {/* Dynamic Synthetic Badge vs Verified Clearance */}
       <div className="flex flex-col gap-1.5 pointer-events-auto">
         {isSynthetic ? (
@@ -55,7 +55,7 @@ export const PlayerOverlay: React.FC<PlayerOverlayProps> = ({
         )}
 
         {motionId && (
-          <div className="bg-slate-900/80 border border-slate-700/60 rounded-full px-2.5 py-0.5 text-[11px] font-mono text-slate-300 flex items-center gap-1.5 shadow backdrop-blur">
+          <div className="bg-slate-900/80 border border-slate-700/60 rounded-xl px-2.5 py-0.5 text-[11px] font-mono text-slate-300 flex flex-wrap items-center gap-1.5 shadow backdrop-blur">
             <Film className="w-3 h-3 text-slate-400" />
             <span>{motionId}</span>
             <span className="text-slate-500">|</span>

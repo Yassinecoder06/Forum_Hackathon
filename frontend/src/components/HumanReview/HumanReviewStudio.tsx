@@ -171,7 +171,7 @@ export const HumanReviewStudio: React.FC<HumanReviewStudioProps> = ({
               )}
               <span className="text-sm font-semibold text-slate-200">
                 {currentPlan.linguistic_review === 'approved'
-                  ? 'Validé par signant'
+                  ? 'Approbation enregistrée'
                   : currentPlan.linguistic_review === 'rejected'
                   ? 'Rejeté'
                   : 'En attente (pending)'}
@@ -320,7 +320,7 @@ export const HumanReviewStudio: React.FC<HumanReviewStudioProps> = ({
           <div className="p-3 bg-emerald-950/40 border border-emerald-500/30 rounded-xl text-emerald-200 text-xs flex items-center gap-2">
             <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
             <span>
-              Revue enregistrée pour le plan {reviewResult.plan_id} (Réviseur : {reviewResult.reviewer}).
+              Revue enregistrée pour le plan {planId} (Réviseur : {reviewResult.reviewer}).
             </span>
           </div>
         )}

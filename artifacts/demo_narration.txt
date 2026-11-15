@@ -1,0 +1,7 @@
+SignaCulture AI explore une idée : aider les créateurs de contenus culturels à préparer des animations en langue des signes française.
+Notre prototype commence par un texte en français. Un outil linguistique recherche les concepts présents dans une bibliothèque contrôlée. Les mots inconnus restent visibles : ils ne sont jamais transformés en gestes inventés.
+Les références trouvées composent une séquence de mouvements, que nous pouvons lire sur un avatar trois dimensions. Les six mouvements actuellement fournis sont des exemples synthétiques de test. Ils ne constituent pas des signes L S F validés.
+Un second parcours analyse un fichier audio. Nous mesurons une estimation de la hauteur, l'énergie et les pauses. Ces mesures peuvent guider une expérience de rythme. Elles ne révèlent pas l'état intérieur de la personne. Le modèle émotionnel reste optionnel et n'est pas activé dans cette démonstration.
+Nous avons aussi préparé une extraction de points clés à partir de vidéos autorisées. Cette étape nécessite encore une validation sur de vrais enregistrements et un travail précis sur les mains et le visage.
+L'application conserve les statuts des droits et de la revue humaine. Les exemples synthétiques restent bloqués pour une publication présentée comme traduction approuvée.
+La prochaine étape est de construire une petite bibliothèque de vrais signes avec les autorisations nécessaires, puis d'évaluer leur compréhension avec des personnes compétentes en L S F.

@@ -314,14 +314,6 @@ export const App: React.FC = () => {
 
               {/* 3D Canvas with overlay */}
               <div className="relative">
-                <AvatarCanvas
-                  motion={currentMotion}
-                  currentTimeMs={currentTimeMs}
-                  expressiveModulation={expressiveModulation}
-                  energyFactor={energyFactor}
-                  showSkeletonDebug={showSkeletonDebug}
-                />
-
                 <PlayerOverlay
                   motionId={activeMotionId}
                   rigVersion={currentMotion?.rig_version || 'signaculture-v1'}
@@ -329,6 +321,14 @@ export const App: React.FC = () => {
                   durationMs={currentMotion?.duration_ms || 1000}
                   activeGloss={activeGlossLabel}
                   isSynthetic={isSyntheticAsset}
+                />
+
+                <AvatarCanvas
+                  motion={currentMotion}
+                  currentTimeMs={currentTimeMs}
+                  expressiveModulation={expressiveModulation}
+                  energyFactor={energyFactor}
+                  showSkeletonDebug={showSkeletonDebug}
                 />
               </div>
 
