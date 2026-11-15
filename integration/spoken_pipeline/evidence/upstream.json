@@ -1,0 +1,27 @@
+{
+  "repository": "https://github.com/sign-language-processing/spoken-to-signed-translation",
+  "revision": "fec7ac393989f4b6541ab5f860819262a54f27c7",
+  "license": "MIT",
+  "attribution": "Copyright(c)2026ZurichNLP; upstream authors Amit Moryossef and Mathias Müller; exact LICENSE retained",
+  "reused_functions": [
+    "spoken_to_signed.gloss_to_pose.lookup.PoseLookup.lookup_sequence",
+    "spoken_to_signed.gloss_to_pose.lookup.CSVPoseLookup (CSV compatibility verified)",
+    "spoken_to_signed.gloss_to_pose.concatenate.normalize_pose",
+    "spoken_to_signed.gloss_to_pose.concatenate.join_poses",
+    "pose_format.utils.generic.normalize_pose_size",
+    "pose_format.Pose.write/read",
+    "pose_format.pose_visualizer.PoseVisualizer.draw/save_video/save_gif"
+  ],
+  "not_used": [
+    "Default Swiss lexicon/download_lexicon",
+    "Foreign ASL/German/Swiss language models or default fingerspelling backup",
+    "Default upstream smoothing/interpolation that fills missing observations",
+    "Default upstream pix2pix video model download"
+  ],
+  "upstream_source_sha256": {
+    "LICENSE": "79c5160cf846b4d616cd4c338fe12520e9a65a4f432a442d2f669f11ad6e6747",
+    "spoken_to_signed/gloss_to_pose/concatenate.py": "34db1f0a5081417132f367680882afd4a6b8b7d7d55a3c82ea4e3e1035ec86b9",
+    "spoken_to_signed/gloss_to_pose/lookup/lookup.py": "9abd554c026cc5aefbc02a80d54c56ff5d108d47f8de8a853086149cc78d1403",
+    "spoken_to_signed/gloss_to_pose/lookup/csv_lookup.py": "d07e21c2d1d9b41a1158401d7d29ae38e4c8c25ddc89f3f9f2effaf487f3c73b"
+  }
+}
