@@ -36,3 +36,13 @@ training/.venv-train/bin/python training/infer.py --text 'Bonjour à tous' --mod
 ```
 
 Returns JSON candidate `gloss_sequence` tokens plus exact base revision, run, dataset digest and checkpoint hashes; verifies checkpoint hashes before loading. `translation_validated` and `render_allowed_for_publication` are false. Current mT5 often emits `<extra_id_0>`: this is an observed model failure, not a sign ID. No silent substitution or motion mapping. LoRA configuration references this worktree's absolute base-model path; keep that local base directory or review its adapter config when moving checkpoints. Lead owns API integration and should retain existing controlled retrieval behavior.
+
+The requested adaptation follow-up is documented in `research/ADAPTATION_INVESTIGATION.md`, with settings locked in `research/MT5_LONG_RUN_PLAN.json`. It remains a failed translation experiment: lower teacher-forced loss and no sentinels, but repetitive/malformed final output and WER517.96%. Historical runs used the script at commit078cafb; the current script corrects partial gradient accumulation and adds token-weighted validation selection/early stopping, so use that historical script revision for exact old-run reproduction.
+
+The one longer run was executed as follows (a reproduction must use a new run name):
+
+```bash
+training/.venv-train/bin/python training/experiment.py --data data/text_to_gloss/v002 --mode source-annotated-research --base google/mt5-small --base-path training/weights/mt5-small --revision 73fb5dbe4756edadc8fbe8c769b0a109493acf7a --run mt5-small-lora-long-validation-selected --lora --epochs 100 --device cuda --lr 0.001 --rank 16 --alpha 32 --targets q,k,v,o,wi_0,wi_1,wo --dropout 0.05 --accumulation 4 --patience 10 --min-delta 0 --warmup-ratio 0.05 --weight-decay 0 --validation-loss token
+```
+
+`diagnose_adaptation.py` audits only train and runs its four-example optimization diagnostic; it reads neither validation nor test. It writes to a new diagnostic output directory and intentionally refuses overwrite. New protocol tests are in `training/test_adaptation.py`; run them together with test_catalog.py. Parameter count is saved before selected-adapter freeze; train/val only are parsed during training, followed by a selection-complete record and one final test pass. Existing run artifacts and data hashes are checked against the locked plan. No decoding change was made after final metrics were seen.

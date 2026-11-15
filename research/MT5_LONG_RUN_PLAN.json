@@ -1,0 +1,67 @@
+{
+  "created_at": "2026-11-15T04:41:29.975607+01:00",
+  "run_id": "mt5-small-lora-long-validation-selected",
+  "user_authorization": "One longer validation-selected mT5 LoRA experiment up to100epochs with patience10; train-only4example diagnostic permitted",
+  "base_model": "google/mt5-small",
+  "base_revision": "73fb5dbe4756edadc8fbe8c769b0a109493acf7a",
+  "data_version": "v002",
+  "counts": {
+    "train": 61,
+    "val": 28,
+    "test": 39
+  },
+  "settings": {
+    "rank": 16,
+    "alpha": 32,
+    "lora_dropout": 0.05,
+    "targets": [
+      "q",
+      "k",
+      "v",
+      "o",
+      "wi_0",
+      "wi_1",
+      "wo"
+    ],
+    "lr": 0.001,
+    "optimizer": "AdamW",
+    "weight_decay": 0.0,
+    "batch_size": 1,
+    "accumulation": 4,
+    "max_epochs": 100,
+    "patience": 10,
+    "min_delta": 0.0,
+    "warmup_ratio": 0.05,
+    "lr_schedule": "linear decay after warmup",
+    "seed": 42,
+    "precision": "BF16 autocast",
+    "validation_selection": "token-weighted negative log likelihood",
+    "decoding": "greedy max128newtokens; unchanged from earlier runs; no sentinel suppression or gloss filtering"
+  },
+  "rationale": [
+    "Train-only tokenizer audit found zero UNK/sentinel targets and exact roundtrip on all61records; padding/EOS/decoder shift verified",
+    "Four-example diagnostic with this rank/module/lr configuration reduced teacher-forced loss36.105→0.110 and escaped sentinel output;2of4exact after200updates. This is optimization evidence, not complete memorization or generalization",
+    "Expand adapter capacity from344064q/vparameters to2555904attention+feedforwardparameters; preserve pretrained embeddings/output head",
+    "More updates with warmup and validation stopping give genuine task adaptation a chance; no hyperparameter sweep",
+    "Correct final accumulation group divisor from fixed4to actual group size; select token-weighted validation loss rather than averaging unequal-length examples",
+    "Count trainable parameters before loading/freeze of selected checkpoint"
+  ],
+  "test_policy": "Existing historical results known from earlier task; do not consult historical test predictions for this configuration. Do not parse new test records until validation selection completes. Decode final fixed test once; no subsequent tuning.",
+  "frozen_data": {
+    "data/text_to_gloss/v002/dataset_manifest.json": "f90ce1457c2fe16f234cd4b8cc1e5f0281b0cf484f646714112d9a7cdc3e1a03",
+    "data/text_to_gloss/v002/test.jsonl": "b55e2d67b1910453d839730095fab29a1dde9d4fda123b95f99ee502f244c103",
+    "data/text_to_gloss/v002/train.jsonl": "76ac122dbe2a3cb644a1afc073ecf781e22f36ece45c471422785f1ef843250d",
+    "data/text_to_gloss/v002/val.jsonl": "c18236c232fed7c19ea829beeb22abec48323462a85b94d469454848c489e2c4"
+  },
+  "preserved_historical_artifacts": {
+    "research/runs/t5-small-cpu-smoke/cli_example.json": "b5b0ab5dcf75989a4b0d6e6bdb9f8cb43a4ddc013dba8b87a2e0bd59dd791c77",
+    "research/runs/t5-small-cpu-smoke/val_predictions.jsonl": "b720554a3863e2c3731a5333d836c98f9b0f26d1c03c7f72461a32a4517cdd37",
+    "research/runs/t5-small-cpu-smoke/test_predictions.jsonl": "63ec0a897e59a20d892af22a250d3cefcc690e4dbc0afdaac166e3743ee85e86",
+    "research/runs/t5-small-cpu-smoke/metrics.json": "a600de54c6d5dc9ec471c40d8614270c1d5e0e9dfa549bcf4359628392587ed1",
+    "research/runs/mt5-small-lora-expanded-slow/val_predictions.jsonl": "6396406c4371baa2e8644106e1708d2955bebf610ba6248cd9bc6dbf7ea0a36b",
+    "research/runs/mt5-small-lora-expanded-slow/test_predictions.jsonl": "d4509e0b36bcfa198c6d12304191e7997e672d9db2d998c67ed55e14f8873a60",
+    "research/runs/mt5-small-lora-expanded-slow/metrics.json": "683247d5a88c5279cbb0558c96cf9deeb0b715e9a948326499d81414a6bd29be",
+    "research/runs/mt5-small-lora-expanded-slow/cli_example_cuda.json": "eb68e64d51679dcad41d6793a1b249ec60c2150b621b5dceb7ba447c01bac5bb",
+    "research/runs/mt5-small-lora-expanded-slow/cli_example_cpu.json": "eb68e64d51679dcad41d6793a1b249ec60c2150b621b5dceb7ba447c01bac5bb"
+  }
+}

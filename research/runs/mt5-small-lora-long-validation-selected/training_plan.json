@@ -1,0 +1,1186 @@
+{
+  "arguments": {
+    "data": "data/text_to_gloss/v002",
+    "base": "google/mt5-small",
+    "base_path": "/home/jmal/Projects/Active/Forum_Hackathon/.worktrees/wt-codex2/training/weights/mt5-small",
+    "revision": "73fb5dbe4756edadc8fbe8c769b0a109493acf7a",
+    "run": "mt5-small-lora-long-validation-selected",
+    "mode": "source-annotated-research",
+    "lora": true,
+    "epochs": 100,
+    "device": "cuda",
+    "lr": 0.001,
+    "rank": 16,
+    "alpha": 32,
+    "dropout": 0.05,
+    "targets": "q,k,v,o,wi_0,wi_1,wo",
+    "accumulation": 4,
+    "patience": 10,
+    "min_delta": 0.0,
+    "warmup_ratio": 0.05,
+    "weight_decay": 0.0,
+    "validation_loss": "token"
+  },
+  "trainable_parameters_before_freeze": 2555904,
+  "trainable_tensors": [
+    {
+      "name": "base_model.model.encoder.block.0.layer.0.SelfAttention.q.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.0.layer.0.SelfAttention.q.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.encoder.block.0.layer.0.SelfAttention.k.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.0.layer.0.SelfAttention.k.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.encoder.block.0.layer.0.SelfAttention.v.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.0.layer.0.SelfAttention.v.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.encoder.block.0.layer.0.SelfAttention.o.lora_A.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.encoder.block.0.layer.0.SelfAttention.o.lora_B.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.0.layer.1.DenseReluDense.wi_0.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.0.layer.1.DenseReluDense.wi_0.lora_B.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.encoder.block.0.layer.1.DenseReluDense.wi_1.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.0.layer.1.DenseReluDense.wi_1.lora_B.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.encoder.block.0.layer.1.DenseReluDense.wo.lora_A.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.encoder.block.0.layer.1.DenseReluDense.wo.lora_B.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.1.layer.0.SelfAttention.q.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.1.layer.0.SelfAttention.q.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.encoder.block.1.layer.0.SelfAttention.k.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.1.layer.0.SelfAttention.k.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.encoder.block.1.layer.0.SelfAttention.v.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.1.layer.0.SelfAttention.v.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.encoder.block.1.layer.0.SelfAttention.o.lora_A.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.encoder.block.1.layer.0.SelfAttention.o.lora_B.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.1.layer.1.DenseReluDense.wi_0.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.1.layer.1.DenseReluDense.wi_0.lora_B.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.encoder.block.1.layer.1.DenseReluDense.wi_1.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.1.layer.1.DenseReluDense.wi_1.lora_B.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.encoder.block.1.layer.1.DenseReluDense.wo.lora_A.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.encoder.block.1.layer.1.DenseReluDense.wo.lora_B.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.2.layer.0.SelfAttention.q.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.2.layer.0.SelfAttention.q.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.encoder.block.2.layer.0.SelfAttention.k.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.2.layer.0.SelfAttention.k.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.encoder.block.2.layer.0.SelfAttention.v.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.2.layer.0.SelfAttention.v.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.encoder.block.2.layer.0.SelfAttention.o.lora_A.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.encoder.block.2.layer.0.SelfAttention.o.lora_B.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.2.layer.1.DenseReluDense.wi_0.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.2.layer.1.DenseReluDense.wi_0.lora_B.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.encoder.block.2.layer.1.DenseReluDense.wi_1.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.2.layer.1.DenseReluDense.wi_1.lora_B.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.encoder.block.2.layer.1.DenseReluDense.wo.lora_A.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.encoder.block.2.layer.1.DenseReluDense.wo.lora_B.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.3.layer.0.SelfAttention.q.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.3.layer.0.SelfAttention.q.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.encoder.block.3.layer.0.SelfAttention.k.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.3.layer.0.SelfAttention.k.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.encoder.block.3.layer.0.SelfAttention.v.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.3.layer.0.SelfAttention.v.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.encoder.block.3.layer.0.SelfAttention.o.lora_A.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.encoder.block.3.layer.0.SelfAttention.o.lora_B.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.3.layer.1.DenseReluDense.wi_0.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.3.layer.1.DenseReluDense.wi_0.lora_B.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.encoder.block.3.layer.1.DenseReluDense.wi_1.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.3.layer.1.DenseReluDense.wi_1.lora_B.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.encoder.block.3.layer.1.DenseReluDense.wo.lora_A.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.encoder.block.3.layer.1.DenseReluDense.wo.lora_B.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.4.layer.0.SelfAttention.q.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.4.layer.0.SelfAttention.q.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.encoder.block.4.layer.0.SelfAttention.k.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.4.layer.0.SelfAttention.k.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.encoder.block.4.layer.0.SelfAttention.v.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.4.layer.0.SelfAttention.v.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.encoder.block.4.layer.0.SelfAttention.o.lora_A.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.encoder.block.4.layer.0.SelfAttention.o.lora_B.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.4.layer.1.DenseReluDense.wi_0.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.4.layer.1.DenseReluDense.wi_0.lora_B.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.encoder.block.4.layer.1.DenseReluDense.wi_1.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.4.layer.1.DenseReluDense.wi_1.lora_B.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.encoder.block.4.layer.1.DenseReluDense.wo.lora_A.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.encoder.block.4.layer.1.DenseReluDense.wo.lora_B.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.5.layer.0.SelfAttention.q.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.5.layer.0.SelfAttention.q.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.encoder.block.5.layer.0.SelfAttention.k.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.5.layer.0.SelfAttention.k.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.encoder.block.5.layer.0.SelfAttention.v.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.5.layer.0.SelfAttention.v.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.encoder.block.5.layer.0.SelfAttention.o.lora_A.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.encoder.block.5.layer.0.SelfAttention.o.lora_B.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.5.layer.1.DenseReluDense.wi_0.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.5.layer.1.DenseReluDense.wi_0.lora_B.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.encoder.block.5.layer.1.DenseReluDense.wi_1.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.5.layer.1.DenseReluDense.wi_1.lora_B.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.encoder.block.5.layer.1.DenseReluDense.wo.lora_A.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.encoder.block.5.layer.1.DenseReluDense.wo.lora_B.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.6.layer.0.SelfAttention.q.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.6.layer.0.SelfAttention.q.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.encoder.block.6.layer.0.SelfAttention.k.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.6.layer.0.SelfAttention.k.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.encoder.block.6.layer.0.SelfAttention.v.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.6.layer.0.SelfAttention.v.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.encoder.block.6.layer.0.SelfAttention.o.lora_A.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.encoder.block.6.layer.0.SelfAttention.o.lora_B.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.6.layer.1.DenseReluDense.wi_0.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.6.layer.1.DenseReluDense.wi_0.lora_B.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.encoder.block.6.layer.1.DenseReluDense.wi_1.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.6.layer.1.DenseReluDense.wi_1.lora_B.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.encoder.block.6.layer.1.DenseReluDense.wo.lora_A.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.encoder.block.6.layer.1.DenseReluDense.wo.lora_B.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.7.layer.0.SelfAttention.q.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.7.layer.0.SelfAttention.q.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.encoder.block.7.layer.0.SelfAttention.k.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.7.layer.0.SelfAttention.k.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.encoder.block.7.layer.0.SelfAttention.v.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.7.layer.0.SelfAttention.v.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.encoder.block.7.layer.0.SelfAttention.o.lora_A.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.encoder.block.7.layer.0.SelfAttention.o.lora_B.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.7.layer.1.DenseReluDense.wi_0.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.7.layer.1.DenseReluDense.wi_0.lora_B.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.encoder.block.7.layer.1.DenseReluDense.wi_1.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.encoder.block.7.layer.1.DenseReluDense.wi_1.lora_B.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.encoder.block.7.layer.1.DenseReluDense.wo.lora_A.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.encoder.block.7.layer.1.DenseReluDense.wo.lora_B.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.0.layer.0.SelfAttention.q.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.0.layer.0.SelfAttention.q.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.0.layer.0.SelfAttention.k.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.0.layer.0.SelfAttention.k.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.0.layer.0.SelfAttention.v.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.0.layer.0.SelfAttention.v.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.0.layer.0.SelfAttention.o.lora_A.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.0.layer.0.SelfAttention.o.lora_B.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.0.layer.1.EncDecAttention.q.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.0.layer.1.EncDecAttention.q.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.0.layer.1.EncDecAttention.k.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.0.layer.1.EncDecAttention.k.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.0.layer.1.EncDecAttention.v.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.0.layer.1.EncDecAttention.v.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.0.layer.1.EncDecAttention.o.lora_A.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.0.layer.1.EncDecAttention.o.lora_B.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.0.layer.2.DenseReluDense.wi_0.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.0.layer.2.DenseReluDense.wi_0.lora_B.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.decoder.block.0.layer.2.DenseReluDense.wi_1.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.0.layer.2.DenseReluDense.wi_1.lora_B.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.decoder.block.0.layer.2.DenseReluDense.wo.lora_A.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.decoder.block.0.layer.2.DenseReluDense.wo.lora_B.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.1.layer.0.SelfAttention.q.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.1.layer.0.SelfAttention.q.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.1.layer.0.SelfAttention.k.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.1.layer.0.SelfAttention.k.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.1.layer.0.SelfAttention.v.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.1.layer.0.SelfAttention.v.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.1.layer.0.SelfAttention.o.lora_A.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.1.layer.0.SelfAttention.o.lora_B.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.1.layer.1.EncDecAttention.q.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.1.layer.1.EncDecAttention.q.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.1.layer.1.EncDecAttention.k.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.1.layer.1.EncDecAttention.k.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.1.layer.1.EncDecAttention.v.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.1.layer.1.EncDecAttention.v.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.1.layer.1.EncDecAttention.o.lora_A.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.1.layer.1.EncDecAttention.o.lora_B.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.1.layer.2.DenseReluDense.wi_0.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.1.layer.2.DenseReluDense.wi_0.lora_B.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.decoder.block.1.layer.2.DenseReluDense.wi_1.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.1.layer.2.DenseReluDense.wi_1.lora_B.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.decoder.block.1.layer.2.DenseReluDense.wo.lora_A.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.decoder.block.1.layer.2.DenseReluDense.wo.lora_B.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.2.layer.0.SelfAttention.q.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.2.layer.0.SelfAttention.q.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.2.layer.0.SelfAttention.k.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.2.layer.0.SelfAttention.k.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.2.layer.0.SelfAttention.v.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.2.layer.0.SelfAttention.v.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.2.layer.0.SelfAttention.o.lora_A.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.2.layer.0.SelfAttention.o.lora_B.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.2.layer.1.EncDecAttention.q.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.2.layer.1.EncDecAttention.q.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.2.layer.1.EncDecAttention.k.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.2.layer.1.EncDecAttention.k.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.2.layer.1.EncDecAttention.v.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.2.layer.1.EncDecAttention.v.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.2.layer.1.EncDecAttention.o.lora_A.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.2.layer.1.EncDecAttention.o.lora_B.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.2.layer.2.DenseReluDense.wi_0.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.2.layer.2.DenseReluDense.wi_0.lora_B.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.decoder.block.2.layer.2.DenseReluDense.wi_1.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.2.layer.2.DenseReluDense.wi_1.lora_B.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.decoder.block.2.layer.2.DenseReluDense.wo.lora_A.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.decoder.block.2.layer.2.DenseReluDense.wo.lora_B.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.3.layer.0.SelfAttention.q.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.3.layer.0.SelfAttention.q.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.3.layer.0.SelfAttention.k.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.3.layer.0.SelfAttention.k.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.3.layer.0.SelfAttention.v.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.3.layer.0.SelfAttention.v.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.3.layer.0.SelfAttention.o.lora_A.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.3.layer.0.SelfAttention.o.lora_B.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.3.layer.1.EncDecAttention.q.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.3.layer.1.EncDecAttention.q.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.3.layer.1.EncDecAttention.k.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.3.layer.1.EncDecAttention.k.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.3.layer.1.EncDecAttention.v.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.3.layer.1.EncDecAttention.v.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.3.layer.1.EncDecAttention.o.lora_A.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.3.layer.1.EncDecAttention.o.lora_B.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.3.layer.2.DenseReluDense.wi_0.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.3.layer.2.DenseReluDense.wi_0.lora_B.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.decoder.block.3.layer.2.DenseReluDense.wi_1.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.3.layer.2.DenseReluDense.wi_1.lora_B.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.decoder.block.3.layer.2.DenseReluDense.wo.lora_A.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.decoder.block.3.layer.2.DenseReluDense.wo.lora_B.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.4.layer.0.SelfAttention.q.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.4.layer.0.SelfAttention.q.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.4.layer.0.SelfAttention.k.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.4.layer.0.SelfAttention.k.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.4.layer.0.SelfAttention.v.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.4.layer.0.SelfAttention.v.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.4.layer.0.SelfAttention.o.lora_A.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.4.layer.0.SelfAttention.o.lora_B.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.4.layer.1.EncDecAttention.q.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.4.layer.1.EncDecAttention.q.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.4.layer.1.EncDecAttention.k.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.4.layer.1.EncDecAttention.k.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.4.layer.1.EncDecAttention.v.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.4.layer.1.EncDecAttention.v.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.4.layer.1.EncDecAttention.o.lora_A.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.4.layer.1.EncDecAttention.o.lora_B.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.4.layer.2.DenseReluDense.wi_0.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.4.layer.2.DenseReluDense.wi_0.lora_B.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.decoder.block.4.layer.2.DenseReluDense.wi_1.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.4.layer.2.DenseReluDense.wi_1.lora_B.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.decoder.block.4.layer.2.DenseReluDense.wo.lora_A.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.decoder.block.4.layer.2.DenseReluDense.wo.lora_B.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.5.layer.0.SelfAttention.q.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.5.layer.0.SelfAttention.q.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.5.layer.0.SelfAttention.k.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.5.layer.0.SelfAttention.k.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.5.layer.0.SelfAttention.v.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.5.layer.0.SelfAttention.v.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.5.layer.0.SelfAttention.o.lora_A.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.5.layer.0.SelfAttention.o.lora_B.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.5.layer.1.EncDecAttention.q.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.5.layer.1.EncDecAttention.q.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.5.layer.1.EncDecAttention.k.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.5.layer.1.EncDecAttention.k.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.5.layer.1.EncDecAttention.v.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.5.layer.1.EncDecAttention.v.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.5.layer.1.EncDecAttention.o.lora_A.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.5.layer.1.EncDecAttention.o.lora_B.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.5.layer.2.DenseReluDense.wi_0.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.5.layer.2.DenseReluDense.wi_0.lora_B.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.decoder.block.5.layer.2.DenseReluDense.wi_1.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.5.layer.2.DenseReluDense.wi_1.lora_B.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.decoder.block.5.layer.2.DenseReluDense.wo.lora_A.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.decoder.block.5.layer.2.DenseReluDense.wo.lora_B.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.6.layer.0.SelfAttention.q.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.6.layer.0.SelfAttention.q.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.6.layer.0.SelfAttention.k.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.6.layer.0.SelfAttention.k.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.6.layer.0.SelfAttention.v.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.6.layer.0.SelfAttention.v.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.6.layer.0.SelfAttention.o.lora_A.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.6.layer.0.SelfAttention.o.lora_B.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.6.layer.1.EncDecAttention.q.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.6.layer.1.EncDecAttention.q.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.6.layer.1.EncDecAttention.k.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.6.layer.1.EncDecAttention.k.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.6.layer.1.EncDecAttention.v.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.6.layer.1.EncDecAttention.v.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.6.layer.1.EncDecAttention.o.lora_A.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.6.layer.1.EncDecAttention.o.lora_B.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.6.layer.2.DenseReluDense.wi_0.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.6.layer.2.DenseReluDense.wi_0.lora_B.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.decoder.block.6.layer.2.DenseReluDense.wi_1.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.6.layer.2.DenseReluDense.wi_1.lora_B.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.decoder.block.6.layer.2.DenseReluDense.wo.lora_A.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.decoder.block.6.layer.2.DenseReluDense.wo.lora_B.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.7.layer.0.SelfAttention.q.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.7.layer.0.SelfAttention.q.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.7.layer.0.SelfAttention.k.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.7.layer.0.SelfAttention.k.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.7.layer.0.SelfAttention.v.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.7.layer.0.SelfAttention.v.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.7.layer.0.SelfAttention.o.lora_A.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.7.layer.0.SelfAttention.o.lora_B.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.7.layer.1.EncDecAttention.q.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.7.layer.1.EncDecAttention.q.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.7.layer.1.EncDecAttention.k.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.7.layer.1.EncDecAttention.k.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.7.layer.1.EncDecAttention.v.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.7.layer.1.EncDecAttention.v.lora_B.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.7.layer.1.EncDecAttention.o.lora_A.default.weight",
+      "parameters": 6144
+    },
+    {
+      "name": "base_model.model.decoder.block.7.layer.1.EncDecAttention.o.lora_B.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.7.layer.2.DenseReluDense.wi_0.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.7.layer.2.DenseReluDense.wi_0.lora_B.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.decoder.block.7.layer.2.DenseReluDense.wi_1.lora_A.default.weight",
+      "parameters": 8192
+    },
+    {
+      "name": "base_model.model.decoder.block.7.layer.2.DenseReluDense.wi_1.lora_B.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.decoder.block.7.layer.2.DenseReluDense.wo.lora_A.default.weight",
+      "parameters": 16384
+    },
+    {
+      "name": "base_model.model.decoder.block.7.layer.2.DenseReluDense.wo.lora_B.default.weight",
+      "parameters": 8192
+    }
+  ],
+  "experiment_script_sha256": "bb976fdd814344a0708ec47eafba17fb72830a6b35f4ca38ae45c531eafc5121",
+  "heldout_policy": "Test file is not read or decoded until checkpoint selection completes",
+  "validation_loss_aggregation": "token",
+  "early_stopping": "validation loss only",
+  "gradient_remainder": "divide last accumulation group by its actual size",
+  "dropout": "base model dropout retained plus specified adapter dropout",
+  "data_manifest_sha256": "f90ce1457c2fe16f234cd4b8cc1e5f0281b0cf484f646714112d9a7cdc3e1a03"
+}

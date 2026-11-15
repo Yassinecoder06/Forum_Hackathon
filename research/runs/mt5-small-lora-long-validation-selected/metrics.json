@@ -1,0 +1,351 @@
+{
+  "run_id": "mt5-small-lora-long-validation-selected",
+  "model_base": "google/mt5-small",
+  "model_revision": "73fb5dbe4756edadc8fbe8c769b0a109493acf7a",
+  "mode": "source-annotated-research",
+  "lora": true,
+  "trainable_parameters": 2555904,
+  "trainable_parameter_count_stage": "before selected adapter load/freeze",
+  "epochs": 21,
+  "max_epochs": 100,
+  "best_epoch": 11,
+  "patience": 10,
+  "optimizer_steps": 336,
+  "validation_loss_aggregation": "token",
+  "lora_config": {
+    "rank": 16,
+    "alpha": 32,
+    "dropout": 0.05,
+    "targets": [
+      "q",
+      "k",
+      "v",
+      "o",
+      "wi_0",
+      "wi_1",
+      "wo"
+    ]
+  },
+  "warmup_steps": 80,
+  "weight_decay": 0.0,
+  "learning_rate": 0.001,
+  "batch_size": 1,
+  "gradient_accumulation": 4,
+  "precision": "bf16 autocast",
+  "seed": 42,
+  "counts": {
+    "train": 61,
+    "val": 28,
+    "test": 39
+  },
+  "group_counts": {
+    "train": 3,
+    "val": 1,
+    "test": 2
+  },
+  "dataset_manifest_sha256": "f90ce1457c2fe16f234cd4b8cc1e5f0281b0cf484f646714112d9a7cdc3e1a03",
+  "train_seconds": 113.91646862199923,
+  "total_seconds": 246.74266910799997,
+  "cuda_device": "NVIDIA GeForce RTX 4060 Laptop GPU",
+  "peak_allocated_mib": 1961.34912109375,
+  "peak_reserved_mib": 2250.0,
+  "torch_version": "2.7.1+cu128",
+  "loss_history": [
+    {
+      "epoch": 1,
+      "train_loss": 25.442853880710288,
+      "val_loss": 18.87208254057655,
+      "val_loss_token_weighted": 18.87208254057655,
+      "val_loss_mean_example": 20.101700408118113,
+      "optimizer_steps": 16,
+      "learning_rate": 0.0002,
+      "elapsed_seconds": 5.69448172400007
+    },
+    {
+      "epoch": 2,
+      "train_loss": 23.725700237711923,
+      "val_loss": 17.76082523869236,
+      "val_loss_token_weighted": 17.76082523869236,
+      "val_loss_mean_example": 19.24056843348912,
+      "optimizer_steps": 32,
+      "learning_rate": 0.0004,
+      "elapsed_seconds": 11.151209949999611
+    },
+    {
+      "epoch": 3,
+      "train_loss": 18.684288650262552,
+      "val_loss": 15.336083526876765,
+      "val_loss_token_weighted": 15.336083526876765,
+      "val_loss_mean_example": 16.970341120447433,
+      "optimizer_steps": 48,
+      "learning_rate": 0.0006,
+      "elapsed_seconds": 16.48116345100061
+    },
+    {
+      "epoch": 4,
+      "train_loss": 11.834798937938253,
+      "val_loss": 5.945519774381967,
+      "val_loss_token_weighted": 5.945519774381967,
+      "val_loss_mean_example": 6.284427063805716,
+      "optimizer_steps": 64,
+      "learning_rate": 0.0008,
+      "elapsed_seconds": 21.858729763000156
+    },
+    {
+      "epoch": 5,
+      "train_loss": 6.850261313016297,
+      "val_loss": 4.634891813365413,
+      "val_loss_token_weighted": 4.634891813365413,
+      "val_loss_mean_example": 4.688645022256034,
+      "optimizer_steps": 80,
+      "learning_rate": 0.001,
+      "elapsed_seconds": 27.299474966999696
+    },
+    {
+      "epoch": 6,
+      "train_loss": 5.251301800618406,
+      "val_loss": 3.8456798957782996,
+      "val_loss_token_weighted": 3.8456798957782996,
+      "val_loss_mean_example": 3.8117740750312805,
+      "optimizer_steps": 96,
+      "learning_rate": 0.0009894736842105264,
+      "elapsed_seconds": 32.77546807699764
+    },
+    {
+      "epoch": 7,
+      "train_loss": 4.472602613636704,
+      "val_loss": 3.678679198915394,
+      "val_loss_token_weighted": 3.678679198915394,
+      "val_loss_mean_example": 3.6677539008004323,
+      "optimizer_steps": 112,
+      "learning_rate": 0.0009789473684210528,
+      "elapsed_seconds": 38.18927161999818
+    },
+    {
+      "epoch": 8,
+      "train_loss": 4.00721920904566,
+      "val_loss": 3.4821115262939726,
+      "val_loss_token_weighted": 3.4821115262939726,
+      "val_loss_mean_example": 3.375865774495261,
+      "optimizer_steps": 128,
+      "learning_rate": 0.000968421052631579,
+      "elapsed_seconds": 43.503862330999254
+    },
+    {
+      "epoch": 9,
+      "train_loss": 3.716474787133639,
+      "val_loss": 3.4093761460681558,
+      "val_loss_token_weighted": 3.4093761460681558,
+      "val_loss_mean_example": 3.290993400982448,
+      "optimizer_steps": 144,
+      "learning_rate": 0.0009578947368421053,
+      "elapsed_seconds": 48.91786382399732
+    },
+    {
+      "epoch": 10,
+      "train_loss": 3.512723563147373,
+      "val_loss": 3.298518869559286,
+      "val_loss_token_weighted": 3.298518869559286,
+      "val_loss_mean_example": 3.167570182255336,
+      "optimizer_steps": 160,
+      "learning_rate": 0.0009473684210526315,
+      "elapsed_seconds": 54.50668094699722
+    },
+    {
+      "epoch": 11,
+      "train_loss": 3.272349492448275,
+      "val_loss": 3.294313885582607,
+      "val_loss_token_weighted": 3.294313885582607,
+      "val_loss_mean_example": 3.214753840650831,
+      "optimizer_steps": 176,
+      "learning_rate": 0.0009368421052631579,
+      "elapsed_seconds": 59.97454946399739
+    },
+    {
+      "epoch": 12,
+      "train_loss": 3.026825261897728,
+      "val_loss": 3.318937353301001,
+      "val_loss_token_weighted": 3.318937353301001,
+      "val_loss_mean_example": 3.2263690744127547,
+      "optimizer_steps": 192,
+      "learning_rate": 0.0009263157894736843,
+      "elapsed_seconds": 65.35172301299826
+    },
+    {
+      "epoch": 13,
+      "train_loss": 2.8961312702444735,
+      "val_loss": 3.337444310870844,
+      "val_loss_token_weighted": 3.337444310870844,
+      "val_loss_mean_example": 3.262564778327942,
+      "optimizer_steps": 208,
+      "learning_rate": 0.0009157894736842105,
+      "elapsed_seconds": 70.66576961600003
+    },
+    {
+      "epoch": 14,
+      "train_loss": 2.8269206197535404,
+      "val_loss": 3.30900371667168,
+      "val_loss_token_weighted": 3.30900371667168,
+      "val_loss_mean_example": 3.258422408785139,
+      "optimizer_steps": 224,
+      "learning_rate": 0.0009052631578947369,
+      "elapsed_seconds": 76.00241806700069
+    },
+    {
+      "epoch": 15,
+      "train_loss": 2.7042369908485258,
+      "val_loss": 3.393882777297473,
+      "val_loss_token_weighted": 3.393882777297473,
+      "val_loss_mean_example": 3.2825692977224077,
+      "optimizer_steps": 240,
+      "learning_rate": 0.0008947368421052632,
+      "elapsed_seconds": 81.7325105939999
+    },
+    {
+      "epoch": 16,
+      "train_loss": 2.6390065853712987,
+      "val_loss": 3.4043230576733237,
+      "val_loss_token_weighted": 3.4043230576733237,
+      "val_loss_mean_example": 3.3044107215745107,
+      "optimizer_steps": 256,
+      "learning_rate": 0.0008842105263157894,
+      "elapsed_seconds": 87.15505972999745
+    },
+    {
+      "epoch": 17,
+      "train_loss": 2.4709535890915353,
+      "val_loss": 3.4470886658010618,
+      "val_loss_token_weighted": 3.4470886658010618,
+      "val_loss_mean_example": 3.349760949611664,
+      "optimizer_steps": 272,
+      "learning_rate": 0.0008736842105263159,
+      "elapsed_seconds": 92.51498097299918
+    },
+    {
+      "epoch": 18,
+      "train_loss": 2.3623564829591843,
+      "val_loss": 3.4419025208793625,
+      "val_loss_token_weighted": 3.4419025208793625,
+      "val_loss_mean_example": 3.3562613214765276,
+      "optimizer_steps": 288,
+      "learning_rate": 0.0008631578947368422,
+      "elapsed_seconds": 97.84124008399885
+    },
+    {
+      "epoch": 19,
+      "train_loss": 2.3276875502750523,
+      "val_loss": 3.466476517690579,
+      "val_loss_token_weighted": 3.466476517690579,
+      "val_loss_mean_example": 3.3664424419403076,
+      "optimizer_steps": 304,
+      "learning_rate": 0.0008526315789473684,
+      "elapsed_seconds": 103.22987768899839
+    },
+    {
+      "epoch": 20,
+      "train_loss": 2.2584267353913825,
+      "val_loss": 3.4686122123100174,
+      "val_loss_token_weighted": 3.4686122123100174,
+      "val_loss_mean_example": 3.3881770372390747,
+      "optimizer_steps": 320,
+      "learning_rate": 0.0008421052631578947,
+      "elapsed_seconds": 108.51859915000023
+    },
+    {
+      "epoch": 21,
+      "train_loss": 2.172222646044903,
+      "val_loss": 3.518968446828262,
+      "val_loss_token_weighted": 3.518968446828262,
+      "val_loss_mean_example": 3.458245881966182,
+      "optimizer_steps": 336,
+      "learning_rate": 0.0008315789473684212,
+      "elapsed_seconds": 113.91597354799887
+    }
+  ],
+  "metrics": {
+    "val": {
+      "retrieval": {
+        "exact_match": 0.0,
+        "token_wer": 1.1443298969072164,
+        "corpus_bleu": 0.0,
+        "bleu_signature": "sacrebleu 2.6.0; case:mixed; tok:none; smooth:exp; effective_order:no; scale:0-100",
+        "predicted_oov_vs_train": 0.0,
+        "reference_oov_vs_train": 0.8144329896907216,
+        "motion_registry_oov": null,
+        "motion_registry_note": "No approved source-gloss-to-motion mapping; train vocabulary OOV is separate",
+        "examples": 28,
+        "reference_tokens": 194,
+        "predicted_tokens": 155
+      },
+      "lexical": {
+        "exact_match": 0.0,
+        "token_wer": 1.8762886597938144,
+        "corpus_bleu": 0.1710565357228816,
+        "bleu_signature": "sacrebleu 2.6.0; case:mixed; tok:none; smooth:exp; effective_order:no; scale:0-100",
+        "predicted_oov_vs_train": 0.896457765667575,
+        "reference_oov_vs_train": 0.8144329896907216,
+        "motion_registry_oov": null,
+        "motion_registry_note": "No approved source-gloss-to-motion mapping; train vocabulary OOV is separate",
+        "examples": 28,
+        "reference_tokens": 194,
+        "predicted_tokens": 367
+      },
+      "model": {
+        "exact_match": 0.0,
+        "token_wer": 4.185567010309279,
+        "corpus_bleu": 0.0,
+        "bleu_signature": "sacrebleu 2.6.0; case:mixed; tok:none; smooth:exp; effective_order:no; scale:0-100",
+        "predicted_oov_vs_train": 0.5360303413400759,
+        "reference_oov_vs_train": 0.8144329896907216,
+        "motion_registry_oov": null,
+        "motion_registry_note": "No approved source-gloss-to-motion mapping; train vocabulary OOV is separate",
+        "examples": 28,
+        "reference_tokens": 194,
+        "predicted_tokens": 791
+      }
+    },
+    "test": {
+      "retrieval": {
+        "exact_match": 0.0,
+        "token_wer": 1.2087378640776698,
+        "corpus_bleu": 0.3009639808175593,
+        "bleu_signature": "sacrebleu 2.6.0; case:mixed; tok:none; smooth:exp; effective_order:no; scale:0-100",
+        "predicted_oov_vs_train": 0.0,
+        "reference_oov_vs_train": 0.8252427184466019,
+        "motion_registry_oov": null,
+        "motion_registry_note": "No approved source-gloss-to-motion mapping; train vocabulary OOV is separate",
+        "examples": 39,
+        "reference_tokens": 206,
+        "predicted_tokens": 227
+      },
+      "lexical": {
+        "exact_match": 0.0,
+        "token_wer": 1.9320388349514563,
+        "corpus_bleu": 0.19352402920994116,
+        "bleu_signature": "sacrebleu 2.6.0; case:mixed; tok:none; smooth:exp; effective_order:no; scale:0-100",
+        "predicted_oov_vs_train": 0.8673218673218673,
+        "reference_oov_vs_train": 0.8252427184466019,
+        "motion_registry_oov": null,
+        "motion_registry_note": "No approved source-gloss-to-motion mapping; train vocabulary OOV is separate",
+        "examples": 39,
+        "reference_tokens": 206,
+        "predicted_tokens": 407
+      },
+      "model": {
+        "exact_match": 0.0,
+        "token_wer": 5.179611650485437,
+        "corpus_bleu": 0.04220886971265283,
+        "bleu_signature": "sacrebleu 2.6.0; case:mixed; tok:none; smooth:exp; effective_order:no; scale:0-100",
+        "predicted_oov_vs_train": 0.6925996204933587,
+        "reference_oov_vs_train": 0.8252427184466019,
+        "motion_registry_oov": null,
+        "motion_registry_note": "No approved source-gloss-to-motion mapping; train vocabulary OOV is separate",
+        "examples": 39,
+        "reference_tokens": 206,
+        "predicted_tokens": 1054
+      }
+    }
+  },
+  "checkpoint": "/home/jmal/Projects/Active/Forum_Hackathon/.worktrees/wt-codex2/training/checkpoints/mt5-small-lora-long-validation-selected",
+  "limitations": "ENGINEERING PROOF ONLY; free translations; tiny single-source corpus; no local linguistic approval; no SOTA claim"
+}

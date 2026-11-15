@@ -70,10 +70,16 @@ def main():
     p.add_argument('--mode',choices=['approved','source-annotated-research'],default='approved')
     p.add_argument('--lora',action='store_true');p.add_argument('--epochs',type=int,default=8)
     p.add_argument('--device',choices=['cuda','cpu'],default='cuda');p.add_argument('--lr',type=float,default=3e-4)
+    p.add_argument('--rank',type=int,default=8);p.add_argument('--alpha',type=int,default=16)
+    p.add_argument('--dropout',type=float,default=.05);p.add_argument('--targets',default='q,v')
+    p.add_argument('--accumulation',type=int,default=4);p.add_argument('--patience',type=int,default=0)
+    p.add_argument('--min-delta',type=float,default=0.0);p.add_argument('--warmup-ratio',type=float,default=0.0)
+    p.add_argument('--weight-decay',type=float,default=.01)
+    p.add_argument('--validation-loss',choices=['token','example'],default='token')
     a=p.parse_args();a.base_path=str(Path(a.base_path).resolve());random.seed(42);np.random.seed(42);torch.manual_seed(42);torch.set_num_threads(4)
-    data={s:read(s,a.data,a.mode) for s in ['train','val','test']};train=data['train']
+    data={s:read(s,a.data,a.mode) for s in ['train','val']};train=data['train']
     validate_exports(a.data,data,a.mode)
-    for s in ['val','test']:
+    for s in ['val']:
         assert not {r['split_group'] for r in train}&{r['split_group'] for r in data[s]}
     out=ROOT/'research/runs'/a.run;out.mkdir(parents=True,exist_ok=False)
     ckpt=ROOT/'training/checkpoints'/a.run;ckpt.mkdir(parents=True,exist_ok=False)
@@ -81,36 +87,65 @@ def main():
     model=AutoModelForSeq2SeqLM.from_pretrained(a.base_path)
     if a.lora:
         from peft import LoraConfig,TaskType,get_peft_model
-        model=get_peft_model(model,LoraConfig(task_type=TaskType.SEQ_2_SEQ_LM,r=8,lora_alpha=16,lora_dropout=.05,target_modules=['q','v'],bias='none'))
+        model=get_peft_model(model,LoraConfig(task_type=TaskType.SEQ_2_SEQ_LM,r=a.rank,lora_alpha=a.alpha,lora_dropout=a.dropout,target_modules=a.targets.split(','),bias='none'))
+    trainable_parameters_before_freeze=sum(p.numel() for p in model.parameters() if p.requires_grad)
+    trainable_tensors=[dict(name=n,parameters=p.numel()) for n,p in model.named_parameters() if p.requires_grad]
+    if not trainable_parameters_before_freeze:raise ValueError('No trainable parameters')
+    dump(out/'training_plan.json',dict(arguments={k:str(v) if isinstance(v,Path) else v for k,v in vars(a).items()},trainable_parameters_before_freeze=trainable_parameters_before_freeze,
+        trainable_tensors=trainable_tensors,experiment_script_sha256=sha(Path(__file__)),
+        heldout_policy='Test file is not read or decoded until checkpoint selection completes',
+        validation_loss_aggregation=a.validation_loss,early_stopping='validation loss only',
+        gradient_remainder='divide last accumulation group by its actual size',
+        dropout='base model dropout retained plus specified adapter dropout',
+        data_manifest_sha256=sha(a.data/'dataset_manifest.json')))
     model.to(a.device);model.config.use_cache=False
     autocast=lambda:torch.autocast('cuda',dtype=torch.bfloat16) if a.device=='cuda' else nullcontext()
     if a.device=='cuda':torch.cuda.reset_peak_memory_stats()
-    opt=torch.optim.AdamW((p for p in model.parameters() if p.requires_grad),lr=a.lr)
+    opt=torch.optim.AdamW((p for p in model.parameters() if p.requires_grad),lr=a.lr,weight_decay=a.weight_decay)
+    total_steps=((len(train)+a.accumulation-1)//a.accumulation)*a.epochs
+    warmup_steps=int(total_steps*a.warmup_ratio)
+    from transformers import get_linear_schedule_with_warmup
+    scheduler=get_linear_schedule_with_warmup(opt,warmup_steps,total_steps) if a.warmup_ratio else None
     def encode(rows):
         x=tokenizer(['French to LSF gloss: '+r['french_text'] for r in rows],return_tensors='pt',padding=True)
         y=tokenizer(text_target=[r['gloss_sequence'] for r in rows],return_tensors='pt',padding=True)['input_ids']
         if max(x['input_ids'].shape[1],y.shape[1])>512:raise ValueError('Overlength; do not silently truncate')
         y[y==tokenizer.pad_token_id]=-100
         return {**{k:v.to(a.device) for k,v in x.items()},'labels':y.to(a.device)}
-    start=time.monotonic();logs=[];best=float('inf');best_epoch=None
+    start=time.monotonic();logs=[];best=float('inf');best_epoch=None;stale_epochs=0;optimizer_steps=0
     for epoch in range(a.epochs):
         model.train();order=list(train);random.shuffle(order);losses=[]
         opt.zero_grad()
         for i,row in enumerate(order):
             with autocast():loss=model(**encode([row])).loss
             if not torch.isfinite(loss):raise ValueError('Nonfinite loss')
-            (loss/4).backward();losses.append(loss.item())
-            if (i+1)%4==0 or i+1==len(order):
-                torch.nn.utils.clip_grad_norm_(model.parameters(),1.0);opt.step();opt.zero_grad()
-        model.eval();vl=[]
+            group_start=(i//a.accumulation)*a.accumulation
+            group_size=min(a.accumulation,len(order)-group_start)
+            (loss/group_size).backward();losses.append(loss.item())
+            if (i+1)%a.accumulation==0 or i+1==len(order):
+                torch.nn.utils.clip_grad_norm_(model.parameters(),1.0);opt.step();opt.zero_grad();optimizer_steps+=1
+                if scheduler:scheduler.step()
+        model.eval();vl=[];val_loss_sum=0.0;val_token_count=0
         with torch.no_grad():
             for row in data['val']:
-                with autocast():vl.append(model(**encode([row])).loss.item())
-        log=dict(epoch=epoch+1,train_loss=float(np.mean(losses)),val_loss=float(np.mean(vl)),elapsed_seconds=time.monotonic()-start)
+                x=encode([row]);n=int((x['labels']!=-100).sum())
+                with autocast():value=model(**x).loss.item()
+                vl.append(value);val_loss_sum+=value*n;val_token_count+=n
+        val_token_loss=val_loss_sum/val_token_count
+        selection_loss=val_token_loss if a.validation_loss=='token' else float(np.mean(vl))
+        if not np.isfinite(selection_loss):raise ValueError('Nonfinite validation loss')
+        log=dict(epoch=epoch+1,train_loss=float(np.mean(losses)),val_loss=selection_loss,
+            val_loss_token_weighted=val_token_loss,val_loss_mean_example=float(np.mean(vl)),
+            optimizer_steps=optimizer_steps,learning_rate=opt.param_groups[0]['lr'],elapsed_seconds=time.monotonic()-start)
         logs.append(log);print(json.dumps(log),flush=True)
         # Validation only chooses checkpoint. Test decoded once after selection.
-        if log['val_loss']<best:
-            best=log['val_loss'];best_epoch=epoch+1;model.save_pretrained(ckpt);tokenizer.save_pretrained(ckpt)
+        if log['val_loss']<best-a.min_delta:
+            best=log['val_loss'];best_epoch=epoch+1;stale_epochs=0;model.save_pretrained(ckpt);tokenizer.save_pretrained(ckpt)
+        else:stale_epochs+=1
+        dump(out/'loss_history.json',logs)
+        if a.patience and stale_epochs>=a.patience:
+            print(json.dumps(dict(early_stop_epoch=epoch+1,best_epoch=best_epoch,patience=a.patience)),flush=True)
+            break
     train_seconds=time.monotonic()-start
     if a.lora:
         from peft import PeftModel
@@ -118,6 +153,11 @@ def main():
     else:
         del model;torch.cuda.empty_cache();model=AutoModelForSeq2SeqLM.from_pretrained(ckpt).to(a.device)
     model.eval();model.config.use_cache=True
+    # Training/selection is finished. Read frozen test now and decode it exactly once.
+    dump(out/'selection_complete.json',dict(best_epoch=best_epoch,epochs_executed=len(logs),best_validation_loss=best,
+        validation_loss_aggregation=a.validation_loss,train_seconds=train_seconds,test_read=False))
+    data['test']=read('test',a.data,a.mode);validate_exports(a.data,{'test':data['test']},a.mode)
+    assert not {r['split_group'] for r in train}&{r['split_group'] for r in data['test']}
     vocab={t for r in train for t in r['gloss_sequence'].split()};results={}
     for split in ['val','test']:
         rows=data[split];pred=[]
@@ -132,8 +172,13 @@ def main():
             for i,row in enumerate(rows):
                 f.write(json.dumps(dict(pair_id=row['pair_id'],source_id=row['source_id'],source_revision=row['source_revision'],split_group=row['split_group'],source_segment_ids=row['source_segment_ids'],french_text=row['french_text'],reference=refs[i],predictions={k:v[i] for k,v in candidates.items()},model_base=a.base,model_revision=a.revision,linguistic_review='PENDING_LOCAL_REVIEW',fuzzy_replacement=False),ensure_ascii=False)+'\n')
     report=dict(run_id=a.run,model_base=a.base,model_revision=a.revision,mode=a.mode,lora=a.lora,
-        trainable_parameters=sum(p.numel() for p in model.parameters() if p.requires_grad),epochs=a.epochs,best_epoch=best_epoch,
-        learning_rate=a.lr,batch_size=1,gradient_accumulation=4,precision='bf16 autocast' if a.device=='cuda' else 'fp32',seed=42,
+        trainable_parameters=trainable_parameters_before_freeze,
+        trainable_parameter_count_stage='before selected adapter load/freeze',
+        epochs=len(logs),max_epochs=a.epochs,best_epoch=best_epoch,patience=a.patience,
+        optimizer_steps=optimizer_steps,validation_loss_aggregation=a.validation_loss,
+        lora_config=dict(rank=a.rank,alpha=a.alpha,dropout=a.dropout,targets=a.targets.split(',')),
+        warmup_steps=warmup_steps,weight_decay=a.weight_decay,
+        learning_rate=a.lr,batch_size=1,gradient_accumulation=a.accumulation,precision='bf16 autocast' if a.device=='cuda' else 'fp32',seed=42,
         counts={s:len(rs) for s,rs in data.items()},group_counts={s:len(set(r['split_group'] for r in rs)) for s,rs in data.items()},
         dataset_manifest_sha256=sha(a.data/'dataset_manifest.json'),train_seconds=train_seconds,total_seconds=time.monotonic()-start,
         cuda_device=torch.cuda.get_device_name() if a.device=='cuda' else None,
