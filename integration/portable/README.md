@@ -1,5 +1,7 @@
 # Private offline transfer bundle
 
+For the Windows destination, give Claude [CLAUDE_WINDOWS_PROMPT.md](CLAUDE_WINDOWS_PROMPT.md). It checks existing WSL2 first and provides a native Windows core-first salvage route without reprocessing data.
+
 `build_bundle.py` snapshots the current app, its prebuilt UI, 1,446 corrected/reconciled capture assets, deduplicated active raw landmarks, source videos, emotion2vec weights, isolated Linux Python runtimes, pinned upstream source and media tools. It omits duplicate histories, credentials, training state and the removed Qwen runtime. Runtime assets remain a private local research transfer; their source rights/review statuses are preserved, not upgraded.
 
 The ready-made binary environments target Linux x86-64 compatible with the tested Ubuntu 24.04 host. On Windows use WSL2, or recreate native dependencies on another platform. Do not execute from MTP; copy/extract onto a local filesystem with at least 12 GB free before copying (8 GB additional after the ZIP is copied).
