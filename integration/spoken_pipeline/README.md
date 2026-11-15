@@ -11,7 +11,7 @@ integration/spoken_pipeline/.venv/bin/python integration/spoken_pipeline/pipelin
 integration/spoken_pipeline/.venv/bin/python integration/spoken_pipeline/pipeline.py render --lexicon integration/spoken_pipeline/runtime/lexicon --text 'Bonjour merci' --output integration/spoken_pipeline/runtime/text-demo
 ```
 
-Default source root: `/home/jmal/Projects/Active/Forum_Hackathon` (read-only). Override export's `--library-root` when moving machines. Re-run export to refresh the latest completed capture registry snapshot; no source files are modified. Export produces real .pose files, upstream-compatible index.csv and a provenance/masking/timestamp manifest. All runtime outputs and isolated Python environment are ignored. Requires installed ffmpeg/ffprobe. Upstream MIT revision fec7ac393989f4b6541ab5f860819262a54f27c7 is verified by setup.sh. Exact dependency versions and LICENSE are retained.
+Default source root: this project checkout (read-only). Override export's `--library-root` when moving machines. Re-run export to refresh the latest completed capture registry snapshot; no source files are modified. Export produces real .pose files, upstream-compatible index.csv and a provenance/masking/timestamp manifest. All runtime outputs and isolated Python environment are ignored. Requires installed ffmpeg/ffprobe. Upstream MIT revision fec7ac393989f4b6541ab5f860819262a54f27c7 is verified by setup.sh. Exact dependency versions and LICENSE are retained.
 
 Pending-rights Dicta-Sign assets require an explicit **local research preview** gate:
 
@@ -32,6 +32,8 @@ Unknown words or true canonical ambiguity stop generation with explicit JSON and
 PYTHONDONTWRITEBYTECODE=1 integration/spoken_pipeline/.venv/bin/python -m pytest integration/spoken_pipeline/test_adapter.py -q -o cache_dir=integration/spoken_pipeline/.pytest_cache
 ```
 
-Tests use the actual local exports and source measurements. Recorded successful runs and snapshot counts are in evidence/; do not mistake a moving ingestion registry for a completed1046-page corpus. Read research/SPOKEN_PIPELINE_INTEGRATION.md for the measured handoff.
+Tests use the actual local exports and source measurements. The cleared export above is required. Preview tests default to the app's completed `.runtime/lexical_pipeline/lexicon`; when using the standalone export above, set `SIGNACULTURE_PREVIEW_LEXICON=integration/spoken_pipeline/runtime/lexicon-preview`. Tests render fresh temporary Bonjour/Merci videos and an unknown-word rejection rather than depending on old ignored demo files. Recorded successful runs and snapshot counts are in evidence/; historical snapshots are distinct from the completed corpus. Read research/SPOKEN_PIPELINE_INTEGRATION.md for the measured handoff.
 
 Manifest integration key: `fingerprint` is a stable SHA256 over canonical JSON for the export's upstream revision, languages, preview gate, source registry hash, records and errors; elapsed time is excluded. `source_library_sha256` identifies the exact read-only registry snapshot. Render JSON carries `lexicon_fingerprint`. The priority/fingerprint follow-up changes no captured poses and does not re-export a moving partial corpus.
+
+Completed bulk capture: the final local lexicon contains **1,447 real entries: 1,007 raw Dicta-Sign captures + 440 earlier motions**, with zero export errors. The final export took 78 seconds on this machine; subsequent text runs reuse it. Both BONJOUR cs380 and MERCI cs905 are now Dicta-Sign sources: 80 frames / 25 fps / 3.2 s. Raw normalized image coordinates are converted using original video width for x/z and height for y, preserving aspect ratio. Earlier 638-entry evidence is a historical intermediate snapshot. See [the completed pipeline](../../docs/DICTASIGN_PIPELINE.md).

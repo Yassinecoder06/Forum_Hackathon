@@ -10,7 +10,7 @@ import numpy as np
 import subprocess
 from fastapi import FastAPI, HTTPException, UploadFile, File, Form, Query
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel, Field
 from typing import Literal
 from .schemas import GlossEntry, MotionAsset, TranslationDraft, AnimationPlan, AudioFeatures, ReviewRecord
@@ -49,16 +49,13 @@ def registry():
         gloss = [GlossEntry.model_validate(x) for x in json.loads((root/'data/glossary.json').read_text())]
         motions = [MotionAsset.model_validate(x) for x in json.loads((root/'data/motions_manifest.json').read_text())]
         imported = capture_library.library()
-        concepts = {x['gloss']['concept_fr'].casefold() for x in imported}
-        replaced = {g.motion_id for g in gloss if g.concept_fr.casefold() in concepts}
-        gloss = [g for g in gloss if g.motion_id not in replaced]
-        motions = [m for m in motions if m.motion_id not in replaced]
         gloss.extend(GlossEntry.model_validate(x['gloss']) for x in imported)
         motions.extend(MotionAsset.model_validate(x['motion']) for x in imported)
         if len({x.motion_id for x in motions}) != len(motions) or len({x.gloss_id for x in gloss}) != len(gloss):
             raise ValueError('Duplicate IDs')
+        motion_glosses={m.motion_id:m.gloss_id for m in motions}
         for g in gloss:
-            if not any(m.motion_id == g.motion_id and m.gloss_id == g.gloss_id for m in motions):
+            if motion_glosses.get(g.motion_id)!=g.gloss_id:
                 raise ValueError('Broken gloss reference')
         return root, gloss, motions
     except (ValueError, OSError) as e:
@@ -205,11 +202,32 @@ def register_capture(job_id: str, body: RegisterCapture):
     except FileNotFoundError: raise HTTPException(404, 'Capture inconnue')
     except ValueError as exc: raise HTTPException(409,str(exc))
 
+def preferred_glosses(entries):
+    # Select a lexical source without unregistering older motion assets/plans.
+    groups={};quality={r['gloss']['gloss_id']:r.get('quality',{}) for r in capture_library.library()}
+    def priority(g):
+        return 3 if g.source_id.startswith('DICTASIGN_PORTAL_') else 2 if g.motion_id.startswith('CAPTURE_') else 1
+    for g in entries:groups.setdefault(g.concept_fr.casefold(),[]).append(g)
+    selected=[]
+    for rows in groups.values():
+        rank=max(priority(g) for g in rows);rows=[g for g in rows if priority(g)==rank]
+        if rank!=3:selected.extend(rows);continue
+        variants={}
+        for g in rows:
+            def score(v):
+                q=quality.get(v.gloss_id,{})
+                return (q.get('pose_coverage',0)+q.get('left_hand_coverage',0)+q.get('right_hand_coverage',0),v.gloss_id)
+            old=variants.get(g.gloss)
+            if old is None or score(g)>score(old):variants[g.gloss]=g
+        selected.extend(variants.values())
+    return selected
+
 @app.get('/glossary')
 def glossary(include_synthetic: bool = Query(False)):
     _,entries,motions=registry()
     allowed={m.motion_id for m in motions if include_synthetic or not m.synthetic}
-    return {'entries':[g for g in entries if g.motion_id in allowed]}
+    selected=[g for g in entries if g.motion_id in allowed]
+    return {'entries':selected if include_synthetic else preferred_glosses(selected)}
 
 @app.get('/motions/{motion_id}')
 def motion(motion_id: str):
@@ -236,7 +254,7 @@ def lookup(body: TextRequest):
         raise HTTPException(422, 'text must contain 1–10000 characters')
     _, entries, motions = registry()
     allowed={m.motion_id for m in motions if body.include_synthetic or not m.synthetic}
-    return lookup_text(text, [g for g in entries if g.motion_id in allowed])
+    return lookup_text(text, preferred_glosses([g for g in entries if g.motion_id in allowed]))
 
 @app.post('/compose-animation', response_model=AnimationPlan)
 def compose(body: TextRequest):
@@ -328,7 +346,7 @@ def research_predict(body: ResearchRequest):
 def concept_vocabulary():
     _,glosses,motions=registry()
     available={m.motion_id for m in motions if not m.synthetic}
-    return {'concepts':[{'id':g.gloss_id,'concept':g.concept_fr} for g in glosses if g.motion_id in available]}
+    return {'concepts':[{'id':g.gloss_id,'concept':g.concept_fr} for g in preferred_glosses([g for g in glosses if g.motion_id in available])]}
 
 class ConceptSequenceRequest(BaseModel):
     text: str = Field(min_length=1,max_length=4000)
@@ -365,3 +383,46 @@ def avatar_model():
     path=capture_library.storage()/'avatar-candidates/Noa.glb'
     if not path.is_file(): raise HTTPException(503,'Le modèle 3D local est absent. Exécutez scripts/setup-avatar.py.')
     return FileResponse(path,media_type='model/gltf-binary')
+
+
+@app.get('/captures/{job_id}/landmarks')
+def capture_landmarks(job_id: str):
+    try:
+        path=capture_library.job_folder(job_id)/'animics-landmarks.json.gz'
+        if not path.is_file():raise FileNotFoundError()
+        return FileResponse(path,media_type='application/gzip',filename='animics-landmarks.json.gz')
+    except (ValueError,FileNotFoundError):raise HTTPException(404,'Landmarks bruts indisponibles pour cette capture.')
+
+@app.get('/datasets/dictasign/lexicon')
+def dictasign_lexicon():
+    entries=[]
+    for row in capture_library.library():
+        if not row.get('source_id','').startswith('DICTASIGN_PORTAL_'):continue
+        entries.append({'concept_id':row['source_id'],'concept_fr':row['gloss']['concept_fr'],
+            'canonical_gloss':row['gloss']['gloss'],'gloss_id':row['gloss']['gloss_id'],
+            'aliases':row['gloss']['aliases'],'language':'fsl','quality':row['quality'],
+            'motion_url':'/assets/'+Path(row['motion']['path']).name,
+            'raw_animics_url':'/captures/'+row['capture_id']+'/landmarks',
+            'source_url':row['source'],'source_sha256':row.get('provenance',{}).get('source_sha256'),
+            'rights_status':row['motion']['rights_status'],'linguistic_review':'pending'})
+    return JSONResponse({'kind':'France-LSF lexical video/pose dataset, not sentence translation pairs',
+        'source_url':'https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/concepts_fre.html',
+        'entries':entries},headers={'Content-Disposition':'attachment; filename="dictasign-lexicon.json"'})
+
+@app.post('/pipeline/lexical')
+def lexical_sequence(body: ConceptProposalRequest):
+    from .services.lexical_pipeline import run
+    if not body.text.strip():raise HTTPException(422,'Saisissez des mots ou des glosses.')
+    try:return run(body.text)
+    except FileNotFoundError as exc:raise HTTPException(503,str(exc))
+    except BlockingIOError as exc:raise HTTPException(429,str(exc))
+    except ValueError as exc:raise HTTPException(422,str(exc))
+    except subprocess.TimeoutExpired:raise HTTPException(504,'La construction des poses a dépassé le délai autorisé.')
+    except RuntimeError as exc:raise HTTPException(503,str(exc))
+
+@app.get('/pipeline/lexical/{run_id}/{kind}')
+def lexical_artifact(run_id:str,kind:str):
+    from .services.lexical_pipeline import artifact
+    try:path,mime=artifact(run_id,kind)
+    except FileNotFoundError:raise HTTPException(404,'Fichier de poses inconnu.')
+    return FileResponse(path,media_type=mime,filename=path.name)

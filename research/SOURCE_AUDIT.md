@@ -1,5 +1,7 @@
 > Current evidence update: the lead has now read the supplied seven-page `research_paper.pdf`. Earlier PDF-unavailable / not-read notes below are historical. See [verified review](PAPER_B_VERIFIED_REVIEW.md).
 
+> Update, 15 November 2026: the user subsequently authorized retrieval of the **public Dicta-Sign lexical portal videos**. All 1,025 France-LSF MP4s were captured locally; 1,007 passed automatic tracking checks. This supersedes the portal row’s earlier metadata-only status. Per-asset redistribution remains pending. The restricted continuous Dicta-Sign-v2/Rosetta/MEDIAPI corpora remain untouched. See [the completed pipeline](../docs/DICTASIGN_PIPELINE.md).
+
 # Primary-source audit — 2026-11-15
 
 Scope: France LSF (`fsl`, local `LSF_FR`). Source expert annotation is not new local linguistic approval. No videos downloaded by this engineer. Sources without verified compatible terms remain metadata only. The user authorized public licensed text research, not fabricated translations or bypass of institutional restrictions.

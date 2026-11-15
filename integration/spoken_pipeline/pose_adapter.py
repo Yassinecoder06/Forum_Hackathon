@@ -3,13 +3,14 @@ import copy,csv,gzip,hashlib,json,math,re,time,unicodedata
 from collections import Counter
 from pathlib import Path
 import numpy as np
+import cv2
 from pose_format import Pose
 from pose_format.numpy import NumPyPoseBody
 from pose_format.pose_header import PoseHeader,PoseHeaderComponent,PoseHeaderDimensions
 
 UPSTREAM_REV='fec7ac393989f4b6541ab5f860819262a54f27c7'
 BASE=Path(__file__).resolve().parent
-DEFAULT_MAIN=Path('/home/jmal/Projects/Active/Forum_Hackathon')
+DEFAULT_MAIN=BASE.parents[1]
 BODY=['NOSE','LEFT_EYE_INNER','LEFT_EYE','LEFT_EYE_OUTER','RIGHT_EYE_INNER','RIGHT_EYE','RIGHT_EYE_OUTER','LEFT_EAR','RIGHT_EAR','MOUTH_LEFT','MOUTH_RIGHT','LEFT_SHOULDER','RIGHT_SHOULDER','LEFT_ELBOW','RIGHT_ELBOW','LEFT_WRIST','RIGHT_WRIST','LEFT_PINKY','RIGHT_PINKY','LEFT_INDEX','RIGHT_INDEX','LEFT_THUMB','RIGHT_THUMB','LEFT_HIP','RIGHT_HIP','LEFT_KNEE','RIGHT_KNEE','LEFT_ANKLE','RIGHT_ANKLE','LEFT_HEEL','RIGHT_HEEL','LEFT_FOOT_INDEX','RIGHT_FOOT_INDEX']
 HAND=['WRIST','THUMB_CMC','THUMB_MCP','THUMB_IP','THUMB_TIP']+[f'{f}_{j}' for f in ['INDEX_FINGER','MIDDLE_FINGER','RING_FINGER','PINKY'] for j in ['MCP','PIP','DIP','TIP']]
 BODY_LIMBS=[(0,1),(1,2),(2,3),(3,7),(0,4),(4,5),(5,6),(6,8),(9,10),(11,12),(11,13),(13,15),(12,14),(14,16),(11,23),(12,24),(23,24),(23,25),(24,26),(25,27),(26,28),(27,29),(28,30),(29,31),(30,32)]
@@ -19,9 +20,9 @@ TOTAL=543
 def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 def dump(p,v):Path(p).write_text(json.dumps(v,ensure_ascii=False,indent=2)+'\n')
 def fold(s):return unicodedata.normalize('NFKC',s).casefold().strip()
-def make_header():
+def make_header(width=640,height=640):
     c=lambda name,points,limbs,color:PoseHeaderComponent(name,points,limbs,[color],'XYZC')
-    return PoseHeader(.2,PoseHeaderDimensions(width=640,height=640,depth=640),[
+    return PoseHeader(.2,PoseHeaderDimensions(width=width,height=height,depth=width),[
         c('POSE_LANDMARKS',BODY,BODY_LIMBS,(25,90,190)),
         c('FACE_LANDMARKS',[str(i) for i in range(468)],[],(130,130,130)),
         c('LEFT_HAND_LANDMARKS',HAND,HAND_LIMBS,(210,50,50)),
@@ -47,6 +48,13 @@ def _store(data,conf,frame,offset,points,scale):
 def raw_to_pose(path):
     frames=json.load(gzip.open(path,'rt',encoding='utf-8'))
     if not frames:raise ValueError('Empty raw Animics capture')
+    source=Path(path).with_name('source.mp4')
+    width=frames[0].get('image_width');height=frames[0].get('image_height')
+    if not width or not height:
+        video=cv2.VideoCapture(str(source))
+        try:width=int(video.get(cv2.CAP_PROP_FRAME_WIDTH));height=int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        finally:video.release()
+    if not width or not height:raise ValueError('Source image dimensions are required for undistorted landmarks')
     data=np.zeros((len(frames),1,TOTAL,3),np.float32);conf=np.zeros((len(frames),1,TOTAL),np.float32)
     times=np.array([r['time_ms'] for r in frames],float)
     if len(times)<2 or np.any(np.diff(times)<=0):raise ValueError('Invalid raw timestamps')
@@ -54,12 +62,12 @@ def raw_to_pose(path):
     valid_dt=all(isinstance(v,(int,float)) and math.isfinite(v) and v>0 for v in dt[1:])
     fps=(len(frames)-1)/sum(dt[1:]) if valid_dt else (len(times)-1)*1000./(times[-1]-times[0])
     for i,r in enumerate(frames):
-        _store(data,conf,i,0,r.get('PLM'),(640,640,640,33))
-        _store(data,conf,i,33,r.get('FLM'),(640,640,640,468))
-        _store(data,conf,i,501,r.get('LLM'),(640,640,640,21))
-        _store(data,conf,i,522,r.get('RLM'),(640,640,640,21))
-    pose=mask_missing(Pose(make_header(),NumPyPoseBody(fps,data,conf)))
-    return pose,dict(format='raw-animics-image-landmarks',source_sha256=sha(path),time_ms=times.tolist(),dt_seconds=dt,image_transform='PLM/FLM/LLM/RLM normalized image x/y/z scaled by640; no image-axis flip',unused_channels='PWLM has different world axis/unit conventions; LWLM/RWLM unavailable, never fabricated',confidence='Original body visibility; presence1for supplied face/hands, absent0')
+        _store(data,conf,i,0,r.get('PLM'),(width,height,width,33))
+        _store(data,conf,i,33,r.get('FLM'),(width,height,width,468))
+        _store(data,conf,i,501,r.get('LLM'),(width,height,width,21))
+        _store(data,conf,i,522,r.get('RLM'),(width,height,width,21))
+    pose=mask_missing(Pose(make_header(width,height),NumPyPoseBody(fps,data,conf)))
+    return pose,dict(format='raw-animics-image-landmarks',source_sha256=sha(path),time_ms=times.tolist(),dt_seconds=dt,image_width=width,image_height=height,image_transform='Normalized x/z multiplied by source width; y by source height, preserving image aspect ratio; no image-axis flip',unused_channels='PWLM has different world axis/unit conventions; LWLM/RWLM unavailable, never fabricated',confidence='Original body visibility; presence1for supplied face/hands, absent0')
 
 def motion_to_pose(path):
     source=json.loads(Path(path).read_text())

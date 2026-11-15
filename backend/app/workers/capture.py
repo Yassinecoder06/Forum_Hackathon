@@ -1,5 +1,6 @@
 """CPU video capture worker. Runs in .venv-motion, independently of the API runtime."""
 import argparse
+import gzip
 from copy import deepcopy
 import json
 import math
@@ -64,7 +65,7 @@ def pose_frame(result, width, height):
     return joints, hands, facial
 
 
-def extract(source, target, progress):
+def extract(source, target, progress, raw_target=None):
     cap = cv2.VideoCapture(str(source))
     fps = float(cap.get(cv2.CAP_PROP_FPS))
     count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
@@ -74,6 +75,15 @@ def extract(source, target, progress):
         raise ValueError('Le clip doit durer au maximum 60 secondes.')
     stride = max(1,math.ceil(fps/20))
     frames, missing, left, right, faces, processed = [],0,0,0,0,0
+    raw_frames=[]
+    def raw_points(landmarks,world=False):
+        if landmarks is None:return None
+        values=[]
+        for point in landmarks.landmark:
+            item={'x':float(point.x),'y':float(-point.y if world else point.y),'z':float(-point.z if world else point.z)}
+            if point.HasField('visibility'):item['visibility']=float(point.visibility)
+            values.append(item)
+        return values
     def report(value):
         temp = progress.with_suffix('.tmp')
         temp.write_text(json.dumps({'progress':value}))
@@ -103,6 +113,15 @@ def extract(source, target, progress):
                                 sides[side]=hand
                     result=SimpleNamespace(pose_landmarks=result.pose_landmarks,pose_world_landmarks=result.pose_world_landmarks,
                         face_landmarks=result.face_landmarks,left_hand_landmarks=sides['left'],right_hand_landmarks=sides['right'])
+                if raw_target is not None:
+                    # Animics Keyframe recorder names/axis convention, pinned reference
+                    # upf-gti/animics daf09928 src/Mediapipe.js processLandmarks/recording.
+                    # Holistic does not expose independent world-hand points: keep them null.
+                    raw_frames.append({'dt':0. if not raw_frames else stride/fps,'time_ms':round(index*1000/fps),
+                        'image_width':image.shape[1],'image_height':image.shape[0],
+                        'PLM':raw_points(result.pose_landmarks),'PWLM':raw_points(result.pose_world_landmarks,True),
+                        'LLM':raw_points(result.left_hand_landmarks),'RLM':raw_points(result.right_hand_landmarks),
+                        'LWLM':None,'RWLM':None,'FLM':raw_points(result.face_landmarks)})
                 processed+=1
                 if result.pose_landmarks:
                     try:
@@ -133,11 +152,13 @@ def extract(source, target, progress):
         'quality':quality,'synthetic':False,'capture_method':'mediapipe-holistic-hands-fallback-0.10.21',
         'warnings':['Profondeur monoculaire approximative. Les occultations nécessitent une revue.']}
     target.write_text(json.dumps(motion,allow_nan=False))
+    if raw_target is not None:
+        with gzip.open(raw_target,'wt',encoding='utf-8') as handle:json.dump(raw_frames,handle,allow_nan=False,separators=(',',':'))
     report(100)
 
 if __name__=='__main__':
-    parser=argparse.ArgumentParser();parser.add_argument('source',type=Path);parser.add_argument('target',type=Path);parser.add_argument('progress',type=Path)
+    parser=argparse.ArgumentParser();parser.add_argument('source',type=Path);parser.add_argument('target',type=Path);parser.add_argument('progress',type=Path);parser.add_argument('--raw-animics',type=Path)
     args=parser.parse_args()
-    try: extract(args.source,args.target,args.progress)
+    try: extract(args.source,args.target,args.progress,args.raw_animics)
     except Exception as exc:
         args.target.with_suffix('.error').write_text(str(exc));raise

@@ -1,0 +1,157 @@
+{
+  "indexed_concept_pages": 1046,
+  "pages_without_lsf_mp4": [
+    {
+      "concept_id": "2",
+      "labels": [
+        "à l'étranger"
+      ],
+      "page_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/cs/cs_2.html"
+    },
+    {
+      "concept_id": "42",
+      "labels": [
+        "armée"
+      ],
+      "page_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/cs/cs_42.html"
+    },
+    {
+      "concept_id": "45",
+      "labels": [
+        "artiste"
+      ],
+      "page_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/cs/cs_45.html"
+    },
+    {
+      "concept_id": "46",
+      "labels": [
+        "cendre"
+      ],
+      "page_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/cs/cs_46.html"
+    },
+    {
+      "concept_id": "64",
+      "labels": [
+        "lavabo"
+      ],
+      "page_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/cs/cs_64.html"
+    },
+    {
+      "concept_id": "161",
+      "labels": [
+        "côte"
+      ],
+      "page_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/cs/cs_161.html"
+    },
+    {
+      "concept_id": "255",
+      "labels": [
+        "chauffeur"
+      ],
+      "page_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/cs/cs_255.html"
+    },
+    {
+      "concept_id": "310",
+      "labels": [
+        "juste"
+      ],
+      "page_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/cs/cs_310.html"
+    },
+    {
+      "concept_id": "369",
+      "labels": [
+        "noble"
+      ],
+      "page_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/cs/cs_369.html"
+    },
+    {
+      "concept_id": "379",
+      "labels": [
+        "bonsoir"
+      ],
+      "page_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/cs/cs_379.html"
+    },
+    {
+      "concept_id": "381",
+      "labels": [
+        "bonne nuit"
+      ],
+      "page_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/cs/cs_381.html"
+    },
+    {
+      "concept_id": "406",
+      "labels": [
+        "tête"
+      ],
+      "page_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/cs/cs_406.html"
+    },
+    {
+      "concept_id": "635",
+      "labels": [
+        "passager"
+      ],
+      "page_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/cs/cs_635.html"
+    },
+    {
+      "concept_id": "713",
+      "labels": [
+        "recette"
+      ],
+      "page_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/cs/cs_713.html"
+    },
+    {
+      "concept_id": "715",
+      "labels": [
+        "réfrigérateur"
+      ],
+      "page_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/cs/cs_715.html"
+    },
+    {
+      "concept_id": "815",
+      "labels": [
+        "d'une façon ou d'une autre"
+      ],
+      "page_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/cs/cs_815.html"
+    },
+    {
+      "concept_id": "846",
+      "labels": [
+        "bâton"
+      ],
+      "page_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/cs/cs_846.html"
+    },
+    {
+      "concept_id": "981",
+      "labels": [
+        "visiteur"
+      ],
+      "page_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/cs/cs_981.html"
+    },
+    {
+      "concept_id": "1023",
+      "labels": [
+        "gagnant"
+      ],
+      "page_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/cs/cs_1023.html"
+    },
+    {
+      "concept_id": "1025",
+      "labels": [
+        "fil électrique"
+      ],
+      "page_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/cs/cs_1025.html"
+    },
+    {
+      "concept_id": "1033",
+      "labels": [
+        "travailleur"
+      ],
+      "page_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/cs/cs_1033.html"
+    }
+  ],
+  "lsf_media_references": 1025,
+  "unique_lsf_video_urls": 1025,
+  "scope": "Only public /concepts/lsf/ video URLs; no restricted corpus downloads",
+  "rights_status": "pending",
+  "language": "fsl"
+}

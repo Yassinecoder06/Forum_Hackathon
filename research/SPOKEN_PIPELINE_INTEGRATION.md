@@ -2,7 +2,11 @@
 
 The requested minimal path is actually running: **real lexical capture → French/gloss lookup → upstream pose concatenation → .pose + MP4 + GIF**. No training was performed. Existing training/, catalog, backend/frontend and lead source files were not edited. This is a lexical prototype and2Dskeleton diagnostic, not grammatical LSF translation, a full Animics browser port or a complete paper reproduction.
 
-## Measured runs
+## Completed full run
+
+The completed local export now contains **1,447 entries: 1,007 accepted raw Dicta-Sign captures and 440 previous motions**, zero export errors, 78 seconds for full export. All 1,025 public LSF videos were downloaded and source-checksummed; 18 captures are retained outside lookup for review. Both clips in the final Bonjour–merci example come from Dicta-Sign (cs380 and cs905): **80 frames, 25 fps, 3.2 seconds**, .pose + MP4/GIF. Browser verification also exercised the real 3D WebM export, downloads and HTTP 422 unknown-word rejection. Raw exports now use source image width/height to preserve aspect ratio. [Complete procedure and diagram](../docs/DICTASIGN_PIPELINE.md). The following handoff table records earlier intermediate runs.
+
+## Earlier measured runs
 
 Pinned upstream: [spoken-to-signed-translation fec7ac393989f4b6541ab5f860819262a54f27c7](https://github.com/sign-language-processing/spoken-to-signed-translation/tree/fec7ac393989f4b6541ab5f860819262a54f27c7), MIT, copyright2026ZurichNLP. Exact LICENSE and reused-source hashes are under integration/spoken_pipeline/. Isolated Python3.11 environment; pose-format0.15.0. No default Swiss lexicon, ASL/German model, fingerspelling backup, pose anonymizer or pix2pix model was invoked.
 

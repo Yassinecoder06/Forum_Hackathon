@@ -13,7 +13,17 @@ make dev
 
 Ouvrir **http://127.0.0.1:5173**. Dans Studio, essayer « Bonjour ». Bibliothèque permet de sélectionner un mouvement, de comparer sa vidéo source et de télécharger un aperçu WebM. Capturer accepte une vidéo autorisée, un JSON de mouvements ou un export de landmarks Animics. Recherche affiche les expériences terminées et permet d’interroger les checkpoints locaux.
 
-La session actuelle contient **440 mouvements réels** : Bonjour, fourni avec attribution, et 439 captures importées. Les vidéos et dérivés du corpus restent locaux dans `.runtime/`. Sur un nouveau checkout, seul Bonjour est livré ; pour reconstruire la bibliothèque :
+La session actuelle contient **1 447 mouvements réels** : 1 007 captures Dicta-Sign acceptées et les 440 mouvements précédents. **Les 1 025 vidéos LSF publiques du portail Dicta-Sign ont été téléchargées et capturées** ; 18 restent hors lookup pour revue du suivi. Le [pipeline Dicta-Sign → glosses → poses](docs/DICTASIGN_PIPELINE.md) fournit les commandes, les résultats vérifiés et le diagramme. Dans Studio, essayer **Bonjour merci**, puis ouvrir **Exporter la chaîne glosses → poses** pour obtenir un `.pose` standard et une vidéo squelette via le véritable moteur upstream.
+
+Les vidéos et dérivés restent locaux dans `.runtime/`. Sur un nouveau checkout, seul Bonjour est livré ; pour reconstruire les captures Dicta-Sign :
+
+```bash
+.venv/bin/pip install -r scripts/requirements-data.txt
+.venv/bin/python scripts/ingest_dictasign.py --all --workers 2 --capture-workers 4
+integration/spoken_pipeline/setup.sh
+```
+
+Le corpus Commons antérieur se reconstruit séparément :
 
 ```bash
 .venv/bin/python scripts/ingest_commons_signs.py --all --author-mirror --workers 2
@@ -47,18 +57,19 @@ Dans Studio, ouvrir « Préparer et corriger les concepts ». On peut sélection
 
 Ces modèles **ne sont pas des traducteurs utilisables**. Le troisième essai réduit la perte de validation mais produit des répétitions ; son test est une réutilisation d’un test d’ingénierie, pas une confirmation indépendante. Aucun résultat état de l’art n’est revendiqué. Voir [l’investigation](research/ADAPTATION_INVESTIGATION.md), [la carte des données](research/DATASET_CARD.md), [les résultats](research/IMPLEMENTATION_STATUS.md) et [les commandes de reproduction](training/README.md).
 
-Le PDF fourni `research_paper.pdf` a maintenant été lu intégralement. La [comparaison vérifiée](research/PAPER_B_VERIFIED_REVIEW.md) distingue les composants du papier de notre implémentation ; un CGAN à cinq points est maintenant entraîné pour une expérience intra-signe, sans activation comme modèle inter-signes. Les anciennes mentions d’un PDF absent décrivent un état antérieur et sont corrigées par cette revue. Dicta-Sign, Rosetta et MEDIAPI sont catalogués avec leurs limites d’accès ; aucun accès institutionnel n’a été simulé.
+Le PDF fourni `research_paper.pdf` a maintenant été lu intégralement. La [comparaison vérifiée](research/PAPER_B_VERIFIED_REVIEW.md) distingue les composants du papier de notre implémentation ; un CGAN à cinq points est maintenant entraîné pour une expérience intra-signe, sans activation comme modèle inter-signes. Les anciennes mentions d’un PDF absent décrivent un état antérieur et sont corrigées par cette revue. Le lexique public Dicta-Sign a depuis été capturé pour aperçu local ; les corpus continus institutionnels restent distincts, sans contournement d’accès.
 
 ## Vérification
 
 ```bash
 make test
 CHROME_PATH=/chemin/vers/chrome npm --prefix e2e test
+CHROME_PATH=/chemin/vers/chrome npm --prefix e2e run test:dictasign
 # Environnement ML séparé, avec dépendances training installées :
 .worktrees/wt-codex2/training/.venv-train/bin/python -m pytest training/test_catalog.py training/test_adaptation.py
 ```
 
-67 tests API/schémas/mouvement et 24 tests de recherche passent, avec des vérifications frontend des transitions et du rig. Un test strictement marqué xfail conserve le défaut connu de détection du prénom Alice. Le contrôle navigateur couvre composition, recherche temporelle, téléchargement réel, audio, import, persistance, mobile et erreurs réseau. Les [captures et aperçu vidéo](artifacts/README.md) documentent le logiciel exécuté.
+70 tests API/schémas/mouvement et 24 tests de recherche passent, avec des vérifications frontend des transitions et du rig. Un test strictement marqué xfail conserve le défaut connu de détection du prénom Alice. Le contrôle navigateur couvre composition, recherche temporelle, téléchargement réel, audio, import, persistance, mobile et erreurs réseau. Les [captures et aperçu vidéo](artifacts/README.md) documentent le logiciel exécuté.
 
 Les modèles `.models/`, environnements, checkpoints et captures `.runtime/` sont ignorés par Git. Aucun téléchargement automatique n’a lieu lors d’une requête API. Le modèle français optionnel se configure dans [backend/README.md](backend/README.md).
 

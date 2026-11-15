@@ -40,7 +40,7 @@ class Page:
  def finish(self,name):
   self.parts.append('<path d="M40 1134 H1640" stroke="#ced8cc"/>')
   self.text(40,1164,'Implementation snapshot · 15 November 2026 · Local research prototype · Human LSF review pending',16,'muted')
-  self.text(1490,1164,f'{self.n} / 4',18,'green',700)
+  self.text(1490,1164,f'{self.n} / 5',18,'green',700)
   self.parts.append('</svg>');path=OUT/name;path.write_text('\n'.join(self.parts));return path
 
 p=Page(1,'From French input to a 3D signing preview','Current application flow. Solid arrows = default path; dashed arrows = optional assistance or audio controls.')
@@ -48,7 +48,7 @@ p.box(40,180,590,160,'What the application produces',[
  'An attributed motion preview and a downloadable WebM.',
  'Concept selection is not a validated French-to-LSF translation.',
  'Audio affects timing / expressivity; it is not transcribed into text.' ],tag='Scope')
-p.box(700,180,260,170,'Real sign library',['440 captured motions','Concept IDs + source credits','Build process: page 2'],tag='Shared resource')
+p.box(700,180,260,170,'Real sign library',['1,447 real motion entries','1,007 Dicta-Sign captures','Source pipeline: pages 2 + 5'],tag='Shared resource')
 p.arrow([(700,265),(665,265),(665,390),(485,390),(485,430)],label='Known concepts',lx=490,ly=380)
 p.arrow([(830,350),(830,430)],label='Verified IDs',lx=845,ly=395)
 p.arrow([(960,265),(1160,265),(1160,430)],label='Motion assets',lx=1030,ly=253)
@@ -76,7 +76,7 @@ p.box(1030,930,610,170,'T5 / mT5: research branch only',['Trained and evaluated 
 files=[p.finish('01-application.svg')]
 
 p=Page(2,'How video becomes a reusable motion','Lexical video ingestion and sentence annotations are separate data streams.')
-p.box(40,190,340,180,'Licensed lexical videos',['447 France-LSF concepts','Per-file licences and credits','Commons + verified author copies'],tag='Public corpus')
+p.box(40,190,340,180,'Public lexical videos',['1,025 Dicta-Sign LSF videos','Earlier Commons: 447 source concepts','Source rights recorded separately'],tag='Public corpus')
 p.box(460,190,340,180,'Source verification',['Rights / licence checks','Source URL + provenance','Checksums verify retrieved files'],tag='Acquisition')
 p.box(880,190,340,180,'MediaPipe extraction',['Holistic body + face','Hand detector fallback','Video sampling ≤ 20 fps'],tag='Computer vision')
 p.box(1300,190,340,180,'Technical quality gate',['Pose coverage ≥ 80%','At least one hand ≥ 35%','Threshold is not LSF validation'],color='amber',tag='Automatic screening')
@@ -86,14 +86,14 @@ p.box(460,490,340,175,'Motion normalization',['signaculture-v1 format','Body + s
 p.arrow([(380,570),(460,570)],'blue',True,label='JSON',lx=389,ly=555)
 p.arrow([(210,490),(210,400),(860,400),(860,280),(880,280)],'blue',True,label='Local video uses the same CV extraction',lx=230,ly=390)
 p.arrow([(1050,370),(1050,425),(630,425),(630,490)])
-p.box(880,490,340,175,'Tracking review',['439 bulk clips accepted','7 retained outside the library','Check hands against source video'],color='amber',tag='Observed extraction outcome')
+p.box(880,490,340,175,'Tracking review',['Dicta: 1,007 accepted, 18 flagged','Commons: 439 imports, 7 flagged','Review hands against source video'],color='amber',tag='Observed extraction outcome')
 p.arrow([(1470,370),(1470,445),(1050,445),(1050,490)],'amber')
-p.box(1300,490,340,175,'Registered sign library',['439 imports + curated Bonjour','440 real motion entries','Concepts, aliases, source, licence'],tag='Playback data')
+p.box(1300,490,340,175,'Registered sign library',['1,007 Dicta + previous 440 entries','1,447 real motion entries','Canonical gloss + source + rights'],tag='Playback data')
 p.arrow([(800,590),(840,590),(840,720),(1470,720),(1470,665)])
 p.arrow([(1220,565),(1300,565)])
 p.box(40,795,760,220,'What the capture preserves',['Hip-relative body coordinates; wrist-anchored finger trajectories.', 'Sparse tracking and face measurements are kept with coverage statistics.', 'Occluded or untracked fingers are not fabricated.', 'Depth and avatar retargeting remain approximate; review is required.'],tag='Motion characteristics')
 p.box(880,795,760,220,'Traceability and review',['Local captures, original files and derived motions: .runtime/', 'Bundled attributed Bonjour example: data/public_examples/', 'Inventory and ingestion report: data/source_inventory/', 'Pending linguistic / animation review remains separate from rights clearance.'],tag='Persistence')
-p.note(40,1080,'Boundary: 447 isolated-sign videos are NOT 447 sentence-level French–gloss training pairs.',120,'amber',21)
+p.note(40,1080,'Boundary: isolated-sign videos are lexical motion data, not sentence-level French–gloss training pairs.',120,'amber',21)
 files.append(p.finish('02-motion-data.svg'))
 
 p=Page(3,'Models, evaluation and paper coverage','T5/mT5 and the new within-sign CGAN are research-only. The supplied paper is compared on page 4.')
@@ -130,6 +130,24 @@ p.note(40,1071,'Paper-reported data: 379 real + 1,000 synthetic transition pairs
 p.note(40,1097,'Read all 7 supplied pages. Exact comparison and reproducibility caveats: research/PAPER_B_VERIFIED_REVIEW.md',145,size=17)
 files.append(p.finish('04-paper-architecture.svg'))
 
+p=Page(5,'Completed Dicta-Sign → gloss → pose baseline','All 1,025 public LSF clips downloaded and captured. Actual upstream code is connected to the Studio.')
+p.box(40,190,340,190,'French lexical index',['1,046 concept pages inspected','1,025 public France-LSF MP4s','21 pages have no LSF video'],tag='Hamburg Dicta-Sign portal')
+p.box(460,190,340,190,'Cache + provenance',['Original MP4 + SHA256 verified','Actual canonical source gloss','French concept label + HamNoSys'],tag='No invented sentence pairs')
+p.box(880,190,340,190,'Computer vision',['MediaPipe Holistic + Hands','Animics-compatible raw channels','33 body + 468 face + 21 per hand'],tag='Observed landmarks')
+p.box(1300,190,340,190,'Tracking screening',['1,007 accepted into lookup','18 retained for tracking review','Missing arrays stay missing'],color='amber',tag='Not linguistic approval')
+for a,b in [(380,460),(800,880),(1220,1300)]:p.arrow([(a,285),(b,285)])
+p.box(40,505,340,190,'French text / glosses',['Example: Bonjour merci','French lemmatization','Longest expression lookup'],tag='Studio input')
+p.box(460,505,340,190,'Resolve real source clips',['BONJOUR → Dicta cs380','MERCI → Dicta cs905','Unknown / ambiguity blocks output'],tag='France LSF only')
+p.box(880,505,340,190,'Actual upstream pipeline',['PoseLookup.lookup_sequence','normalize_pose + join_poses','Masks preserved at 25 fps'],tag='Pinned spoken-to-signed code')
+p.box(1300,505,340,190,'Downloadable outputs',['543-point standard .pose','512×512 MP4 + GIF skeleton','80 frames / 25 fps / 3.2 s example'],tag='Diagnostic renderer')
+for a,b in [(380,460),(800,880),(1220,1300)]:p.arrow([(a,600),(b,600)])
+p.arrow([(1470,380),(1470,440),(630,440),(630,505)])
+p.box(460,815,760,195,'Existing rigged 3D player',['Uses the same registered Dicta-Sign motion clips.', 'Separate arm / hand IK and 333 ms transition bridges.', 'Browser verified: playback, seeking and actual WebM download.'],color='blue',tag='Alternative rendering branch')
+p.arrow([(630,695),(630,815)],'blue',True)
+p.box(1300,815,340,195,'Scope and rights',['Lexical prototype; no LSF grammar claim','T5 / GAN training not required','Local previews; redistribution pending'],color='amber',tag='Explicit limitations')
+p.note(40,1080,'Evidence: docs/DICTASIGN_PIPELINE.md · data/source_inventory/dictasign_ingestion_report.json',145,size=18)
+files.append(p.finish('05-dictasign-upstream.svg'))
+
 html='''<!doctype html><html lang="en"><meta charset="utf-8"><title>SignaCulture — Full Pipeline</title><style>@page{size:A3 landscape;margin:0}*{box-sizing:border-box}html,body{margin:0;background:#f7f8f3}.page{width:420mm;height:297mm;break-after:page;overflow:hidden}.page:last-child{break-after:auto}.page svg{display:block;width:100%;height:100%}</style>'''+''.join('<section class="page">'+f.read_text()+'</section>' for f in files)+'</html>'
 (OUT/'pipeline.html').write_text(html)
-print('Generated four SVG pages and docs/pipeline/pipeline.html')
+print('Generated five SVG pages and docs/pipeline/pipeline.html')

@@ -46,7 +46,7 @@ def capabilities():
         'emotion':runtime_python('audio').is_file() and (ROOT/'.models/emotion2vec-seed/model.pt').is_file(),
         'motion_model':'MediaPipe Holistic','emotion_model':'emotion2vec+ seed',
         'library_count':len(library()),
-        'corpus':corpus_status()}
+        'corpus':corpus_status(),'dictasign':dictasign_status()}
 
 def corpus_status():
     path=storage()/'corpus_status.json'
@@ -132,3 +132,10 @@ def remove_entry(motion_id):
         if path.is_relative_to(storage()/'motions'):
             path.unlink(missing_ok=True)
     # The original capture is retained, so the user can register it again.
+
+
+def dictasign_status():
+    path=storage()/'dictasign_status.json'
+    if not path.is_file():return None
+    try:return {k:v for k,v in json.loads(path.read_text()).items() if k!='results'}
+    except (OSError,ValueError):return None

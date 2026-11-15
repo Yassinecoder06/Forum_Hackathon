@@ -21,6 +21,7 @@ import {
   X,
 } from "lucide-react";
 import { request } from "./services/api";
+import { LexicalPipelinePanel } from "./components/LexicalPipelinePanel";
 import { ConceptComposer } from "./components/ConceptComposer";
 import { ResearchPanel } from "./components/ResearchPanel";
 import { AvatarCanvas } from "./components/AvatarPlayer/AvatarCanvas";
@@ -35,6 +36,16 @@ import "./studio.css";
 
 type Page = "studio" | "library" | "capture" | "research";
 type Capabilities = {
+  dictasign?: {
+    status: string;
+    indexed_concepts: number;
+    inventory_processed: number;
+    processed: number;
+    total: number;
+    imported: number;
+    quality_review_needed: number;
+    failed: number;
+  } | null;
   corpus?: {
     status: string;
     total: number;
@@ -698,6 +709,9 @@ export default function App() {
                       onPlan={loadConceptPlan}
                     />
                   </div>
+                  <div className="card">
+                    <LexicalPipelinePanel text={text} />
+                  </div>
                   <div className="card audio-card">
                     <div className="card-heading">
                       <span className="step">02</span>
@@ -1128,6 +1142,29 @@ export default function App() {
                       <Plus />
                     </button>
                   </div>
+                  {caps?.dictasign && (
+                    <div className="dictasign-status">
+                      <strong>Lexique Dicta-Sign · France-LSF</strong>
+                      <p>
+                        {caps.dictasign.imported} captures disponibles ·{" "}
+                        {caps.dictasign.quality_review_needed} à vérifier ·{" "}
+                        {caps.dictasign.failed} erreurs
+                      </p>
+                      <progress
+                        aria-label="Progression Dicta-Sign"
+                        max={caps.dictasign.indexed_concepts || 1}
+                        value={caps.dictasign.processed}
+                      />
+                      <p>
+                        {caps.dictasign.status === "complete"
+                          ? "Extraction terminée"
+                          : `Extraction en cours · ${caps.dictasign.inventory_processed}/${caps.dictasign.indexed_concepts} pages indexées`}
+                      </p>
+                      <a href="/api/datasets/dictasign/lexicon" download>
+                        Exporter le lexique et les liens vers les squelettes
+                      </a>
+                    </div>
+                  )}
                   <input
                     className="library-search"
                     aria-label="Rechercher un concept"
@@ -1175,7 +1212,7 @@ export default function App() {
                             <span>
                               <strong>{entry.gloss.concept_fr}</strong>
                               <small>
-                                {entry.source} ·{" "}
+                                {entry.gloss.gloss} · {entry.source} ·{" "}
                                 {seconds(entry.motion.duration_ms)}
                               </small>
                             </span>

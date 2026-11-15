@@ -11,10 +11,10 @@
 <rect x="700" y="180" width="260" height="170" rx="17" fill="#edf3e9" stroke="#23684f" stroke-width="1.4"/>
 <text x="720" y="204" fill="#23684f" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">SHARED RESOURCE</text>
 <text x="720" y="235" fill="#23684f" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Real sign library</text>
-<text x="720" y="266" fill="#193b34" font-size="17" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">440 captured motions</text>
-<text x="720" y="288" fill="#193b34" font-size="17" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Concept IDs + source</text>
-<text x="720" y="310" fill="#193b34" font-size="17" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">credits</text>
-<text x="720" y="332" fill="#193b34" font-size="17" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Build process: page 2</text>
+<text x="720" y="266" fill="#193b34" font-size="17" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">1,447 real motion entries</text>
+<text x="720" y="288" fill="#193b34" font-size="17" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">1,007 Dicta-Sign captures</text>
+<text x="720" y="310" fill="#193b34" font-size="17" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Source pipeline: pages 2 +</text>
+<text x="720" y="332" fill="#193b34" font-size="17" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">5</text>
 <path d="M700,265 L665,265 L665,390 L485,390 L485,430" fill="none" stroke="#23684f" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#green)"/>
 <text x="490" y="380" fill="#23684f" font-size="16" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Known concepts</text>
 <path d="M830,350 L830,430" fill="none" stroke="#23684f" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#green)"/>
@@ -110,5 +110,5 @@
 <text x="1050" y="1062" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Data, experiments and measured limitations: page 3.</text>
 <path d="M40 1134 H1640" stroke="#ced8cc"/>
 <text x="40" y="1164" fill="#60746d" font-size="16" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Implementation snapshot · 15 November 2026 · Local research prototype · Human LSF review pending</text>
-<text x="1490" y="1164" fill="#23684f" font-size="18" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">1 / 4</text>
+<text x="1490" y="1164" fill="#23684f" font-size="18" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">1 / 5</text>
 </svg>

@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1680" height="1188" viewBox="0 0 1680 1188"><defs><marker id="ink" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#193b34" stroke-width="1.5"/></marker><marker id="muted" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#60746d" stroke-width="1.5"/></marker><marker id="green" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#23684f" stroke-width="1.5"/></marker><marker id="blue" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#336a91" stroke-width="1.5"/></marker><marker id="amber" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#996522" stroke-width="1.5"/></marker><marker id="purple" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#74578d" stroke-width="1.5"/></marker></defs><rect width="1680" height="1188" fill="#f7f8f3"/>
+<text x="40" y="47" fill="#23684f" font-size="17" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">SIGNACULTURE  /  SYSTEM MAP</text>
+<text x="40" y="99" fill="#193b34" font-size="39" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Completed Dicta-Sign → gloss → pose baseline</text>
+<text x="40" y="137" fill="#60746d" font-size="20" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">All 1,025 public LSF clips downloaded and captured. Actual upstream code is connected to the Studio.</text>
+<rect x="40" y="190" width="340" height="190" rx="17" fill="#edf3e9" stroke="#23684f" stroke-width="1.4"/>
+<text x="60" y="214" fill="#23684f" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">HAMBURG DICTA-SIGN PORTAL</text>
+<text x="60" y="245" fill="#23684f" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">French lexical index</text>
+<text x="60" y="276" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">1,046 concept pages inspected</text>
+<text x="60" y="299" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">1,025 public France-LSF MP4s</text>
+<text x="60" y="322" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">21 pages have no LSF video</text>
+<rect x="460" y="190" width="340" height="190" rx="17" fill="#edf3e9" stroke="#23684f" stroke-width="1.4"/>
+<text x="480" y="214" fill="#23684f" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">NO INVENTED SENTENCE PAIRS</text>
+<text x="480" y="245" fill="#23684f" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Cache + provenance</text>
+<text x="480" y="276" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Original MP4 + SHA256 verified</text>
+<text x="480" y="299" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Actual canonical source gloss</text>
+<text x="480" y="322" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">French concept label + HamNoSys</text>
+<rect x="880" y="190" width="340" height="190" rx="17" fill="#edf3e9" stroke="#23684f" stroke-width="1.4"/>
+<text x="900" y="214" fill="#23684f" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">OBSERVED LANDMARKS</text>
+<text x="900" y="245" fill="#23684f" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Computer vision</text>
+<text x="900" y="276" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">MediaPipe Holistic + Hands</text>
+<text x="900" y="299" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Animics-compatible raw channels</text>
+<text x="900" y="322" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">33 body + 468 face + 21 per hand</text>
+<rect x="1300" y="190" width="340" height="190" rx="17" fill="#faf2e5" stroke="#996522" stroke-width="1.4"/>
+<text x="1320" y="214" fill="#996522" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">NOT LINGUISTIC APPROVAL</text>
+<text x="1320" y="245" fill="#996522" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Tracking screening</text>
+<text x="1320" y="276" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">1,007 accepted into lookup</text>
+<text x="1320" y="299" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">18 retained for tracking review</text>
+<text x="1320" y="322" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Missing arrays stay missing</text>
+<path d="M380,285 L460,285" fill="none" stroke="#23684f" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#green)"/>
+<path d="M800,285 L880,285" fill="none" stroke="#23684f" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#green)"/>
+<path d="M1220,285 L1300,285" fill="none" stroke="#23684f" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#green)"/>
+<rect x="40" y="505" width="340" height="190" rx="17" fill="#edf3e9" stroke="#23684f" stroke-width="1.4"/>
+<text x="60" y="529" fill="#23684f" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">STUDIO INPUT</text>
+<text x="60" y="560" fill="#23684f" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">French text / glosses</text>
+<text x="60" y="591" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Example: Bonjour merci</text>
+<text x="60" y="614" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">French lemmatization</text>
+<text x="60" y="637" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Longest expression lookup</text>
+<rect x="460" y="505" width="340" height="190" rx="17" fill="#edf3e9" stroke="#23684f" stroke-width="1.4"/>
+<text x="480" y="529" fill="#23684f" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">FRANCE LSF ONLY</text>
+<text x="480" y="560" fill="#23684f" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Resolve real source</text>
+<text x="480" y="587" fill="#23684f" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">clips</text>
+<text x="480" y="618" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">BONJOUR → Dicta cs380</text>
+<text x="480" y="641" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">MERCI → Dicta cs905</text>
+<text x="480" y="664" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Unknown / ambiguity blocks output</text>
+<rect x="880" y="505" width="340" height="190" rx="17" fill="#edf3e9" stroke="#23684f" stroke-width="1.4"/>
+<text x="900" y="529" fill="#23684f" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">PINNED SPOKEN-TO-SIGNED CODE</text>
+<text x="900" y="560" fill="#23684f" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Actual upstream pipeline</text>
+<text x="900" y="591" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">PoseLookup.lookup_sequence</text>
+<text x="900" y="614" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">normalize_pose + join_poses</text>
+<text x="900" y="637" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Masks preserved at 25 fps</text>
+<rect x="1300" y="505" width="340" height="190" rx="17" fill="#edf3e9" stroke="#23684f" stroke-width="1.4"/>
+<text x="1320" y="529" fill="#23684f" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">DIAGNOSTIC RENDERER</text>
+<text x="1320" y="560" fill="#23684f" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Downloadable outputs</text>
+<text x="1320" y="591" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">543-point standard .pose</text>
+<text x="1320" y="614" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">512×512 MP4 + GIF skeleton</text>
+<text x="1320" y="637" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">80 frames / 25 fps / 3.2 s example</text>
+<path d="M380,600 L460,600" fill="none" stroke="#23684f" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#green)"/>
+<path d="M800,600 L880,600" fill="none" stroke="#23684f" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#green)"/>
+<path d="M1220,600 L1300,600" fill="none" stroke="#23684f" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#green)"/>
+<path d="M1470,380 L1470,440 L630,440 L630,505" fill="none" stroke="#23684f" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#green)"/>
+<rect x="460" y="815" width="760" height="195" rx="17" fill="#edf3f7" stroke="#336a91" stroke-width="1.4"/>
+<text x="480" y="839" fill="#336a91" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">ALTERNATIVE RENDERING BRANCH</text>
+<text x="480" y="870" fill="#336a91" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Existing rigged 3D player</text>
+<text x="480" y="901" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Uses the same registered Dicta-Sign motion clips.</text>
+<text x="480" y="924" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Separate arm / hand IK and 333 ms transition bridges.</text>
+<text x="480" y="947" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Browser verified: playback, seeking and actual WebM download.</text>
+<path d="M630,695 L630,815" fill="none" stroke="#336a91" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#blue)" stroke-dasharray="9 7"/>
+<rect x="1300" y="815" width="340" height="195" rx="17" fill="#faf2e5" stroke="#996522" stroke-width="1.4"/>
+<text x="1320" y="839" fill="#996522" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">EXPLICIT LIMITATIONS</text>
+<text x="1320" y="870" fill="#996522" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Scope and rights</text>
+<text x="1320" y="901" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Lexical prototype; no LSF grammar</text>
+<text x="1320" y="924" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">claim</text>
+<text x="1320" y="947" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">T5 / GAN training not required</text>
+<text x="1320" y="970" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Local previews; redistribution</text>
+<text x="1320" y="993" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">pending</text>
+<text x="40" y="1080" fill="#60746d" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Evidence: docs/DICTASIGN_PIPELINE.md · data/source_inventory/dictasign_ingestion_report.json</text>
+<path d="M40 1134 H1640" stroke="#ced8cc"/>
+<text x="40" y="1164" fill="#60746d" font-size="16" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Implementation snapshot · 15 November 2026 · Local research prototype · Human LSF review pending</text>
+<text x="1490" y="1164" fill="#23684f" font-size="18" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">5 / 5</text>
+</svg>
