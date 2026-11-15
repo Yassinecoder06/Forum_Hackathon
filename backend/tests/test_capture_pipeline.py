@@ -73,3 +73,10 @@ def test_clip_transitions_have_dedicated_time():
     segments,duration,mode=segment_timing([asset,asset],None,333)
     assert segments==[(0,1000),(1333,1000)]
     assert duration==2333 and mode=='original'
+
+def test_active_cv_landmarks_match_registered_capture(isolated,monkeypatch):
+    job=str(uuid.uuid4());folder=capture_library.storage()/'captures'/job;folder.mkdir(parents=True)
+    candidate=capture_library.storage()/'cv-test'/'points.json.gz';candidate.parent.mkdir();candidate.write_bytes(b'current raw capture')
+    monkeypatch.setattr(capture_library,'library',lambda:[{'capture_id':job,'raw_animics_path':str(candidate)}])
+    result=isolated.get('/captures/'+job+'/landmarks')
+    assert result.status_code==200 and result.content==b'current raw capture'

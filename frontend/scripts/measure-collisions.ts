@@ -31,18 +31,18 @@ function makeRig() {
 
 import { stitchAnimationPlan } from "../src/utils/planStitcher";
 const results=[];
-for(let id=1;id<=14;id++) {
- const input=load(path.join(root,`artifacts/phrase-review/after/${String(id).padStart(2,"0")}-input.json`));
+for(let id=1;id<=Number(process.env.CV_CASE_LIMIT || 15);id++) {
+ const input=load(path.join(root,`${process.env.CV_MEASURE_INPUT || "artifacts/phrase-review/live-cv-loop1"}/${String(id).padStart(2,"0")}-input.json`));
  const motion=stitchAnimationPlan(input.plan,new Map(input.assets)), rig=makeRig(), retarget=new HumanoidRetargeter(rig);
- let sum=0,max=0,count=0;
- for(let t=0;t<=motion.duration_ms;t+=40) {
+ let sum=0,max=0,count=0,worst=0;
+ for(let t=0;t<=motion.duration_ms;t+=Number(process.env.CV_SAMPLE_MS || 40)) {
   retarget.applyMotion(motion,t);
   const capsules=(side:string):Capsule[]=>{
-   const segment=(a:string,b:string,radius:number)=>{const x=rig.getObjectByName(side+a)!,y=rig.getObjectByName(side+b)!;const pa=x.getWorldPosition(new THREE.Vector3()),pb=y.getWorldPosition(new THREE.Vector3());return {a:pa,b:pb,sourceA:pa,sourceB:pb,sourceObserved:false,radius};};
-   return [...["Thumb","Index","Middle","Ring","Pinky"].flatMap(f=>[1,2,3].map(i=>segment(`Hand${f}${i}`,`Hand${f}${i+1}`,.008))),...["Index","Middle","Pinky"].map(f=>segment("Hand",`Hand${f}1`,.022))];
+   const segment=(a:string,b:string,radius:number)=>{const x=rig.getObjectByName(side+a)!,y=rig.getObjectByName(side+b)!;const pa=x.getWorldPosition(new THREE.Vector3()),pb=y.getWorldPosition(new THREE.Vector3());return {a:pa,b:pb,sourceA:pa,sourceB:pb,sourceObserved:false,radius,kind:a==="ForeArm"?"forearm" as const:"hand" as const};};
+   return [segment("ForeArm","Hand",.028),...["Thumb","Index","Middle","Ring","Pinky"].flatMap(f=>[1,2,3].map(i=>segment(`Hand${f}${i}`,`Hand${f}${i+1}`,.008))),...["Index","Middle","Pinky"].map(f=>segment("Hand",`Hand${f}1`,.022))];
   };
-  const hit=handContact(capsules("Left"),capsules("Right"));sum+=hit.maxPenetration;max=Math.max(max,hit.maxPenetration);count++;
+  const hit=handContact(capsules("Left"),capsules("Right"));sum+=hit.maxPenetration;if(hit.maxPenetration>max){max=hit.maxPenetration;worst=t;}count++;
  }
- results.push({id,text:input.text,mean_penetration_mm:sum/count*1000,max_penetration_mm:max*1000,samples:count,diagnostics:retarget.diagnostics});
+ results.push({id,text:input.text,mean_penetration_mm:sum/count*1000,max_penetration_mm:max*1000,worst_time_ms:worst,samples:count,diagnostics:retarget.diagnostics});
 }
 fs.writeFileSync(output,JSON.stringify(results,null,2));console.log(JSON.stringify(results));

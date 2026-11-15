@@ -1,0 +1,1333 @@
+{
+  "status": "executed_local_research_preview_pending_review",
+  "scope": "15 user-specified controlled lexical sequences; not LSF translation ground truth",
+  "active_corrected_source_rows": 36,
+  "measurement": {
+    "sample_interval_ms": 10,
+    "geometry": "Actual Noa GLB skeleton; capsules: fingers 8mm, palm 22mm, opposite forearm 28mm. Forearm/forearm excluded. Proxy penetration, not mesh collision or CV accuracy.",
+    "aggregation": "Arithmetic mean of per-phrase mean maximum capsule penetration across sampled times. Equal phrase weighting.",
+    "same_corrected_cv_inputs": true,
+    "before_mean_mm": 6.204549954063844,
+    "after_mean_mm": 0.7031947560849642,
+    "before_worst_mm": 47.37538268143366,
+    "after_worst_mm": 27.40958641632317,
+    "relative_mean_reduction_percent": 88.66646636273133,
+    "total_samples": 14521
+  },
+  "per_phrase": [
+    {
+      "id": 1,
+      "text": "je vouloir boire eau",
+      "before": {
+        "id": 1,
+        "text": "je vouloir boire eau",
+        "mean_penetration_mm": 6.979011292492988,
+        "max_penetration_mm": 43.872514316120544,
+        "samples": 1118,
+        "diagnostics": {
+          "preparedMs": 473.098445,
+          "rejectedSpikes": 6,
+          "correctedFrames": 287,
+          "contactFrames": 160,
+          "maxCorrection": 0.060000000000000095,
+          "maxPenetration": 0.01553646679375581
+        }
+      },
+      "after": {
+        "id": 1,
+        "text": "je vouloir boire eau",
+        "mean_penetration_mm": 0.6073637376979917,
+        "max_penetration_mm": 19.466649417924923,
+        "worst_time_ms": 5330,
+        "samples": 1118,
+        "diagnostics": {
+          "preparedMs": 2120.69742,
+          "rejectedSpikes": 6,
+          "correctedFrames": 594,
+          "contactFrames": 674,
+          "maxCorrection": 0.060000000000000095,
+          "maxPenetration": 0.019466649417924923
+        }
+      }
+    },
+    {
+      "id": 2,
+      "text": "je vouloir manger pain",
+      "before": {
+        "id": 2,
+        "text": "je vouloir manger pain",
+        "mean_penetration_mm": 10.285003993249399,
+        "max_penetration_mm": 43.872514316120544,
+        "samples": 1134,
+        "diagnostics": {
+          "preparedMs": 512.13403,
+          "rejectedSpikes": 12,
+          "correctedFrames": 373,
+          "contactFrames": 211,
+          "maxCorrection": 0.060000000000000095,
+          "maxPenetration": 0.01553646679375581
+        }
+      },
+      "after": {
+        "id": 2,
+        "text": "je vouloir manger pain",
+        "mean_penetration_mm": 0.748064478997323,
+        "max_penetration_mm": 19.466649417924923,
+        "worst_time_ms": 5330,
+        "samples": 1134,
+        "diagnostics": {
+          "preparedMs": 2431.2516079999996,
+          "rejectedSpikes": 12,
+          "correctedFrames": 830,
+          "contactFrames": 963,
+          "maxCorrection": 0.060000000000000095,
+          "maxPenetration": 0.019466649417924923
+        }
+      }
+    },
+    {
+      "id": 3,
+      "text": "mon frère aimer musique",
+      "before": {
+        "id": 3,
+        "text": "mon frère aimer musique",
+        "mean_penetration_mm": 5.536040085402436,
+        "max_penetration_mm": 46.58144491512734,
+        "samples": 988,
+        "diagnostics": {
+          "preparedMs": 261.557734,
+          "rejectedSpikes": 19,
+          "correctedFrames": 174,
+          "contactFrames": 113,
+          "maxCorrection": 0.04705795207421261,
+          "maxPenetration": 0.015480663784937544
+        }
+      },
+      "after": {
+        "id": 3,
+        "text": "mon frère aimer musique",
+        "mean_penetration_mm": 0.8654059691578696,
+        "max_penetration_mm": 24.7319513554277,
+        "worst_time_ms": 9760,
+        "samples": 988,
+        "diagnostics": {
+          "preparedMs": 1457.3940670000002,
+          "rejectedSpikes": 19,
+          "correctedFrames": 352,
+          "contactFrames": 505,
+          "maxCorrection": 0.060000000000000074,
+          "maxPenetration": 0.023089524109670127
+        }
+      }
+    },
+    {
+      "id": 4,
+      "text": "je aller école demain",
+      "before": {
+        "id": 4,
+        "text": "je aller école demain",
+        "mean_penetration_mm": 1.8638740950019193,
+        "max_penetration_mm": 43.872514316120544,
+        "samples": 1026,
+        "diagnostics": {
+          "preparedMs": 327.21404000000007,
+          "rejectedSpikes": 8,
+          "correctedFrames": 226,
+          "contactFrames": 63,
+          "maxCorrection": 0.060000000000000095,
+          "maxPenetration": 0.010428586116268443
+        }
+      },
+      "after": {
+        "id": 4,
+        "text": "je aller école demain",
+        "mean_penetration_mm": 0.13376069855822154,
+        "max_penetration_mm": 13.393007700117684,
+        "worst_time_ms": 1340,
+        "samples": 1026,
+        "diagnostics": {
+          "preparedMs": 1226.758683,
+          "rejectedSpikes": 8,
+          "correctedFrames": 468,
+          "contactFrames": 257,
+          "maxCorrection": 0.060000000000000095,
+          "maxPenetration": 0.010393007700117682
+        }
+      }
+    },
+    {
+      "id": 5,
+      "text": "mon ami habiter Paris",
+      "before": {
+        "id": 5,
+        "text": "mon ami habiter Paris",
+        "mean_penetration_mm": 8.780193027555283,
+        "max_penetration_mm": 47.37538268143366,
+        "samples": 1100,
+        "diagnostics": {
+          "preparedMs": 395.89001400000006,
+          "rejectedSpikes": 14,
+          "correctedFrames": 332,
+          "contactFrames": 140,
+          "maxCorrection": 0.04800353189919701,
+          "maxPenetration": 0.01439022188379462
+        }
+      },
+      "after": {
+        "id": 5,
+        "text": "mon ami habiter Paris",
+        "mean_penetration_mm": 1.0470829806516169,
+        "max_penetration_mm": 22.39082315204962,
+        "worst_time_ms": 1680,
+        "samples": 1100,
+        "diagnostics": {
+          "preparedMs": 2193.937674999999,
+          "rejectedSpikes": 14,
+          "correctedFrames": 665,
+          "contactFrames": 603,
+          "maxCorrection": 0.06000000000000007,
+          "maxPenetration": 0.02239082315204962
+        }
+      }
+    },
+    {
+      "id": 6,
+      "text": "je vouloir acheter voiture",
+      "before": {
+        "id": 6,
+        "text": "je vouloir acheter voiture",
+        "mean_penetration_mm": 6.285450078738671,
+        "max_penetration_mm": 43.872514316120544,
+        "samples": 1106,
+        "diagnostics": {
+          "preparedMs": 473.66323599999987,
+          "rejectedSpikes": 7,
+          "correctedFrames": 326,
+          "contactFrames": 168,
+          "maxCorrection": 0.060000000000000095,
+          "maxPenetration": 0.01553646679375581
+        }
+      },
+      "after": {
+        "id": 6,
+        "text": "je vouloir acheter voiture",
+        "mean_penetration_mm": 0.6031153619217313,
+        "max_penetration_mm": 25.226031659347253,
+        "worst_time_ms": 8520,
+        "samples": 1106,
+        "diagnostics": {
+          "preparedMs": 1935.5245489999998,
+          "rejectedSpikes": 7,
+          "correctedFrames": 668,
+          "contactFrames": 691,
+          "maxCorrection": 0.060000000000000095,
+          "maxPenetration": 0.025226031659347253
+        }
+      }
+    },
+    {
+      "id": 7,
+      "text": "je lire livre",
+      "before": {
+        "id": 7,
+        "text": "je lire livre",
+        "mean_penetration_mm": 10.153984940214077,
+        "max_penetration_mm": 43.92377136370055,
+        "samples": 804,
+        "diagnostics": {
+          "preparedMs": 466.25079600000026,
+          "rejectedSpikes": 44,
+          "correctedFrames": 354,
+          "contactFrames": 292,
+          "maxCorrection": 0.060000000000000095,
+          "maxPenetration": 0.019992457310955725
+        }
+      },
+      "after": {
+        "id": 7,
+        "text": "je lire livre",
+        "mean_penetration_mm": 1.4291130327769346,
+        "max_penetration_mm": 21.57508589656877,
+        "worst_time_ms": 2460,
+        "samples": 804,
+        "diagnostics": {
+          "preparedMs": 1949.1304180000006,
+          "rejectedSpikes": 44,
+          "correctedFrames": 724,
+          "contactFrames": 1183,
+          "maxCorrection": 0.060000000000000095,
+          "maxPenetration": 0.021507130019596053
+        }
+      }
+    },
+    {
+      "id": 8,
+      "text": "chat dormir",
+      "before": {
+        "id": 8,
+        "text": "chat dormir",
+        "mean_penetration_mm": 0.02909006265076989,
+        "max_penetration_mm": 11.1785240952238,
+        "samples": 494,
+        "diagnostics": {
+          "preparedMs": 97.67214100000047,
+          "rejectedSpikes": 1,
+          "correctedFrames": 5,
+          "contactFrames": 0,
+          "maxCorrection": 0.008517783515055463,
+          "maxPenetration": 0
+        }
+      },
+      "after": {
+        "id": 8,
+        "text": "chat dormir",
+        "mean_penetration_mm": 0,
+        "max_penetration_mm": 0,
+        "worst_time_ms": 0,
+        "samples": 494,
+        "diagnostics": {
+          "preparedMs": 412.96852899999976,
+          "rejectedSpikes": 1,
+          "correctedFrames": 11,
+          "contactFrames": 0,
+          "maxCorrection": 0.008517783515055463,
+          "maxPenetration": 0
+        }
+      }
+    },
+    {
+      "id": 9,
+      "text": "je regarder football",
+      "before": {
+        "id": 9,
+        "text": "je regarder football",
+        "mean_penetration_mm": 9.695117877003861,
+        "max_penetration_mm": 43.93518220885169,
+        "samples": 742,
+        "diagnostics": {
+          "preparedMs": 356.7618910000001,
+          "rejectedSpikes": 9,
+          "correctedFrames": 248,
+          "contactFrames": 191,
+          "maxCorrection": 0.060000000000000095,
+          "maxPenetration": 0.015250645353276792
+        }
+      },
+      "after": {
+        "id": 9,
+        "text": "je regarder football",
+        "mean_penetration_mm": 1.4796436398350545,
+        "max_penetration_mm": 21.566675584677043,
+        "worst_time_ms": 7350,
+        "samples": 742,
+        "diagnostics": {
+          "preparedMs": 1550.1958670000004,
+          "rejectedSpikes": 9,
+          "correctedFrames": 516,
+          "contactFrames": 780,
+          "maxCorrection": 0.060000000000000095,
+          "maxPenetration": 0.02118012758149039
+        }
+      }
+    },
+    {
+      "id": 10,
+      "text": "je vouloir apprendre langue signe",
+      "before": {
+        "id": 10,
+        "text": "je vouloir apprendre langue signe",
+        "mean_penetration_mm": 7.018542793061139,
+        "max_penetration_mm": 46.886832379480865,
+        "samples": 1426,
+        "diagnostics": {
+          "preparedMs": 495.5425069999992,
+          "rejectedSpikes": 19,
+          "correctedFrames": 409,
+          "contactFrames": 257,
+          "maxCorrection": 0.060000000000000095,
+          "maxPenetration": 0.01553646679375581
+        }
+      },
+      "after": {
+        "id": 10,
+        "text": "je vouloir apprendre langue signe",
+        "mean_penetration_mm": 0.7513683510544248,
+        "max_penetration_mm": 27.40958641632317,
+        "worst_time_ms": 10490,
+        "samples": 1426,
+        "diagnostics": {
+          "preparedMs": 2608.6959480000005,
+          "rejectedSpikes": 19,
+          "correctedFrames": 841,
+          "contactFrames": 1045,
+          "maxCorrection": 0.060000000000000095,
+          "maxPenetration": 0.02740958641632317
+        }
+      }
+    },
+    {
+      "id": 11,
+      "text": "je chercher mon téléphone portable",
+      "before": {
+        "id": 11,
+        "text": "je chercher mon téléphone portable",
+        "mean_penetration_mm": 6.780801601201951,
+        "max_penetration_mm": 45.23595001695476,
+        "samples": 1034,
+        "diagnostics": {
+          "preparedMs": 351.09967999999935,
+          "rejectedSpikes": 6,
+          "correctedFrames": 194,
+          "contactFrames": 111,
+          "maxCorrection": 0.060000000000000095,
+          "maxPenetration": 0.010428586116268443
+        }
+      },
+      "after": {
+        "id": 11,
+        "text": "je chercher mon téléphone portable",
+        "mean_penetration_mm": 0.8623879440639473,
+        "max_penetration_mm": 27.20385689876731,
+        "worst_time_ms": 7900,
+        "samples": 1034,
+        "diagnostics": {
+          "preparedMs": 1742.1863589999994,
+          "rejectedSpikes": 6,
+          "correctedFrames": 409,
+          "contactFrames": 502,
+          "maxCorrection": 0.060000000000000095,
+          "maxPenetration": 0.024203856898767306
+        }
+      }
+    },
+    {
+      "id": 12,
+      "text": "je aller cinéma demain",
+      "before": {
+        "id": 12,
+        "text": "je aller cinéma demain",
+        "mean_penetration_mm": 1.9526486277247102,
+        "max_penetration_mm": 43.872514316120544,
+        "samples": 975,
+        "diagnostics": {
+          "preparedMs": 290.52599999999984,
+          "rejectedSpikes": 14,
+          "correctedFrames": 189,
+          "contactFrames": 125,
+          "maxCorrection": 0.060000000000000095,
+          "maxPenetration": 0.010428586116268443
+        }
+      },
+      "after": {
+        "id": 12,
+        "text": "je aller cinéma demain",
+        "mean_penetration_mm": 0.2632439378766416,
+        "max_penetration_mm": 13.393007700117684,
+        "worst_time_ms": 1340,
+        "samples": 975,
+        "diagnostics": {
+          "preparedMs": 1176.1797720000031,
+          "rejectedSpikes": 14,
+          "correctedFrames": 394,
+          "contactFrames": 501,
+          "maxCorrection": 0.060000000000000095,
+          "maxPenetration": 0.010393007700117682
+        }
+      }
+    },
+    {
+      "id": 13,
+      "text": "mon père travail aujourd'hui",
+      "before": {
+        "id": 13,
+        "text": "mon père travail aujourd'hui",
+        "mean_penetration_mm": 4.852180361851964,
+        "max_penetration_mm": 46.58144491512734,
+        "samples": 964,
+        "diagnostics": {
+          "preparedMs": 266.32732100000067,
+          "rejectedSpikes": 4,
+          "correctedFrames": 247,
+          "contactFrames": 105,
+          "maxCorrection": 0.05273514383550009,
+          "maxPenetration": 0.007232341239118624
+        }
+      },
+      "after": {
+        "id": 13,
+        "text": "mon père travail aujourd'hui",
+        "mean_penetration_mm": 0.6597057188836849,
+        "max_penetration_mm": 22.39082315204962,
+        "worst_time_ms": 1680,
+        "samples": 964,
+        "diagnostics": {
+          "preparedMs": 1505.0731559999986,
+          "rejectedSpikes": 4,
+          "correctedFrames": 498,
+          "contactFrames": 494,
+          "maxCorrection": 0.06000000000000007,
+          "maxPenetration": 0.02239082315204962
+        }
+      }
+    },
+    {
+      "id": 14,
+      "text": "je vouloir café",
+      "before": {
+        "id": 14,
+        "text": "je vouloir café",
+        "mean_penetration_mm": 6.598968187763069,
+        "max_penetration_mm": 43.872514316120544,
+        "samples": 785,
+        "diagnostics": {
+          "preparedMs": 293.05885899999976,
+          "rejectedSpikes": 7,
+          "correctedFrames": 262,
+          "contactFrames": 154,
+          "maxCorrection": 0.060000000000000095,
+          "maxPenetration": 0.01553646679375581
+        }
+      },
+      "after": {
+        "id": 14,
+        "text": "je vouloir café",
+        "mean_penetration_mm": 0.5666821881510578,
+        "max_penetration_mm": 19.466649417924923,
+        "worst_time_ms": 5330,
+        "samples": 785,
+        "diagnostics": {
+          "preparedMs": 1438.6222639999978,
+          "rejectedSpikes": 7,
+          "correctedFrames": 546,
+          "contactFrames": 629,
+          "maxCorrection": 0.060000000000000095,
+          "maxPenetration": 0.019466649417924923
+        }
+      }
+    },
+    {
+      "id": 15,
+      "text": "je vouloir abandonner",
+      "before": {
+        "id": 15,
+        "text": "je vouloir abandonner",
+        "mean_penetration_mm": 6.257342287045426,
+        "max_penetration_mm": 43.872514316120544,
+        "samples": 825,
+        "diagnostics": {
+          "preparedMs": 307.8846730000005,
+          "rejectedSpikes": 9,
+          "correctedFrames": 253,
+          "contactFrames": 142,
+          "maxCorrection": 0.060000000000000095,
+          "maxPenetration": 0.01553646679375581
+        }
+      },
+      "after": {
+        "id": 15,
+        "text": "je vouloir abandonner",
+        "mean_penetration_mm": 0.530983301647964,
+        "max_penetration_mm": 19.466649417924923,
+        "worst_time_ms": 5330,
+        "samples": 825,
+        "diagnostics": {
+          "preparedMs": 1465.0733230000005,
+          "rejectedSpikes": 9,
+          "correctedFrames": 525,
+          "contactFrames": 587,
+          "maxCorrection": 0.060000000000000095,
+          "maxPenetration": 0.019466649417924923
+        }
+      }
+    }
+  ],
+  "activation": [
+    {
+      "source_id": "WMC_75162134",
+      "motion_id": "CAPTURE_8069af08c0fc52f8",
+      "backup": "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/cv-live-loop/backups/CAPTURE_8069af08c0fc52f8.json",
+      "capture_method": "roi-v4+forward-reverse-focused-v5",
+      "rights_status": "cleared",
+      "linguistic_review": "pending"
+    },
+    {
+      "source_id": "WMC_75165061",
+      "motion_id": "CAPTURE_195ec46a9fc55bdf",
+      "backup": "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/cv-live-loop/backups/CAPTURE_195ec46a9fc55bdf.json",
+      "capture_method": "roi-v4+forward-reverse-focused-v5",
+      "rights_status": "cleared",
+      "linguistic_review": "pending"
+    },
+    {
+      "source_id": "WMC_75162534",
+      "motion_id": "CAPTURE_9a9432771cd65a67",
+      "backup": "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/cv-live-loop/backups/CAPTURE_9a9432771cd65a67.json",
+      "capture_method": "mediapipe-holistic-hands-fallback-0.10.21-roi-v4",
+      "rights_status": "cleared",
+      "linguistic_review": "pending"
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_96",
+      "motion_id": "CAPTURE_5ae7a7908cfb5b59",
+      "backup": "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/cv-live-loop/backups/CAPTURE_5ae7a7908cfb5b59.json",
+      "capture_method": "roi-v4+forward-reverse-focused-v5",
+      "rights_status": "pending",
+      "linguistic_review": "pending"
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_103",
+      "motion_id": "CAPTURE_4a265a67ca095921",
+      "backup": "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/cv-live-loop/backups/CAPTURE_4a265a67ca095921.json",
+      "capture_method": "roi-v4+forward-reverse-focused-v5",
+      "rights_status": "pending",
+      "linguistic_review": "pending"
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_108",
+      "motion_id": "CAPTURE_de461c0574a85f02",
+      "backup": "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/cv-live-loop/backups/CAPTURE_de461c0574a85f02.json",
+      "capture_method": "mediapipe-holistic-hands-fallback-0.10.21-roi-v4",
+      "rights_status": "pending",
+      "linguistic_review": "pending"
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_115",
+      "motion_id": "CAPTURE_d9b156e774d1523c",
+      "backup": "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/cv-live-loop/backups/CAPTURE_d9b156e774d1523c.json",
+      "capture_method": "mediapipe-holistic-hands-fallback-0.10.21-roi-v4",
+      "rights_status": "pending",
+      "linguistic_review": "pending"
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_125",
+      "motion_id": "CAPTURE_1a596182468b522b",
+      "backup": "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/cv-live-loop/backups/CAPTURE_1a596182468b522b.json",
+      "capture_method": "mediapipe-holistic-hands-fallback-0.10.21-roi-v4",
+      "rights_status": "pending",
+      "linguistic_review": "pending"
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_151",
+      "motion_id": "CAPTURE_1d256c49df8251a3",
+      "backup": "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/cv-live-loop/backups/CAPTURE_1d256c49df8251a3.json",
+      "capture_method": "mediapipe-holistic-hands-fallback-0.10.21-roi-v4",
+      "rights_status": "pending",
+      "linguistic_review": "pending"
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_163",
+      "motion_id": "CAPTURE_e21e6c52c5915246",
+      "backup": "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/cv-live-loop/backups/CAPTURE_e21e6c52c5915246.json",
+      "capture_method": "mediapipe-holistic-hands-fallback-0.10.21-roi-v4",
+      "rights_status": "pending",
+      "linguistic_review": "pending"
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_253",
+      "motion_id": "CAPTURE_e68dbc70d6335484",
+      "backup": "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/cv-live-loop/backups/CAPTURE_e68dbc70d6335484.json",
+      "capture_method": "mediapipe-holistic-hands-fallback-0.10.21-roi-v4",
+      "rights_status": "pending",
+      "linguistic_review": "pending"
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_260",
+      "motion_id": "CAPTURE_cfff4811d84a57b5",
+      "backup": "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/cv-live-loop/backups/CAPTURE_cfff4811d84a57b5.json",
+      "capture_method": "mediapipe-holistic-hands-fallback-0.10.21-roi-v4",
+      "rights_status": "pending",
+      "linguistic_review": "pending"
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_266",
+      "motion_id": "CAPTURE_ee859c85991e5d09",
+      "backup": "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/cv-live-loop/backups/CAPTURE_ee859c85991e5d09.json",
+      "capture_method": "mediapipe-holistic-hands-fallback-0.10.21-roi-v4",
+      "rights_status": "pending",
+      "linguistic_review": "pending"
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_317",
+      "motion_id": "CAPTURE_64e149ab37435a6c",
+      "backup": "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/cv-live-loop/backups/CAPTURE_64e149ab37435a6c.json",
+      "capture_method": "mediapipe-holistic-hands-fallback-0.10.21-roi-v4",
+      "rights_status": "pending",
+      "linguistic_review": "pending"
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_341",
+      "motion_id": "CAPTURE_5ccf9caa34205ffc",
+      "backup": "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/cv-live-loop/backups/CAPTURE_5ccf9caa34205ffc.json",
+      "capture_method": "mediapipe-holistic-hands-fallback-0.10.21-roi-v4",
+      "rights_status": "pending",
+      "linguistic_review": "pending"
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_356",
+      "motion_id": "CAPTURE_1e0e012b8dea5c6f",
+      "backup": "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/cv-live-loop/backups/CAPTURE_1e0e012b8dea5c6f.json",
+      "capture_method": "mediapipe-holistic-hands-fallback-0.10.21-roi-v4",
+      "rights_status": "pending",
+      "linguistic_review": "pending"
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_376",
+      "motion_id": "CAPTURE_3f121e716856537f",
+      "backup": "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/cv-live-loop/backups/CAPTURE_3f121e716856537f.json",
+      "capture_method": "mediapipe-holistic-hands-fallback-0.10.21-roi-v4",
+      "rights_status": "pending",
+      "linguistic_review": "pending"
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_482",
+      "motion_id": "CAPTURE_bfa365815fc55ba8",
+      "backup": "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/cv-live-loop/backups/CAPTURE_bfa365815fc55ba8.json",
+      "capture_method": "mediapipe-holistic-hands-fallback-0.10.21-roi-v4",
+      "rights_status": "pending",
+      "linguistic_review": "pending"
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_509",
+      "motion_id": "CAPTURE_8a25a68f06f95a09",
+      "backup": "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/cv-live-loop/backups/CAPTURE_8a25a68f06f95a09.json",
+      "capture_method": "mediapipe-holistic-hands-fallback-0.10.21-roi-v4",
+      "rights_status": "pending",
+      "linguistic_review": "pending"
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_529",
+      "motion_id": "CAPTURE_4d1d077ab14b50a4",
+      "backup": "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/cv-live-loop/backups/CAPTURE_4d1d077ab14b50a4.json",
+      "capture_method": "mediapipe-holistic-hands-fallback-0.10.21-roi-v4",
+      "rights_status": "pending",
+      "linguistic_review": "pending"
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_546",
+      "motion_id": "CAPTURE_fcd13f6d07285632",
+      "backup": "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/cv-live-loop/backups/CAPTURE_fcd13f6d07285632.json",
+      "capture_method": "mediapipe-holistic-hands-fallback-0.10.21-roi-v4",
+      "rights_status": "pending",
+      "linguistic_review": "pending"
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_560",
+      "motion_id": "CAPTURE_3dfa39c6f3105eb0",
+      "backup": "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/cv-live-loop/backups/CAPTURE_3dfa39c6f3105eb0.json",
+      "capture_method": "mediapipe-holistic-hands-fallback-0.10.21-roi-v4",
+      "rights_status": "pending",
+      "linguistic_review": "pending"
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_562",
+      "motion_id": "CAPTURE_896624b15484568d",
+      "backup": "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/cv-live-loop/backups/CAPTURE_896624b15484568d.json",
+      "capture_method": "mediapipe-holistic-hands-fallback-0.10.21-roi-v4",
+      "rights_status": "pending",
+      "linguistic_review": "pending"
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_632",
+      "motion_id": "CAPTURE_d80a4fd195395977",
+      "backup": "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/cv-live-loop/backups/CAPTURE_d80a4fd195395977.json",
+      "capture_method": "mediapipe-holistic-hands-fallback-0.10.21-roi-v4",
+      "rights_status": "pending",
+      "linguistic_review": "pending"
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_709",
+      "motion_id": "CAPTURE_bb5a01100a865a27",
+      "backup": "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/cv-live-loop/backups/CAPTURE_bb5a01100a865a27.json",
+      "capture_method": "mediapipe-holistic-hands-fallback-0.10.21-roi-v4",
+      "rights_status": "pending",
+      "linguistic_review": "pending"
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_726",
+      "motion_id": "CAPTURE_8433573762165f84",
+      "backup": "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/cv-live-loop/backups/CAPTURE_8433573762165f84.json",
+      "capture_method": "mediapipe-holistic-hands-fallback-0.10.21-roi-v4",
+      "rights_status": "pending",
+      "linguistic_review": "pending"
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_756",
+      "motion_id": "CAPTURE_cd9e36d9b7285c31",
+      "backup": "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/cv-live-loop/backups/CAPTURE_cd9e36d9b7285c31.json",
+      "capture_method": "mediapipe-holistic-hands-fallback-0.10.21-roi-v4",
+      "rights_status": "pending",
+      "linguistic_review": "pending"
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_788",
+      "motion_id": "CAPTURE_bd4b91048fa457ca",
+      "backup": "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/cv-live-loop/backups/CAPTURE_bd4b91048fa457ca.json",
+      "capture_method": "mediapipe-holistic-hands-fallback-0.10.21-roi-v4",
+      "rights_status": "pending",
+      "linguistic_review": "pending"
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_801",
+      "motion_id": "CAPTURE_63a2f76004f35563",
+      "backup": "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/cv-live-loop/backups/CAPTURE_63a2f76004f35563.json",
+      "capture_method": "mediapipe-holistic-hands-fallback-0.10.21-roi-v4",
+      "rights_status": "pending",
+      "linguistic_review": "pending"
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_925",
+      "motion_id": "CAPTURE_01345b4c38185d71",
+      "backup": "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/cv-live-loop/backups/CAPTURE_01345b4c38185d71.json",
+      "capture_method": "mediapipe-holistic-hands-fallback-0.10.21-roi-v4",
+      "rights_status": "pending",
+      "linguistic_review": "pending"
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_930",
+      "motion_id": "CAPTURE_8a3969d6ca26533d",
+      "backup": "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/cv-live-loop/backups/CAPTURE_8a3969d6ca26533d.json",
+      "capture_method": "mediapipe-holistic-hands-fallback-0.10.21-roi-v4",
+      "rights_status": "pending",
+      "linguistic_review": "pending"
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_929",
+      "motion_id": "CAPTURE_c458fee746575889",
+      "backup": "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/cv-live-loop/backups/CAPTURE_c458fee746575889.json",
+      "capture_method": "mediapipe-holistic-hands-fallback-0.10.21-roi-v4",
+      "rights_status": "pending",
+      "linguistic_review": "pending"
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_986",
+      "motion_id": "CAPTURE_2d5b78eaf2db5d7d",
+      "backup": "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/cv-live-loop/backups/CAPTURE_2d5b78eaf2db5d7d.json",
+      "capture_method": "mediapipe-holistic-hands-fallback-0.10.21-roi-v4",
+      "rights_status": "pending",
+      "linguistic_review": "pending"
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_990",
+      "motion_id": "CAPTURE_4cc4e7bec1f75144",
+      "backup": "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/cv-live-loop/backups/CAPTURE_4cc4e7bec1f75144.json",
+      "capture_method": "mediapipe-holistic-hands-fallback-0.10.21-roi-v4",
+      "rights_status": "pending",
+      "linguistic_review": "pending"
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_992",
+      "motion_id": "CAPTURE_812876323b175f8d",
+      "backup": "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/cv-live-loop/backups/CAPTURE_812876323b175f8d.json",
+      "capture_method": "mediapipe-holistic-hands-fallback-0.10.21-roi-v4",
+      "rights_status": "pending",
+      "linguistic_review": "pending"
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_1032",
+      "motion_id": "CAPTURE_e14ce6390c0458da",
+      "backup": "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/cv-live-loop/backups/CAPTURE_e14ce6390c0458da.json",
+      "capture_method": "roi-v4+forward-reverse-focused-v5",
+      "rights_status": "pending",
+      "linguistic_review": "pending"
+    }
+  ],
+  "limits": [
+    "Occluded fingertips lack independent reference labels.",
+    "Residual penetration remains; no linguistic or human motion approval.",
+    "Only 36 source rows activated, not entire re-extracted corpus.",
+    "Controlled dictionary sequences are software review cases, not validated grammatical LSF."
+  ],
+  "iterations": [
+    {
+      "trial": "initial unbounded forearm pass",
+      "accepted": false,
+      "reason": "Worsened overlap averages."
+    },
+    {
+      "trial": "best-pose two-phase correction at 50Hz",
+      "accepted": false,
+      "reason": "Dense 10ms evaluation found worse interframe maximum: 49.58mm vs 47.38mm baseline."
+    },
+    {
+      "trial": "best-pose two-phase correction at 100Hz",
+      "accepted": true,
+      "reason": "No per-phrase mean or maximum regression in 10ms check; bounded wrist displacement 60mm."
+    }
+  ],
+  "ordinary_french_lookup": [
+    {
+      "phrase": "Je veux boire de l'eau.",
+      "glosses": [
+        "JE",
+        "VOULOIR",
+        "BOIRE",
+        "EAU"
+      ],
+      "unknowns": [
+        "de",
+        "l"
+      ]
+    },
+    {
+      "phrase": "Je veux manger du pain.",
+      "glosses": [
+        "JE",
+        "VOULOIR",
+        "MANGER",
+        "PAIN"
+      ],
+      "unknowns": [
+        "du"
+      ]
+    },
+    {
+      "phrase": "Mon frère aime la musique.",
+      "glosses": [
+        "MON",
+        "FRERE",
+        "AIMER",
+        "MUSIQUE"
+      ],
+      "unknowns": [
+        "la"
+      ]
+    },
+    {
+      "phrase": "Je vais à l'école demain.",
+      "glosses": [
+        "JE",
+        "ALLER",
+        "ECOLE",
+        "DEMAIN"
+      ],
+      "unknowns": [
+        "à",
+        "l"
+      ]
+    },
+    {
+      "phrase": "Mon ami habite à Paris.",
+      "glosses": [
+        "MON",
+        "AMI",
+        "HABITER",
+        "PARIS"
+      ],
+      "unknowns": [
+        "à"
+      ]
+    },
+    {
+      "phrase": "Je veux acheter une voiture.",
+      "glosses": [
+        "JE",
+        "VOULOIR",
+        "ACHETER",
+        "VOITURE"
+      ],
+      "unknowns": [
+        "une"
+      ]
+    },
+    {
+      "phrase": "Je lis un livre.",
+      "glosses": [
+        "JE",
+        "LIRE",
+        "LIVRE"
+      ],
+      "unknowns": [
+        "un"
+      ]
+    },
+    {
+      "phrase": "Le chat dort.",
+      "glosses": [
+        "CHAT",
+        "DORMIR"
+      ],
+      "unknowns": [
+        "Le"
+      ]
+    },
+    {
+      "phrase": "Je regarde le football.",
+      "glosses": [
+        "JE",
+        "REGARDER",
+        "FOOTBALL"
+      ],
+      "unknowns": [
+        "le"
+      ]
+    },
+    {
+      "phrase": "Je veux apprendre la langue des signes.",
+      "glosses": [
+        "JE",
+        "VOULOIR",
+        "APPRENDRE",
+        "LANGUE",
+        "SIGNE"
+      ],
+      "unknowns": [
+        "la",
+        "des"
+      ]
+    },
+    {
+      "phrase": "Je cherche mon téléphone portable.",
+      "glosses": [
+        "JE",
+        "CHERCHER",
+        "MON",
+        "TELEPHONE PORTABLE"
+      ],
+      "unknowns": []
+    },
+    {
+      "phrase": "Je vais au cinéma demain.",
+      "glosses": [
+        "JE",
+        "ALLER",
+        "CINEMA",
+        "DEMAIN"
+      ],
+      "unknowns": [
+        "au"
+      ]
+    },
+    {
+      "phrase": "Mon père travaille aujourd'hui.",
+      "glosses": [
+        "MON",
+        "PERE",
+        "TRAVAILLER",
+        "AUJOURD HUI"
+      ],
+      "unknowns": []
+    },
+    {
+      "phrase": "Je veux du café.",
+      "glosses": [
+        "JE",
+        "VOULOIR",
+        "CAFE"
+      ],
+      "unknowns": [
+        "du"
+      ]
+    },
+    {
+      "phrase": "Je veux abandonner.",
+      "glosses": [
+        "JE",
+        "VOULOIR",
+        "ABANDONNER"
+      ],
+      "unknowns": []
+    }
+  ],
+  "renderer_baseline_revision": "0e22b395ad9de0ca9348eb0ff5544cd2e343ac8e",
+  "input_sha256": {
+    "01-input.json": "6d43a7adb13157c3956436d5cd601d235d1bbb8198a9065c7eecfd18274a5239",
+    "02-input.json": "c41c72231559b34e7979eee28d2ee8faf7ec021efa6f6fd3357ffc0079c8997d",
+    "03-input.json": "4bb6ac3e455550427b0248631fbd7afab897cf6eb58968a55b9b673f6f9a3f45",
+    "04-input.json": "41a0919843e3d51a56506dd49239e3f9f987e347de5dd76303df80a4c1dbfbaa",
+    "05-input.json": "0630e118f1f69ec0994f63aebc2ddf74971fbdfc53962423dff01623f178b4a3",
+    "06-input.json": "51d237772ac3e800cea1dbd9890abbea482b008ecf434ddf729f226bb4f23845",
+    "07-input.json": "45e0f5591d08541630ef2998a8c900e00951aa35304d0289a1b4c7de9c1b52ee",
+    "08-input.json": "22e638a9d5b53778eb0edc34ea6347ca6e47227712ee1a6d3f35dcd68ce9b5a9",
+    "09-input.json": "e19edf23a5bfbad087658f4fc8a6a5c93aa5258f5625a668a1e89506fbc86098",
+    "10-input.json": "70c9d06533e391147c79447f1977c56fb7dd22103010d8fbbb6fe9fb252e77b9",
+    "11-input.json": "a342d8c1cb68ef378102162dcb1fc7185329868a36e834b90064fed138b44799",
+    "12-input.json": "aab3a15a70f949c19ea9bbae3e8e627942ba3779532d571a1b67af5a48704ede",
+    "13-input.json": "d21063835bea9e4645a08b2aa250523d4aa1f9bed1aba4bc658e5e19129df022",
+    "14-input.json": "373cd968cd636215ecb1e5127550d7f7a1ab2ef6ce924dda45f1cb18cb191f1e",
+    "15-input.json": "fabb351f0c1d5932bcf3292249728106762e27de5ea19e28c5143c7046babd09"
+  },
+  "final_browser_review": {
+    "count": 15,
+    "unknowns": 0,
+    "same_glosses_as_before": true,
+    "output_directory": "artifacts/phrase-review/live-cv-loop4",
+    "videos": [
+      {
+        "id": 1,
+        "sha256": "5e49f4c055cd5c165bc8b447710a64a0ec4b541442349c3af67334c947ed5978",
+        "size_bytes": 1078310,
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "vp9",
+              "width": 1280,
+              "height": 960
+            }
+          ],
+          "format": {
+            "duration": "11.324031"
+          }
+        }
+      },
+      {
+        "id": 2,
+        "sha256": "2bbe6f32232e525d4ca3d9be4795f9cf6e09a18d518963d865b3ebc975343765",
+        "size_bytes": 1119955,
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "vp9",
+              "width": 1280,
+              "height": 960
+            }
+          ],
+          "format": {
+            "duration": "11.486982"
+          }
+        }
+      },
+      {
+        "id": 3,
+        "sha256": "84bf414604118a7e7cfcd4ae02f81d6334b0e17a31778173a2308070b117580a",
+        "size_bytes": 966532,
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "vp9",
+              "width": 1280,
+              "height": 960
+            }
+          ],
+          "format": {
+            "duration": "10.028563"
+          }
+        }
+      },
+      {
+        "id": 4,
+        "sha256": "8dc5fd9465eb506576d3a46ed505554fc86bfe296ae66d723e28c8b5acd483a1",
+        "size_bytes": 974942,
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "vp9",
+              "width": 1280,
+              "height": 960
+            }
+          ],
+          "format": {
+            "duration": "10.371457"
+          }
+        }
+      },
+      {
+        "id": 5,
+        "sha256": "e6e79a25cb140d517a9a999aa49a49b115d3ec357e7eb36fbcbd3c95a616c2c6",
+        "size_bytes": 939765,
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "vp9",
+              "width": 1280,
+              "height": 960
+            }
+          ],
+          "format": {
+            "duration": "11.152946"
+          }
+        }
+      },
+      {
+        "id": 6,
+        "sha256": "24337399aca341ce554b9b9cb4ce547ebf6cd61eda31a86eb0b098f83436bee6",
+        "size_bytes": 1020678,
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "vp9",
+              "width": 1280,
+              "height": 960
+            }
+          ],
+          "format": {
+            "duration": "11.192517"
+          }
+        }
+      },
+      {
+        "id": 7,
+        "sha256": "2860f6d0a3215877de6d5cb779bcfb5e3b17819c97a3148b4bb1ad33c10b1c7b",
+        "size_bytes": 679092,
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "vp9",
+              "width": 1280,
+              "height": 960
+            }
+          ],
+          "format": {
+            "duration": "8.197393"
+          }
+        }
+      },
+      {
+        "id": 8,
+        "sha256": "282b88f961ab36f767d76a2cdb1058c4730e9a9af280001865d72d5a8e1a4698",
+        "size_bytes": 463201,
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "vp9",
+              "width": 1280,
+              "height": 960
+            }
+          ],
+          "format": {
+            "duration": "5.102386"
+          }
+        }
+      },
+      {
+        "id": 9,
+        "sha256": "23e3d1a7353b12f59dddb49da5688432cd9043bb963f9dec5c215752d94c1f59",
+        "size_bytes": 708727,
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "vp9",
+              "width": 1280,
+              "height": 960
+            }
+          ],
+          "format": {
+            "duration": "7.586091"
+          }
+        }
+      },
+      {
+        "id": 10,
+        "sha256": "84a7f7a29456218ef2221323a8e5898c1ea18a4a686f8c12dc32d2408d8a8748",
+        "size_bytes": 1430218,
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "vp9",
+              "width": 1280,
+              "height": 960
+            }
+          ],
+          "format": {
+            "duration": "14.429200"
+          }
+        }
+      },
+      {
+        "id": 11,
+        "sha256": "be695af375a23b6d24e85460cb3d87b980f6b8f03719acdf581c5f9df52fbfc4",
+        "size_bytes": 1051454,
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "vp9",
+              "width": 1280,
+              "height": 960
+            }
+          ],
+          "format": {
+            "duration": "10.494685"
+          }
+        }
+      },
+      {
+        "id": 12,
+        "sha256": "2645b82e5f5dcc24b00c54da13739f056220a64e1e34db7c4dabf532bea02f8b",
+        "size_bytes": 925175,
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "vp9",
+              "width": 1280,
+              "height": 960
+            }
+          ],
+          "format": {
+            "duration": "9.904681"
+          }
+        }
+      },
+      {
+        "id": 13,
+        "sha256": "338b92a8cf5263acdcd81c489f529db1e4be35011cb0e53afa825ca0fd99ba36",
+        "size_bytes": 895301,
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "vp9",
+              "width": 1280,
+              "height": 960
+            }
+          ],
+          "format": {
+            "duration": "9.765793"
+          }
+        }
+      },
+      {
+        "id": 14,
+        "sha256": "b310b785ff0a913ee3b2cd00458a593cfce196df818df0d85f1d808a7b7331ad",
+        "size_bytes": 750312,
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "vp9",
+              "width": 1280,
+              "height": 960
+            }
+          ],
+          "format": {
+            "duration": "8.009808"
+          }
+        }
+      },
+      {
+        "id": 15,
+        "sha256": "fe8b581ef5239edaed2a6b45b0a6111facf2be12f53a1193cf415c1298e0d069",
+        "size_bytes": 808060,
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "vp9",
+              "width": 1280,
+              "height": 960
+            }
+          ],
+          "format": {
+            "duration": "8.390996"
+          }
+        }
+      }
+    ],
+    "export_first_frame_regression": "passed: first source canvas exactly equals paused frame zero",
+    "paused_seek_regression": "passed: exact canvas pixels after seek round trip",
+    "backend_tests": 42,
+    "frontend_motion_checks": "passed",
+    "lint": "passed",
+    "production_build": "passed; existing bundle-size warning"
+  }
+}

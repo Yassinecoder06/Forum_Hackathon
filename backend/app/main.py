@@ -389,6 +389,10 @@ def avatar_model():
 def capture_landmarks(job_id: str):
     try:
         path=capture_library.job_folder(job_id)/'animics-landmarks.json.gz'
+        row=next((r for r in capture_library.library() if r.get('capture_id')==job_id),None)
+        if row and row.get('raw_animics_path'):
+            candidate=Path(row['raw_animics_path']).resolve()
+            if candidate.is_relative_to(capture_library.storage()) and candidate.is_file():path=candidate
         if not path.is_file():raise FileNotFoundError()
         return FileResponse(path,media_type='application/gzip',filename='animics-landmarks.json.gz')
     except (ValueError,FileNotFoundError):raise HTTPException(404,'Landmarks bruts indisponibles pour cette capture.')

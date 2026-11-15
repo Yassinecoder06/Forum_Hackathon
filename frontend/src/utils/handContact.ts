@@ -1,5 +1,5 @@
 import * as THREE from "three";
-export type Capsule = { a: THREE.Vector3; b: THREE.Vector3; sourceA: THREE.Vector3; sourceB: THREE.Vector3; radius?: number; sourceObserved?: boolean };
+export type Capsule = { a: THREE.Vector3; b: THREE.Vector3; sourceA: THREE.Vector3; sourceB: THREE.Vector3; radius?: number; sourceObserved?: boolean; kind?: "hand" | "forearm" };
 
 /** Closest points of bounded segments, including parallel/zero-length segments. */
 export function segmentDistance(a: THREE.Vector3, b: THREE.Vector3, c: THREE.Vector3, d: THREE.Vector3) {
@@ -25,12 +25,14 @@ export function segmentDistance(a: THREE.Vector3, b: THREE.Vector3, c: THREE.Vec
  * have a rendered volume and must participate in collision detection. */
 export function handContact(left: Capsule[], right: Capsule[]) {
   const correction = new THREE.Vector3();
-  let sourceDistance = Infinity, maxPenetration = 0;
+  let sourceDistance = Infinity, maxPenetration = 0, maxRawPenetration = 0;
   for (const l of left) for (const r of right) {
+    if (l.kind === "forearm" && r.kind === "forearm") continue;
     const measured = l.sourceObserved !== false && r.sourceObserved !== false;
     const sourceGap = measured ? segmentDistance(l.sourceA, l.sourceB, r.sourceA, r.sourceB).distance : Infinity;
     sourceDistance = Math.min(sourceDistance, sourceGap);
     const hit = segmentDistance(l.a, l.b, r.a, r.b);
+    maxRawPenetration = Math.max(maxRawPenetration, (l.radius ?? .008) + (r.radius ?? .008) - hit.distance);
     const touching = sourceGap < .035;
     const penetration = Math.max(0, (l.radius ?? .008) + (r.radius ?? .008) - (touching ? .003 : 0) - hit.distance);
     if (penetration > maxPenetration + 1e-6) {
@@ -43,5 +45,5 @@ export function handContact(left: Capsule[], right: Capsule[]) {
   }
   const contact = sourceDistance < .035;
   correction.clampLength(0, .015);
-  return { correction, maxPenetration, sourceDistance, contact };
+  return { correction, maxPenetration, maxRawPenetration, sourceDistance, contact };
 }

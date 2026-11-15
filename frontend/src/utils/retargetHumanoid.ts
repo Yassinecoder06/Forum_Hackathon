@@ -268,11 +268,11 @@ export class HumanoidRetargeter {
       states[side] = track.states.map((state, i) => state === "observed" && motion.frames[i].playback_origin && motion.frames[i].playback_origin !== "source" ? "interpolated" : state);
       rejected += track.rejected;
     }
-    // Resolve contacts AFTER rotation filtering. Densify to 50 Hz so a collision
+    // Resolve contacts AFTER rotation filtering. Densify to 100 Hz so a collision
     // between source keyframes is also checked; runtime only samples this cache.
     const dense = [], denseStates: Record<string, HandState[]> = { Left: [], Right: [] };
     let correctedFrames = 0, contactFrames = 0, maxCorrection = 0, maxPenetration = 0;
-    for (let time = 0; all.length && time <= motion.duration_ms; time = Math.min(motion.duration_ms, time + 20)) {
+    for (let time = 0; all.length && time <= motion.duration_ms; time = Math.min(motion.duration_ms, time + 10)) {
       const interval = frameInterval(motion.frames, time);
       names.forEach((n, i) => this.binds.get(n)!.bone.quaternion.slerpQuaternions(all[interval.lo].rotations[i], all[interval.next].rotations[i], interval.alpha));
       this.root.updateMatrixWorld(true);
@@ -284,14 +284,31 @@ export class HumanoidRetargeter {
           if (!a || !b) return [];
           const pa = a.getWorldPosition(new THREE.Vector3()), pb = b.getWorldPosition(new THREE.Vector3());
           const sa = joints[`${side.toLowerCase()}_${saName}`], sb = joints[`${side.toLowerCase()}_${sbName}`];
-          return [{ a: pa, b: pb, sourceA: sa ? vec(sa) : pa, sourceB: sb ? vec(sb) : pb, sourceObserved: Boolean(sa && sb), radius }];
+          return [{ a: pa, b: pb, sourceA: sa ? vec(sa) : pa, sourceB: sb ? vec(sb) : pb, sourceObserved: Boolean(sa && sb), radius, kind: an === "ForeArm" ? "forearm" : "hand" }];
         };
         return [...fingers.flatMap((finger) => [1, 2, 3].flatMap((i) => segment(`Hand${finger}${i}`, `Hand${finger}${i + 1}`, `${finger.toLowerCase()}_${i}`, `${finger.toLowerCase()}_${i + 1}`, .008))),
-          ...["Index", "Middle", "Pinky"].flatMap((f) => segment("Hand", `Hand${f}1`, "wrist", `${f.toLowerCase()}_1`, .022))];
+          ...["Index", "Middle", "Pinky"].flatMap((f) => segment("Hand", `Hand${f}1`, "wrist", `${f.toLowerCase()}_1`, .022)),
+          ...segment("ForeArm", "Hand", "elbow", "wrist", .028)];
       };
       let corrected = false;
+      const resolveContacts = (includeForearms: boolean) => {
+      const activeCaps = (side: string) => capsules(side).filter(c => includeForearms || c.kind !== "forearm");
+      let bestScore = Infinity;
+      let bestPose: THREE.Quaternion[] = [];
+      const remember = () => {
+        if (!includeForearms) return;
+        const score = handContact(capsules("Left"), capsules("Right")).maxRawPenetration;
+        if (score < bestScore) { bestScore = score; bestPose = names.map(n => this.binds.get(n)!.bone.quaternion.clone()); }
+      };
+      const restore = () => {
+        if (!includeForearms || !bestPose.length) return;
+        names.forEach((n,i) => this.binds.get(n)!.bone.quaternion.copy(bestPose[i]));
+        this.root.updateMatrixWorld(true);
+      };
+      remember();
+
       for (let iteration = 0; iteration < 8; iteration++) {
-        const left = capsules("Left"), right = capsules("Right");
+        const left = activeCaps("Left"), right = activeCaps("Right");
         if (!left.length || !right.length) break;
         const hit = handContact(left, right);
         if (iteration === 0 && hit.contact) contactFrames++;
@@ -310,15 +327,16 @@ export class HumanoidRetargeter {
           }
           target.z += Math.min(.04, bodyPush);
           const offset = target.clone().sub(original[side]).clampLength(0, .06);
-          maxCorrection = Math.max(maxCorrection, offset.length());
           this.placeArm(side, original[side].clone().add(offset), elbow.getWorldPosition(new THREE.Vector3()), true);
         }
+        remember();
         corrected = true;
       }
+      restore();
       // A closest-pair projection can get stuck between several fingers. Search
       // bounded rigid translations for a better separating direction, keeping
       // fingers/palm intact and never moving a hand backwards into the torso.
-      let left = capsules("Left"), right = capsules("Right");
+      let left = activeCaps("Left"), right = activeCaps("Right");
       let best = handContact(left, right).maxPenetration;
       if (best > .006) {
         const current = Object.fromEntries(["Left", "Right"].map((s) => [s, this.bone(s + "Hand")!.getWorldPosition(new THREE.Vector3())]));
@@ -334,12 +352,20 @@ export class HumanoidRetargeter {
         }
         if (chosen) for (const side of ["Left", "Right"] as const) {
           const target = current[side].clone().add(chosen[side]);
-          maxCorrection = Math.max(maxCorrection, target.distanceTo(original[side]));
           this.placeArm(side, target, this.bone(side + "ForeArm")!.getWorldPosition(new THREE.Vector3()), true);
-          corrected = true;
+          remember();
+        corrected = true;
         }
-        left = capsules("Left"); right = capsules("Right");
+        left = activeCaps("Left"); right = activeCaps("Right");
       }
+
+      remember(); restore();
+      };
+      resolveContacts(false); // Preserve the established hand-to-hand solution.
+      resolveContacts(true); // Accept only actual geometric improvements.
+      const left = capsules("Left"), right = capsules("Right");
+      for (const side of ["Left", "Right"])
+        maxCorrection = Math.max(maxCorrection, this.bone(side + "Hand")!.getWorldPosition(new THREE.Vector3()).distanceTo(original[side]));
       maxPenetration = Math.max(maxPenetration, handContact(left, right).maxPenetration);
       if (corrected) correctedFrames++;
       dense.push({ time_ms: time, rotations: names.map((n) => this.binds.get(n)!.bone.quaternion.clone()) });

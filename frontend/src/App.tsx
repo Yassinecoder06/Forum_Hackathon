@@ -36,6 +36,7 @@ import "./studio.css";
 
 type Page = "studio" | "library" | "capture" | "research";
 type Capabilities = {
+  cv_corrected_count?: number;
   dictasign?: {
     status: string;
     indexed_concepts: number;
@@ -435,7 +436,12 @@ export default function App() {
     setError("");
     setTime(0);
     setSpeed(1);
-    setPlaying(true);
+    setPlaying(false);
+    // Let React commit the reset and the avatar render frame zero before capture.
+    // Otherwise the first encoded frame can contain the previous paused pose.
+    await new Promise<void>((resolve) =>
+      requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+    );
     const output = document.createElement("canvas");
     output.width = 1280;
     output.height = 960;
@@ -511,6 +517,7 @@ export default function App() {
     };
     draw();
     recorder.start();
+    setPlaying(true);
     window.setTimeout(() => {
       if (recorder.state === "recording") recorder.stop();
     }, duration + 200);
@@ -1167,6 +1174,11 @@ export default function App() {
                         Exporter le lexique et les liens vers les squelettes
                       </a>
                     </div>
+                  )}
+                  {!!caps?.cv_corrected_count && (
+                    <p className="dictasign-status">
+                      {caps.cv_corrected_count} captures CV actualisées et actives · aperçu de recherche, revue en attente
+                    </p>
                   )}
                   <input
                     className="library-search"

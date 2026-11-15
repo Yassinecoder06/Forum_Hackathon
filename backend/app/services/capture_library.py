@@ -42,10 +42,11 @@ def runtime_python(kind):
     return Path(override) if override else ROOT/f'.venv-{kind}'/'bin/python'
 
 def capabilities():
+    entries=library()
     return {'capture':runtime_python('motion').is_file(),
         'emotion':runtime_python('audio').is_file() and (ROOT/'.models/emotion2vec-seed/model.pt').is_file(),
         'motion_model':'MediaPipe Holistic','emotion_model':'emotion2vec+ seed',
-        'library_count':len(library()),
+        'library_count':len(entries),'cv_corrected_count':sum(bool(r.get('cv_generation')) for r in entries),
         'corpus':corpus_status(),'dictasign':dictasign_status()}
 
 def corpus_status():

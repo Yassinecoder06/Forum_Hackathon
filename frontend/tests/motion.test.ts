@@ -193,6 +193,9 @@ assert(touching.contact && touching.correction.length() === 0, "Preserve surface
 assert(handContact([leftCapsule], [{ ...rightCapsule, sourceA: point(-.09), sourceB: point(-.09, 1) }]).correction.length() > 0, "Deep intersection is corrected even during contact");
 assert(handContact([{ ...leftCapsule, sourceObserved: false, radius: .022 }], [{ ...rightCapsule, sourceObserved: false, radius: .022 }]).correction.length() > 0, "Untracked rendered palms still collide");
 assert(handContact([{ ...leftCapsule, sourceObserved: false }], [{ ...leftCapsule, sourceObserved: false }]).correction.length() > 0, "Coincident capsules need a deterministic separating normal");
+const forearm = { ...leftCapsule, kind: "forearm" as const, radius: .028 };
+assert(handContact([forearm], [forearm]).maxPenetration === 0, "Forearm crossings are not hand collisions");
+assert(handContact([forearm], [{ ...rightCapsule, kind: "hand" as const }]).maxRawPenetration > 0, "Hands must be checked against the opposite forearm");
 // Whole-track seeking must be independent of render history, including a gap.
 const seekClip = { ...a, frames: [0, 40, 80].map((time_ms, i) => ({ time_ms, joints: { ...joints, left_wrist: [0.1 + i * .02, 1.5, .3] as [number, number, number] } })) };
 retarget.applyMotion(seekClip, 20);
