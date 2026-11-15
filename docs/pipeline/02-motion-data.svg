@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1680" height="1188" viewBox="0 0 1680 1188"><defs><marker id="ink" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#193b34" stroke-width="1.5"/></marker><marker id="muted" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#60746d" stroke-width="1.5"/></marker><marker id="green" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#23684f" stroke-width="1.5"/></marker><marker id="blue" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#336a91" stroke-width="1.5"/></marker><marker id="amber" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#996522" stroke-width="1.5"/></marker><marker id="purple" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#74578d" stroke-width="1.5"/></marker></defs><rect width="1680" height="1188" fill="#f7f8f3"/>
+<text x="40" y="47" fill="#23684f" font-size="17" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">SIGNACULTURE  /  SYSTEM MAP</text>
+<text x="40" y="99" fill="#193b34" font-size="39" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">How video becomes a reusable motion</text>
+<text x="40" y="137" fill="#60746d" font-size="20" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Lexical video ingestion and sentence annotations are separate data streams.</text>
+<rect x="40" y="190" width="340" height="180" rx="17" fill="#edf3e9" stroke="#23684f" stroke-width="1.4"/>
+<text x="60" y="214" fill="#23684f" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">PUBLIC CORPUS</text>
+<text x="60" y="245" fill="#23684f" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Licensed lexical videos</text>
+<text x="60" y="276" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">447 France-LSF concepts</text>
+<text x="60" y="299" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Per-file licences and credits</text>
+<text x="60" y="322" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Commons + verified author copies</text>
+<rect x="460" y="190" width="340" height="180" rx="17" fill="#edf3e9" stroke="#23684f" stroke-width="1.4"/>
+<text x="480" y="214" fill="#23684f" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">ACQUISITION</text>
+<text x="480" y="245" fill="#23684f" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Source verification</text>
+<text x="480" y="276" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Rights / licence checks</text>
+<text x="480" y="299" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Source URL + provenance</text>
+<text x="480" y="322" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Checksums verify retrieved files</text>
+<rect x="880" y="190" width="340" height="180" rx="17" fill="#edf3e9" stroke="#23684f" stroke-width="1.4"/>
+<text x="900" y="214" fill="#23684f" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">COMPUTER VISION</text>
+<text x="900" y="245" fill="#23684f" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">MediaPipe extraction</text>
+<text x="900" y="276" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Holistic body + face</text>
+<text x="900" y="299" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Hand detector fallback</text>
+<text x="900" y="322" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Video sampling ≤ 20 fps</text>
+<rect x="1300" y="190" width="340" height="180" rx="17" fill="#faf2e5" stroke="#996522" stroke-width="1.4"/>
+<text x="1320" y="214" fill="#996522" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">AUTOMATIC SCREENING</text>
+<text x="1320" y="245" fill="#996522" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Technical quality gate</text>
+<text x="1320" y="276" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Pose coverage ≥ 80%</text>
+<text x="1320" y="299" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">At least one hand ≥ 35%</text>
+<text x="1320" y="322" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Threshold is not LSF validation</text>
+<path d="M380,280 L460,280" fill="none" stroke="#23684f" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#green)"/>
+<path d="M800,280 L880,280" fill="none" stroke="#23684f" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#green)"/>
+<path d="M1220,280 L1300,280" fill="none" stroke="#23684f" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#green)"/>
+<rect x="40" y="490" width="340" height="175" rx="17" fill="#edf3f7" stroke="#336a91" stroke-width="1.4"/>
+<text x="60" y="514" fill="#336a91" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">ALTERNATIVE INPUT</text>
+<text x="60" y="545" fill="#336a91" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Authorized local input</text>
+<text x="60" y="576" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Uploaded signer video</text>
+<text x="60" y="599" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Native motion JSON</text>
+<text x="60" y="622" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Animics landmark JSON</text>
+<rect x="460" y="490" width="340" height="175" rx="17" fill="#edf3e9" stroke="#23684f" stroke-width="1.4"/>
+<text x="480" y="514" fill="#23684f" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">COMMON REPRESENTATION</text>
+<text x="480" y="545" fill="#23684f" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Motion normalization</text>
+<text x="480" y="576" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">signaculture-v1 format</text>
+<text x="480" y="599" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Body + sparse finger joints</text>
+<text x="480" y="622" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Mouth / brow measurements</text>
+<path d="M380,570 L460,570" fill="none" stroke="#336a91" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#blue)" stroke-dasharray="9 7"/>
+<text x="389" y="555" fill="#336a91" font-size="16" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">JSON</text>
+<path d="M210,490 L210,400 L860,400 L860,280 L880,280" fill="none" stroke="#336a91" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#blue)" stroke-dasharray="9 7"/>
+<text x="230" y="390" fill="#336a91" font-size="16" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Local video uses the same CV extraction</text>
+<path d="M1050,370 L1050,425 L630,425 L630,490" fill="none" stroke="#23684f" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#green)"/>
+<rect x="880" y="490" width="340" height="175" rx="17" fill="#faf2e5" stroke="#996522" stroke-width="1.4"/>
+<text x="900" y="514" fill="#996522" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">OBSERVED EXTRACTION OUTCOME</text>
+<text x="900" y="545" fill="#996522" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Tracking review</text>
+<text x="900" y="576" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">439 bulk clips accepted</text>
+<text x="900" y="599" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">7 retained outside the library</text>
+<text x="900" y="622" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Check hands against source video</text>
+<path d="M1470,370 L1470,445 L1050,445 L1050,490" fill="none" stroke="#996522" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#amber)"/>
+<rect x="1300" y="490" width="340" height="175" rx="17" fill="#edf3e9" stroke="#23684f" stroke-width="1.4"/>
+<text x="1320" y="514" fill="#23684f" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">PLAYBACK DATA</text>
+<text x="1320" y="545" fill="#23684f" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Registered sign library</text>
+<text x="1320" y="576" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">439 imports + curated Bonjour</text>
+<text x="1320" y="599" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">440 real motion entries</text>
+<text x="1320" y="622" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Concepts, aliases, source, licence</text>
+<path d="M800,590 L840,590 L840,720 L1470,720 L1470,665" fill="none" stroke="#23684f" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#green)"/>
+<path d="M1220,565 L1300,565" fill="none" stroke="#23684f" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#green)"/>
+<rect x="40" y="795" width="760" height="220" rx="17" fill="#edf3e9" stroke="#23684f" stroke-width="1.4"/>
+<text x="60" y="819" fill="#23684f" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">MOTION CHARACTERISTICS</text>
+<text x="60" y="850" fill="#23684f" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">What the capture preserves</text>
+<text x="60" y="881" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Hip-relative body coordinates; wrist-anchored finger trajectories.</text>
+<text x="60" y="904" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Sparse tracking and face measurements are kept with coverage statistics.</text>
+<text x="60" y="927" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Occluded or untracked fingers are not fabricated.</text>
+<text x="60" y="950" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Depth and avatar retargeting remain approximate; review is required.</text>
+<rect x="880" y="795" width="760" height="220" rx="17" fill="#edf3e9" stroke="#23684f" stroke-width="1.4"/>
+<text x="900" y="819" fill="#23684f" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">PERSISTENCE</text>
+<text x="900" y="850" fill="#23684f" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Traceability and review</text>
+<text x="900" y="881" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Local captures, original files and derived motions: .runtime/</text>
+<text x="900" y="904" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Bundled attributed Bonjour example: data/public_examples/</text>
+<text x="900" y="927" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Inventory and ingestion report: data/source_inventory/</text>
+<text x="900" y="950" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Pending linguistic / animation review remains separate from rights clearance.</text>
+<text x="40" y="1080" fill="#996522" font-size="21" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Boundary: 447 isolated-sign videos are NOT 447 sentence-level French–gloss training pairs.</text>
+<path d="M40 1134 H1640" stroke="#ced8cc"/>
+<text x="40" y="1164" fill="#60746d" font-size="16" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Implementation snapshot · 15 November 2026 · Local research prototype · Human LSF review pending</text>
+<text x="1490" y="1164" fill="#23684f" font-size="18" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">2 / 3</text>
+</svg>
