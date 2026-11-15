@@ -45,7 +45,11 @@ def process(item,out,fingerprint):
   comparisons.append({'capture_id':alias['capture_id'],'old_frames':len(old),'new_frames':len(new),'common_frames':len(common),'body_lost':body_lost,'hands':hands,'gate':gate})
  d={'source_sha256':digest,'aliases':aliases,'status':'complete','worker_fingerprint':fingerprint,'seconds':round(time.monotonic()-start,2),'quality':json.loads(motion.read_text())['quality'],'comparisons':comparisons,'keypoint_accuracy_validated':False,'active_assets_replaced':False};save(result,d);return d
 if __name__=='__main__':
- p=argparse.ArgumentParser();p.add_argument('--output',type=Path,default=ROOT/'.runtime/cv-v4-all');p.add_argument('--workers',type=int,default=3);a=p.parse_args();groups,excluded=inventory();fingerprint=hashlib.sha256(b''.join((ROOT/'backend/app/workers'/f).read_bytes() for f in ['capture.py','hand_tracking.py'])).hexdigest();save(a.output/'inventory.json',{'groups':groups,'excluded_unprovenanced_uploads':excluded,'worker_fingerprint':fingerprint});results=[];start=time.monotonic()
+ p=argparse.ArgumentParser();p.add_argument('--output',type=Path,default=ROOT/'.runtime/cv-v4-all');p.add_argument('--workers',type=int,default=3);a=p.parse_args();groups,excluded=inventory();fingerprint=hashlib.sha256(b''.join((ROOT/'backend/app/workers'/f).read_bytes() for f in ['capture.py','hand_tracking.py','face_features.py'])).hexdigest()
+ if (a.output/'inventory.json').exists():
+  existing=json.loads((a.output/'inventory.json').read_text())
+  if existing.get('worker_fingerprint')!=fingerprint:p.error('Existing output belongs to another extractor revision; select a fresh --output directory to preserve frozen evidence.')
+ save(a.output/'inventory.json',{'groups':groups,'excluded_unprovenanced_uploads':excluded,'worker_fingerprint':fingerprint});results=[];start=time.monotonic()
  with concurrent.futures.ThreadPoolExecutor(max_workers=max(1,min(a.workers,4))) as pool:
   futures={pool.submit(process,item,a.output,fingerprint):item[0] for item in groups.items()}
   for f in concurrent.futures.as_completed(futures):

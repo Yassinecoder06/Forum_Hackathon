@@ -11,8 +11,10 @@ import mediapipe as mp
 import numpy as np
 if __package__:
     from .hand_tracking import assign_hands, roi_box, map_roi_hand, consistent_hand
+    from .face_features import measure_face
 else:
     from hand_tracking import assign_hands, roi_box, map_roi_hand, consistent_hand
+    from face_features import measure_face
 
 BODY = {'head': 0, 'left_shoulder': 11, 'right_shoulder': 12,
         'left_elbow': 13, 'right_elbow': 14, 'left_wrist': 15, 'right_wrist': 16}
@@ -58,12 +60,7 @@ def pose_frame(result, width, height):
     face = result.face_landmarks
     facial = None
     if face:
-        pts = face.landmark
-        # Dimensionless measurements, not grammatical interpretation.
-        eye_width = max(abs(pts[33].x-pts[263].x),.001)
-        facial = {'mouth_open': abs(pts[13].y-pts[14].y)/eye_width,
-                  'brow_left': abs(pts[105].y-pts[159].y)/eye_width,
-                  'brow_right': abs(pts[334].y-pts[386].y)/eye_width}
+        facial = measure_face(face.landmark, width, height)
     if not all(math.isfinite(n) for xyz in joints.values() for n in xyz):
         raise ValueError('Coordonnées invalides')
     return joints, hands, facial
@@ -181,9 +178,9 @@ def extract(source, target, progress, raw_target=None):
         raise ValueError('Aucune personne détectée. Utilisez un plan fixe, de face, avec le buste et les mains visibles.')
     duration=round(index*1000/fps)
     if frames[0]['time_ms']>0:
-        first=deepcopy(frames[0]);first['time_ms']=0;frames.insert(0,first)
+        first=deepcopy(frames[0]);first['time_ms']=0;first['playback_origin']='endpoint_hold';frames.insert(0,first)
     if frames[-1]['time_ms']<duration:
-        last=deepcopy(frames[-1]);last['time_ms']=duration;frames.append(last)
+        last=deepcopy(frames[-1]);last['time_ms']=duration;last['playback_origin']='endpoint_hold';frames.append(last)
     joint_names=sorted(set().union(*(f['joints'] for f in frames)))
     # Do not invent fingers during occlusion. Sparse finger keys are intentional;
     # the player separately labels/fades missing-hand playback estimates.
@@ -194,6 +191,7 @@ def extract(source, target, progress, raw_target=None):
     motion={'rig_version':'signaculture-v1','fps':fps/stride,'duration_ms':duration,
         'joints':list(BODY)+['hips','neck'],'tracked_joints':joint_names,'frames':frames,
         'quality':quality,'synthetic':False,'capture_method':'mediapipe-holistic-hands-fallback-0.10.21-roi-v4',
+        'face_feature_method':'eye-normal-projection-legacy-scale-v1',
         'warnings':['Profondeur monoculaire approximative. Les occultations nécessitent une revue.']}
     target.write_text(json.dumps(motion,allow_nan=False))
     if raw_target is not None:

@@ -1,0 +1,648 @@
+{
+  "status": "executed",
+  "phrase_count": 15,
+  "controlled_dictionary_unknowns": 0,
+  "same_glosses_as_previous": true,
+  "actual_browser_results": [
+    {
+      "id": 1,
+      "text": "je vouloir boire eau",
+      "source_phrase": "Je veux boire de l'eau.",
+      "glosses": [
+        "JE",
+        "VOULOIR",
+        "BOIRE",
+        "EAU"
+      ],
+      "unknowns": [],
+      "duration_ms": 11179,
+      "segments": 4,
+      "diagnostic": {
+        "preparedMs": 4066.6000000089407,
+        "rejectedSpikes": 6,
+        "correctedFrames": 594,
+        "contactFrames": 674,
+        "maxCorrection": 0.06000016934251291,
+        "maxPenetration": 0.019466649417924874,
+        "trajectoryRefinedFrames": 8
+      },
+      "video": "01.webm"
+    },
+    {
+      "id": 2,
+      "text": "je vouloir manger pain",
+      "source_phrase": "Je veux manger du pain.",
+      "glosses": [
+        "JE",
+        "VOULOIR",
+        "MANGER",
+        "PAIN"
+      ],
+      "unknowns": [],
+      "duration_ms": 11337,
+      "segments": 4,
+      "diagnostic": {
+        "preparedMs": 4244.5999999940395,
+        "rejectedSpikes": 12,
+        "correctedFrames": 830,
+        "contactFrames": 963,
+        "maxCorrection": 0.06000016934251291,
+        "maxPenetration": 0.019466649417924874,
+        "trajectoryRefinedFrames": 8
+      },
+      "video": "02.webm"
+    },
+    {
+      "id": 3,
+      "text": "mon frère aimer musique",
+      "source_phrase": "Mon frère aime la musique.",
+      "glosses": [
+        "MON",
+        "FRERE",
+        "AIMER",
+        "MUSIQUE"
+      ],
+      "unknowns": [],
+      "duration_ms": 9875,
+      "segments": 4,
+      "diagnostic": {
+        "preparedMs": 3368.5,
+        "rejectedSpikes": 19,
+        "correctedFrames": 352,
+        "contactFrames": 505,
+        "maxCorrection": 0.06000007612480769,
+        "maxPenetration": 0.023089524109669673,
+        "trajectoryRefinedFrames": 3
+      },
+      "video": "03.webm"
+    },
+    {
+      "id": 4,
+      "text": "je aller école demain",
+      "source_phrase": "Je vais à l'école demain.",
+      "glosses": [
+        "JE",
+        "ALLER",
+        "ECOLE",
+        "DEMAIN"
+      ],
+      "unknowns": [],
+      "duration_ms": 10259,
+      "segments": 4,
+      "diagnostic": {
+        "preparedMs": 2707.800000011921,
+        "rejectedSpikes": 8,
+        "correctedFrames": 468,
+        "contactFrames": 257,
+        "maxCorrection": 0.06000016934251291,
+        "maxPenetration": 0.010393007700117918,
+        "trajectoryRefinedFrames": 1
+      },
+      "video": "04.webm"
+    },
+    {
+      "id": 5,
+      "text": "mon ami habiter Paris",
+      "source_phrase": "Mon ami habite à Paris.",
+      "glosses": [
+        "MON",
+        "AMI",
+        "HABITER",
+        "PARIS"
+      ],
+      "unknowns": [],
+      "duration_ms": 10991,
+      "segments": 4,
+      "diagnostic": {
+        "preparedMs": 4016.5999999940395,
+        "rejectedSpikes": 14,
+        "correctedFrames": 665,
+        "contactFrames": 603,
+        "maxCorrection": 0.06000009935998256,
+        "maxPenetration": 0.022390823152050418,
+        "trajectoryRefinedFrames": 10
+      },
+      "video": "05.webm"
+    },
+    {
+      "id": 6,
+      "text": "je vouloir acheter voiture",
+      "source_phrase": "Je veux acheter une voiture.",
+      "glosses": [
+        "JE",
+        "VOULOIR",
+        "ACHETER",
+        "VOITURE"
+      ],
+      "unknowns": [],
+      "duration_ms": 11057,
+      "segments": 4,
+      "diagnostic": {
+        "preparedMs": 3332.5999999940395,
+        "rejectedSpikes": 7,
+        "correctedFrames": 668,
+        "contactFrames": 691,
+        "maxCorrection": 0.06000016934251291,
+        "maxPenetration": 0.02513194777322615,
+        "trajectoryRefinedFrames": 7
+      },
+      "video": "06.webm"
+    },
+    {
+      "id": 7,
+      "text": "je lire livre",
+      "source_phrase": "Je lis un livre.",
+      "glosses": [
+        "JE",
+        "LIRE",
+        "LIVRE"
+      ],
+      "unknowns": [],
+      "duration_ms": 8030,
+      "segments": 3,
+      "diagnostic": {
+        "preparedMs": 3257.3999999910593,
+        "rejectedSpikes": 44,
+        "correctedFrames": 724,
+        "contactFrames": 1183,
+        "maxCorrection": 0.06000016934251291,
+        "maxPenetration": 0.021507130019596053,
+        "trajectoryRefinedFrames": 9
+      },
+      "video": "07.webm"
+    },
+    {
+      "id": 8,
+      "text": "chat dormir",
+      "source_phrase": "Le chat dort.",
+      "glosses": [
+        "CHAT",
+        "DORMIR"
+      ],
+      "unknowns": [],
+      "duration_ms": 4930,
+      "segments": 2,
+      "diagnostic": {
+        "preparedMs": 868.7000000029802,
+        "rejectedSpikes": 1,
+        "correctedFrames": 11,
+        "contactFrames": 0,
+        "maxCorrection": 0.008517726170650585,
+        "maxPenetration": 0,
+        "trajectoryRefinedFrames": 0
+      },
+      "video": "08.webm"
+    },
+    {
+      "id": 9,
+      "text": "je regarder football",
+      "source_phrase": "Je regarde le football.",
+      "glosses": [
+        "JE",
+        "REGARDER",
+        "FOOTBALL"
+      ],
+      "unknowns": [],
+      "duration_ms": 7418,
+      "segments": 3,
+      "diagnostic": {
+        "preparedMs": 3298.2999999970198,
+        "rejectedSpikes": 9,
+        "correctedFrames": 516,
+        "contactFrames": 780,
+        "maxCorrection": 0.06000016934251291,
+        "maxPenetration": 0.02118012758149039,
+        "trajectoryRefinedFrames": 4
+      },
+      "video": "09.webm"
+    },
+    {
+      "id": 10,
+      "text": "je vouloir apprendre langue signe",
+      "source_phrase": "Je veux apprendre la langue des signes.",
+      "glosses": [
+        "JE",
+        "VOULOIR",
+        "APPRENDRE",
+        "LANGUE",
+        "SIGNE"
+      ],
+      "unknowns": [],
+      "duration_ms": 14259,
+      "segments": 5,
+      "diagnostic": {
+        "preparedMs": 4943.5,
+        "rejectedSpikes": 19,
+        "correctedFrames": 841,
+        "contactFrames": 1045,
+        "maxCorrection": 0.06000016934251291,
+        "maxPenetration": 0.025983955900168006,
+        "trajectoryRefinedFrames": 6
+      },
+      "video": "10.webm"
+    },
+    {
+      "id": 11,
+      "text": "je chercher mon téléphone portable",
+      "source_phrase": "Je cherche mon téléphone portable.",
+      "glosses": [
+        "JE",
+        "CHERCHER",
+        "MON",
+        "TELEPHONE PORTABLE"
+      ],
+      "unknowns": [],
+      "duration_ms": 10336,
+      "segments": 4,
+      "diagnostic": {
+        "preparedMs": 3515.5,
+        "rejectedSpikes": 6,
+        "correctedFrames": 409,
+        "contactFrames": 502,
+        "maxCorrection": 0.06000016934251291,
+        "maxPenetration": 0.023960454380896976,
+        "trajectoryRefinedFrames": 6
+      },
+      "video": "11.webm"
+    },
+    {
+      "id": 12,
+      "text": "je aller cinéma demain",
+      "source_phrase": "Je vais au cinéma demain.",
+      "glosses": [
+        "JE",
+        "ALLER",
+        "CINEMA",
+        "DEMAIN"
+      ],
+      "unknowns": [],
+      "duration_ms": 9741,
+      "segments": 4,
+      "diagnostic": {
+        "preparedMs": 1965.199999988079,
+        "rejectedSpikes": 14,
+        "correctedFrames": 394,
+        "contactFrames": 501,
+        "maxCorrection": 0.06000016934251291,
+        "maxPenetration": 0.010393007700117918,
+        "trajectoryRefinedFrames": 1
+      },
+      "video": "12.webm"
+    },
+    {
+      "id": 13,
+      "text": "mon père travail aujourd'hui",
+      "source_phrase": "Mon père travaille aujourd'hui.",
+      "glosses": [
+        "MON",
+        "PERE",
+        "TRAVAIL",
+        "AUJOURD HUI"
+      ],
+      "unknowns": [],
+      "duration_ms": 9630,
+      "segments": 4,
+      "diagnostic": {
+        "preparedMs": 3244.5,
+        "rejectedSpikes": 4,
+        "correctedFrames": 480,
+        "contactFrames": 501,
+        "maxCorrection": 0.06000008619575124,
+        "maxPenetration": 0.022390823152050418,
+        "trajectoryRefinedFrames": 3
+      },
+      "video": "13.webm"
+    },
+    {
+      "id": 14,
+      "text": "je vouloir café",
+      "source_phrase": "Je veux du café.",
+      "glosses": [
+        "JE",
+        "VOULOIR",
+        "CAFE"
+      ],
+      "unknowns": [],
+      "duration_ms": 7844,
+      "segments": 3,
+      "diagnostic": {
+        "preparedMs": 2585.9000000059605,
+        "rejectedSpikes": 7,
+        "correctedFrames": 546,
+        "contactFrames": 629,
+        "maxCorrection": 0.06000016934251291,
+        "maxPenetration": 0.019466649417924874,
+        "trajectoryRefinedFrames": 3
+      },
+      "video": "14.webm"
+    },
+    {
+      "id": 15,
+      "text": "je vouloir abandonner",
+      "source_phrase": "Je veux abandonner.",
+      "glosses": [
+        "JE",
+        "VOULOIR",
+        "ABANDONNER"
+      ],
+      "unknowns": [],
+      "duration_ms": 8244,
+      "segments": 3,
+      "diagnostic": {
+        "preparedMs": 2879.5,
+        "rejectedSpikes": 9,
+        "correctedFrames": 525,
+        "contactFrames": 587,
+        "maxCorrection": 0.06000016934251291,
+        "maxPenetration": 0.019466649417924874,
+        "trajectoryRefinedFrames": 3
+      },
+      "video": "15.webm"
+    }
+  ],
+  "videos": [
+    {
+      "id": 1,
+      "sha256": "e6ac0605063acb3c3e149e262fc118c45d595e55dc7940f8a6ca17ccd90177ed",
+      "video_probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "vp9",
+            "width": 1280,
+            "height": 960
+          }
+        ],
+        "format": {
+          "duration": "11.220968"
+        }
+      }
+    },
+    {
+      "id": 2,
+      "sha256": "b6e42e41df0865500e7ed7f0408c1ad717f5a518284e37adb6508e80101cb9d6",
+      "video_probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "vp9",
+            "width": 1280,
+            "height": 960
+          }
+        ],
+        "format": {
+          "duration": "11.403648"
+        }
+      }
+    },
+    {
+      "id": 3,
+      "sha256": "c3f4fb5ebf01d04941a7f9d60f385aa0a9ae35b08749b997e364e7a599ce19cf",
+      "video_probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "vp9",
+            "width": 1280,
+            "height": 960
+          }
+        ],
+        "format": {
+          "duration": "9.937530"
+        }
+      }
+    },
+    {
+      "id": 4,
+      "sha256": "b79cb51c1287602d2877f72200ac1cd27bb8dff37f06761cbdd7ac5271b3859c",
+      "video_probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "vp9",
+            "width": 1280,
+            "height": 960
+          }
+        ],
+        "format": {
+          "duration": "10.361322"
+        }
+      }
+    },
+    {
+      "id": 5,
+      "sha256": "c5fa7106f416aa8d06109f3ba35b22b555030ddd5b7bb17b3be4b6f7fdd2731f",
+      "video_probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "vp9",
+            "width": 1280,
+            "height": 960
+          }
+        ],
+        "format": {
+          "duration": "11.112816"
+        }
+      }
+    },
+    {
+      "id": 6,
+      "sha256": "dd4a3338a0914014754a4ffa849ce69502fddc57fee7fc005f7815fc2e82f3c2",
+      "video_probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "vp9",
+            "width": 1280,
+            "height": 960
+          }
+        ],
+        "format": {
+          "duration": "11.097966"
+        }
+      }
+    },
+    {
+      "id": 7,
+      "sha256": "e17e03f1b8bff30fe228507e4b4e7f0361219508248bb1d56863a20573cdbed4",
+      "video_probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "vp9",
+            "width": 1280,
+            "height": 960
+          }
+        ],
+        "format": {
+          "duration": "8.098654"
+        }
+      }
+    },
+    {
+      "id": 8,
+      "sha256": "9b0727ce42e52dfa28ca1ef6d8296ad45f5ece4d90a69fb94adbb0bb57c8d26a",
+      "video_probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "vp9",
+            "width": 1280,
+            "height": 960
+          }
+        ],
+        "format": {
+          "duration": "4.972713"
+        }
+      }
+    },
+    {
+      "id": 9,
+      "sha256": "54878aeb6af1ca40bfebb2c6390b4ea8467e43f1b1cf37746d9d008952228b1d",
+      "video_probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "vp9",
+            "width": 1280,
+            "height": 960
+          }
+        ],
+        "format": {
+          "duration": "7.444088"
+        }
+      }
+    },
+    {
+      "id": 10,
+      "sha256": "f2c7924a0d534a3d40e408db79b03c81edf93fc0a6aa62f36f52440440e28bf9",
+      "video_probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "vp9",
+            "width": 1280,
+            "height": 960
+          }
+        ],
+        "format": {
+          "duration": "14.263237"
+        }
+      }
+    },
+    {
+      "id": 11,
+      "sha256": "65f3b74ace368fd3acca27806abe227aaa04a048218bcbc4c70a08493fbfbcdb",
+      "video_probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "vp9",
+            "width": 1280,
+            "height": 960
+          }
+        ],
+        "format": {
+          "duration": "10.369742"
+        }
+      }
+    },
+    {
+      "id": 12,
+      "sha256": "aeefafdbd332c484ce9ea081d6866b76f8d979fbac00956a54f4ca16458d4f12",
+      "video_probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "vp9",
+            "width": 1280,
+            "height": 960
+          }
+        ],
+        "format": {
+          "duration": "9.824110"
+        }
+      }
+    },
+    {
+      "id": 13,
+      "sha256": "18c92123992b5e879b6d6c5855a0755e31f6dfb5f7f21f2465c88d01202095b6",
+      "video_probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "vp9",
+            "width": 1280,
+            "height": 960
+          }
+        ],
+        "format": {
+          "duration": "9.764546"
+        }
+      }
+    },
+    {
+      "id": 14,
+      "sha256": "d5a734266f6bbf67a70bf13fa16c5bcc49e76ed685af652d009fafd3970e73bc",
+      "video_probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "vp9",
+            "width": 1280,
+            "height": 960
+          }
+        ],
+        "format": {
+          "duration": "7.906869"
+        }
+      }
+    },
+    {
+      "id": 15,
+      "sha256": "9ef0211662cfcd7aeb42e1275123beccb036fc55c874b277c602cdc435bafe84",
+      "video_probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "vp9",
+            "width": 1280,
+            "height": 960
+          }
+        ],
+        "format": {
+          "duration": "8.263142"
+        }
+      }
+    }
+  ],
+  "backend_tests_passed": 54,
+  "application_asset_validator_passed": 1446,
+  "export_frame_zero_regression": "passed",
+  "paused_seek_pixel_identity": "passed",
+  "linguistic_validation": false,
+  "independent_keypoint_accuracy_validated": false,
+  "avatar_asset": "unchanged; MetaHuman delegated to teammate",
+  "training": "untouched",
+  "selection_changes_since_previous_browser_pass": [
+    {
+      "phrase_id": 13,
+      "before_motion_ids": [
+        "CAPTURE_896624b15484568d",
+        "CAPTURE_64e149ab37435a6c",
+        "CAPTURE_3803a3c882ff5ab4",
+        "CAPTURE_01345b4c38185d71"
+      ],
+      "after_motion_ids": [
+        "CAPTURE_896624b15484568d",
+        "CAPTURE_64e149ab37435a6c",
+        "CAPTURE_e14ce6390c0458da",
+        "CAPTURE_01345b4c38185d71"
+      ],
+      "reason": "Existing coverage-based alias selection after corpus quality refresh. TRAVAIL portals 473 and 1032 share exact source-video SHA256; capture derivatives differ.",
+      "source_sha256": "42fb5ea31a565b6439ca976a48ab3d94836ead2fa58db67e81bfb3131d2f2cc2"
+    }
+  ],
+  "fixed_input_collision_experiment_separate_from_current_selection": true
+}

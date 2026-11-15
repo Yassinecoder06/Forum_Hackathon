@@ -1,5 +1,7 @@
 # Corpus activation and remaining external requirements
 
+> Historical snapshot: superseded by [the final engineering pass](CV_FINAL_ENGINEERING_PASS.md), which reconciles the 134 holds and applies head-roll correction. External asset/reference-review requirements remain open.
+
 The completed full CV rerun is now activated across **1,312 of 1,446 registered clips**. This includes the 36 previously activated phrase sources, 840 additional no-observation-loss candidates and 436 additional unbaselined research previews. These last cases have no older raw keypoint baseline and are not labelled accurate or approved. All candidates were checked for monotonic raw/native timestamps, finite coordinates, landmark counts, consistent observation flags and absent independent world-hand fields before activation.
 
 **134 registered clips remain on their previous extraction** because the candidate lost observations or lacked comparable timestamps. Their exact per-source decisions and hashes are recorded in `data/source_inventory/cv_corpus_activation.json`. Compared all 1,446 registry rows before/after: gloss records, identifiers, source attribution, rights, licences and synthetic flags are unchanged. Native assets and the registry are backed up under `.runtime/cv-corpus-activation/`. Existing focused phrase fixes are preserved.

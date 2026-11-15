@@ -271,6 +271,7 @@ export class HumanoidRetargeter {
     // Resolve contacts AFTER rotation filtering. Densify to 100 Hz so a collision
     // between source keyframes is also checked; runtime only samples this cache.
     const dense = [], denseStates: Record<string, HandState[]> = { Left: [], Right: [] };
+    const geometry: { capsules: (side: string) => Capsule[]; original: Record<string, THREE.Vector3> }[] = [];
     let correctedFrames = 0, contactFrames = 0, maxCorrection = 0, maxPenetration = 0;
     for (let time = 0; all.length && time <= motion.duration_ms; time = Math.min(motion.duration_ms, time + 10)) {
       const interval = frameInterval(motion.frames, time);
@@ -369,10 +370,57 @@ export class HumanoidRetargeter {
       maxPenetration = Math.max(maxPenetration, handContact(left, right).maxPenetration);
       if (corrected) correctedFrames++;
       dense.push({ time_ms: time, rotations: names.map((n) => this.binds.get(n)!.bone.quaternion.clone()) });
+      geometry.push({ capsules, original });
       for (const side of ["Left", "Right"]) denseStates[side].push(states[side][interval.alpha < .5 ? interval.lo : interval.next]);
       if (time === motion.duration_ms) break;
     }
-    const diagnostics = { preparedMs: performance.now() - start, rejectedSpikes: rejected, correctedFrames, contactFrames, maxCorrection, maxPenetration };
+    const setPose = (rotations: THREE.Quaternion[]) => {
+      names.forEach((n,i) => this.binds.get(n)!.bone.quaternion.copy(rotations[i]));
+      this.root.updateMatrixWorld(true);
+    };
+    const wrists = () => Object.fromEntries(["Left", "Right"].map(side =>
+      [side, this.bone(side + "Hand")!.getWorldPosition(new THREE.Vector3())]));
+    const baselineWrists = dense.map(frame => { setPose(frame.rotations); return wrists(); });
+    const acceptedWrists = [...baselineWrists];
+    let trajectoryRefinedFrames = 0;
+    // Offline, deterministic pass: require both adjacent wrist steps to remain
+    // within the existing trajectory's lengths. The next frame's fallback pose
+    // is always feasible, so an improvement cannot force a later teleport.
+    for (let i = 1; i < dense.length - 1; i++) {
+      const frame = dense[i], { capsules, original } = geometry[i];
+      setPose(frame.rotations);
+      let best = handContact(capsules("Left"), capsules("Right")).maxRawPenetration;
+      if (best <= .006) continue;
+      const seed = frame.rotations, seedWrists = baselineWrists[i];
+      const elbows = Object.fromEntries(["Left", "Right"].map(side =>
+        [side, this.bone(side + "ForeArm")!.getWorldPosition(new THREE.Vector3())]));
+      let chosen: THREE.Quaternion[] | null = null;
+      const axes = [new THREE.Vector3(1,0,0),new THREE.Vector3(-1,0,0),
+        new THREE.Vector3(0,1,0),new THREE.Vector3(0,-1,0),new THREE.Vector3(0,0,1)];
+      for (const side of ["Left", "Right"]) for (const axis of axes) for (const amount of [.01,.02,.04,.06]) {
+        setPose(seed);
+        const target = seedWrists[side].clone().addScaledVector(axis, amount);
+        target.sub(original[side]).clampLength(0,.06).add(original[side]);
+        if (target.z < seedWrists[side].z - .0001) continue;
+        this.placeArm(side,target,elbows[side],true);
+        const actual = this.bone(side + "Hand")!.getWorldPosition(new THREE.Vector3());
+        const previousLimit = seedWrists[side].distanceTo(baselineWrists[i-1][side]);
+        const nextLimit = seedWrists[side].distanceTo(baselineWrists[i+1][side]);
+        if (actual.distanceTo(acceptedWrists[i-1][side]) > previousLimit + 1e-6 ||
+            actual.distanceTo(baselineWrists[i+1][side]) > nextLimit + 1e-6) continue;
+        const score = handContact(capsules("Left"),capsules("Right")).maxRawPenetration;
+        if (score < best - .0001) { best=score; chosen=names.map(n => this.binds.get(n)!.bone.quaternion.clone()); }
+      }
+      if (chosen) { frame.rotations=chosen; trajectoryRefinedFrames++; }
+      setPose(frame.rotations); acceptedWrists[i]=wrists();
+    }
+    maxPenetration=0;
+    dense.forEach((frame,i) => {
+      setPose(frame.rotations);
+      maxPenetration=Math.max(maxPenetration,handContact(geometry[i].capsules("Left"),geometry[i].capsules("Right")).maxPenetration);
+      for (const side of ["Left", "Right"]) maxCorrection=Math.max(maxCorrection,this.bone(side+"Hand")!.getWorldPosition(new THREE.Vector3()).distanceTo(geometry[i].original[side]));
+    });
+    const diagnostics = { preparedMs: performance.now() - start, rejectedSpikes: rejected, correctedFrames, contactFrames, maxCorrection, maxPenetration, trajectoryRefinedFrames };
     return { all: dense, names, states: denseStates, diagnostics };
   }
 
