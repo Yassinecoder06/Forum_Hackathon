@@ -2,6 +2,7 @@
 from functools import lru_cache
 import os
 import re
+import simplemma
 
 TOKEN = re.compile(r'[^\W_]+', re.UNICODE)
 
@@ -43,6 +44,7 @@ def phrase_tokens(phrase, model_name):
 def lookup_text(text, entries):
     tokens, lemmas = tokenize(text)
     surfaces = [t.casefold() for t in tokens]
+    dictionary_lemmas = [simplemma.lemmatize(t, lang='fr') for t in surfaces]
     candidates = []
     for entry in entries:
         for phrase in [entry.concept_fr, *entry.aliases]:
@@ -53,6 +55,11 @@ def lookup_text(text, entries):
     while i < len(tokens):
         matches = [(len(ts), entry) for ts, ls, entry in candidates
                    if surfaces[i:i+len(ts)] == ts or tuple(lemmas[i:i+len(ls)]) == ls]
+        # Dictionary recovery only when contextual lookup found nothing. Never
+        # override an exact match or resolve an existing ambiguity by guessing.
+        if not matches:
+            matches = [(len(ts), entry) for ts, ls, entry in candidates
+                       if dictionary_lemmas[i:i+len(ts)] == ts]
         if matches:
             size = max(n for n, _ in matches)
             best = {g.gloss_id:g for n,g in matches if n == size}

@@ -1,0 +1,679 @@
+{
+  "kind": "14 user-authored French software scenarios; no LSF ground truth",
+  "before": [
+    {
+      "id": 1,
+      "text": "Je veux boire de l'eau.",
+      "glosses": [
+        "JE",
+        "VOULOIR",
+        "BOIRE",
+        "EAU"
+      ],
+      "unknowns": [
+        "de",
+        "l"
+      ],
+      "duration_ms": 11179,
+      "segments": 4,
+      "diagnostic": {
+        "preparedMs": 119.79999999701977,
+        "rejectedSpikes": 5,
+        "correctedFrames": 98,
+        "contactFrames": 128,
+        "maxCorrection": 0.011575637532450367,
+        "maxPenetration": 0.015422545797361608
+      },
+      "video": "01.webm"
+    },
+    {
+      "id": 2,
+      "text": "Je veux manger du pain.",
+      "glosses": [
+        "JE",
+        "VOULOIR",
+        "MANGER",
+        "PAIN"
+      ],
+      "unknowns": [
+        "du"
+      ],
+      "duration_ms": 11337,
+      "segments": 4,
+      "diagnostic": {
+        "preparedMs": 120.60000000149012,
+        "rejectedSpikes": 15,
+        "correctedFrames": 133,
+        "contactFrames": 161,
+        "maxCorrection": 0.011575637532450367,
+        "maxPenetration": 0.014959203844391311
+      },
+      "video": "02.webm"
+    },
+    {
+      "id": 3,
+      "text": "Mon frère aime la musique.",
+      "glosses": [
+        "MON",
+        "FRERE",
+        "AIMER",
+        "MUSIQUE"
+      ],
+      "unknowns": [
+        "la"
+      ],
+      "duration_ms": 9875,
+      "segments": 4,
+      "diagnostic": {
+        "preparedMs": 73.60000000149012,
+        "rejectedSpikes": 19,
+        "correctedFrames": 16,
+        "contactFrames": 96,
+        "maxCorrection": 0.006025474223779213,
+        "maxPenetration": 0.015443956145326725
+      },
+      "video": "03.webm"
+    },
+    {
+      "id": 4,
+      "text": "Je vais à l'école demain.",
+      "glosses": [
+        "JE",
+        "ALLER",
+        "ECOLE",
+        "DEMAIN"
+      ],
+      "unknowns": [
+        "à",
+        "l"
+      ],
+      "duration_ms": 10259,
+      "segments": 4,
+      "diagnostic": {
+        "preparedMs": 74.09999999403954,
+        "rejectedSpikes": 8,
+        "correctedFrames": 43,
+        "contactFrames": 53,
+        "maxCorrection": 0.01359742724929038,
+        "maxPenetration": 0.015556970963208043
+      },
+      "video": "04.webm"
+    },
+    {
+      "id": 5,
+      "text": "Mon ami habite à Paris.",
+      "glosses": [
+        "MON",
+        "AMI",
+        "PARIS"
+      ],
+      "unknowns": [
+        "habite",
+        "à"
+      ],
+      "duration_ms": 8523,
+      "segments": 3,
+      "diagnostic": {
+        "preparedMs": 75.60000000149012,
+        "rejectedSpikes": 5,
+        "correctedFrames": 73,
+        "contactFrames": 77,
+        "maxCorrection": 0.005883138943794641,
+        "maxPenetration": 0.015848273794827467
+      },
+      "video": "05.webm"
+    },
+    {
+      "id": 6,
+      "text": "Je veux acheter une voiture.",
+      "glosses": [
+        "JE",
+        "VOULOIR",
+        "ACHETER",
+        "VOITURE"
+      ],
+      "unknowns": [
+        "une"
+      ],
+      "duration_ms": 11057,
+      "segments": 4,
+      "diagnostic": {
+        "preparedMs": 103.89999999850988,
+        "rejectedSpikes": 7,
+        "correctedFrames": 125,
+        "contactFrames": 135,
+        "maxCorrection": 0.011575637532450367,
+        "maxPenetration": 0.01511405820006909
+      },
+      "video": "06.webm"
+    },
+    {
+      "id": 7,
+      "text": "Je lis un livre.",
+      "glosses": [
+        "JE",
+        "LIRE",
+        "LIVRE"
+      ],
+      "unknowns": [
+        "un"
+      ],
+      "duration_ms": 8030,
+      "segments": 3,
+      "diagnostic": {
+        "preparedMs": 81.10000000149012,
+        "rejectedSpikes": 16,
+        "correctedFrames": 48,
+        "contactFrames": 266,
+        "maxCorrection": 0.020000000000000004,
+        "maxPenetration": 0.015921206617612458
+      },
+      "video": "07.webm"
+    },
+    {
+      "id": 8,
+      "text": "Le chat dort.",
+      "glosses": [
+        "CHAT"
+      ],
+      "unknowns": [
+        "Le",
+        "dort"
+      ],
+      "duration_ms": 2929,
+      "segments": 1,
+      "diagnostic": {
+        "preparedMs": 28.600000001490116,
+        "rejectedSpikes": 1,
+        "correctedFrames": 4,
+        "contactFrames": 0,
+        "maxCorrection": 0.00851778351505548,
+        "maxPenetration": 0
+      },
+      "video": "08.webm"
+    },
+    {
+      "id": 9,
+      "text": "Je regarde le football.",
+      "glosses": [
+        "JE",
+        "REGARDER",
+        "FOOTBALL"
+      ],
+      "unknowns": [
+        "le"
+      ],
+      "duration_ms": 7418,
+      "segments": 3,
+      "diagnostic": {
+        "preparedMs": 82.30000000447035,
+        "rejectedSpikes": 11,
+        "correctedFrames": 81,
+        "contactFrames": 118,
+        "maxCorrection": 0.013863704504744763,
+        "maxPenetration": 0.015954318200090616
+      },
+      "video": "09.webm"
+    },
+    {
+      "id": 10,
+      "text": "Je veux apprendre la langue des signes.",
+      "glosses": [
+        "JE",
+        "VOULOIR",
+        "APPRENDRE",
+        "LANGUE",
+        "SIGNE"
+      ],
+      "unknowns": [
+        "la",
+        "des"
+      ],
+      "duration_ms": 14259,
+      "segments": 5,
+      "diagnostic": {
+        "preparedMs": 138,
+        "rejectedSpikes": 14,
+        "correctedFrames": 117,
+        "contactFrames": 205,
+        "maxCorrection": 0.011575637532450367,
+        "maxPenetration": 0.015995201038678047
+      },
+      "video": "10.webm"
+    },
+    {
+      "id": 11,
+      "text": "Je cherche mon téléphone portable.",
+      "glosses": [
+        "JE",
+        "MON",
+        "TELEPHONE PORTABLE"
+      ],
+      "unknowns": [
+        "cherche"
+      ],
+      "duration_ms": 7217,
+      "segments": 3,
+      "diagnostic": {
+        "preparedMs": 71.89999999850988,
+        "rejectedSpikes": 3,
+        "correctedFrames": 39,
+        "contactFrames": 103,
+        "maxCorrection": 0.011631285857171185,
+        "maxPenetration": 0.01393737838419414
+      },
+      "video": "11.webm"
+    },
+    {
+      "id": 12,
+      "text": "Je vais au cinéma demain.",
+      "glosses": [
+        "JE",
+        "ALLER",
+        "CINEMA",
+        "DEMAIN"
+      ],
+      "unknowns": [
+        "au"
+      ],
+      "duration_ms": 9741,
+      "segments": 4,
+      "diagnostic": {
+        "preparedMs": 65.20000000298023,
+        "rejectedSpikes": 14,
+        "correctedFrames": 22,
+        "contactFrames": 111,
+        "maxCorrection": 0.02,
+        "maxPenetration": 0.015579361866830439
+      },
+      "video": "12.webm"
+    },
+    {
+      "id": 13,
+      "text": "Mon père travaille aujourd'hui.",
+      "glosses": [
+        "MON",
+        "PERE",
+        "TRAVAILLER",
+        "AUJOURD HUI"
+      ],
+      "unknowns": [],
+      "duration_ms": 10107,
+      "segments": 4,
+      "diagnostic": {
+        "preparedMs": 164.5,
+        "rejectedSpikes": 4,
+        "correctedFrames": 38,
+        "contactFrames": 66,
+        "maxCorrection": 0.010607490313779437,
+        "maxPenetration": 0.013366405342248554
+      },
+      "video": "13.webm"
+    },
+    {
+      "id": 14,
+      "text": "Je veux du café.",
+      "glosses": [
+        "JE",
+        "VOULOIR",
+        "CAFE"
+      ],
+      "unknowns": [
+        "du"
+      ],
+      "duration_ms": 7844,
+      "segments": 3,
+      "diagnostic": {
+        "preparedMs": 135.89999999850988,
+        "rejectedSpikes": 6,
+        "correctedFrames": 89,
+        "contactFrames": 128,
+        "maxCorrection": 0.011575637532450367,
+        "maxPenetration": 0.015868970570493794
+      },
+      "video": "14.webm"
+    }
+  ],
+  "after": [
+    {
+      "id": 1,
+      "text": "Je veux boire de l'eau.",
+      "glosses": [
+        "JE",
+        "VOULOIR",
+        "BOIRE",
+        "EAU"
+      ],
+      "unknowns": [
+        "de",
+        "l"
+      ],
+      "duration_ms": 11179,
+      "segments": 4,
+      "diagnostic": {
+        "preparedMs": 137.10000000149012,
+        "rejectedSpikes": 5,
+        "correctedFrames": 98,
+        "contactFrames": 128,
+        "maxCorrection": 0.011575637532450367,
+        "maxPenetration": 0.015422545797361608
+      },
+      "video": "01.webm"
+    },
+    {
+      "id": 2,
+      "text": "Je veux manger du pain.",
+      "glosses": [
+        "JE",
+        "VOULOIR",
+        "MANGER",
+        "PAIN"
+      ],
+      "unknowns": [
+        "du"
+      ],
+      "duration_ms": 11337,
+      "segments": 4,
+      "diagnostic": {
+        "preparedMs": 123.60000000149012,
+        "rejectedSpikes": 15,
+        "correctedFrames": 133,
+        "contactFrames": 161,
+        "maxCorrection": 0.011575637532450367,
+        "maxPenetration": 0.014959203844391311
+      },
+      "video": "02.webm"
+    },
+    {
+      "id": 3,
+      "text": "Mon frère aime la musique.",
+      "glosses": [
+        "MON",
+        "FRERE",
+        "AIMER",
+        "MUSIQUE"
+      ],
+      "unknowns": [
+        "la"
+      ],
+      "duration_ms": 9875,
+      "segments": 4,
+      "diagnostic": {
+        "preparedMs": 76.5,
+        "rejectedSpikes": 19,
+        "correctedFrames": 16,
+        "contactFrames": 96,
+        "maxCorrection": 0.006025474223779213,
+        "maxPenetration": 0.015443956145326725
+      },
+      "video": "03.webm"
+    },
+    {
+      "id": 4,
+      "text": "Je vais à l'école demain.",
+      "glosses": [
+        "JE",
+        "ALLER",
+        "ECOLE",
+        "DEMAIN"
+      ],
+      "unknowns": [
+        "à",
+        "l"
+      ],
+      "duration_ms": 10259,
+      "segments": 4,
+      "diagnostic": {
+        "preparedMs": 74.60000000149012,
+        "rejectedSpikes": 8,
+        "correctedFrames": 43,
+        "contactFrames": 53,
+        "maxCorrection": 0.01359742724929038,
+        "maxPenetration": 0.015556970963208043
+      },
+      "video": "04.webm"
+    },
+    {
+      "id": 5,
+      "text": "Mon ami habite à Paris.",
+      "glosses": [
+        "MON",
+        "AMI",
+        "HABITER",
+        "PARIS"
+      ],
+      "unknowns": [
+        "à"
+      ],
+      "duration_ms": 10991,
+      "segments": 4,
+      "diagnostic": {
+        "preparedMs": 107.70000000298023,
+        "rejectedSpikes": 6,
+        "correctedFrames": 107,
+        "contactFrames": 107,
+        "maxCorrection": 0.006856348942037476,
+        "maxPenetration": 0.015848273794827467
+      },
+      "video": "05.webm"
+    },
+    {
+      "id": 6,
+      "text": "Je veux acheter une voiture.",
+      "glosses": [
+        "JE",
+        "VOULOIR",
+        "ACHETER",
+        "VOITURE"
+      ],
+      "unknowns": [
+        "une"
+      ],
+      "duration_ms": 11057,
+      "segments": 4,
+      "diagnostic": {
+        "preparedMs": 107.59999999403954,
+        "rejectedSpikes": 7,
+        "correctedFrames": 125,
+        "contactFrames": 135,
+        "maxCorrection": 0.011575637532450367,
+        "maxPenetration": 0.01511405820006909
+      },
+      "video": "06.webm"
+    },
+    {
+      "id": 7,
+      "text": "Je lis un livre.",
+      "glosses": [
+        "JE",
+        "LIRE",
+        "LIVRE"
+      ],
+      "unknowns": [
+        "un"
+      ],
+      "duration_ms": 8030,
+      "segments": 3,
+      "diagnostic": {
+        "preparedMs": 83.39999999850988,
+        "rejectedSpikes": 16,
+        "correctedFrames": 48,
+        "contactFrames": 266,
+        "maxCorrection": 0.020000000000000004,
+        "maxPenetration": 0.015921206617612458
+      },
+      "video": "07.webm"
+    },
+    {
+      "id": 8,
+      "text": "Le chat dort.",
+      "glosses": [
+        "CHAT",
+        "DORMIR"
+      ],
+      "unknowns": [
+        "Le"
+      ],
+      "duration_ms": 4930,
+      "segments": 2,
+      "diagnostic": {
+        "preparedMs": 35.70000000298023,
+        "rejectedSpikes": 1,
+        "correctedFrames": 4,
+        "contactFrames": 0,
+        "maxCorrection": 0.00851778351505548,
+        "maxPenetration": 0
+      },
+      "video": "08.webm"
+    },
+    {
+      "id": 9,
+      "text": "Je regarde le football.",
+      "glosses": [
+        "JE",
+        "REGARDER",
+        "FOOTBALL"
+      ],
+      "unknowns": [
+        "le"
+      ],
+      "duration_ms": 7418,
+      "segments": 3,
+      "diagnostic": {
+        "preparedMs": 82.20000000298023,
+        "rejectedSpikes": 11,
+        "correctedFrames": 81,
+        "contactFrames": 118,
+        "maxCorrection": 0.013863704504744763,
+        "maxPenetration": 0.015954318200090616
+      },
+      "video": "09.webm"
+    },
+    {
+      "id": 10,
+      "text": "Je veux apprendre la langue des signes.",
+      "glosses": [
+        "JE",
+        "VOULOIR",
+        "APPRENDRE",
+        "LANGUE",
+        "SIGNE"
+      ],
+      "unknowns": [
+        "la",
+        "des"
+      ],
+      "duration_ms": 14259,
+      "segments": 5,
+      "diagnostic": {
+        "preparedMs": 135.80000000447035,
+        "rejectedSpikes": 14,
+        "correctedFrames": 117,
+        "contactFrames": 205,
+        "maxCorrection": 0.011575637532450367,
+        "maxPenetration": 0.015995201038678047
+      },
+      "video": "10.webm"
+    },
+    {
+      "id": 11,
+      "text": "Je cherche mon téléphone portable.",
+      "glosses": [
+        "JE",
+        "CHERCHER",
+        "MON",
+        "TELEPHONE PORTABLE"
+      ],
+      "unknowns": [],
+      "duration_ms": 10336,
+      "segments": 4,
+      "diagnostic": {
+        "preparedMs": 110,
+        "rejectedSpikes": 5,
+        "correctedFrames": 39,
+        "contactFrames": 97,
+        "maxCorrection": 0.013536805483201887,
+        "maxPenetration": 0.014039786436147216
+      },
+      "video": "11.webm"
+    },
+    {
+      "id": 12,
+      "text": "Je vais au cinéma demain.",
+      "glosses": [
+        "JE",
+        "ALLER",
+        "CINEMA",
+        "DEMAIN"
+      ],
+      "unknowns": [
+        "au"
+      ],
+      "duration_ms": 9741,
+      "segments": 4,
+      "diagnostic": {
+        "preparedMs": 68.5,
+        "rejectedSpikes": 14,
+        "correctedFrames": 22,
+        "contactFrames": 111,
+        "maxCorrection": 0.02,
+        "maxPenetration": 0.015579361866830439
+      },
+      "video": "12.webm"
+    },
+    {
+      "id": 13,
+      "text": "Mon père travaille aujourd'hui.",
+      "glosses": [
+        "MON",
+        "PERE",
+        "TRAVAILLER",
+        "AUJOURD HUI"
+      ],
+      "unknowns": [],
+      "duration_ms": 10107,
+      "segments": 4,
+      "diagnostic": {
+        "preparedMs": 82.5,
+        "rejectedSpikes": 4,
+        "correctedFrames": 38,
+        "contactFrames": 66,
+        "maxCorrection": 0.010607490313779437,
+        "maxPenetration": 0.013366405342248554
+      },
+      "video": "13.webm"
+    },
+    {
+      "id": 14,
+      "text": "Je veux du café.",
+      "glosses": [
+        "JE",
+        "VOULOIR",
+        "CAFE"
+      ],
+      "unknowns": [
+        "du"
+      ],
+      "duration_ms": 7844,
+      "segments": 3,
+      "diagnostic": {
+        "preparedMs": 79.29999999701977,
+        "rejectedSpikes": 6,
+        "correctedFrames": 89,
+        "contactFrames": 128,
+        "maxCorrection": 0.011575637532450367,
+        "maxPenetration": 0.015868970570493794
+      },
+      "video": "14.webm"
+    }
+  ],
+  "verified_video_count": 28,
+  "fixes": [
+    "French dictionary recovery for missed conjugated verbs",
+    "Exported partial preview explicitly names unrepresented words"
+  ],
+  "remaining": [
+    "Source-order lexical retrieval does not implement validated LSF grammar",
+    "Hand overlaps and incomplete tracking remain visible; no new collision improvement claimed in this run"
+  ]
+}

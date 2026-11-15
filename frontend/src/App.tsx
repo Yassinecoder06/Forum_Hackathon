@@ -470,9 +470,12 @@ export default function App() {
       ctx.fillStyle = "#fff";
       ctx.font = "18px sans-serif";
       ctx.fillText(
-        "SignaCulture · Aperçu expérimental · Non validé en LSF",
+        plan?.unknowns.length
+          ? `Aperçu incomplet · mots non représentés : ${plan.unknowns.join(", ")}`
+          : "SignaCulture · Aperçu expérimental · Non validé en LSF",
         28,
         913,
+        1224,
       );
       ctx.font = "12px sans-serif";
       ctx.fillText(
