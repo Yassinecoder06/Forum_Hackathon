@@ -23,7 +23,7 @@ requires optional FunASR and its model dependencies. Supply an already provision
 To include the actual backend asset validator in the scoped tests, set its app directory (read only import), for example from this worktree:
 
 ```sh
-SIGNACULTURE_BACKEND_APP=../wt-luna-2/backend/app /home/jmal/Projects/Active/Forum_Hackathon/.venv/bin/python -m pytest -q experiments/motion_extraction/test_motion.py
+SIGNACULTURE_BACKEND_APP=../wt-luna-2/backend/app python3 -m pytest -q experiments/motion_extraction/test_motion.py
 ```
 
-Without that variable the backend integration test is explicitly skipped. The test writes the converted asset into a temporary directory and validates it against matching pending manifest metadata.
+By default the test imports backend/app from this repository. The environment variable overrides that location for isolated worktrees. It skips only when the selected backend main.py is absent. The test writes the converted asset into a temporary directory and validates it against matching pending manifest metadata.
