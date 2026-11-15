@@ -18,6 +18,18 @@ def map_roi_hand(hand, x0, y0, size, width, height):
     return mapped
 
 
+def consistent_hand(a, b, width, height):
+    """Independent crop scales must agree in original pixels; not accuracy proof."""
+    if len(a.landmark) != 21 or len(b.landmark) != 21:
+        return False
+    palm = math.hypot((a.landmark[5].x-a.landmark[17].x)*width,
+                      (a.landmark[5].y-a.landmark[17].y)*height)
+    if palm < 4:
+        return False
+    errors = [math.hypot((x.x-y.x)*width,(x.y-y.y)*height) for x,y in zip(a.landmark,b.landmark)]
+    return max(errors) <= max(3.,palm*.35) and sum(errors)/21 <= max(1.5,palm*.15)
+
+
 def assign_hands(detections, wrists, existing=None, previous=None, max_distance=.18):
     """Return side->detection index. Existing Holistic sides stay locked.
 

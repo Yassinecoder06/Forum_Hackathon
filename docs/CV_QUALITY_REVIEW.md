@@ -1,5 +1,7 @@
 # Actual keypoint extraction audit
 
+The next phase has now run: [CV v4 results and review gallery](CV_V4_RESULTS.md), including native-frame retention, cross-scale confirmation and stricter per-observation gates.
+
 Audited **all 1,025 existing Dicta-Sign raw captures**, independently of avatar smoothing and collision correction. The [machine-readable audit](../data/source_inventory/cv_quality_audit.json) records per-hand observation coverage, longest missing runs, wrist disagreement with the body detector and wrist-relative fingertip jumps. These are triage signals, not labelled keypoint accuracy measurements.
 
 The audit found **347 clips below 80% left-hand coverage and 342 below 80% right-hand coverage**; 97 have no left-hand detections. Some hands are outside the video or intentionally inactive. Large normalized hand/body wrist disagreements occurred in 92 left-hand and 51 right-hand frames. Such disagreement can come from either detector and needs source inspection; it does not prove which detector is wrong. No blanket “accurate CV” or linguistic approval is justified by the old coverage gate.

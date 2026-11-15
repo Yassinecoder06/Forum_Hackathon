@@ -10,9 +10,9 @@ import cv2
 import mediapipe as mp
 import numpy as np
 if __package__:
-    from .hand_tracking import assign_hands, roi_box, map_roi_hand
+    from .hand_tracking import assign_hands, roi_box, map_roi_hand, consistent_hand
 else:
-    from hand_tracking import assign_hands, roi_box, map_roi_hand
+    from hand_tracking import assign_hands, roi_box, map_roi_hand, consistent_hand
 
 BODY = {'head': 0, 'left_shoulder': 11, 'right_shoulder': 12,
         'left_elbow': 13, 'right_elbow': 14, 'left_wrist': 15, 'right_wrist': 16}
@@ -77,7 +77,7 @@ def extract(source, target, progress, raw_target=None):
         raise ValueError('Cette vidéo ne peut pas être décodée.')
     if count/fps > 60:
         raise ValueError('Le clip doit durer au maximum 60 secondes.')
-    stride = max(1,math.ceil(fps/20))
+    stride = max(1,math.ceil(fps/30))
     frames, missing, left, right, faces, processed = [],0,0,0,0,0
     raw_frames=[]
     previous_hands={}
@@ -135,8 +135,11 @@ def extract(source, target, progress, raw_target=None):
                         if x1-x0<24 or y1-y0<24:continue
                         crop=cv2.resize(rgb[y0:y1,x0:x1],(384,384))
                         found=roi_model.process(crop)
+                        confirm=roi_model.process(cv2.resize(rgb[y0:y1,x0:x1],(512,512)))
+                        confirmations=[map_roi_hand(hand,x0,y0,size,w,h) for hand in confirm.multi_hand_landmarks or []]
                         for hand in found.multi_hand_landmarks or []:
                             mapped=map_roi_hand(hand,x0,y0,size,w,h)
+                            if not any(consistent_hand(mapped,other,w,h) for other in confirmations):continue
                             wrist=mapped.landmark[0]
                             if not any(math.hypot(wrist.x-c.landmark[0].x,wrist.y-c.landmark[0].y)<.02 for c in candidates):
                                 candidates.append(mapped)
@@ -190,7 +193,7 @@ def extract(source, target, progress, raw_target=None):
         'face_coverage':round(faces/processed,3),'missing_frames':missing,'hand_wrist_disagreement_frames':hand_disagreements}
     motion={'rig_version':'signaculture-v1','fps':fps/stride,'duration_ms':duration,
         'joints':list(BODY)+['hips','neck'],'tracked_joints':joint_names,'frames':frames,
-        'quality':quality,'synthetic':False,'capture_method':'mediapipe-holistic-hands-fallback-0.10.21-roi-v3',
+        'quality':quality,'synthetic':False,'capture_method':'mediapipe-holistic-hands-fallback-0.10.21-roi-v4',
         'warnings':['Profondeur monoculaire approximative. Les occultations nécessitent une revue.']}
     target.write_text(json.dumps(motion,allow_nan=False))
     if raw_target is not None:

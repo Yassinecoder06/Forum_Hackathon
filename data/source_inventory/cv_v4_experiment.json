@@ -1,0 +1,932 @@
+[
+  {
+    "source_id": "DICTASIGN_PORTAL_96",
+    "capture_id": "5ae7a790-8cfb-5b59-91d4-655c97ea33df",
+    "source_sha256": "d973947426a336c1d727fa9779e2ee24255f02a3ef4b15e02b018b57f04443d4",
+    "native_frames_before": 42,
+    "native_frames_candidate": 84,
+    "common_frames": 42,
+    "body_before": 42,
+    "body_candidate": 42,
+    "hands": {
+      "left": {
+        "before_observed": 37,
+        "candidate_observed": 38,
+        "common_frames": 42,
+        "lost": 2,
+        "recovered": 3
+      },
+      "right": {
+        "before_observed": 42,
+        "candidate_observed": 42,
+        "common_frames": 42,
+        "lost": 0,
+        "recovered": 0
+      }
+    },
+    "engineering_gate": "review_regression_or_incomparable",
+    "linguistic_review": "pending",
+    "keypoint_accuracy_validated": false,
+    "active_asset_replaced": false
+  },
+  {
+    "source_id": "DICTASIGN_PORTAL_103",
+    "capture_id": "4a265a67-ca09-5921-a55c-8854d478c12e",
+    "source_sha256": "5e7700f6b485865c93afb3afe521e89aa8e9b755bd4f9e43bb48311219917228",
+    "native_frames_before": 35,
+    "native_frames_candidate": 69,
+    "common_frames": 35,
+    "body_before": 35,
+    "body_candidate": 35,
+    "hands": {
+      "left": {
+        "before_observed": 32,
+        "candidate_observed": 30,
+        "common_frames": 35,
+        "lost": 2,
+        "recovered": 0
+      },
+      "right": {
+        "before_observed": 35,
+        "candidate_observed": 35,
+        "common_frames": 35,
+        "lost": 0,
+        "recovered": 0
+      }
+    },
+    "engineering_gate": "review_regression_or_incomparable",
+    "linguistic_review": "pending",
+    "keypoint_accuracy_validated": false,
+    "active_asset_replaced": false
+  },
+  {
+    "source_id": "DICTASIGN_PORTAL_108",
+    "capture_id": "de461c05-74a8-5f02-9f7c-d97a285bfc2e",
+    "source_sha256": "2825031976a77e3f669708b04b4acad07de6e6287f98d4c526922adf22130490",
+    "native_frames_before": 28,
+    "native_frames_candidate": 28,
+    "common_frames": 28,
+    "body_before": 28,
+    "body_candidate": 28,
+    "hands": {
+      "left": {
+        "before_observed": 27,
+        "candidate_observed": 27,
+        "common_frames": 28,
+        "lost": 0,
+        "recovered": 0
+      },
+      "right": {
+        "before_observed": 26,
+        "candidate_observed": 26,
+        "common_frames": 28,
+        "lost": 0,
+        "recovered": 0
+      }
+    },
+    "engineering_gate": "no_observation_loss",
+    "linguistic_review": "pending",
+    "keypoint_accuracy_validated": false,
+    "active_asset_replaced": false
+  },
+  {
+    "source_id": "DICTASIGN_PORTAL_115",
+    "capture_id": "d9b156e7-74d1-523c-8e9a-b977fd33be68",
+    "source_sha256": "dea1d195e530a7ee2aba15918c542ab8cafe8fb16f85766cb448af6d6bbafa0d",
+    "native_frames_before": 34,
+    "native_frames_candidate": 34,
+    "common_frames": 34,
+    "body_before": 34,
+    "body_candidate": 34,
+    "hands": {
+      "left": {
+        "before_observed": 18,
+        "candidate_observed": 18,
+        "common_frames": 34,
+        "lost": 0,
+        "recovered": 0
+      },
+      "right": {
+        "before_observed": 20,
+        "candidate_observed": 20,
+        "common_frames": 34,
+        "lost": 0,
+        "recovered": 0
+      }
+    },
+    "engineering_gate": "no_observation_loss",
+    "linguistic_review": "pending",
+    "keypoint_accuracy_validated": false,
+    "active_asset_replaced": false
+  },
+  {
+    "source_id": "DICTASIGN_PORTAL_125",
+    "capture_id": "1a596182-468b-522b-ae80-2aaba0b87d14",
+    "source_sha256": "8c127715a2ab945adf0ddf9226c298ca30963d425268ed6c06655cd432f2162d",
+    "native_frames_before": 31,
+    "native_frames_candidate": 62,
+    "common_frames": 31,
+    "body_before": 31,
+    "body_candidate": 31,
+    "hands": {
+      "left": {
+        "before_observed": 31,
+        "candidate_observed": 31,
+        "common_frames": 31,
+        "lost": 0,
+        "recovered": 0
+      },
+      "right": {
+        "before_observed": 31,
+        "candidate_observed": 31,
+        "common_frames": 31,
+        "lost": 0,
+        "recovered": 0
+      }
+    },
+    "engineering_gate": "no_observation_loss",
+    "linguistic_review": "pending",
+    "keypoint_accuracy_validated": false,
+    "active_asset_replaced": false
+  },
+  {
+    "source_id": "DICTASIGN_PORTAL_151",
+    "capture_id": "1d256c49-df82-51a3-ae4d-b3adb2ff1bf5",
+    "source_sha256": "b1772fe9a152d328721df26cbd776a5bde5e0af7af672e1c08ab6be8708dd850",
+    "native_frames_before": 30,
+    "native_frames_candidate": 30,
+    "common_frames": 30,
+    "body_before": 30,
+    "body_candidate": 30,
+    "hands": {
+      "left": {
+        "before_observed": 18,
+        "candidate_observed": 18,
+        "common_frames": 30,
+        "lost": 0,
+        "recovered": 0
+      },
+      "right": {
+        "before_observed": 19,
+        "candidate_observed": 19,
+        "common_frames": 30,
+        "lost": 0,
+        "recovered": 0
+      }
+    },
+    "engineering_gate": "no_observation_loss",
+    "linguistic_review": "pending",
+    "keypoint_accuracy_validated": false,
+    "active_asset_replaced": false
+  },
+  {
+    "source_id": "DICTASIGN_PORTAL_163",
+    "capture_id": "e21e6c52-c591-5246-99cf-387315d998e0",
+    "source_sha256": "ac7a04a1599950e6b4d890cce194d93a964e2535a37a743d052851aeb1e59c62",
+    "native_frames_before": 28,
+    "native_frames_candidate": 28,
+    "common_frames": 28,
+    "body_before": 28,
+    "body_candidate": 28,
+    "hands": {
+      "left": {
+        "before_observed": 16,
+        "candidate_observed": 16,
+        "common_frames": 28,
+        "lost": 0,
+        "recovered": 0
+      },
+      "right": {
+        "before_observed": 17,
+        "candidate_observed": 17,
+        "common_frames": 28,
+        "lost": 0,
+        "recovered": 0
+      }
+    },
+    "engineering_gate": "no_observation_loss",
+    "linguistic_review": "pending",
+    "keypoint_accuracy_validated": false,
+    "active_asset_replaced": false
+  },
+  {
+    "source_id": "DICTASIGN_PORTAL_253",
+    "capture_id": "e68dbc70-d633-5484-b444-fbef8dbeac59",
+    "source_sha256": "57e10c5076840d09142d9b6ce1a5facd40d4f83701b6b97e4453b90fe2f06ff0",
+    "native_frames_before": 32,
+    "native_frames_candidate": 32,
+    "common_frames": 32,
+    "body_before": 32,
+    "body_candidate": 32,
+    "hands": {
+      "left": {
+        "before_observed": 0,
+        "candidate_observed": 0,
+        "common_frames": 32,
+        "lost": 0,
+        "recovered": 0
+      },
+      "right": {
+        "before_observed": 13,
+        "candidate_observed": 14,
+        "common_frames": 32,
+        "lost": 0,
+        "recovered": 1
+      }
+    },
+    "engineering_gate": "no_observation_loss",
+    "linguistic_review": "pending",
+    "keypoint_accuracy_validated": false,
+    "active_asset_replaced": false
+  },
+  {
+    "source_id": "DICTASIGN_PORTAL_260",
+    "capture_id": "cfff4811-d84a-57b5-af82-847a93abdd3a",
+    "source_sha256": "e2e4b67b3eb9d4e9363f8ee51a92f1c3eef34cc8b029b3aeb3bd80b3e6a8396b",
+    "native_frames_before": 32,
+    "native_frames_candidate": 32,
+    "common_frames": 32,
+    "body_before": 32,
+    "body_candidate": 32,
+    "hands": {
+      "left": {
+        "before_observed": 27,
+        "candidate_observed": 27,
+        "common_frames": 32,
+        "lost": 0,
+        "recovered": 0
+      },
+      "right": {
+        "before_observed": 32,
+        "candidate_observed": 32,
+        "common_frames": 32,
+        "lost": 0,
+        "recovered": 0
+      }
+    },
+    "engineering_gate": "no_observation_loss",
+    "linguistic_review": "pending",
+    "keypoint_accuracy_validated": false,
+    "active_asset_replaced": false
+  },
+  {
+    "source_id": "DICTASIGN_PORTAL_266",
+    "capture_id": "ee859c85-991e-5d09-b472-e3ef1c57a1f2",
+    "source_sha256": "859c4bd6393f547b6cd7b974bc569c618cf4fdd5bf93eb0299ff8e91fbd4df51",
+    "native_frames_before": 34,
+    "native_frames_candidate": 34,
+    "common_frames": 34,
+    "body_before": 34,
+    "body_candidate": 34,
+    "hands": {
+      "left": {
+        "before_observed": 34,
+        "candidate_observed": 34,
+        "common_frames": 34,
+        "lost": 0,
+        "recovered": 0
+      },
+      "right": {
+        "before_observed": 31,
+        "candidate_observed": 32,
+        "common_frames": 34,
+        "lost": 0,
+        "recovered": 1
+      }
+    },
+    "engineering_gate": "no_observation_loss",
+    "linguistic_review": "pending",
+    "keypoint_accuracy_validated": false,
+    "active_asset_replaced": false
+  },
+  {
+    "source_id": "DICTASIGN_PORTAL_317",
+    "capture_id": "64e149ab-3743-5a6c-86f2-ba7e72d7bf2a",
+    "source_sha256": "0243510845af149f8b01c40699f41900e698bc26df9b1ae160bdd17093ba363e",
+    "native_frames_before": 31,
+    "native_frames_candidate": 62,
+    "common_frames": 31,
+    "body_before": 31,
+    "body_candidate": 31,
+    "hands": {
+      "left": {
+        "before_observed": 31,
+        "candidate_observed": 31,
+        "common_frames": 31,
+        "lost": 0,
+        "recovered": 0
+      },
+      "right": {
+        "before_observed": 31,
+        "candidate_observed": 31,
+        "common_frames": 31,
+        "lost": 0,
+        "recovered": 0
+      }
+    },
+    "engineering_gate": "no_observation_loss",
+    "linguistic_review": "pending",
+    "keypoint_accuracy_validated": false,
+    "active_asset_replaced": false
+  },
+  {
+    "source_id": "DICTASIGN_PORTAL_341",
+    "capture_id": "5ccf9caa-3420-5ffc-9a15-6335a5cfcc20",
+    "source_sha256": "353ebc867b0eb50280970c5df80e4acf43f94c0fe0c64056b73b1228e3410b54",
+    "native_frames_before": 39,
+    "native_frames_candidate": 39,
+    "common_frames": 39,
+    "body_before": 39,
+    "body_candidate": 39,
+    "hands": {
+      "left": {
+        "before_observed": 37,
+        "candidate_observed": 37,
+        "common_frames": 39,
+        "lost": 0,
+        "recovered": 0
+      },
+      "right": {
+        "before_observed": 39,
+        "candidate_observed": 39,
+        "common_frames": 39,
+        "lost": 0,
+        "recovered": 0
+      }
+    },
+    "engineering_gate": "no_observation_loss",
+    "linguistic_review": "pending",
+    "keypoint_accuracy_validated": false,
+    "active_asset_replaced": false
+  },
+  {
+    "source_id": "DICTASIGN_PORTAL_356",
+    "capture_id": "1e0e012b-8dea-5c6f-a6c3-e4dad6992d4a",
+    "source_sha256": "fc41c3f2bd85ecea75a405f7a08eee6980e2fc05b905f4463cd18c3e5e3b66ad",
+    "native_frames_before": 29,
+    "native_frames_candidate": 29,
+    "common_frames": 29,
+    "body_before": 29,
+    "body_candidate": 29,
+    "hands": {
+      "left": {
+        "before_observed": 13,
+        "candidate_observed": 14,
+        "common_frames": 29,
+        "lost": 0,
+        "recovered": 1
+      },
+      "right": {
+        "before_observed": 12,
+        "candidate_observed": 13,
+        "common_frames": 29,
+        "lost": 0,
+        "recovered": 1
+      }
+    },
+    "engineering_gate": "no_observation_loss",
+    "linguistic_review": "pending",
+    "keypoint_accuracy_validated": false,
+    "active_asset_replaced": false
+  },
+  {
+    "source_id": "DICTASIGN_PORTAL_376",
+    "capture_id": "3f121e71-6856-537f-be38-bfc5c55d0a75",
+    "source_sha256": "c264ef4dca36207caffa170c6094423f69e24885ff550a0d141837b1161c74dd",
+    "native_frames_before": 40,
+    "native_frames_candidate": 40,
+    "common_frames": 40,
+    "body_before": 40,
+    "body_candidate": 40,
+    "hands": {
+      "left": {
+        "before_observed": 24,
+        "candidate_observed": 24,
+        "common_frames": 40,
+        "lost": 0,
+        "recovered": 0
+      },
+      "right": {
+        "before_observed": 23,
+        "candidate_observed": 23,
+        "common_frames": 40,
+        "lost": 0,
+        "recovered": 0
+      }
+    },
+    "engineering_gate": "no_observation_loss",
+    "linguistic_review": "pending",
+    "keypoint_accuracy_validated": false,
+    "active_asset_replaced": false
+  },
+  {
+    "source_id": "DICTASIGN_PORTAL_482",
+    "capture_id": "bfa36581-5fc5-5ba8-995d-ca6649463497",
+    "source_sha256": "f93792a9e76ca4247cc5bb55fbdf39cfcce73ea018ff24033dece49612c99d45",
+    "native_frames_before": 43,
+    "native_frames_candidate": 43,
+    "common_frames": 43,
+    "body_before": 43,
+    "body_candidate": 43,
+    "hands": {
+      "left": {
+        "before_observed": 26,
+        "candidate_observed": 26,
+        "common_frames": 43,
+        "lost": 0,
+        "recovered": 0
+      },
+      "right": {
+        "before_observed": 25,
+        "candidate_observed": 25,
+        "common_frames": 43,
+        "lost": 0,
+        "recovered": 0
+      }
+    },
+    "engineering_gate": "no_observation_loss",
+    "linguistic_review": "pending",
+    "keypoint_accuracy_validated": false,
+    "active_asset_replaced": false
+  },
+  {
+    "source_id": "DICTASIGN_PORTAL_509",
+    "capture_id": "8a25a68f-06f9-5a09-8dd3-160fce1b0cae",
+    "source_sha256": "2d7bdf51b4477eac8b7ddf95f27ffce94460fe2df01007b82e582fe4cec38cde",
+    "native_frames_before": 43,
+    "native_frames_candidate": 43,
+    "common_frames": 43,
+    "body_before": 43,
+    "body_candidate": 43,
+    "hands": {
+      "left": {
+        "before_observed": 0,
+        "candidate_observed": 0,
+        "common_frames": 43,
+        "lost": 0,
+        "recovered": 0
+      },
+      "right": {
+        "before_observed": 16,
+        "candidate_observed": 16,
+        "common_frames": 43,
+        "lost": 0,
+        "recovered": 0
+      }
+    },
+    "engineering_gate": "no_observation_loss",
+    "linguistic_review": "pending",
+    "keypoint_accuracy_validated": false,
+    "active_asset_replaced": false
+  },
+  {
+    "source_id": "DICTASIGN_PORTAL_529",
+    "capture_id": "4d1d077a-b14b-50a4-b658-cfafbc462810",
+    "source_sha256": "9e84042c64375b05551996fe536b2a8723a377fddbce31c9200c35b8f2c74c06",
+    "native_frames_before": 31,
+    "native_frames_candidate": 31,
+    "common_frames": 31,
+    "body_before": 31,
+    "body_candidate": 31,
+    "hands": {
+      "left": {
+        "before_observed": 31,
+        "candidate_observed": 31,
+        "common_frames": 31,
+        "lost": 0,
+        "recovered": 0
+      },
+      "right": {
+        "before_observed": 31,
+        "candidate_observed": 31,
+        "common_frames": 31,
+        "lost": 0,
+        "recovered": 0
+      }
+    },
+    "engineering_gate": "no_observation_loss",
+    "linguistic_review": "pending",
+    "keypoint_accuracy_validated": false,
+    "active_asset_replaced": false
+  },
+  {
+    "source_id": "DICTASIGN_PORTAL_546",
+    "capture_id": "fcd13f6d-0728-5632-a76d-89243c571d5a",
+    "source_sha256": "5aeaf6c910d58e41e7000968e776f96d9fa83955c83565ba1899c5eef02091ba",
+    "native_frames_before": 31,
+    "native_frames_candidate": 62,
+    "common_frames": 31,
+    "body_before": 31,
+    "body_candidate": 31,
+    "hands": {
+      "left": {
+        "before_observed": 31,
+        "candidate_observed": 31,
+        "common_frames": 31,
+        "lost": 0,
+        "recovered": 0
+      },
+      "right": {
+        "before_observed": 31,
+        "candidate_observed": 31,
+        "common_frames": 31,
+        "lost": 0,
+        "recovered": 0
+      }
+    },
+    "engineering_gate": "no_observation_loss",
+    "linguistic_review": "pending",
+    "keypoint_accuracy_validated": false,
+    "active_asset_replaced": false
+  },
+  {
+    "source_id": "DICTASIGN_PORTAL_560",
+    "capture_id": "3dfa39c6-f310-5eb0-a5b3-5f0814daad4c",
+    "source_sha256": "1825638a7a43498236b0c24858c0f0cb9eb618fc35b557f9c5ff9e677ce395d4",
+    "native_frames_before": 32,
+    "native_frames_candidate": 32,
+    "common_frames": 32,
+    "body_before": 32,
+    "body_candidate": 32,
+    "hands": {
+      "left": {
+        "before_observed": 32,
+        "candidate_observed": 32,
+        "common_frames": 32,
+        "lost": 0,
+        "recovered": 0
+      },
+      "right": {
+        "before_observed": 32,
+        "candidate_observed": 32,
+        "common_frames": 32,
+        "lost": 0,
+        "recovered": 0
+      }
+    },
+    "engineering_gate": "no_observation_loss",
+    "linguistic_review": "pending",
+    "keypoint_accuracy_validated": false,
+    "active_asset_replaced": false
+  },
+  {
+    "source_id": "DICTASIGN_PORTAL_562",
+    "capture_id": "896624b1-5484-568d-a3a0-fe5cdfa1cad6",
+    "source_sha256": "7922d188cd0a94a7e5e48ce7e7fe7d1fd1dc455e33ab391227f554c5ab28dfe3",
+    "native_frames_before": 30,
+    "native_frames_candidate": 30,
+    "common_frames": 30,
+    "body_before": 30,
+    "body_candidate": 30,
+    "hands": {
+      "left": {
+        "before_observed": 26,
+        "candidate_observed": 26,
+        "common_frames": 30,
+        "lost": 0,
+        "recovered": 0
+      },
+      "right": {
+        "before_observed": 30,
+        "candidate_observed": 30,
+        "common_frames": 30,
+        "lost": 0,
+        "recovered": 0
+      }
+    },
+    "engineering_gate": "no_observation_loss",
+    "linguistic_review": "pending",
+    "keypoint_accuracy_validated": false,
+    "active_asset_replaced": false
+  },
+  {
+    "source_id": "DICTASIGN_PORTAL_632",
+    "capture_id": "d80a4fd1-9539-5977-bf98-a3f731726bdc",
+    "source_sha256": "4306fee6263f1b9ad55be51c6c07de8ee87430fe4c879e489c0d1e5c02d0614b",
+    "native_frames_before": 49,
+    "native_frames_candidate": 98,
+    "common_frames": 49,
+    "body_before": 49,
+    "body_candidate": 49,
+    "hands": {
+      "left": {
+        "before_observed": 49,
+        "candidate_observed": 49,
+        "common_frames": 49,
+        "lost": 0,
+        "recovered": 0
+      },
+      "right": {
+        "before_observed": 49,
+        "candidate_observed": 49,
+        "common_frames": 49,
+        "lost": 0,
+        "recovered": 0
+      }
+    },
+    "engineering_gate": "no_observation_loss",
+    "linguistic_review": "pending",
+    "keypoint_accuracy_validated": false,
+    "active_asset_replaced": false
+  },
+  {
+    "source_id": "DICTASIGN_PORTAL_709",
+    "capture_id": "bb5a0110-0a86-5a27-a5eb-f51e09afeab8",
+    "source_sha256": "8ee08cf87a91eaf11b9a5aaab50e848b788fd76487bd9570ee777a2a55085bfd",
+    "native_frames_before": 29,
+    "native_frames_candidate": 29,
+    "common_frames": 29,
+    "body_before": 29,
+    "body_candidate": 29,
+    "hands": {
+      "left": {
+        "before_observed": 29,
+        "candidate_observed": 29,
+        "common_frames": 29,
+        "lost": 0,
+        "recovered": 0
+      },
+      "right": {
+        "before_observed": 29,
+        "candidate_observed": 29,
+        "common_frames": 29,
+        "lost": 0,
+        "recovered": 0
+      }
+    },
+    "engineering_gate": "no_observation_loss",
+    "linguistic_review": "pending",
+    "keypoint_accuracy_validated": false,
+    "active_asset_replaced": false
+  },
+  {
+    "source_id": "DICTASIGN_PORTAL_756",
+    "capture_id": "cd9e36d9-b728-5c31-ba0f-ea4a4bc5ceae",
+    "source_sha256": "f7c91dc74b2bf6c9a2669b309cf69bd4929ce69ff46dddac4aba5370312a1ff5",
+    "native_frames_before": 32,
+    "native_frames_candidate": 63,
+    "common_frames": 32,
+    "body_before": 32,
+    "body_candidate": 32,
+    "hands": {
+      "left": {
+        "before_observed": 32,
+        "candidate_observed": 32,
+        "common_frames": 32,
+        "lost": 0,
+        "recovered": 0
+      },
+      "right": {
+        "before_observed": 18,
+        "candidate_observed": 19,
+        "common_frames": 32,
+        "lost": 0,
+        "recovered": 1
+      }
+    },
+    "engineering_gate": "no_observation_loss",
+    "linguistic_review": "pending",
+    "keypoint_accuracy_validated": false,
+    "active_asset_replaced": false
+  },
+  {
+    "source_id": "DICTASIGN_PORTAL_788",
+    "capture_id": "bd4b9104-8fa4-57ca-9282-6259e49ac11d",
+    "source_sha256": "fd77d287f892c79a29a3d2f7f5598fddaf8f3a6d971756282899d41c819ce84d",
+    "native_frames_before": 39,
+    "native_frames_candidate": 77,
+    "common_frames": 39,
+    "body_before": 39,
+    "body_candidate": 39,
+    "hands": {
+      "left": {
+        "before_observed": 39,
+        "candidate_observed": 39,
+        "common_frames": 39,
+        "lost": 0,
+        "recovered": 0
+      },
+      "right": {
+        "before_observed": 39,
+        "candidate_observed": 39,
+        "common_frames": 39,
+        "lost": 0,
+        "recovered": 0
+      }
+    },
+    "engineering_gate": "no_observation_loss",
+    "linguistic_review": "pending",
+    "keypoint_accuracy_validated": false,
+    "active_asset_replaced": false
+  },
+  {
+    "source_id": "DICTASIGN_PORTAL_801",
+    "capture_id": "63a2f760-04f3-5563-9eb1-71f34c8a1495",
+    "source_sha256": "72af4103276a6755c7d855a111a00925dd9cd895245afde55f96baa4c6301fab",
+    "native_frames_before": 25,
+    "native_frames_candidate": 25,
+    "common_frames": 25,
+    "body_before": 25,
+    "body_candidate": 25,
+    "hands": {
+      "left": {
+        "before_observed": 0,
+        "candidate_observed": 0,
+        "common_frames": 25,
+        "lost": 0,
+        "recovered": 0
+      },
+      "right": {
+        "before_observed": 19,
+        "candidate_observed": 19,
+        "common_frames": 25,
+        "lost": 0,
+        "recovered": 0
+      }
+    },
+    "engineering_gate": "no_observation_loss",
+    "linguistic_review": "pending",
+    "keypoint_accuracy_validated": false,
+    "active_asset_replaced": false
+  },
+  {
+    "source_id": "DICTASIGN_PORTAL_925",
+    "capture_id": "01345b4c-3818-5d71-b119-aa19c45c5b29",
+    "source_sha256": "76d2509a05543ec95d4aefb71ddeee75e46b14cc763739fad96a1d929b91578e",
+    "native_frames_before": 34,
+    "native_frames_candidate": 34,
+    "common_frames": 34,
+    "body_before": 34,
+    "body_candidate": 34,
+    "hands": {
+      "left": {
+        "before_observed": 13,
+        "candidate_observed": 13,
+        "common_frames": 34,
+        "lost": 0,
+        "recovered": 0
+      },
+      "right": {
+        "before_observed": 14,
+        "candidate_observed": 15,
+        "common_frames": 34,
+        "lost": 0,
+        "recovered": 1
+      }
+    },
+    "engineering_gate": "no_observation_loss",
+    "linguistic_review": "pending",
+    "keypoint_accuracy_validated": false,
+    "active_asset_replaced": false
+  },
+  {
+    "source_id": "DICTASIGN_PORTAL_930",
+    "capture_id": "8a3969d6-ca26-533d-b995-a8a6ba26a82f",
+    "source_sha256": "551c477f338ebdb0ded620213f121b1e9857dbc99d7fb2c1bd3d7acfb72ae80f",
+    "native_frames_before": 25,
+    "native_frames_candidate": 25,
+    "common_frames": 25,
+    "body_before": 25,
+    "body_candidate": 25,
+    "hands": {
+      "left": {
+        "before_observed": 23,
+        "candidate_observed": 23,
+        "common_frames": 25,
+        "lost": 0,
+        "recovered": 0
+      },
+      "right": {
+        "before_observed": 25,
+        "candidate_observed": 25,
+        "common_frames": 25,
+        "lost": 0,
+        "recovered": 0
+      }
+    },
+    "engineering_gate": "no_observation_loss",
+    "linguistic_review": "pending",
+    "keypoint_accuracy_validated": false,
+    "active_asset_replaced": false
+  },
+  {
+    "source_id": "DICTASIGN_PORTAL_929",
+    "capture_id": "c458fee7-4657-5889-9eb7-dcb94ad8efe6",
+    "source_sha256": "6670056fb0a9123c6b41c36c3e006fc63e65d8eac8e5a5a81d660b07ec13de6f",
+    "native_frames_before": 30,
+    "native_frames_candidate": 30,
+    "common_frames": 30,
+    "body_before": 30,
+    "body_candidate": 30,
+    "hands": {
+      "left": {
+        "before_observed": 0,
+        "candidate_observed": 0,
+        "common_frames": 30,
+        "lost": 0,
+        "recovered": 0
+      },
+      "right": {
+        "before_observed": 18,
+        "candidate_observed": 18,
+        "common_frames": 30,
+        "lost": 0,
+        "recovered": 0
+      }
+    },
+    "engineering_gate": "no_observation_loss",
+    "linguistic_review": "pending",
+    "keypoint_accuracy_validated": false,
+    "active_asset_replaced": false
+  },
+  {
+    "source_id": "DICTASIGN_PORTAL_986",
+    "capture_id": "2d5b78ea-f2db-5d7d-abc8-2b5df1be7cd5",
+    "source_sha256": "37c4b3d929e26d38824d9de089b9b243586835b87c4df3ad856d5404e7e7c494",
+    "native_frames_before": 41,
+    "native_frames_candidate": 81,
+    "common_frames": 41,
+    "body_before": 41,
+    "body_candidate": 41,
+    "hands": {
+      "left": {
+        "before_observed": 41,
+        "candidate_observed": 41,
+        "common_frames": 41,
+        "lost": 0,
+        "recovered": 0
+      },
+      "right": {
+        "before_observed": 39,
+        "candidate_observed": 41,
+        "common_frames": 41,
+        "lost": 0,
+        "recovered": 2
+      }
+    },
+    "engineering_gate": "no_observation_loss",
+    "linguistic_review": "pending",
+    "keypoint_accuracy_validated": false,
+    "active_asset_replaced": false
+  },
+  {
+    "source_id": "DICTASIGN_PORTAL_990",
+    "capture_id": "4cc4e7be-c1f7-5144-8401-d131edf80801",
+    "source_sha256": "524eda5712e5ef1d0227bdd0b24e82ce3195bd13d32714ef6a6266f266b8d88c",
+    "native_frames_before": 26,
+    "native_frames_candidate": 52,
+    "common_frames": 26,
+    "body_before": 26,
+    "body_candidate": 26,
+    "hands": {
+      "left": {
+        "before_observed": 26,
+        "candidate_observed": 26,
+        "common_frames": 26,
+        "lost": 0,
+        "recovered": 0
+      },
+      "right": {
+        "before_observed": 26,
+        "candidate_observed": 26,
+        "common_frames": 26,
+        "lost": 0,
+        "recovered": 0
+      }
+    },
+    "engineering_gate": "no_observation_loss",
+    "linguistic_review": "pending",
+    "keypoint_accuracy_validated": false,
+    "active_asset_replaced": false
+  },
+  {
+    "source_id": "DICTASIGN_PORTAL_992",
+    "capture_id": "81287632-3b17-5f8d-9233-1acbe4f43a2b",
+    "source_sha256": "965d85f3860f4f9ba04ff203bd3d312bf6f1a9837e1cb0386e3b06ef2bc23262",
+    "native_frames_before": 41,
+    "native_frames_candidate": 41,
+    "common_frames": 41,
+    "body_before": 41,
+    "body_candidate": 41,
+    "hands": {
+      "left": {
+        "before_observed": 33,
+        "candidate_observed": 33,
+        "common_frames": 41,
+        "lost": 0,
+        "recovered": 0
+      },
+      "right": {
+        "before_observed": 40,
+        "candidate_observed": 40,
+        "common_frames": 41,
+        "lost": 0,
+        "recovered": 0
+      }
+    },
+    "engineering_gate": "no_observation_loss",
+    "linguistic_review": "pending",
+    "keypoint_accuracy_validated": false,
+    "active_asset_replaced": false
+  }
+]

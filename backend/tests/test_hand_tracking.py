@@ -1,6 +1,7 @@
 from backend.app.workers.hand_tracking import assign_hands
 from backend.app.workers.hand_tracking import roi_box, map_roi_hand
 from types import SimpleNamespace
+from backend.app.workers.hand_tracking import consistent_hand
 
 
 def test_two_detections_get_distinct_anatomical_sides():
@@ -41,3 +42,12 @@ def test_roi_coordinates_restore_original_pixels_without_mutating_detector():
     assert mapped.x*320 == 90 and mapped.y*240 == 45
     assert mapped.z == .1*100/320
     assert hand.landmark[0].x == .5
+
+
+def test_scale_agreement_rejects_different_or_unresolved_hands():
+    a=SimpleNamespace(landmark=[SimpleNamespace(x=.1+i*.005,y=.3,z=0) for i in range(21)])
+    close=SimpleNamespace(landmark=[SimpleNamespace(x=p.x+.001,y=p.y,z=0) for p in a.landmark])
+    wrong=SimpleNamespace(landmark=[SimpleNamespace(x=p.x+.1,y=p.y,z=0) for p in a.landmark])
+    assert consistent_hand(a,close,320,240)
+    assert not consistent_hand(a,wrong,320,240)
+    assert not consistent_hand(a,a,10,10)
