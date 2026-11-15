@@ -1,0 +1,191 @@
+{
+  "kind": "INTRA_SIGN_MASKED_WINDOW_RECONSTRUCTION_NOT_INTER_SIGN_COARTICULATION",
+  "device": "cpu",
+  "cuda_allocated_peak_mib": 0.0,
+  "cuda_note": "No CUDA tensors/context required; existing Qwen server untouched",
+  "training_seconds": 3.065239596005995,
+  "total_seconds": 3.093765726000129,
+  "counts": {
+    "train": 646,
+    "val": 152,
+    "test": 93
+  },
+  "eligible_source_groups": {
+    "train": 178,
+    "val": 40,
+    "test": 32
+  },
+  "epochs": 50,
+  "best_epoch": 48,
+  "validation_rmse": 0.26754821375276505,
+  "validation_baselines": {
+    "linear": {
+      "rmse": 0.28638737248687474,
+      "mae": 0.16191161400623585,
+      "inner_boundary_rmse": 0.18232241052074513,
+      "inner_boundary_mae": 0.09564324446249597,
+      "supplied_anchor_rmse": 0.0,
+      "supplied_anchor_note": "Outer anchors are copied exactly; zero is structural, not learned continuity evidence"
+    },
+    "quintic": {
+      "rmse": 0.29985307797102156,
+      "mae": 0.16174315775592588,
+      "inner_boundary_rmse": 0.19525408061878366,
+      "inner_boundary_mae": 0.09288722040278356,
+      "supplied_anchor_rmse": 0.0,
+      "supplied_anchor_note": "Outer anchors are copied exactly; zero is structural, not learned continuity evidence"
+    }
+  },
+  "selected_deterministic_baseline": "linear",
+  "metrics": {
+    "linear": {
+      "normalized": {
+        "rmse": 0.32029320687667895,
+        "mae": 0.16594267677642174,
+        "inner_boundary_rmse": 0.1668544123899464,
+        "inner_boundary_mae": 0.09240214860871665,
+        "supplied_anchor_rmse": 0.0,
+        "supplied_anchor_note": "Outer anchors are copied exactly; zero is structural, not learned continuity evidence"
+      },
+      "native_rig_xy": {
+        "rmse": 0.05303208761699955,
+        "mae": 0.022066775318548493,
+        "inner_boundary_rmse": 0.02776137566646683,
+        "inner_boundary_mae": 0.012497597951279272,
+        "supplied_anchor_rmse": 0.0,
+        "supplied_anchor_note": "Outer anchors are copied exactly; zero is structural, not learned continuity evidence"
+      },
+      "macro_source_clip_rmse": 0.2732910021818602
+    },
+    "quintic": {
+      "normalized": {
+        "rmse": 0.32961851759492455,
+        "mae": 0.1635391352366611,
+        "inner_boundary_rmse": 0.17269661208836135,
+        "inner_boundary_mae": 0.08880689679300763,
+        "supplied_anchor_rmse": 0.0,
+        "supplied_anchor_note": "Outer anchors are copied exactly; zero is structural, not learned continuity evidence"
+      },
+      "native_rig_xy": {
+        "rmse": 0.05480611101797559,
+        "mae": 0.02186637951774682,
+        "inner_boundary_rmse": 0.02896397271713825,
+        "inner_boundary_mae": 0.01214779229303922,
+        "supplied_anchor_rmse": 0.0,
+        "supplied_anchor_note": "Outer anchors are copied exactly; zero is structural, not learned continuity evidence"
+      },
+      "macro_source_clip_rmse": 0.28502888106191027
+    },
+    "gan": {
+      "normalized": {
+        "rmse": 0.31489801487044405,
+        "mae": 0.16303588185945064,
+        "inner_boundary_rmse": 0.16688385619435592,
+        "inner_boundary_mae": 0.09096442264847718,
+        "supplied_anchor_rmse": 0.0,
+        "supplied_anchor_note": "Outer anchors are copied exactly; zero is structural, not learned continuity evidence"
+      },
+      "native_rig_xy": {
+        "rmse": 0.051877872359000606,
+        "mae": 0.021846554059828573,
+        "inner_boundary_rmse": 0.02797662882803733,
+        "inner_boundary_mae": 0.012384690825204034,
+        "supplied_anchor_rmse": 0.0,
+        "supplied_anchor_note": "Outer anchors are copied exactly; zero is structural, not learned continuity evidence"
+      },
+      "macro_source_clip_rmse": 0.2518970860297938
+    }
+  },
+  "recommendation": "gan",
+  "gan_worse_than_selected_baseline": false,
+  "checkpoint": "/home/jmal/Projects/Active/Forum_Hackathon/.worktrees/wt-codex2/training/transitions/artifacts/transition-intrasign-v1.pt",
+  "checkpoint_sha256": "01374d12750e50c8ac7c1b460bcc77d6e1d714277e6c411fdbc817782de09ff0",
+  "paper_score_comparison": "NOT COMPARABLE: different captured within-sign windows, normalization, native fps, source and split",
+  "test_evaluation_passes": 1,
+  "plan": {
+    "kind": "INTRA_SIGN_MASKED_WINDOW_RECONSTRUCTION_NOT_INTER_SIGN_COARTICULATION",
+    "seed": 42,
+    "device": "cpu",
+    "max_epochs": 50,
+    "patience": 8,
+    "batch_size": 64,
+    "lr": 0.0002,
+    "adam_betas": [
+      0.5,
+      0.999
+    ],
+    "lambda_l1": 1000.0,
+    "noise_dimensions": 16,
+    "eval_noise": "all zeros; deterministic",
+    "generator_hidden_widths": [
+      256,
+      256,
+      128
+    ],
+    "generator": "Linear/BN/ReLU, Dropout.4after first2hiddenlayers; final100linear; additive linear-interpolation residual shortcut and zero final initialization are engineering additions",
+    "discriminator_hidden_widths": [
+      256,
+      128,
+      64
+    ],
+    "discriminator": "Conditional endpoint20+target100 ->MLP, LeakyReLU.2/Dropout.3after each hidden; logit output",
+    "loss_g": "BCEWithLogits(D(condition,G),1)+1000*L1(G,target)",
+    "loss_d": "BCEWithLogits(D(condition,target),1)+BCEWithLogits(D(condition,G.detach),0)",
+    "selection": "Minimum validation normalized RMSE; patience8; trained checkpoints only, not epoch0",
+    "normalization": {
+      "mean": [
+        0.03282610455868678,
+        1.6448646218999374,
+        0.12941638562431113,
+        1.2756468668518544,
+        -0.09361589762597004,
+        1.330711352489927,
+        0.06118342893680899,
+        1.3207727275919496,
+        -0.028705399257820043,
+        1.4191294842552475
+      ],
+      "std": [
+        0.019875990037765506,
+        0.01995756695907997,
+        0.06964511003258746,
+        0.16558839425025426,
+        0.06054922822007294,
+        0.1366034972834002,
+        0.12296949892713893,
+        0.27477105192119233,
+        0.10718442455122373,
+        0.2098006814823877
+      ],
+      "fit_split": "train only",
+      "fit_samples": 7752,
+      "definition": "Per-feature z-score on complete training windows, including supplied anchors; each method uses identical stats",
+      "feature_order": [
+        "head_x",
+        "head_y",
+        "left_wrist_x",
+        "left_wrist_y",
+        "right_wrist_x",
+        "right_wrist_y",
+        "left_middle_4_x",
+        "left_middle_4_y",
+        "right_middle_4_x",
+        "right_middle_4_y"
+      ]
+    },
+    "dataset_manifest_sha256": "eea74d81c96a6eff66bacdc0a882ecc2973c4ce4b11a245d5c34569d972acb45",
+    "generator_parameters": 122340,
+    "discriminator_parameters": 72193,
+    "paper_scope": "Inspected actual supplied PDFp4section3.5; widths, noise, residual shortcut, conditioning and optimization choices not fully specified by paper; NOT exact reproduction"
+  },
+  "limitations": [
+    "INTRA-SIGN reconstruction only, not genuine inter-sign coarticulation",
+    "No379sentence transitions or synthetic transition pairs from paper",
+    "Captures/retargeting are approximate and pending linguistic/animation review",
+    "Hand visibility selects the eligible subset",
+    "Same original signer may appear throughout; identity grouping unavailable; no signer-disjoint claim",
+    "Neighboring windows overlap within clips; clips are disjoint across splits",
+    "Native captured fps/timing differs from paper30fps; no paper-score comparison"
+  ],
+  "integration_recommendation": "Deterministic linear/quintic for real inter-sign joins; GAN research-only, no inter-sign supervision or linguistic/animation approval"
+}
