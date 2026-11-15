@@ -5,3 +5,14 @@ NLP uses Unicode token matching, longest expressions first, with optional instal
 Audio is PCM WAV only, 10 MiB / 60 seconds, RMS and autocorrelation F0; emotion unavailable. Audio does not automatically alter motion timings. Preview serves registered technical fixtures, not validated LSF. No video export. Review records apply to linguistic review only; animation and rights must be approved in the registry separately. Local review API has no authentication and must stay on a trusted local interface.
 
 Optional French lemmatization: install spaCy and a French pipeline separately, then set SIGNACULTURE_SPACY_MODEL (default fr_core_news_sm). No automatic downloads occur. The model is cached per process; absent packages/models or pipelines without a French lemmatizer select deterministic regex fallback. X-NLP-Backend identifies the active mode. Original regex token spans stay authoritative: only exactly aligned spaCy tokens supply lemmas, and unknowns retain original text and duplicates. Restart after installing/changing models. Lemma lookup remains an experimental candidate matcher.
+
+Reproduce the optional NLP setup from the repository root (Python 3.12):
+
+```bash
+python3 -m venv .venv
+.venv/bin/python -m pip install -r backend/requirements-nlp.txt
+.venv/bin/python -m pip install https://github.com/explosion/spacy-models/releases/download/fr_core_news_sm-3.8.0/fr_core_news_sm-3.8.0-py3-none-any.whl
+SIGNACULTURE_SPACY_MODEL=fr_core_news_sm .venv/bin/python -m uvicorn backend.app.main:app
+```
+
+The model download above is an explicit installation step. The API never downloads models at runtime. The optional integration test skips only when spaCy or the model package is absent; an installed but unusable model fails the test.

@@ -35,7 +35,8 @@ def test_missing_asset_and_empty_text():
     assert client.get('/assets/unregistered.json').status_code == 404
     assert client.post('/analyze-text',json={'text':''}).status_code == 422
 
-def test_malformed_requests():
+def test_malformed_requests(monkeypatch):
+    monkeypatch.setenv('SIGNACULTURE_SPACY_MODEL', '')
     assert client.post('/compose-animation',json={'text':'bonjour','audio_features':{'frames':[]}}).status_code == 422
     assert client.post('/render',json={'plan_id':[]}).status_code == 422
     assert client.post('/review',json={'plan_id':{},'reviewer':'x','status':'approved','notes':''}).status_code == 422
@@ -119,3 +120,21 @@ def test_stereo_tone_then_silence():
     assert abs(r['frames'][0]['pitch_hz']-200)<5
     assert r['frames'][0]['energy']>.1
     assert all(f['is_pause'] and f['energy']==0 for f in r['frames'] if f['start_ms']>=520)
+
+
+def test_real_french_model(monkeypatch):
+    monkeypatch.setenv('SIGNACULTURE_SPACY_MODEL', 'fr_core_news_sm')
+    pytest.importorskip('spacy')
+    import importlib.util
+    if importlib.util.find_spec('fr_core_news_sm') is None:
+        pytest.skip('Optional French spaCy model is not installed')
+    assert text_lookup.model() is not None
+    tokens, lemmas = text_lookup.tokenize('musées')
+    assert tokens == ['musées']
+    assert lemmas == ['musée']
+    entry = main.registry()[1][0].model_copy(update={'concept_fr':'musée', 'aliases':[]})
+    result = text_lookup.lookup_text('musées Inconnu', [entry])
+    assert [g.gloss_id for g in result['gloss_sequence']] == [entry.gloss_id]
+    assert result['unknowns'] == ['Inconnu']
+    response = client.post('/analyze-text', json={'text':'musées'})
+    assert response.headers['x-nlp-backend'] == 'spacy-fr-lemmatizer'
