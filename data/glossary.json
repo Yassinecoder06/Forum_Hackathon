@@ -1,0 +1,80 @@
+[
+  {
+    "gloss_id": "LSF_CONCEPT_001",
+    "concept_fr": "bonjour",
+    "gloss": "BONJOUR",
+    "language": "LSF",
+    "variant": "concept français non validé LSF",
+    "source_id": "SRC_ORIGINAL_FIXTURES",
+    "motion_id": "SYNTHETIC_001",
+    "aliases": [
+      "bonjour"
+    ],
+    "review_status": "pending"
+  },
+  {
+    "gloss_id": "LSF_CONCEPT_002",
+    "concept_fr": "merci",
+    "gloss": "MERCI",
+    "language": "LSF",
+    "variant": "concept français non validé LSF",
+    "source_id": "SRC_ORIGINAL_FIXTURES",
+    "motion_id": "SYNTHETIC_002",
+    "aliases": [
+      "merci"
+    ],
+    "review_status": "pending"
+  },
+  {
+    "gloss_id": "LSF_CONCEPT_003",
+    "concept_fr": "culture",
+    "gloss": "CULTURE",
+    "language": "LSF",
+    "variant": "concept français non validé LSF",
+    "source_id": "SRC_ORIGINAL_FIXTURES",
+    "motion_id": "SYNTHETIC_003",
+    "aliases": [
+      "culture"
+    ],
+    "review_status": "pending"
+  },
+  {
+    "gloss_id": "LSF_CONCEPT_004",
+    "concept_fr": "musée",
+    "gloss": "MUSÉE",
+    "language": "LSF",
+    "variant": "concept français non validé LSF",
+    "source_id": "SRC_ORIGINAL_FIXTURES",
+    "motion_id": "SYNTHETIC_004",
+    "aliases": [
+      "musée"
+    ],
+    "review_status": "pending"
+  },
+  {
+    "gloss_id": "LSF_CONCEPT_005",
+    "concept_fr": "art",
+    "gloss": "ART",
+    "language": "LSF",
+    "variant": "concept français non validé LSF",
+    "source_id": "SRC_ORIGINAL_FIXTURES",
+    "motion_id": "SYNTHETIC_005",
+    "aliases": [
+      "art"
+    ],
+    "review_status": "pending"
+  },
+  {
+    "gloss_id": "LSF_CONCEPT_006",
+    "concept_fr": "bienvenue",
+    "gloss": "BIENVENUE",
+    "language": "LSF",
+    "variant": "concept français non validé LSF",
+    "source_id": "SRC_ORIGINAL_FIXTURES",
+    "motion_id": "SYNTHETIC_006",
+    "aliases": [
+      "bienvenue"
+    ],
+    "review_status": "pending"
+  }
+]
