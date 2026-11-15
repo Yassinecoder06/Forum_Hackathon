@@ -1,6 +1,6 @@
 # Organisation en Worktrees de Développement — SignaCulture AI
 
-> **Document :** Spécification d'implémentation multi-worktree v1.1  
+> **Document :** Spécification d'implémentation multi-worktree v1.2  
 > **Objet :** Traduction opérationnelle de l'organisation d'équipe du plan initial en quatre worktrees Git isolés sous la direction d'un lead orchestrateur, sans modifier les objectifs du plan d'origine.  
 > **Principe directeur :** Aucun chemin absolu codé en dur ; travail exclusif via des branches et des chemins relatifs au dépôt (`REPO_ROOT`).
 
@@ -40,12 +40,16 @@ flowchart TD
 
 ---
 
-## 2. Règles d'Isolation et Workflow Git
+## 2. Règles d'Isolation, Gestion des Processus et Workflow Git
 
-1. **Isolation stricte :** Chaque agent travaille exclusivement dans son worktree assigné. Aucune modification directe sur les branches voisines.
+1. **Isolation stricte des fichiers :** Chaque agent travaille exclusivement dans son worktree assigné. Aucune modification directe sur les branches voisines.
 2. **Chemins relatifs universels :** Les scripts et configurations s'appuient sur la racine Git dynamique (`REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"`) sans aucun chemin absolu codé en dur.
-3. **Autorité du Contrat d'Intégration :** En cas d'ambiguïté entre branches, le document `docs/INTEGRATION_CONTRACT.md` détenu par le lead est la référence normative absolue.
-4. **Protocole de Fusion :**
+3. **Hygiène des Processus et Respect des Ports Partagés :**
+   - Le port `8000` est réservé à l'API de référence gérée par le lead orchestrateur. Aucun agent ou script de test ne doit envoyer de signal `SIGTERM` ou `pkill` ciblant ce port ou des processus partagés.
+   - Les services de test locaux démarrés par un agent doivent utiliser des ports alternatifs dédiés (`BACKEND_PORT=8001`, `FRONTEND_PORT=5174`, etc.) ou cibler l'API active sans interrompre les processus externes.
+   - Tout script de lancement (`dev.sh`) nettoie rigoureusement et exclusivement ses propres PIDs créés (`$!`).
+4. **Autorité du Contrat d'Intégration :** En cas d'ambiguïté entre branches, le document `docs/INTEGRATION_CONTRACT.md` détenu par le lead est la référence normative absolue.
+5. **Protocole de Fusion :**
    - Chaque worktree committe ses fichiers de périmètre sans rebase ni merge non coordonné.
    - Le lead examine les branches et effectue l'intégration sur `main`.
-   - La suite de smoke tests (`scripts/smoke_test.py`) valide l'ensemble intégré contre le backend FastAPI réel en fonctionnement.
+   - La suite de smoke tests (`scripts/smoke_test.py`) valide l'ensemble intégré contre le backend FastAPI réel en fonctionnement sans modifier l'état des processus serveur.

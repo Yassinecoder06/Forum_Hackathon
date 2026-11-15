@@ -63,11 +63,13 @@ bash scripts/setup.sh
 
 ### Lancement du Développement Local
 ```bash
-# Démarre le backend FastAPI (port 8000) et le frontend Vite (port 5173, --strictPort)
+# Démarre le backend FastAPI (port 8000 par défaut) et le frontend Vite (port 5173, --strictPort)
 make dev
 # ou alternativement :
 bash scripts/dev.sh
 ```
+
+> **Hygiène des processus et ports :** L'API partagée du lead écoute sur le port 8000. Les scripts n'utilisent aucun `pkill` large et n'interrompent jamais de processus tiers. Pour exécuter un backend de test isolé sans conflit, utilisez `BACKEND_PORT=8001 bash scripts/dev.sh`.
 
 ### Exécution des Tests
 ```bash
