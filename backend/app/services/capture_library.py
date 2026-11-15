@@ -1,7 +1,16 @@
 """Persistent local captures and a curated gloss/motion library."""
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
-import fcntl
+try:
+    import fcntl
+except ImportError:  # Windows: msvcrt byte-range lock as the flock equivalent
+    import msvcrt
+    class fcntl:
+        LOCK_EX, LOCK_UN = msvcrt.LK_LOCK, msvcrt.LK_UNLCK
+        @staticmethod
+        def flock(handle, mode):
+            handle.seek(0)
+            msvcrt.locking(handle.fileno(), mode, 1)
 from datetime import datetime, timezone
 import json
 import os

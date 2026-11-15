@@ -271,6 +271,14 @@ def compose_draft(draft, audio=None):
         t += m.duration_ms
     from .services.animation_timing import segment_timing
     transition_ms=333 if len(selected)>1 else 0
+    # Play each sign's active core so bridges join signing hands, not two rest poses.
+    if len(selected)>1:
+        from .services.sign_core import clip_windows
+        root,_,_=registry()
+        windows=clip_windows([asset(root,m) for m in selected])
+        for segment,(start,end) in zip(segments,windows):
+            segment.update(clip_start_ms=start,clip_end_ms=end)
+        selected=[m.model_copy(update={'duration_ms':end-start}) for m,(start,end) in zip(selected,windows)]
     timing,t,timing_mode=segment_timing(selected,audio,transition_ms)
     for segment,(start,length) in zip(segments,timing):
         segment.update(start_ms=start,duration_ms=length)
@@ -366,9 +374,13 @@ def compose_concepts(body: ConceptSequenceRequest):
 
 @app.get('/avatar/model')
 def avatar_model():
-    path=capture_library.storage()/'avatar-candidates/Noa.glb'
-    if not path.is_file(): raise HTTPException(503,'Le modèle 3D local est absent. Exécutez scripts/setup-avatar.py.')
-    return FileResponse(path,media_type='model/gltf-binary')
+    # Explicit choice among checksum-pinned local candidates; no silent fallback.
+    name=os.getenv('SIGNACULTURE_AVATAR','ReadyEva')
+    if name not in ('ReadyEva','Noa'): raise HTTPException(503,f'Avatar inconnu : {name}')
+    path=capture_library.storage()/f'avatar-candidates/{name}.glb'
+    if not path.is_file(): raise HTTPException(503,f'Le modèle 3D local {name} est absent. Exécutez scripts/setup-avatar.py.')
+    # Revalidate on every load (ETag) so switching avatars is never masked by cache.
+    return FileResponse(path,media_type='model/gltf-binary',headers={'Cache-Control':'no-cache'})
 
 
 @app.get('/captures/{job_id}/landmarks')

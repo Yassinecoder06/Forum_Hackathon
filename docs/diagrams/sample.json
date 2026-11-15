@@ -1,0 +1,20 @@
+{
+  "_comment": "Single source of truth for the example images in the diagrams. To use another sign, change these fields, then run (server on :8080): node e2e/diagram-examples.mjs && python scripts/build-diagrams.py && node e2e/diagram-png.mjs",
+  "label": "CHAT",
+  "text": "chat",
+  "motion": ".runtime/motions/CAPTURE_8069af08c0fc52f8.json",
+  "video": ".runtime/captures/8069af08-c0fc-52f8-b958-23443f63c2d8/source.mp4",
+  "video_crop": "640:328:0:0",
+  "times_ms": [
+    850,
+    1400,
+    2100
+  ],
+  "time_labels": [
+    "Rest",
+    "Hands at the cheeks",
+    "Whiskers drawn out"
+  ],
+  "credit": "Laura Jauvert · montage Edouard-lopez · CC BY 3.0 · Wikimedia Commons (LL-Q33302 fsl)",
+  "motion_id": "CAPTURE_8069af08c0fc52f8"
+}

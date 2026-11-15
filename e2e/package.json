@@ -8,7 +8,10 @@
     "test:dictasign": "node dictasign.mjs",
     "test:avatar": "node avatar.mjs",
     "test:cv-phrases": "node cv-loop.mjs",
-    "test:export-reset": "node export-reset.mjs"
+    "test:export-reset": "node export-reset.mjs",
+    "diagram-examples": "node diagram-examples.mjs",
+    "diagram-png": "node diagram-png.mjs",
+    "showcase": "node build-showcase.mjs"
   },
   "devDependencies": {
     "playwright": "^1.58.0"

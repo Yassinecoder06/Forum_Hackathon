@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1600" height="900" viewBox="0 0 1600 900"><defs><marker id="m-green" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#23684f" stroke-width="1.6"/></marker><marker id="m-blue" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#336a91" stroke-width="1.6"/></marker><marker id="m-amber" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#a0661c" stroke-width="1.6"/></marker><marker id="m-purple" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#74578d" stroke-width="1.6"/></marker><marker id="m-gray" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#8a9893" stroke-width="1.6"/></marker></defs><rect width="1600" height="900" fill="#ffffff"/>
+<text x="64" y="84" fill="#1d3a33" font-size="36" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">Driving the 3D character from captured points</text>
+<text x="64" y="122" fill="#6b7d77" font-size="19" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">The same five steps run for every frame. Captured data is never modified, only adapted.</text>
+<rect x="64" y="190" width="330" height="420" rx="12" fill="#fafbfa" stroke="#dfe5e1" stroke-width="1"/>
+<circle cx="231.2" cy="244.7" r="30.0" fill="none" stroke="#23684f" stroke-width="3"/>
+<line x1="285.6" y1="304.2" x2="172.4" y2="304.3" stroke="#23684f" stroke-width="4" stroke-linecap="round"/>
+<line x1="285.6" y1="304.2" x2="271.4" y2="476.8" stroke="#23684f" stroke-width="4" stroke-linecap="round"/>
+<line x1="172.4" y1="304.3" x2="186.6" y2="476.8" stroke="#23684f" stroke-width="4" stroke-linecap="round"/>
+<line x1="271.4" y1="476.8" x2="186.6" y2="476.8" stroke="#23684f" stroke-width="4" stroke-linecap="round"/>
+<line x1="285.6" y1="304.2" x2="285.6" y2="366.8" stroke="#23684f" stroke-width="4" stroke-linecap="round"/>
+<line x1="285.6" y1="366.8" x2="265.9" y2="305.6" stroke="#23684f" stroke-width="4" stroke-linecap="round"/>
+<line x1="172.4" y1="304.3" x2="173.6" y2="360.5" stroke="#23684f" stroke-width="4" stroke-linecap="round"/>
+<line x1="173.6" y1="360.5" x2="191.2" y2="308.7" stroke="#23684f" stroke-width="4" stroke-linecap="round"/>
+<line x1="265.9" y1="305.6" x2="254.4" y2="292.7" stroke="#a0661c" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="254.4" y1="292.7" x2="249.2" y2="278.3" stroke="#a0661c" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="249.2" y1="278.3" x2="245.3" y2="269.2" stroke="#a0661c" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="245.3" y1="269.2" x2="241.1" y2="262.1" stroke="#a0661c" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="265.9" y1="305.6" x2="270.5" y2="262.7" stroke="#a0661c" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="270.5" y1="262.7" x2="255.0" y2="254.6" stroke="#a0661c" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="255.0" y1="254.6" x2="244.0" y2="253.9" stroke="#a0661c" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="244.0" y1="253.9" x2="236.7" y2="255.4" stroke="#a0661c" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="265.9" y1="305.6" x2="270.7" y2="265.6" stroke="#a0661c" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="270.7" y1="265.6" x2="254.2" y2="254.6" stroke="#a0661c" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="254.2" y1="254.6" x2="244.4" y2="255.9" stroke="#a0661c" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="244.4" y1="255.9" x2="238.9" y2="257.7" stroke="#a0661c" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="265.9" y1="305.6" x2="268.0" y2="270.6" stroke="#a0661c" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="268.0" y1="270.6" x2="249.7" y2="264.4" stroke="#a0661c" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="249.7" y1="264.4" x2="248.4" y2="271.2" stroke="#a0661c" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="248.4" y1="271.2" x2="251.7" y2="274.9" stroke="#a0661c" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="265.9" y1="305.6" x2="262.7" y2="277.2" stroke="#a0661c" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="262.7" y1="277.2" x2="248.1" y2="273.3" stroke="#a0661c" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="248.1" y1="273.3" x2="247.8" y2="278.9" stroke="#a0661c" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="247.8" y1="278.9" x2="251.5" y2="282.0" stroke="#a0661c" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="191.2" y1="308.7" x2="201.8" y2="290.2" stroke="#336a91" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="201.8" y1="290.2" x2="205.8" y2="275.0" stroke="#336a91" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="205.8" y1="275.0" x2="210.5" y2="264.9" stroke="#336a91" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="210.5" y1="264.9" x2="214.7" y2="257.4" stroke="#336a91" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="191.2" y1="308.7" x2="184.5" y2="263.3" stroke="#336a91" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="184.5" y1="263.3" x2="200.3" y2="250.8" stroke="#336a91" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="200.3" y1="250.8" x2="211.5" y2="247.8" stroke="#336a91" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="211.5" y1="247.8" x2="218.9" y2="247.2" stroke="#336a91" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="191.2" y1="308.7" x2="184.6" y2="266.2" stroke="#336a91" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="184.6" y1="266.2" x2="204.9" y2="260.8" stroke="#336a91" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="204.9" y1="260.8" x2="207.2" y2="269.2" stroke="#336a91" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="207.2" y1="269.2" x2="203.3" y2="275.0" stroke="#336a91" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="191.2" y1="308.7" x2="188.3" y2="270.6" stroke="#336a91" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="188.3" y1="270.6" x2="208.3" y2="267.5" stroke="#336a91" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="208.3" y1="267.5" x2="209.1" y2="276.6" stroke="#336a91" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="209.1" y1="276.6" x2="205.3" y2="282.5" stroke="#336a91" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="191.2" y1="308.7" x2="193.7" y2="275.1" stroke="#336a91" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="193.7" y1="275.1" x2="208.4" y2="274.1" stroke="#336a91" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="208.4" y1="274.1" x2="209.8" y2="280.7" stroke="#336a91" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="209.8" y1="280.7" x2="208.0" y2="285.0" stroke="#336a91" stroke-width="1.8" stroke-linecap="round"/>
+<circle cx="285.6" cy="304.2" r="4" fill="#ffffff" stroke="#23684f" stroke-width="2"/>
+<circle cx="172.4" cy="304.3" r="4" fill="#ffffff" stroke="#23684f" stroke-width="2"/>
+<circle cx="285.6" cy="366.8" r="4" fill="#ffffff" stroke="#23684f" stroke-width="2"/>
+<circle cx="173.6" cy="360.5" r="4" fill="#ffffff" stroke="#23684f" stroke-width="2"/>
+<circle cx="265.9" cy="305.6" r="4" fill="#ffffff" stroke="#23684f" stroke-width="2"/>
+<circle cx="191.2" cy="308.7" r="4" fill="#ffffff" stroke="#23684f" stroke-width="2"/>
+<text x="229.0" y="634" fill="#6b7d77" font-size="14" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="middle">Captured joints</text>
+<rect x="470" y="175" width="640" height="78" rx="14" fill="#eef5f0" stroke="#23684f" stroke-width="1.3"/>
+<text x="494" y="208" fill="#23684f" font-size="20" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">1  Scale &amp; anchor</text>
+<text x="494" y="234" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">Match shoulder width, pin at the neck</text>
+<rect x="470" y="267" width="640" height="78" rx="14" fill="#eef5f0" stroke="#23684f" stroke-width="1.3"/>
+<text x="494" y="300" fill="#23684f" font-size="20" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">2  Arm IK</text>
+<text x="494" y="326" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">Shoulder + elbow angles reach the wrist</text>
+<rect x="470" y="359" width="640" height="78" rx="14" fill="#eef5f0" stroke="#23684f" stroke-width="1.3"/>
+<text x="494" y="392" fill="#23684f" font-size="20" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">3  Palm orientation</text>
+<text x="494" y="418" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">From wrist, index, middle and pinky</text>
+<rect x="470" y="451" width="640" height="78" rx="14" fill="#eef5f0" stroke="#23684f" stroke-width="1.3"/>
+<text x="494" y="484" fill="#23684f" font-size="20" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">4  Fingers</text>
+<text x="494" y="510" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">Bend and spread per joint, within limits</text>
+<rect x="470" y="543" width="640" height="78" rx="14" fill="#eef5f0" stroke="#23684f" stroke-width="1.3"/>
+<text x="494" y="576" fill="#23684f" font-size="20" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">5  Clean-up</text>
+<text x="494" y="602" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">Remove spikes · fill short gaps · stop hand overlap</text>
+<path d="M404,400 L460,400" fill="none" stroke="#23684f" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#m-green)"/>
+<path d="M1120,400 L1176,400" fill="none" stroke="#23684f" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#m-green)"/>
+<clipPath id="c1"><rect x="1186" y="190" width="350" height="420" rx="12"/></clipPath><image href="examples/avatar_1.png" xlink:href="examples/avatar_1.png" x="1186" y="190" width="350" height="420" preserveAspectRatio="xMidYMid slice" clip-path="url(#c1)"/><rect x="1186" y="190" width="350" height="420" rx="12" fill="none" stroke="#dfe5e1"/>
+<text x="1361.0" y="634" fill="#6b7d77" font-size="14" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="middle">Rendered avatar (same moment)</text>
+<text x="470" y="680" fill="#6b7d77" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">Display-only layer on top: breathing, blinking and small eye/head movements,</text>
+<text x="470" y="703" fill="#6b7d77" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">reduced while signing because head movement can carry meaning in LSF.</text>
+<line x1="64" y1="852" x2="1536" y2="852" stroke="#dfe5e1"/>
+<text x="64" y="878" fill="#6b7d77" font-size="13" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">Example: CHAT · source video: Laura Jauvert · montage Edouard-lopez · CC BY 3.0 · Wikimedia Commons (LL-Q33302 fsl)</text>
+</svg>

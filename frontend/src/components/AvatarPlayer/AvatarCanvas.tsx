@@ -6,6 +6,8 @@ import type { MotionFile } from "../../types/contract";
 import { interpolateJointPositions } from "../../utils/motionInterpolator";
 import { HumanoidRetargeter } from "../../utils/retargetHumanoid";
 import { browWeights, faceCalibration, sampleFace } from "../../utils/avatarPlayback";
+import { IdleLife } from "../../utils/idleLife";
+import { createCafeBackdrop } from "../../utils/stageBackdrop";
 type Props = {
   motion: MotionFile | null;
   currentTimeMs: number;
@@ -27,19 +29,22 @@ export function AvatarCanvas(props: Props) {
     let disposed = false,
       frameId = 0,
       model: THREE.Object3D | null = null,
-      retarget: HumanoidRetargeter | null = null;
+      retarget: HumanoidRetargeter | null = null,
+      idle: IdleLife | null = null;
     const morphs: THREE.Mesh[] = [];
     const scene = new THREE.Scene();
+    const backdrop = createCafeBackdrop();
+    scene.background = backdrop;
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
       alpha: false,
       preserveDrawingBuffer: true,
     });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setClearColor(0xeff3ec);
+    renderer.setClearColor(0x6b4232);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.05;
+    renderer.toneMappingExposure = 1.0;
     host.appendChild(renderer.domElement);
     const camera = new THREE.PerspectiveCamera(30, 1, 0.01, 30);
     camera.position.set(0, 1.43, 1.95);
@@ -51,11 +56,14 @@ export function AvatarCanvas(props: Props) {
     controls.maxDistance = 4;
     controls.maxPolarAngle = 2;
     controls.update();
-    scene.add(new THREE.HemisphereLight(0xfff7ec, 0xb9c7cb, 2.2));
+    // Café lighting: warm tungsten key, soft fill, amber rims to lift hair and
+    // shoulders off the wall. Faces and hands stay evenly lit for legibility.
+    scene.add(new THREE.HemisphereLight(0xffe8d2, 0x4a2c20, 1.7));
     for (const [x, y, z, power, color] of [
-      [-2, 3, 4, 3.5, 0xfff4e5],
-      [2, 2, 1, 2, 0xe1edff],
-      [0, 3, -2, 3, 0xffffff],
+      [-1.8, 2.6, 3.2, 3.1, 0xffd9b0],
+      [2.2, 1.6, 2.2, 1.2, 0xfff0e2],
+      [1.3, 2.4, -2.4, 3.4, 0xffb46e],
+      [-1.5, 2.1, -2.2, 2.0, 0xffc893],
     ]) {
       const light = new THREE.DirectionalLight(color, power);
       light.position.set(x, y, z);
@@ -106,6 +114,7 @@ export function AvatarCanvas(props: Props) {
           );
           return;
         }
+        idle = new IdleLife(model);
         model.traverse((o) => {
           if (o instanceof THREE.Mesh) {
             o.frustumCulled = false;
@@ -143,7 +152,8 @@ export function AvatarCanvas(props: Props) {
           const sign = side === "left" ? 1 : -1;
           joints[`${side}_shoulder`] = [sign * 0.18, 1.48, 0];
           joints[`${side}_elbow`] = [sign * 0.25, 1.2, 0.04];
-          joints[`${side}_wrist`] = [sign * 0.16, 1.02, 0.09];
+          // Hands resting loosely together without the fingers interpenetrating.
+          joints[`${side}_wrist`] = [sign * 0.17, 1.02, 0.1];
         }
       }
       if (motion && host) {
@@ -152,10 +162,25 @@ export function AvatarCanvas(props: Props) {
         host.dataset.rigDiagnostics = JSON.stringify(retarget?.diagnostics);
         const note = host.querySelector<HTMLElement>(".hand-tracking-note");
         if (note) {
-          const uncertain = tracking && Object.values(tracking).some((s) => s !== "observed");
+          // Warn only for real tracking gaps (hand held or faded to rest), not for the planned
+          // bridges between signs or sub-180 ms interpolation, which would make it flicker constantly.
+          const uncertain = tracking && Object.values(tracking).some((s) => s === "held" || s === "untracked");
           note.textContent = uncertain ? "Suivi des mains incomplet · pose estimée à vérifier" : "";
         }
       } else retarget?.apply(joints);
+      // Display-only life layer on top of the reset-every-frame retargeted pose.
+      const life = idle?.update(performance.now() / 1000, Boolean(motion));
+      morph("eyeBlinkLeft", life?.blink ?? 0);
+      morph("eyeBlinkRight", life?.blink ?? 0);
+      const gx = life?.gaze.x ?? 0, gy = life?.gaze.y ?? 0;
+      morph("eyeLookOutLeft", Math.max(0, gx));
+      morph("eyeLookInRight", Math.max(0, gx));
+      morph("eyeLookInLeft", Math.max(0, -gx));
+      morph("eyeLookOutRight", Math.max(0, -gx));
+      morph("eyeLookUpLeft", Math.max(0, gy));
+      morph("eyeLookUpRight", Math.max(0, gy));
+      morph("eyeLookDownLeft", Math.max(0, -gy));
+      morph("eyeLookDownRight", Math.max(0, -gy));
       const face = sampleFace(motion, currentTimeMs);
       const calibration = motion ? faceCalibration(motion) : undefined;
       const browLimit = .18 + .47 * THREE.MathUtils.clamp(face?.brow_reference_blend ?? (calibration ? 1 : 0), 0, 1);
@@ -175,7 +200,8 @@ export function AvatarCanvas(props: Props) {
           brow !== undefined ? weights.up : joy * 0.15,
         );
         morph(`browDown${side}`, brow !== undefined ? weights.down : angry * 0.2);
-        morph(`mouthSmile${side}`, face ? 0 : joy * 0.2);
+        // A soft welcoming smile only at rest; never added over signed content.
+        morph(`mouthSmile${side}`, face ? 0 : Math.max(joy * 0.2, motion ? 0 : 0.22));
         morph(`mouthFrown${side}`, face ? 0 : sad * 0.15);
       }
       morph("browInnerUp", face ? (browWeights(face.brow_left, face.brow_left_neutral ?? calibration?.brow_left, browLimit).up + browWeights(face.brow_right, face.brow_right_neutral ?? calibration?.brow_right, browLimit).up) * .2 : 0);
@@ -189,6 +215,7 @@ export function AvatarCanvas(props: Props) {
       observer.disconnect();
       controls.dispose();
       if (model) disposeModel(model);
+      backdrop.dispose();
       renderer.dispose();
       renderer.domElement.remove();
     };
@@ -204,7 +231,7 @@ export function AvatarCanvas(props: Props) {
         <span className="hand-tracking-note" aria-live="off" />
       </div>
       <span className="avatar-view-note">
-        Avatar Noa · UPF-GTI / Ready Player Me
+        Avatar Eva · UPF-GTI / Ready Player Me
       </span>
     </div>
   );

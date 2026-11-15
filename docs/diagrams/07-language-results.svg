@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1600" height="900" viewBox="0 0 1600 900"><defs><marker id="m-green" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#23684f" stroke-width="1.6"/></marker><marker id="m-blue" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#336a91" stroke-width="1.6"/></marker><marker id="m-amber" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#a0661c" stroke-width="1.6"/></marker><marker id="m-purple" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#74578d" stroke-width="1.6"/></marker><marker id="m-gray" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#8a9893" stroke-width="1.6"/></marker></defs><rect width="1600" height="900" fill="#ffffff"/>
+<text x="64" y="84" fill="#1d3a33" font-size="36" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">Text → sign: what was tried</text>
+<text x="64" y="122" fill="#6b7d77" font-size="19" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">Exact match and WER on 39 held-out test sentences (lower WER is better; above 100% means extra words).</text>
+<rect x="64" y="160" width="1472" height="62" rx="10" fill="#f4f7f5"/>
+<text x="82" y="197.0" fill="#6b7d77" font-size="15" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">Approach</text>
+<text x="512" y="197.0" fill="#6b7d77" font-size="15" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">Exact match</text>
+<text x="702" y="197.0" fill="#6b7d77" font-size="15" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">WER</text>
+<text x="892" y="197.0" fill="#6b7d77" font-size="15" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">BLEU</text>
+<text x="1042" y="197.0" fill="#6b7d77" font-size="15" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">Observed behaviour</text>
+<rect x="64" y="225" width="1472" height="56" rx="10" fill="#eef5f0"/>
+<line x1="64" y1="284" x2="1536" y2="284" stroke="#dfe5e1"/>
+<text x="82" y="259.0" fill="#23684f" font-size="16" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">Retrieval baseline</text>
+<text x="512" y="259.0" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">0%</text>
+<text x="702" y="259.0" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">120.9%</text>
+<text x="892" y="259.0" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">0.301</text>
+<text x="1042" y="259.0" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">Best of the four, still not usable</text>
+<line x1="64" y1="346" x2="1536" y2="346" stroke="#dfe5e1"/>
+<text x="82" y="321.0" fill="#1d3a33" font-size="16" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">T5-small + LoRA (CPU)</text>
+<text x="512" y="321.0" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">0%</text>
+<text x="702" y="321.0" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">207.3%</text>
+<text x="892" y="321.0" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">0</text>
+<text x="1042" y="321.0" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">Mostly copies the French input</text>
+<line x1="64" y1="408" x2="1536" y2="408" stroke="#dfe5e1"/>
+<text x="82" y="383.0" fill="#1d3a33" font-size="16" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">mT5-small + LoRA, 8 epochs</text>
+<text x="512" y="383.0" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">0%</text>
+<text x="702" y="383.0" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">100%</text>
+<text x="892" y="383.0" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">0</text>
+<text x="1042" y="383.0" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">Outputs an empty placeholder token</text>
+<line x1="64" y1="470" x2="1536" y2="470" stroke="#dfe5e1"/>
+<text x="82" y="445.0" fill="#1d3a33" font-size="16" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">mT5-small, best val., 21 epochs</text>
+<text x="512" y="445.0" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">0%</text>
+<text x="702" y="445.0" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">518.0%</text>
+<text x="892" y="445.0" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">0.042</text>
+<text x="1042" y="445.0" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">Repeats and invents gloss labels</text>
+<text x="64" y="530" fill="#1d3a33" font-size="20" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">Concept planning (24 test sentences, picks signs from the library)</text>
+<rect x="64" y="554" width="1472" height="62" rx="10" fill="#f4f7f5"/>
+<text x="82" y="591.0" fill="#6b7d77" font-size="15" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">Approach</text>
+<text x="512" y="591.0" fill="#6b7d77" font-size="15" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">Exact sequence</text>
+<text x="812" y="591.0" fill="#6b7d77" font-size="15" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">F1</text>
+<text x="1032" y="591.0" fill="#6b7d77" font-size="15" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">Time per sentence</text>
+<rect x="64" y="619" width="1472" height="56" rx="10" fill="#eef5f0"/>
+<line x1="64" y1="678" x2="1536" y2="678" stroke="#dfe5e1"/>
+<text x="82" y="653.0" fill="#23684f" font-size="16" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">Qwen3.5-9B + guards</text>
+<text x="512" y="653.0" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">13 / 24 (54.2%)</text>
+<text x="812" y="653.0" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">0.760</text>
+<text x="1032" y="653.0" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">6.8 s (median, local GPU)</text>
+<line x1="64" y1="740" x2="1536" y2="740" stroke="#dfe5e1"/>
+<text x="82" y="715.0" fill="#1d3a33" font-size="16" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">Literal word lookup</text>
+<text x="512" y="715.0" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">12 / 24 (50.0%)</text>
+<text x="812" y="715.0" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">0.708</text>
+<text x="1032" y="715.0" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">0.003 s</text>
+<line x1="64" y1="852" x2="1536" y2="852" stroke="#dfe5e1"/>
+<text x="64" y="878" fill="#6b7d77" font-size="13" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">Conclusion: 128 sentence pairs are far too few to train a translator; the app uses lookup, with optional Qwen suggestions.</text>
+</svg>

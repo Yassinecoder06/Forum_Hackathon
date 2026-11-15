@@ -50,6 +50,9 @@ export interface AnimationPlanSegment {
   start_ms: number;
   duration_ms: number;
   asset_url?: string;
+  /** Part of the source clip to play (its signing core, on captured frame times); absent = whole clip. */
+  clip_start_ms?: number;
+  clip_end_ms?: number;
 }
 
 export interface AudioFrame {
