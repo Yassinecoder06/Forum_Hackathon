@@ -1,0 +1,163 @@
+{
+  "schema": "http://www.ortolang.fr/schema/016#",
+  "corporaLanguages": [
+    "${referential:fra_language}",
+    "${referential:fsl_language}"
+  ],
+  "corporaStyles": [
+    "${referential:journalistic_corpora}"
+  ],
+  "image": "/Logo_Rosetta.png",
+  "website": "https://rosettaccess.fr/",
+  "keywords": [
+    {
+      "lang": "fr",
+      "value": "Langue des Signes Française"
+    },
+    {
+      "lang": "fr",
+      "value": "LSF"
+    },
+    {
+      "lang": "fr",
+      "value": "Capture de mouvement"
+    },
+    {
+      "lang": "fr",
+      "value": "mocap"
+    },
+    {
+      "lang": "en",
+      "value": "French Sign Language"
+    },
+    {
+      "lang": "en",
+      "value": "LSF"
+    },
+    {
+      "lang": "en",
+      "value": "Motion capture"
+    },
+    {
+      "lang": "en",
+      "value": "mocap"
+    }
+  ],
+  "corporaLanguageType": "${referential:multilingual}",
+  "statusOfUse": "${referential:free_for_non_commercial_use}",
+  "description": [
+    {
+      "lang": "fr",
+      "value": "<b>Présentation</b><br><div>Le corpus <b>Rosetta-LSF</b> est un corpus de Langue des Signes Française (LSF) d'environ 3h, réalisé dans le cadre d'une collaboration entre les sociétés <a href=\"https://www.systransoft.com\">Systran</a>, <a href=\"https://www.mocaplab.com/\">MocapLab</a> et le laboratoire <a href=\"https://www.lisn.upsaclay.fr/\">LISN</a> au sein du projet&nbsp; <a href=\"https://rosettaccess.fr/\">ROSETTA</a> . Il peut être utilisé par des membres de structures d'enseignement universitaire et de recherche publiques. <br></div><div><br></div><div>Il est constitué de 4 tâches :</div><ul><li>La traduction en LSF de 194 titres de journaux issus ou inspirés de ceux du site <a href=\"https://www.francetvinfo.fr/\">Franceinfo</a>, dont la taille varie entre 3 et 35 mots.</li><li>La description de 28 photographies.</li><li>La reproduction de 24 extraits de vidéos en LSF.</li><li>La réalisation de plus de 1200 signes isolés correspondant aux notions les plus fréquentes issues des titres de la tâche 1.</li></ul>Le corpus a été enregistré dans le studio de MocapLab à l'aide d'un système de capture de mouvement (ou mocap). Les données de mocap ont été appliquées sur un avatar afin de permettre un rendu vidéo. Ces vidéos ont été produites à 100 fps et converties à 25 fps pour leur utilisation dans un logiciel d'annotation. À cause de leur grande taille, les fichiers vidéos à 100 fps n'ont pas été déposés sur Ortolang. Ils peuvent néanmoins être obtenus en contactant Mocaplab.<br><div>Cette version du dépôt contient le matériel d'élicitation et les vidéos des 3 premières tâches, les annotations des vidéos de la tâche 1 et le guide d'annotation correspondant, ainsi que leur description en AZee, un formalisme de description des énoncés en LSF développé au LISN.</div><div><br></div><div><b>Données</b><br></div>L'ensemble des données est déposé dans le répertoire<b> /data</b> et est organisé en 4 sous-répertoires décrits ci-dessous.<br><br><div><b>&nbsp;&nbsp; /Elicitation</b> contient 1 fichier et 2 sous-répertoires :</div><ul><li><b>List_TitleTranslation_Task.csv</b> : ce fichier liste les 194 titres en français à traduire en français.</li><li><b>/Files_PictureDescription_task</b> : contient 28 fichiers images correspondant aux photos à décrire en LSF.</li><li><b>/Files_VideoCopy_Task</b> : contient 24 fichiers vidéos correspondant aux extrais de LSF à reproduire en LSF.</li></ul><b>&nbsp;&nbsp; /Videos </b>contient 3 sous-répertoires :<br><ul><li><b>/TitleTranslation</b> : contient 194 fichiers vidéos correspondant à la traduction en LSF des 194 titres en français et le fichier <b>1_ReadMe_TitlesCorrespondence.csv</b> donnant la correspondance entre les noms des fichiers vidéos et les phrases en français.</li><li><b>/PictureDescription</b> : contient 28 fichiers vidéos correspondant à la description en LSF des 28 photos et le fichier <b>1_ReadMe_PicturesCorrespondence.csv </b> donnant la correspondance entre les noms des fichiers vidéos et les noms des fichiers images.</li><li><b>/VideoCopy</b> : contient 24 fichiers vidéos correspondant à la reproduction en LSF des 24 extraits de LSF et le fichier <b>1_ReadMe_VideosCorrespondence.csv </b>donnant la correspondance entre les noms des fichiers vidéos et les noms des fichiers des vidéos à reproduire.</li></ul><b>&nbsp;&nbsp; /Annotations</b> contient 3 fichiers :<br><ul><li><b>Annotations.csv</b> : annotations des vidéos de la tâche 1</li><li><b>GuideAnnotation_Rosetta-LSF_V1.2.pdf</b> : guide d'annotation en français</li><li><b>AnnotationGuide_Rosetta-LSF_V1.2.pdf </b>: guide d'annotation en anglais</li></ul><b>&nbsp;&nbsp; /AZee</b> contient 195 fichiers :<br><ul><li>194 fichiers <b>.az</b> qui correspondent aux description AZee des 194 titres de la tâche 1.</li><li>1 fichier <b>AZee-Text_Alignments. csv</b> qui comporte les alignements entre les titres en français et AZee.</li></ul><p></p>"
+    },
+    {
+      "lang": "en",
+      "value": "<b>Presentation</b><br><div>The <b>Rosetta-LSF</b> corpus is a French Sign Language (LSF) corpus of about 3 hours, realized in the framework of a collaboration between <a href=\"https://www.systransoft.com/\">Systran</a>, <a href=\"https://www.mocaplab.com/\">MocapLab</a> and the <a href=\"https://www.lisn.upsaclay.fr/\">LISN</a> laboratory within the <a href=\"https://rosettaccess.fr/\">ROSETTA</a> project.&nbsp; It can be used by members of public university and research structures.</div><div><br></div><div>It consists of 4 tasks:</div><div><ul><li>The translation into LSF of 194 newspaper headlines from or inspired by those of the <a href=\"https://www.francetvinfo.fr/\">Franceinfo</a> website, whose size varies between 3 and 35 words.</li><li>The description of 28 photographs.</li><li>The reproduction of video extracts in LSF.</li><li>The realization of 1200 isolated signs corresponding to the most frequent notions from the titles of task 1.</li></ul></div>The corpus was recorded in the MocapLab studio using a motion capture system (or mocap). The mocap data was applied to an avatar to enable video rendering. These videos were produced at 100 fps and converted to 25 fps for use in annotation software. Due to their large size, the 100 fps video files have not been uploaded to Ortolang. They can nevertheless be obtained by contacting Mocaplab.<br>This version of the repository contains the elicitation material and the videos of the first 3 tasks, the annotations of the videos of task 1 and the corresponding annotation guide, as well as their description in AZee, a formalism for describing LSF utterances developed at LISN.<br><br><b>Data</b><br>The data set is stored in the <b>/data</b> directory and is organised in 4 sub-directories described below.<br><br>&nbsp;&nbsp; <b>/Elicitation</b> contains 1 file and 2 subdirectories:<br><ul><li><b>List_TitleTranslation_Task.csv</b>: lists the the 194 French titles to be translated into French.</li><li><b>/Files_PictureDescription_task</b>: contains 28 image files corresponding to the photos to be described in LSF.</li><li><b>/Files_VideoCopy_Task</b>: contains 24 video files corresponding to the LSF extracts to be reproduced in LSF.</li></ul>&nbsp;&nbsp; <b>/Videos</b> contains 3 subdirectories:<br><ul><li><b>/TitleTranslation</b>: contains 194 video files corresponding to the translation of the 194 headlines from French to LSF, and the file <b>1_ReadMe_TitlesCorrespondence.csv</b> giving the correspondence between the names of the video files and the French sentences.</li><li><b>/PictureDescription</b>: contains 28 video files corresponding to the description in LSF of the 28 photos, and the file <b>1_ReadMe_PicturesCorrespondence.csv</b> giving the correspondence between the names of the video files and the names of the image files.</li><li><b>/VideoCopy</b>: contains 24 video files corresponding to the LSF reproduction of the 24 LSF extracts, and the file <b>1_ReadMe_VideosCorrespondence.csv</b> giving the correspondence between the names of the video files and the names of the video files to be reproduced.</li></ul>&nbsp;&nbsp;<b> /Annotations</b> contains 3 files:<br><ul><li><b>Annotations.csv</b>: annotations of the videos of task 1</li><li><b>GuideAnnotation_Rosetta-LSF_V1.2.pdf</b>: annotation guide in French</li><li><b>AnnotationGuide_Rosetta-LSF_V1.2.pdf</b>: annotation guide in English</li></ul>&nbsp;&nbsp; <b>/AZee</b> contains 195 files :<br><ul><li>194 <b>.az</b> files corresponding to the AZee description of the 194 titles of task 1.</li><li><b>AZee-Text_Alignments.csv</b>: contains the alignments between the French and AZee titles.</li></ul><br><p></p>"
+    }
+  ],
+  "conditionsOfUse": [
+    {
+      "lang": "fr",
+      "value": "Ce corpus ne peut être téléchargé que par des membres de structures d'enseignement universitaire et de recherche publiques. En téléchargeant ce corpus, l'utilisateur s'engage sur les points suivants : 1) n'utiliser ce corpus qu'à des fins de recherche scientifiques ou d'enseignement universitaire non commerciaux , 2) signaler clairement l'origine du corpus dans toute publication ou utilisation, à l'aide de son identifiant pérenne et des références bibliographiques mentionnées sur la fiche descriptive, 3) ne le diffuser qu'à travers la plateforme Ortolang."
+    },
+    {
+      "lang": "en",
+      "value": "This corpus can only be downloaded by members of public university and research structures. By downloading this corpus, the user agrees to the following: \n1) to use this corpus only for non-commercial scientific research or university teaching purposes;\n2) to clearly indicate the origin of the corpus in any publication or use, using its permanent identifier and the bibliographic references mentioned on the description form; \n3) only distribute it through the Ortolang platform."
+    }
+  ],
+  "title": [
+    {
+      "lang": "fr",
+      "value": "rosetta-lsf"
+    }
+  ],
+  "type": "Corpus",
+  "corporaType": "${referential:multimodal_corpora}",
+  "producers": [
+    "${referential:limsi}",
+    "${referential:lisn}"
+  ],
+  "license": "${referential:license-cc-by-nc-4_0}",
+  "corporaFormats": [
+    "${referential:mp4_fileformat}"
+  ],
+  "datasize": "625329262",
+  "contributors": [
+    {
+      "roles": [
+        "${referential:photographer}",
+        "${referential:researcher}",
+        "${referential:depositor}"
+      ],
+      "entity": "${referential:boris_dauriac}"
+    },
+    {
+      "roles": [
+        "${referential:researcher}",
+        "${referential:depositor}",
+        "${referential:scientific_director}"
+      ],
+      "organization": "${referential:limsi}",
+      "entity": "${referential:annelies_braffort}"
+    },
+    {
+      "roles": [
+        "${referential:annotator}",
+        "${referential:researcher}"
+      ],
+      "entity": "${referential:jeremie_segouat}"
+    },
+    {
+      "roles": [
+        "${referential:researcher}"
+      ],
+      "entity": "${referential:elise_bertinlenee}"
+    },
+    {
+      "roles": [
+        "${referential:researcher}",
+        "${referential:annotator}"
+      ],
+      "organization": "${referential:limsi}",
+      "entity": "${referential:camille_challant}"
+    },
+    {
+      "roles": [
+        "${referential:annotator}",
+        "${referential:researcher}"
+      ],
+      "organization": "${referential:sfl}",
+      "entity": "${referential:claire_danet}"
+    },
+    {
+      "roles": [
+        "${referential:researcher}",
+        "${referential:annotator}"
+      ],
+      "organization": "${referential:limsi}",
+      "entity": "${referential:emmanuelle_martinod}"
+    },
+    {
+      "roles": [
+        "${referential:researcher}"
+      ],
+      "entity": "${referential:michael_filhol}"
+    }
+  ],
+  "corporaStudyLanguages": [
+    "${referential:fra_language}",
+    "${referential:fsl_language}"
+  ],
+  "publicationDate": "2022-06-23",
+  "corporaDataTypes": [
+    "${referential:video_datatype}"
+  ],
+  "publications": [
+    "Identifiant ISLRN : 535-376-670-927-5",
+    "Elise Bertin-Lemée, Annelies Braffort, Camille Challant, Claire Danet, Boris Dauriac, Michael Filhol, Emmanuella Martinod and Jérémie Segouat. Rosetta-LSF: an Aligned Corpus of French Sign Language and French for Text-to-Sign Translation, 13th International Conference on Language Resources and Evaluation (LREC 2022), Marseille, France, 23/06/22, pp. 4955‑4962. http://www.lrec-conf.org/proceedings/lrec2022/pdf/2022.lrec-1.529.pdf"
+  ],
+  "preview": [
+    "/RO1_X0009.Titre3.az",
+    "/RO1_X0009.Titre3.mp4"
+  ]
+}

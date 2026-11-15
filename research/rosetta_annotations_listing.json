@@ -1,0 +1,62 @@
+{
+  "key": "8a9a98e1-6027-4de7-b42c-7dfd33666e14",
+  "service": "core",
+  "type": "collection",
+  "id": "3a385fd2-8efc-4527-8ea5-b29474657019",
+  "status": "published",
+  "visibility": "visible",
+  "lock": "root",
+  "author": "braffort",
+  "creationDate": "1641934613155",
+  "lastModificationDate": "1643884565343",
+  "owner": "root",
+  "parent": null,
+  "children": null,
+  "object": {
+    "id": "3a385fd2-8efc-4527-8ea5-b29474657019",
+    "version": 8,
+    "metadatasContent": "",
+    "key": "8a9a98e1-6027-4de7-b42c-7dfd33666e14",
+    "name": "Annotations",
+    "clock": 1,
+    "root": false,
+    "segments": [
+      "object\tAnnotations.csv\t1643734892591\t327371\ttext/csv\tf4047c97-8693-490a-85f7-a8415f97667a\nobject\tGuideAnnotation_Rosetta-LSF_V1.2.pdf\t1643797479343\t94781\tapplication/pdf\t6df0104e-85b2-473c-9423-c68c02c85c55\nobject\tAnnotationGuide_Rosetta-LSF_V1.2.pdf\t1643797482855\t92869\tapplication/pdf\tdd7e373e-88bb-47ab-a552-4d975486db88"
+    ],
+    "elements": [
+      {
+        "type": "object",
+        "name": "Annotations.csv",
+        "modification": 1643734892591,
+        "size": 327371,
+        "mimeType": "text/csv",
+        "key": "f4047c97-8693-490a-85f7-a8415f97667a"
+      },
+      {
+        "type": "object",
+        "name": "AnnotationGuide_Rosetta-LSF_V1.2.pdf",
+        "modification": 1643797482855,
+        "size": 92869,
+        "mimeType": "application/pdf",
+        "key": "dd7e373e-88bb-47ab-a552-4d975486db88"
+      },
+      {
+        "type": "object",
+        "name": "GuideAnnotation_Rosetta-LSF_V1.2.pdf",
+        "modification": 1643797479343,
+        "size": 94781,
+        "mimeType": "application/pdf",
+        "key": "6df0104e-85b2-473c-9423-c68c02c85c55"
+      }
+    ],
+    "empty": false,
+    "objectIdentifier": {
+      "service": "core",
+      "type": "collection",
+      "id": "3a385fd2-8efc-4527-8ea5-b29474657019"
+    },
+    "metadatas": [],
+    "objectName": "Annotations",
+    "objectKey": "8a9a98e1-6027-4de7-b42c-7dfd33666e14"
+  }
+}

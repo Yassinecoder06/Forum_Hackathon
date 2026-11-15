@@ -1,0 +1,18 @@
+{
+  "gloss_label": "bonjour",
+  "candidate_gloss_id": "COMMONS_LSF_FR_BONJOUR",
+  "language_variant": "LSF_FR",
+  "kind": "LEXICAL_SIGN_VIDEO_NOT_SENTENCE",
+  "source_url": "https://commons.wikimedia.org/wiki/File:LL-Q33302_(fsl)-Laura_Jauvert-Bonjour.webm",
+  "direct_url": "https://upload.wikimedia.org/wikipedia/commons/9/98/LL-Q33302_%28fsl%29-Laura_Jauvert-Bonjour.webm?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+  "license_url": "https://creativecommons.org/licenses/by/3.0/",
+  "license_id": "CC-BY-3.0",
+  "attribution": "Laura Jauvert (original signing), Edouard-lopez (video editing); Wikimedia Commons",
+  "sha1": "5bfafa28518d8d20901ad0d8efda5915c44c70fa",
+  "local_linguistic_review": "PENDING",
+  "motion_review": "PENDING",
+  "derivation_requirement": "Credit creators, link source and license, indicate capture/retargeting changes; no endorsement implied",
+  "evidence": "research/bonjour_commons_api.json",
+  "size_bytes": 139123,
+  "duration_seconds": 2.447
+}
