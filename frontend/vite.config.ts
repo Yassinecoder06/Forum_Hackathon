@@ -5,7 +5,9 @@ import { env } from "node:process";
 const apiTarget = env.SIGNACULTURE_API_TARGET || "http://127.0.0.1:8000";
 
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig(({ command }) => ({
+  // The built Studio is served under /studio/; the showcase site owns /.
+  base: command === "build" ? "/studio/" : "/",
   plugins: [react()],
   server: {
     port: 5173,
@@ -23,4 +25,4 @@ export default defineConfig({
       },
     },
   },
-});
+}));
