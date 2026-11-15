@@ -55,7 +55,7 @@ graph TD
 | Dimension Éthique | Mesure Concrète Réalisée (MVP) | Statut Actuel | Étape en Attente (Feuille de Route) |
 |---|---|---|---|
 | **Contrôle Créateurs** | Endpoint `POST /review` avec rejet / approbation persistée dans SQLite | **Opérationnel** | Interface UI dédiée aux relecteurs sourds avec annotations 3D |
-| **Gating de Publication** | Blocage HTTP 403 systématique sur `POST /render` (mode publication) | **Opérationnel** | Déblocage cryptographique après signature d'un expert assermenté |
+| **Gating de Publication** | Blocage HTTP 403 systématique sur `POST /render` (mode publication) | **Opérationnel** | Déblocage après double validation humaine certifiée (relecteur sourd + droits) |
 | **Transparence Données** | Mention explicite `NONVALIDATED_TECHNICAL_FIXTURE` dans les assets | **Opérationnel** | Certification d'un jeu de données issu d'un workshop sourd |
 | **Validation Humaine** | Protocole d'évaluation défini (`docs/validation.md`) | **En attente** | Séances de tests utilisateurs avec locuteurs sourds natifs |
 | **Vidéo & Démonstration** | Script et narration documentés (`docs/demo_narration.md`) | **En attente** | Enregistrement studio et validation d'accessibilité de la vidéo |

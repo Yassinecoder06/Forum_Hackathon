@@ -10,7 +10,7 @@
 
 SignaCulture AI traite des données linguistiques en langue des signes française (LSF), des signaux audio vocaux et des données géométriques de capture de mouvement (mocap / landmarks 3D).
 
-Conformément au [Contrat d'intégration](file:///home/jmal/Projects/Active/Forum_Hackathon/.worktrees/wt-gemini-2/docs/INTEGRATION_CONTRACT.md), la gouvernance des données repose sur quatre piliers stricts :
+Conformément au [Contrat d'intégration](INTEGRATION_CONTRACT.md), la gouvernance des données repose sur quatre piliers stricts :
 
 1. **Traçabilité absolue des identifiants :** Chaque entité de gloss (`gloss_id`), de mouvement (`motion_id`) et de ressource d'origine (`source_id`) est immuable et référencée dans les registres du dépôt.
 2. **Cloisonnement des données personnelles :** Les vidéos brutes montrant des visages ou des personnes identifiables ne sont jamais stockées sur des dépôts publics sans consentement explicite et archivage séparé.
@@ -73,5 +73,5 @@ Les métadonnées respectent la structure unifiée définie dans `data/glossary.
 | **Glossaire LSF** | 6 concepts contrôlés (`bonjour`, `merci`, `culture`, etc.) labellisés non validés | Lexique étendu (50+ concepts) issu de corpus autorisés | Revue linguistique par experts sourds natifs |
 | **Assets de mouvement** | Fixtures cinématiques synthétiques minimales (rig `signaculture-v1`) | Enregistrements mocap retargetés haute fidélité | Autorisations de droit à l'image et session mocap |
 | **Gating de publication** | Blocage strict (`render_allowed_for_publication: false`) sur tout plan | Déblocage conditionnel après double approbation | Approbation humaine enregistrée + droits vérifiés |
-| **Analyse vocale** | Traitement déterministe DSP (RMS, pitch F0, silence) | Inférence emotion2vec+ locale | Validation du modèle sans surcharge VRAM |
-| **Persistance des revues** | Base SQLite locale (`reviews`) avec traçabilité | Base centralisée sécurisée avec signature numérique | Audit de sécurité et migration PostgreSQL |
+| **Analyse vocale** | Traitement déterministe DSP (RMS, pitch F0, silence) | Expérimentation d'un modèle local emotion2vec+ | Validation du modèle sans surcharge VRAM |
+| **Persistance des revues** | Base SQLite locale (`reviews`) avec traçabilité | Base centralisée sécurisée | Audit de sécurité et migration base de production |

@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # SignaCulture AI - Unified Test Suite Runner
-# Executes schema validation tests, backend unit tests, experiments tests, frontend lint & build, and smoke tests.
+# Executes schema validation tests, backend unit tests, experiments tests, frontend lint & build, and optional smoke tests.
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "${REPO_ROOT}"
@@ -13,7 +13,7 @@ if [ ! -x "${VENV_PYTHON}" ]; then
 fi
 
 API_URL="${API_URL:-http://127.0.0.1:8000}"
-SKIP_SMOKE="${SKIP_SMOKE:-false}"
+RUN_SMOKE="${RUN_SMOKE:-false}"
 
 echo "=== SignaCulture AI - Suite de Tests Complète ==="
 
@@ -50,12 +50,12 @@ echo "[TEST] 4/5 - Execution frontend lint et build..."
 npm --prefix "${REPO_ROOT}/frontend" run lint
 npm --prefix "${REPO_ROOT}/frontend" run build
 
-# 5. Tests d'integration et Smoke Tests contre le backend reel
-if [ "${SKIP_SMOKE}" = "false" ]; then
+# 5. Tests d'integration et Smoke Tests (optionnels via RUN_SMOKE=true ou make smoke)
+if [ "${RUN_SMOKE}" = "true" ]; then
     echo "[TEST] 5/5 - Execution des smoke tests contre ${API_URL}..."
     "${VENV_PYTHON}" "${REPO_ROOT}/scripts/smoke_test.py" --base-url "${API_URL}"
 else
-    echo "[INFO] Smoke tests ignores via SKIP_SMOKE=true."
+    echo "[INFO] 5/5 - Smoke tests ignores par defaut (optionnels via RUN_SMOKE=true ou 'make smoke' avec serveur actif)."
 fi
 
 echo "=== Tous les tests ont ete executes avec succes ==="

@@ -19,7 +19,7 @@ graph TD
 ```
 
 ### Niveau 1 — Validation Technique & Schémas (Automatisée en CI)
-- **Contrat d'intégration :** Strict respect de [INTEGRATION_CONTRACT.md](file:///home/jmal/Projects/Active/Forum_Hackathon/.worktrees/wt-gemini-2/docs/INTEGRATION_CONTRACT.md).
+- **Contrat d'intégration :** Strict respect de [INTEGRATION_CONTRACT.md](INTEGRATION_CONTRACT.md).
 - **Gestion des types et temps :** Tous les timestamps sont en millisecondes entières.
 - **Suite de Smoke Tests (`scripts/smoke_test.py`) :**
   - Vérification de l'API `/health` (HTTP 200).
@@ -74,9 +74,9 @@ L'approbation isolée d'un réviseur via `POST /review` **ne peut pas outrepasse
 | Processus de Validation | Statut Réel Actuel (MVP) | Statut Cible / En Attente | Preuve / Livrable Associé |
 |---|---|---|---|
 | **Contrôle d'Intégration API** | Opérationnel et testé à 100% via `scripts/smoke_test.py` | Surveillance continue en production | `python3 scripts/smoke_test.py` (7/7 tests validés) |
-| **Gating de Rendu Publication** | Opérationnel : HTTP 403 strict sur toute tentative de publication | Signature cryptographique du flux vidéo final | Testé dans la suite de smoke tests |
+| **Gating de Rendu Publication** | Opérationnel : HTTP 403 strict sur toute tentative de publication | Déblocage conditionné par double validation certifiée (relecteur sourd + droits) | Testé dans la suite de smoke tests |
 | **Sécurité d'Accès aux Assets** | Opérationnel : blocage 403/404 des assets non approuvés | Quotas et contrôle de session | Endpoint `GET /assets/{filename}` |
 | **Revue Linguistique LSF** | **En attente** (protocole défini, statut `pending` par défaut) | Séances d'évaluation avec experts sourds natifs | Grille d'évaluation chiremique et spatiale |
 | **Validation Droits Corpus** | Fixtures synthétiques libres (CC0), sources réelles tracées | Audit juridique formalisé des licences tierces | Registre `data/sources.csv` |
 | **Enregistrement Démo Vidéo** | Script minuté formalisé (`docs/demo_narration.md`) | Enregistrement de la démo 1–2 minutes | Script prêt pour captation finale |
-| **Dépôt Public GitHub** | Dépôt Git local et CI prêts pour publication | Mise en ligne publique après validation lead | `.github/workflows/ci.yml` configuré |
+| **Dépôt Public GitHub** | Dépôt Git local et CI configurés | Mise en ligne publique après validation lead | `.github/workflows/ci.yml` configuré |
