@@ -1,0 +1,9 @@
+CREATE TABLE annotations(segment_id TEXT PRIMARY KEY,source_id TEXT REFERENCES sources,raw_json TEXT NOT NULL);
+CREATE TABLE assets(asset_id TEXT PRIMARY KEY,source_id TEXT REFERENCES sources,entry_id TEXT REFERENCES lexical_entries,kind TEXT,url TEXT,license_id TEXT,review_status TEXT);
+CREATE TABLE derivations(derivation_id TEXT PRIMARY KEY,pair_id TEXT REFERENCES pairs,tool TEXT,parameters_json TEXT,input_sha256 TEXT);
+CREATE TABLE lexical_entries(entry_id TEXT PRIMARY KEY,source_id TEXT REFERENCES sources,label_fr TEXT,raw_gloss TEXT,representation TEXT,source_url TEXT,review_status TEXT);
+CREATE TABLE model_runs(run_id TEXT PRIMARY KEY,model_base TEXT,model_revision TEXT,dataset_sha256 TEXT,hyperparameters_json TEXT,metrics_json TEXT,checkpoint_uri TEXT);
+CREATE TABLE pair_annotations(pair_id TEXT REFERENCES pairs,segment_id TEXT REFERENCES annotations,ordinal INTEGER,PRIMARY KEY(pair_id,segment_id));
+CREATE TABLE pairs(pair_id TEXT PRIMARY KEY,source_id TEXT REFERENCES sources,french_text TEXT,raw_gloss_sequence TEXT,split_group TEXT,split TEXT,linguistic_review TEXT CHECK(linguistic_review IN ('PENDING_LOCAL_REVIEW','APPROVED')),record_json TEXT NOT NULL);
+CREATE TABLE reviews(review_id TEXT PRIMARY KEY,pair_id TEXT REFERENCES pairs,reviewer_role TEXT,decision TEXT,timestamp TEXT,notes TEXT);
+CREATE TABLE sources(source_id TEXT PRIMARY KEY,url TEXT,revision TEXT,license_id TEXT,terms_url TEXT,access TEXT,notes TEXT);

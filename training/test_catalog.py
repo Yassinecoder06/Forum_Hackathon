@@ -43,7 +43,37 @@ def test_catalog_integrity_and_lineage():
     c=sqlite3.connect(ROOT/'data/catalog/catalog.sqlite')
     assert c.execute('PRAGMA integrity_check').fetchone()==('ok',)
     assert c.execute('PRAGMA foreign_key_check').fetchall()==[]
-    assert c.execute('select count(*) from annotations').fetchone()[0]==108
-    assert c.execute('select count(*) from pair_annotations').fetchone()[0]==108
-    assert c.execute('select count(*) from derivations').fetchone()[0]==106
+    assert c.execute('select count(*) from annotations where source_id="stk"').fetchone()[0]==108
+    assert c.execute('select count(*) from pair_annotations where pair_id like "stk:%"').fetchone()[0]==108
+    assert c.execute('select count(*) from derivations where pair_id like "stk:%"').fetchone()[0]==106
     assert c.execute("select count(*) from pairs where linguistic_review='APPROVED'").fetchone()[0]==0
+
+
+def test_expansion_preserves_frozen_holdouts_and_no_leakage():
+    expanded=ROOT/'data/text_to_gloss/v002'
+    if not expanded.exists():pytest.skip('Expansion not built')
+    m=json.loads((expanded/'dataset_manifest.json').read_text())
+    for s in ['val','test']:assert sha(expanded/(s+'.jsonl'))==sha(DATA/(s+'.jsonl'))
+    for f,h in m['files'].items():assert sha(expanded/f)==h
+    train=[json.loads(x) for x in (expanded/'train.jsonl').read_text().splitlines()]
+    holdout=records()['val']+records()['test']
+    for a in train:
+        assert research_eligible(a) and not approved_eligible(a)
+        for b in holdout:
+            assert a['recording']!=b['recording'] and a['speaker_group']!=b['speaker_group']
+            assert a['gloss_sequence']!=b['gloss_sequence']
+            u,v=norm(a['french_text']),norm(b['french_text'])
+            assert u!=v and (min(len(u),len(v))<20 or SequenceMatcher(None,u,v).ratio()<.90)
+
+def test_lexical_inventory_never_becomes_pairs():
+    c=sqlite3.connect(ROOT/'data/catalog/catalog.sqlite')
+    assert c.execute("select count(*) from lexical_entries where source_id='commons-laura'").fetchone()[0]==447
+    assert c.execute("select count(*) from pairs where source_id='commons-laura'").fetchone()[0]==0
+
+
+def test_export_authenticity_not_just_relabelled_flags():
+    from experiment import validate_exports
+    d=records();validate_exports(DATA,d,'source-annotated-research')
+    r=d['train'][0];d['train'][0]={**r,'french_text':'Invented input'}
+    with pytest.raises(ValueError,match='differs from source-derived catalog'):
+        validate_exports(DATA,d,'source-annotated-research')

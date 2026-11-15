@@ -1,0 +1,7 @@
+{
+  "status": "ABORTED_BEFORE_EVALUATION",
+  "reason": "Use native slow SentencePiece tokenizer to preserve byte fallback; fast-tokenizer warning inspected before heldout metrics",
+  "model": "google/mt5-small",
+  "replacement_run": "mt5-small-lora-expanded-slow",
+  "test_evaluated": false
+}
