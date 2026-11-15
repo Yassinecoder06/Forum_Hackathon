@@ -188,8 +188,11 @@ const leftCapsule = { a: point(0), b: point(0, 1), sourceA: point(-.1), sourceB:
 const rightCapsule = { a: point(.005), b: point(.005, 1), sourceA: point(.1), sourceB: point(.1, 1) };
 const separated = handContact([leftCapsule], [rightCapsule]);
 assert(separated.correction.length() > 0 && separated.correction.length() <= .015);
-const touching = handContact([leftCapsule], [{ ...rightCapsule, sourceA: point(-.09), sourceB: point(-.09, 1) }]);
-assert(touching.contact && touching.correction.length() === 0, "Preserve source-supported contact");
+const touching = handContact([leftCapsule], [{ ...rightCapsule, a: point(.013), b: point(.013, 1), sourceA: point(-.09), sourceB: point(-.09, 1) }]);
+assert(touching.contact && touching.correction.length() === 0, "Preserve surface contact");
+assert(handContact([leftCapsule], [{ ...rightCapsule, sourceA: point(-.09), sourceB: point(-.09, 1) }]).correction.length() > 0, "Deep intersection is corrected even during contact");
+assert(handContact([{ ...leftCapsule, sourceObserved: false, radius: .022 }], [{ ...rightCapsule, sourceObserved: false, radius: .022 }]).correction.length() > 0, "Untracked rendered palms still collide");
+assert(handContact([{ ...leftCapsule, sourceObserved: false }], [{ ...leftCapsule, sourceObserved: false }]).correction.length() > 0, "Coincident capsules need a deterministic separating normal");
 // Whole-track seeking must be independent of render history, including a gap.
 const seekClip = { ...a, frames: [0, 40, 80].map((time_ms, i) => ({ time_ms, joints: { ...joints, left_wrist: [0.1 + i * .02, 1.5, .3] as [number, number, number] } })) };
 retarget.applyMotion(seekClip, 20);

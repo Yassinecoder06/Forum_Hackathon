@@ -278,28 +278,68 @@ export class HumanoidRetargeter {
       this.root.updateMatrixWorld(true);
       const joints = interpolateJointPositions(motion, time);
       const original = Object.fromEntries(["Left", "Right"].map((side) => [side, this.bone(side + "Hand")!.getWorldPosition(new THREE.Vector3())]));
-      const capsules = (side: string): Capsule[] => fingers.flatMap((finger) => [1, 2, 3].flatMap((i) => {
-        const a = this.bone(`${side}Hand${finger}${i}`), b = this.bone(`${side}Hand${finger}${i + 1}`);
-        const sa = joints[`${side.toLowerCase()}_${finger.toLowerCase()}_${i}`], sb = joints[`${side.toLowerCase()}_${finger.toLowerCase()}_${i + 1}`];
-        return a && b && sa && sb ? [{ a: a.getWorldPosition(new THREE.Vector3()), b: b.getWorldPosition(new THREE.Vector3()), sourceA: vec(sa), sourceB: vec(sb) }] : [];
-      }));
+      const capsules = (side: string): Capsule[] => {
+        const segment = (an: string, bn: string, saName: string, sbName: string, radius: number): Capsule[] => {
+          const a = this.bone(side + an), b = this.bone(side + bn);
+          if (!a || !b) return [];
+          const pa = a.getWorldPosition(new THREE.Vector3()), pb = b.getWorldPosition(new THREE.Vector3());
+          const sa = joints[`${side.toLowerCase()}_${saName}`], sb = joints[`${side.toLowerCase()}_${sbName}`];
+          return [{ a: pa, b: pb, sourceA: sa ? vec(sa) : pa, sourceB: sb ? vec(sb) : pb, sourceObserved: Boolean(sa && sb), radius }];
+        };
+        return [...fingers.flatMap((finger) => [1, 2, 3].flatMap((i) => segment(`Hand${finger}${i}`, `Hand${finger}${i + 1}`, `${finger.toLowerCase()}_${i}`, `${finger.toLowerCase()}_${i + 1}`, .008))),
+          ...["Index", "Middle", "Pinky"].flatMap((f) => segment("Hand", `Hand${f}1`, "wrist", `${f.toLowerCase()}_1`, .022))];
+      };
       let corrected = false;
-      for (let iteration = 0; iteration < 3; iteration++) {
+      for (let iteration = 0; iteration < 8; iteration++) {
         const left = capsules("Left"), right = capsules("Right");
-        if (left.length !== 15 || right.length !== 15) break;
+        if (!left.length || !right.length) break;
         const hit = handContact(left, right);
         if (iteration === 0 && hit.contact) contactFrames++;
-        if (hit.contact || hit.correction.lengthSq() < 1e-10) break;
+        if (hit.correction.lengthSq() < 1e-10) break;
         for (const side of ["Left", "Right"]) {
           const hand = this.bone(side + "Hand")!, elbow = this.bone(side + "ForeArm")!;
           const target = hand.getWorldPosition(new THREE.Vector3()).addScaledVector(hit.correction, side === "Left" ? 1 : -1);
-          const offset = target.clone().sub(original[side]).clampLength(0, .02);
+          // Keep the volume of the palm/fingers in front of the torso, rather
+          // than correcting one hand backwards through the character's chest.
+          let bodyPush = 0;
+          for (const capsule of side === "Left" ? left : right) for (const point of [capsule.a, capsule.b]) {
+            if (point.y < this.neckOrigin.y - .04 && point.y > this.neckOrigin.y - .55 && Math.abs(point.x) < .25) {
+              const front = this.neckOrigin.z + .14 * Math.sqrt(Math.max(0, 1 - (point.x / .28) ** 2));
+              bodyPush = Math.max(bodyPush, front + (capsule.radius ?? .008) - point.z);
+            }
+          }
+          target.z += Math.min(.04, bodyPush);
+          const offset = target.clone().sub(original[side]).clampLength(0, .06);
           maxCorrection = Math.max(maxCorrection, offset.length());
           this.placeArm(side, original[side].clone().add(offset), elbow.getWorldPosition(new THREE.Vector3()), true);
         }
         corrected = true;
       }
-      const left = capsules("Left"), right = capsules("Right");
+      // A closest-pair projection can get stuck between several fingers. Search
+      // bounded rigid translations for a better separating direction, keeping
+      // fingers/palm intact and never moving a hand backwards into the torso.
+      let left = capsules("Left"), right = capsules("Right");
+      let best = handContact(left, right).maxPenetration;
+      if (best > .006) {
+        const current = Object.fromEntries(["Left", "Right"].map((s) => [s, this.bone(s + "Hand")!.getWorldPosition(new THREE.Vector3())]));
+        let chosen: { Left: THREE.Vector3; Right: THREE.Vector3 } | null = null;
+        for (const axis of [new THREE.Vector3(1, 0, 0), new THREE.Vector3(-1, 0, 0), new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, -1, 0)]) for (const amount of [.01, .02, .03]) {
+          const shifts = Object.fromEntries(["Left", "Right"].map((s) => {
+            const target = current[s].clone().addScaledVector(axis, amount * (s === "Left" ? 1 : -1));
+            return [s, target.sub(original[s]).clampLength(0, .06).add(original[s]).sub(current[s])];
+          })) as { Left: THREE.Vector3; Right: THREE.Vector3 };
+          const shifted = (cs: Capsule[], delta: THREE.Vector3) => cs.map((c) => ({ ...c, a: c.a.clone().add(delta), b: c.b.clone().add(delta) }));
+          const penetration = handContact(shifted(left, shifts.Left), shifted(right, shifts.Right)).maxPenetration;
+          if (penetration < best - .0001) { best = penetration; chosen = shifts; }
+        }
+        if (chosen) for (const side of ["Left", "Right"] as const) {
+          const target = current[side].clone().add(chosen[side]);
+          maxCorrection = Math.max(maxCorrection, target.distanceTo(original[side]));
+          this.placeArm(side, target, this.bone(side + "ForeArm")!.getWorldPosition(new THREE.Vector3()), true);
+          corrected = true;
+        }
+        left = capsules("Left"); right = capsules("Right");
+      }
       maxPenetration = Math.max(maxPenetration, handContact(left, right).maxPenetration);
       if (corrected) correctedFrames++;
       dense.push({ time_ms: time, rotations: names.map((n) => this.binds.get(n)!.bone.quaternion.clone()) });

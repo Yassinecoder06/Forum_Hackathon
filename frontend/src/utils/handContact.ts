@@ -1,5 +1,5 @@
 import * as THREE from "three";
-export type Capsule = { a: THREE.Vector3; b: THREE.Vector3; sourceA: THREE.Vector3; sourceB: THREE.Vector3 };
+export type Capsule = { a: THREE.Vector3; b: THREE.Vector3; sourceA: THREE.Vector3; sourceB: THREE.Vector3; radius?: number; sourceObserved?: boolean };
 
 /** Closest points of bounded segments, including parallel/zero-length segments. */
 export function segmentDistance(a: THREE.Vector3, b: THREE.Vector3, c: THREE.Vector3, d: THREE.Vector3) {
@@ -21,23 +21,27 @@ export function segmentDistance(a: THREE.Vector3, b: THREE.Vector3, c: THREE.Vec
 }
 
 /** Correct only model-created intersections when the source supports separation.
- * Near source contact disables repulsion; uncertainty is not permission to rewrite a sign. */
+ * Source contact allows touching, not deep intersection. Untracked hands still
+ * have a rendered volume and must participate in collision detection. */
 export function handContact(left: Capsule[], right: Capsule[]) {
   const correction = new THREE.Vector3();
   let sourceDistance = Infinity, maxPenetration = 0;
   for (const l of left) for (const r of right) {
-    sourceDistance = Math.min(sourceDistance, segmentDistance(l.sourceA, l.sourceB, r.sourceA, r.sourceB).distance);
+    const measured = l.sourceObserved !== false && r.sourceObserved !== false;
+    const sourceGap = measured ? segmentDistance(l.sourceA, l.sourceB, r.sourceA, r.sourceB).distance : Infinity;
+    sourceDistance = Math.min(sourceDistance, sourceGap);
     const hit = segmentDistance(l.a, l.b, r.a, r.b);
-    const penetration = Math.max(0, .016 - hit.distance); // Two 8 mm finger proxies.
-    if (penetration > maxPenetration) {
+    const touching = sourceGap < .035;
+    const penetration = Math.max(0, (l.radius ?? .008) + (r.radius ?? .008) - (touching ? .003 : 0) - hit.distance);
+    if (penetration > maxPenetration + 1e-6) {
       maxPenetration = penetration;
       const normal = hit.left.sub(hit.right);
       if (normal.lengthSq() < 1e-6) normal.copy(l.sourceA).sub(r.sourceA);
+      if (normal.lengthSq() < 1e-6) normal.set(1, 0, .25);
       correction.copy(normal.normalize().multiplyScalar(penetration * .5 + .001));
     }
   }
   const contact = sourceDistance < .035;
-  if (contact) correction.set(0, 0, 0);
-  else correction.multiplyScalar(THREE.MathUtils.smoothstep(sourceDistance, .035, .06)).clampLength(0, .015);
+  correction.clampLength(0, .015);
   return { correction, maxPenetration, sourceDistance, contact };
 }

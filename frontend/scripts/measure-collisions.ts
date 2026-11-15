@@ -1,0 +1,48 @@
+/** Local real-source engineering diagnostic; no linguistic accuracy score. */
+import fs from "node:fs";
+import path from "node:path";
+import * as THREE from "three";
+import { HumanoidRetargeter } from "../src/utils/retargetHumanoid";
+import { handContact, type Capsule } from "../src/utils/handContact";
+
+const root = path.resolve(process.cwd(), "..");
+const output = process.argv[2] || path.join(root, "artifacts/avatar-review/measurements.json");
+
+const load = (p: string) => JSON.parse(fs.readFileSync(p, "utf8"));
+// Read the real GLB's skeletal graph without textures, GPU, or synthetic rig fallback.
+const glb = fs.readFileSync(path.join(root, ".runtime/avatar-candidates/Noa.glb"));
+const model = JSON.parse(glb.subarray(20, 20 + glb.readUInt32LE(12)).toString());
+function makeRig() {
+  const joints = new Set<number>(model.skins.flatMap((skin: { joints: number[] }) => skin.joints));
+  const nodes = model.nodes.map((n: { name?: string; translation?: number[]; rotation?: number[]; scale?: number[] }, i: number) => {
+    const o = joints.has(i) ? new THREE.Bone() : new THREE.Object3D();
+    o.name = n.name || "";
+    if (n.translation) o.position.fromArray(n.translation);
+    if (n.rotation) o.quaternion.fromArray(n.rotation);
+    if (n.scale) o.scale.fromArray(n.scale);
+    return o;
+  });
+  model.nodes.forEach((n: { children?: number[] }, i: number) => n.children?.forEach((j) => nodes[i].add(nodes[j])));
+  const rig = new THREE.Group();
+  model.scenes[model.scene || 0].nodes.forEach((i: number) => rig.add(nodes[i]));
+  rig.updateMatrixWorld(true);
+  return rig;
+}
+
+import { stitchAnimationPlan } from "../src/utils/planStitcher";
+const results=[];
+for(let id=1;id<=14;id++) {
+ const input=load(path.join(root,`artifacts/phrase-review/after/${String(id).padStart(2,"0")}-input.json`));
+ const motion=stitchAnimationPlan(input.plan,new Map(input.assets)), rig=makeRig(), retarget=new HumanoidRetargeter(rig);
+ let sum=0,max=0,count=0;
+ for(let t=0;t<=motion.duration_ms;t+=40) {
+  retarget.applyMotion(motion,t);
+  const capsules=(side:string):Capsule[]=>{
+   const segment=(a:string,b:string,radius:number)=>{const x=rig.getObjectByName(side+a)!,y=rig.getObjectByName(side+b)!;const pa=x.getWorldPosition(new THREE.Vector3()),pb=y.getWorldPosition(new THREE.Vector3());return {a:pa,b:pb,sourceA:pa,sourceB:pb,sourceObserved:false,radius};};
+   return [...["Thumb","Index","Middle","Ring","Pinky"].flatMap(f=>[1,2,3].map(i=>segment(`Hand${f}${i}`,`Hand${f}${i+1}`,.008))),...["Index","Middle","Pinky"].map(f=>segment("Hand",`Hand${f}1`,.022))];
+  };
+  const hit=handContact(capsules("Left"),capsules("Right"));sum+=hit.maxPenetration;max=Math.max(max,hit.maxPenetration);count++;
+ }
+ results.push({id,text:input.text,mean_penetration_mm:sum/count*1000,max_penetration_mm:max*1000,samples:count,diagnostics:retarget.diagnostics});
+}
+fs.writeFileSync(output,JSON.stringify(results,null,2));console.log(JSON.stringify(results));

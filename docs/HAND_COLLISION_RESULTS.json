@@ -1,0 +1,429 @@
+{
+  "baseline_commit": "e51c664",
+  "sampling_ms": 40,
+  "proxy": "8mm finger, 22mm palm capsules; includes untracked displayed hands; not triangle mesh intersections",
+  "before": [
+    {
+      "id": 1,
+      "text": "Je veux boire de l'eau.",
+      "mean_penetration_mm": 17.749001055921525,
+      "max_penetration_mm": 43.97642103261975,
+      "samples": 280,
+      "diagnostics": {
+        "preparedMs": 201.115982,
+        "rejectedSpikes": 5,
+        "correctedFrames": 98,
+        "contactFrames": 128,
+        "maxCorrection": 0.01157563753245022,
+        "maxPenetration": 0.015422545797361608
+      }
+    },
+    {
+      "id": 2,
+      "text": "Je veux manger du pain.",
+      "mean_penetration_mm": 22.301327750336505,
+      "max_penetration_mm": 43.97642103261975,
+      "samples": 284,
+      "diagnostics": {
+        "preparedMs": 185.83178499999997,
+        "rejectedSpikes": 15,
+        "correctedFrames": 133,
+        "contactFrames": 161,
+        "maxCorrection": 0.01157563753245022,
+        "maxPenetration": 0.014959203844391505
+      }
+    },
+    {
+      "id": 3,
+      "text": "Mon frère aime la musique.",
+      "mean_penetration_mm": 11.12459882974249,
+      "max_penetration_mm": 43.97632697982872,
+      "samples": 247,
+      "diagnostics": {
+        "preparedMs": 100.39177799999993,
+        "rejectedSpikes": 19,
+        "correctedFrames": 16,
+        "contactFrames": 96,
+        "maxCorrection": 0.006025474223779055,
+        "maxPenetration": 0.015443956145326725
+      }
+    },
+    {
+      "id": 4,
+      "text": "Je vais à l'école demain.",
+      "mean_penetration_mm": 9.478795528664376,
+      "max_penetration_mm": 43.5055584364223,
+      "samples": 257,
+      "diagnostics": {
+        "preparedMs": 99.80873399999996,
+        "rejectedSpikes": 8,
+        "correctedFrames": 43,
+        "contactFrames": 53,
+        "maxCorrection": 0.013597427249289622,
+        "maxPenetration": 0.015556970963208148
+      }
+    },
+    {
+      "id": 5,
+      "text": "Mon ami habite à Paris.",
+      "mean_penetration_mm": 18.3928206723695,
+      "max_penetration_mm": 43.910083473803496,
+      "samples": 275,
+      "diagnostics": {
+        "preparedMs": 149.96961399999986,
+        "rejectedSpikes": 6,
+        "correctedFrames": 107,
+        "contactFrames": 107,
+        "maxCorrection": 0.006856348942037483,
+        "maxPenetration": 0.015848273794827464
+      }
+    },
+    {
+      "id": 6,
+      "text": "Je veux acheter une voiture.",
+      "mean_penetration_mm": 19.059357949957967,
+      "max_penetration_mm": 43.97642103261975,
+      "samples": 277,
+      "diagnostics": {
+        "preparedMs": 155.15669400000002,
+        "rejectedSpikes": 7,
+        "correctedFrames": 125,
+        "contactFrames": 135,
+        "maxCorrection": 0.01157563753245022,
+        "maxPenetration": 0.015114058200069077
+      }
+    },
+    {
+      "id": 7,
+      "text": "Je lis un livre.",
+      "mean_penetration_mm": 29.85766591506786,
+      "max_penetration_mm": 43.99342343849934,
+      "samples": 201,
+      "diagnostics": {
+        "preparedMs": 127.89927499999999,
+        "rejectedSpikes": 16,
+        "correctedFrames": 48,
+        "contactFrames": 266,
+        "maxCorrection": 0.02,
+        "maxPenetration": 0.015921206617612503
+      }
+    },
+    {
+      "id": 8,
+      "text": "Le chat dort.",
+      "mean_penetration_mm": 0,
+      "max_penetration_mm": 0,
+      "samples": 124,
+      "diagnostics": {
+        "preparedMs": 46.69907499999999,
+        "rejectedSpikes": 1,
+        "correctedFrames": 4,
+        "contactFrames": 0,
+        "maxCorrection": 0.008517783515055463,
+        "maxPenetration": 0
+      }
+    },
+    {
+      "id": 9,
+      "text": "Je regarde le football.",
+      "mean_penetration_mm": 20.83494530485562,
+      "max_penetration_mm": 43.90991541634747,
+      "samples": 186,
+      "diagnostics": {
+        "preparedMs": 113.38528299999984,
+        "rejectedSpikes": 11,
+        "correctedFrames": 81,
+        "contactFrames": 118,
+        "maxCorrection": 0.013863704504744754,
+        "maxPenetration": 0.015954318200090616
+      }
+    },
+    {
+      "id": 10,
+      "text": "Je veux apprendre la langue des signes.",
+      "mean_penetration_mm": 18.62845557524017,
+      "max_penetration_mm": 43.97642103261975,
+      "samples": 357,
+      "diagnostics": {
+        "preparedMs": 197.4558609999999,
+        "rejectedSpikes": 14,
+        "correctedFrames": 117,
+        "contactFrames": 205,
+        "maxCorrection": 0.01157563753245022,
+        "maxPenetration": 0.015995201038678047
+      }
+    },
+    {
+      "id": 11,
+      "text": "Je cherche mon téléphone portable.",
+      "mean_penetration_mm": 13.38335854756372,
+      "max_penetration_mm": 43.87425962592971,
+      "samples": 259,
+      "diagnostics": {
+        "preparedMs": 135.28500699999995,
+        "rejectedSpikes": 5,
+        "correctedFrames": 39,
+        "contactFrames": 97,
+        "maxCorrection": 0.013536805483201887,
+        "maxPenetration": 0.01403978643614748
+      }
+    },
+    {
+      "id": 12,
+      "text": "Je vais au cinéma demain.",
+      "mean_penetration_mm": 9.668127613989165,
+      "max_penetration_mm": 43.5055584364223,
+      "samples": 244,
+      "diagnostics": {
+        "preparedMs": 87.90111200000024,
+        "rejectedSpikes": 14,
+        "correctedFrames": 22,
+        "contactFrames": 111,
+        "maxCorrection": 0.02,
+        "maxPenetration": 0.015579361866830488
+      }
+    },
+    {
+      "id": 13,
+      "text": "Mon père travaille aujourd'hui.",
+      "mean_penetration_mm": 14.870752033893508,
+      "max_penetration_mm": 43.994811953824815,
+      "samples": 253,
+      "diagnostics": {
+        "preparedMs": 113.94701299999997,
+        "rejectedSpikes": 4,
+        "correctedFrames": 38,
+        "contactFrames": 66,
+        "maxCorrection": 0.010607490313779335,
+        "maxPenetration": 0.013366405342248554
+      }
+    },
+    {
+      "id": 14,
+      "text": "Je veux du café.",
+      "mean_penetration_mm": 22.23761115453597,
+      "max_penetration_mm": 43.97642103261975,
+      "samples": 197,
+      "diagnostics": {
+        "preparedMs": 110.26285400000006,
+        "rejectedSpikes": 6,
+        "correctedFrames": 89,
+        "contactFrames": 128,
+        "maxCorrection": 0.01157563753245022,
+        "maxPenetration": 0.01586897057049377
+      }
+    }
+  ],
+  "after": [
+    {
+      "id": 1,
+      "text": "Je veux boire de l'eau.",
+      "mean_penetration_mm": 0.27851937287831957,
+      "max_penetration_mm": 13.622928958913507,
+      "samples": 280,
+      "diagnostics": {
+        "preparedMs": 438.89930999999996,
+        "rejectedSpikes": 5,
+        "correctedFrames": 281,
+        "contactFrames": 171,
+        "maxCorrection": 0.060000000000000095,
+        "maxPenetration": 0.01553646679375581
+      }
+    },
+    {
+      "id": 2,
+      "text": "Je veux manger du pain.",
+      "mean_penetration_mm": 0.3343130808489372,
+      "max_penetration_mm": 10.541714481526542,
+      "samples": 284,
+      "diagnostics": {
+        "preparedMs": 471.17626399999995,
+        "rejectedSpikes": 15,
+        "correctedFrames": 352,
+        "contactFrames": 217,
+        "maxCorrection": 0.060000000000000095,
+        "maxPenetration": 0.01553646679375581
+      }
+    },
+    {
+      "id": 3,
+      "text": "Mon frère aime la musique.",
+      "mean_penetration_mm": 0.12027468655622867,
+      "max_penetration_mm": 3.992458736517334,
+      "samples": 247,
+      "diagnostics": {
+        "preparedMs": 358.62905,
+        "rejectedSpikes": 19,
+        "correctedFrames": 174,
+        "contactFrames": 113,
+        "maxCorrection": 0.04705795207421261,
+        "maxPenetration": 0.015480663784937544
+      }
+    },
+    {
+      "id": 4,
+      "text": "Je vais à l'école demain.",
+      "mean_penetration_mm": 0.22164808345951034,
+      "max_penetration_mm": 9.70460810838109,
+      "samples": 257,
+      "diagnostics": {
+        "preparedMs": 428.60902199999987,
+        "rejectedSpikes": 8,
+        "correctedFrames": 221,
+        "contactFrames": 63,
+        "maxCorrection": 0.060000000000000095,
+        "maxPenetration": 0.010428586116268443
+      }
+    },
+    {
+      "id": 5,
+      "text": "Mon ami habite à Paris.",
+      "mean_penetration_mm": 0.09683759913633762,
+      "max_penetration_mm": 1.9829065209178882,
+      "samples": 275,
+      "diagnostics": {
+        "preparedMs": 484.747891,
+        "rejectedSpikes": 6,
+        "correctedFrames": 320,
+        "contactFrames": 139,
+        "maxCorrection": 0.06000000000000001,
+        "maxPenetration": 0.013102532832668268
+      }
+    },
+    {
+      "id": 6,
+      "text": "Je veux acheter une voiture.",
+      "mean_penetration_mm": 0.236661064899926,
+      "max_penetration_mm": 9.70460810838109,
+      "samples": 277,
+      "diagnostics": {
+        "preparedMs": 513.4928410000002,
+        "rejectedSpikes": 7,
+        "correctedFrames": 320,
+        "contactFrames": 185,
+        "maxCorrection": 0.060000000000000095,
+        "maxPenetration": 0.01553646679375581
+      }
+    },
+    {
+      "id": 7,
+      "text": "Je lis un livre.",
+      "mean_penetration_mm": 0.8027143572048049,
+      "max_penetration_mm": 18.24436195550662,
+      "samples": 201,
+      "diagnostics": {
+        "preparedMs": 520.0777549999998,
+        "rejectedSpikes": 16,
+        "correctedFrames": 353,
+        "contactFrames": 292,
+        "maxCorrection": 0.060000000000000095,
+        "maxPenetration": 0.01824436195550662
+      }
+    },
+    {
+      "id": 8,
+      "text": "Le chat dort.",
+      "mean_penetration_mm": 0,
+      "max_penetration_mm": 0,
+      "samples": 124,
+      "diagnostics": {
+        "preparedMs": 124.31881399999975,
+        "rejectedSpikes": 1,
+        "correctedFrames": 5,
+        "contactFrames": 0,
+        "maxCorrection": 0.008517783515055463,
+        "maxPenetration": 0
+      }
+    },
+    {
+      "id": 9,
+      "text": "Je regarde le football.",
+      "mean_penetration_mm": 0.5266635254226325,
+      "max_penetration_mm": 9.70460810838109,
+      "samples": 186,
+      "diagnostics": {
+        "preparedMs": 424.472037,
+        "rejectedSpikes": 11,
+        "correctedFrames": 248,
+        "contactFrames": 195,
+        "maxCorrection": 0.060000000000000095,
+        "maxPenetration": 0.014213100957717531
+      }
+    },
+    {
+      "id": 10,
+      "text": "Je veux apprendre la langue des signes.",
+      "mean_penetration_mm": 0.34826786328925907,
+      "max_penetration_mm": 9.70460810838109,
+      "samples": 357,
+      "diagnostics": {
+        "preparedMs": 712.7892469999997,
+        "rejectedSpikes": 14,
+        "correctedFrames": 406,
+        "contactFrames": 275,
+        "maxCorrection": 0.060000000000000095,
+        "maxPenetration": 0.01553646679375581
+      }
+    },
+    {
+      "id": 11,
+      "text": "Je cherche mon téléphone portable.",
+      "mean_penetration_mm": 0.2759454797280625,
+      "max_penetration_mm": 10.38143548311892,
+      "samples": 259,
+      "diagnostics": {
+        "preparedMs": 448.20700099999976,
+        "rejectedSpikes": 5,
+        "correctedFrames": 195,
+        "contactFrames": 115,
+        "maxCorrection": 0.060000000000000095,
+        "maxPenetration": 0.010428586116268443
+      }
+    },
+    {
+      "id": 12,
+      "text": "Je vais au cinéma demain.",
+      "mean_penetration_mm": 0.3290404776407402,
+      "max_penetration_mm": 9.70460810838109,
+      "samples": 244,
+      "diagnostics": {
+        "preparedMs": 405.8099979999997,
+        "rejectedSpikes": 14,
+        "correctedFrames": 189,
+        "contactFrames": 125,
+        "maxCorrection": 0.060000000000000095,
+        "maxPenetration": 0.010428586116268443
+      }
+    },
+    {
+      "id": 13,
+      "text": "Mon père travaille aujourd'hui.",
+      "mean_penetration_mm": 0.10062328047646694,
+      "max_penetration_mm": 3.648064635971556,
+      "samples": 253,
+      "diagnostics": {
+        "preparedMs": 366.504559,
+        "rejectedSpikes": 4,
+        "correctedFrames": 220,
+        "contactFrames": 91,
+        "maxCorrection": 0.05582331679425051,
+        "maxPenetration": 0.004747322385833695
+      }
+    },
+    {
+      "id": 14,
+      "text": "Je veux du café.",
+      "mean_penetration_mm": 0.37801962888466145,
+      "max_penetration_mm": 11.093344577267413,
+      "samples": 197,
+      "diagnostics": {
+        "preparedMs": 403.12515299999995,
+        "rejectedSpikes": 6,
+        "correctedFrames": 256,
+        "contactFrames": 165,
+        "maxCorrection": 0.060000000000000095,
+        "maxPenetration": 0.01553646679375581
+      }
+    }
+  ]
+}

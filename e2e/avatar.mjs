@@ -33,7 +33,7 @@ try {
       rig: JSON.parse(el.dataset.rigDiagnostics), hands: JSON.parse(el.dataset.handTracking),
     }));
     assert(diagnostics.rig.preparedMs > 0);
-    assert(diagnostics.rig.maxCorrection <= .020001);
+    assert(diagnostics.rig.maxCorrection <= .060001);
     await page.locator(".avatar-stage").screenshot({ path: `${output}/${results.length}-front.png` });
     const bounds = await canvas.boundingBox();
     await page.mouse.move(bounds.x + bounds.width * .5, bounds.y + bounds.height * .5);

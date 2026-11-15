@@ -69,7 +69,7 @@ CHROME_PATH=/chemin/vers/chrome npm --prefix e2e run test:dictasign
 .worktrees/wt-codex2/training/.venv-train/bin/python -m pytest training/test_catalog.py training/test_adaptation.py
 ```
 
-74 tests API/schémas/mouvement et 24 tests de recherche passent, avec des vérifications frontend des transitions et du rig. Les [améliorations mesurées de l’avatar](docs/AVATAR_PLAYBACK.md) stabilisent les doigts, corrigent l’échelle des sourcils et limitent certaines collisions ; les cas résiduels sont documentés. Un test strictement marqué xfail conserve le défaut connu de détection du prénom Alice. Le contrôle navigateur couvre composition, recherche temporelle, téléchargement réel, audio, import, persistance, mobile et erreurs réseau. Les [captures et aperçu vidéo](artifacts/README.md) documentent le logiciel exécuté.
+76 tests API/schémas/mouvement et 24 tests de recherche passent, avec des vérifications frontend des transitions et du rig. Les [améliorations mesurées de l’avatar](docs/AVATAR_PLAYBACK.md) stabilisent les doigts, corrigent l’échelle des sourcils et limitent certaines collisions ; les cas résiduels sont documentés. Un test strictement marqué xfail conserve le défaut connu de détection du prénom Alice. Le contrôle navigateur couvre composition, recherche temporelle, téléchargement réel, audio, import, persistance, mobile et erreurs réseau. Les [captures et aperçu vidéo](artifacts/README.md) documentent le logiciel exécuté.
 
 Les modèles `.models/`, environnements, checkpoints et captures `.runtime/` sont ignorés par Git. Aucun téléchargement automatique n’a lieu lors d’une requête API. Le modèle français optionnel se configure dans [backend/README.md](backend/README.md).
 

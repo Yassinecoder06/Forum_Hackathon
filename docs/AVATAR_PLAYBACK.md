@@ -1,5 +1,7 @@
 # Avatar playback improvements — executed result
 
+The contact solver described in this historical measurement has since been replaced by the [stronger hand-collision correction](HAND_COLLISION_FIX.md), evaluated on all 14 requested phrases. Its previous contact-disabling rule is no longer active.
+
 Implemented the practical playback changes from [the reviewed plan](AVATAR_IMPROVEMENT_PLAN.md). Raw captures, lexical lookup, `.pose` exports and approval status remain intact. All stabilization is a derived avatar playback track; future video captures also receive improved fallback hand assignment and observation provenance.
 
 ## What changed
