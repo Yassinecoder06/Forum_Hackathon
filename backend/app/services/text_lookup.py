@@ -35,19 +35,24 @@ def tokenize(text):
                 lemmas[i] = aligned[0].lemma_.casefold()
     return tokens, lemmas
 
+@lru_cache(maxsize=4096)
+def phrase_tokens(phrase, model_name):
+    tokens, lemmas = tokenize(phrase)
+    return tuple(tokens), tuple(lemmas)
+
 def lookup_text(text, entries):
     tokens, lemmas = tokenize(text)
     surfaces = [t.casefold() for t in tokens]
     candidates = []
     for entry in entries:
         for phrase in [entry.concept_fr, *entry.aliases]:
-            ts, ls = tokenize(phrase)
+            ts, ls = phrase_tokens(phrase, os.getenv('SIGNACULTURE_SPACY_MODEL', 'fr_core_news_sm'))
             if ts:
                 candidates.append(([t.casefold() for t in ts], ls, entry))
     sequence, unknowns, i = [], [], 0
     while i < len(tokens):
         matches = [(len(ts), entry) for ts, ls, entry in candidates
-                   if surfaces[i:i+len(ts)] == ts or lemmas[i:i+len(ls)] == ls]
+                   if surfaces[i:i+len(ts)] == ts or tuple(lemmas[i:i+len(ls)]) == ls]
         if matches:
             size = max(n for n, _ in matches)
             best = {g.gloss_id:g for n,g in matches if n == size}

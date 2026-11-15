@@ -75,7 +75,7 @@ class AudioFeatures(ContractModel):
     """Positive-duration audio; empty frames and null unvoiced pitch are valid."""
     duration_ms: int = Field(gt=0)
     frames: list[AudioFrame]
-    emotion_hypothesis: None
+    emotion_hypothesis: dict[str, Annotated[float, Field(ge=0, le=1, allow_inf_nan=False)]] | None
     model_version: str
     warnings: list[str]
 
@@ -93,6 +93,7 @@ class AudioFeatures(ContractModel):
 
 
 class AnimationPlan(ContractModel):
+    timing_mode: Literal["original", "audio_voiced"] = "original"
     plan_id: str
     source_text: str
     target_language: Literal["LSF"]

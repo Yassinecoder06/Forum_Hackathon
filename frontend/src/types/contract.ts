@@ -4,15 +4,15 @@
  * All timestamps are in milliseconds (ms). Keys are snake_case.
  */
 
-export type ReviewStatus = 'pending' | 'approved' | 'rejected';
-export type RightsStatus = 'cleared' | 'pending';
-export type RigVersion = 'signaculture-v1';
+export type ReviewStatus = "pending" | "approved" | "rejected";
+export type RightsStatus = "cleared" | "pending";
+export type RigVersion = "signaculture-v1";
 
 export interface GlossEntry {
   gloss_id: string;
   concept_fr: string;
   gloss: string;
-  language: 'LSF';
+  language: "LSF";
   variant?: string;
   source_id: string;
   motion_id?: string;
@@ -69,9 +69,10 @@ export interface AudioFeatures {
 }
 
 export interface AnimationPlan {
+  timing_mode?: "original" | "audio_voiced";
   plan_id: string;
   source_text: string;
-  target_language: 'LSF';
+  target_language: "LSF";
   segments: AnimationPlanSegment[];
   unknowns: string[];
   duration_ms: number;
@@ -85,9 +86,21 @@ export interface AnimationPlan {
 export interface MotionFrame {
   time_ms: number;
   joints: Record<string, [number, number, number]>;
+  face?: Record<string, number> | null;
+}
+
+export interface MotionAttribution {
+  credit: string;
+  source_url: string;
+  license: string;
+  license_url?: string;
+  changes?: string;
 }
 
 export interface MotionFile {
+  synthetic?: boolean;
+  attribution?: MotionAttribution;
+  attributions?: MotionAttribution[];
   rig_version: RigVersion | string;
   fps: number;
   duration_ms: number;
@@ -97,7 +110,7 @@ export interface MotionFile {
 
 export interface ReviewRecord {
   reviewer: string;
-  status: 'approved' | 'rejected';
+  status: "approved" | "rejected";
   notes: string;
   version: string;
   date: string;
@@ -105,7 +118,7 @@ export interface ReviewRecord {
 
 export interface RenderRequest {
   plan_id: string;
-  purpose: 'preview' | 'publication';
+  purpose: "preview" | "publication";
 }
 
 /**
@@ -120,7 +133,7 @@ export interface RenderResponse {
 }
 
 export interface HealthResponse {
-  status: 'ok' | string;
+  status: "ok" | string;
 }
 
 export interface GlossaryResponse {

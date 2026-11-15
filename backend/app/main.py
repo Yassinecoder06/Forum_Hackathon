@@ -1,15 +1,14 @@
 """Local experimental lookup API; no translation or emotion model claims."""
-import io
 import json
 import os
 from pathlib import Path
 import sqlite3
 import uuid
-import wave
 from datetime import datetime, timezone
 
 import numpy as np
-from fastapi import FastAPI, HTTPException, UploadFile, File, Body
+import subprocess
+from fastapi import FastAPI, HTTPException, UploadFile, File, Form, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
@@ -17,6 +16,7 @@ from typing import Literal
 from .schemas import GlossEntry, MotionAsset, TranslationDraft, AnimationPlan, AudioFeatures, ReviewRecord
 
 from .services.text_lookup import lookup_text, mode
+from .services import capture_library
 
 ROOT = Path(__file__).resolve().parents[2]
 app = FastAPI(title='SignaCulture experimental API')
@@ -47,6 +47,13 @@ def registry():
     try:
         gloss = [GlossEntry.model_validate(x) for x in json.loads((root/'data/glossary.json').read_text())]
         motions = [MotionAsset.model_validate(x) for x in json.loads((root/'data/motions_manifest.json').read_text())]
+        imported = capture_library.library()
+        concepts = {x['gloss']['concept_fr'].casefold() for x in imported}
+        replaced = {g.motion_id for g in gloss if g.concept_fr.casefold() in concepts}
+        gloss = [g for g in gloss if g.motion_id not in replaced]
+        motions = [m for m in motions if m.motion_id not in replaced]
+        gloss.extend(GlossEntry.model_validate(x['gloss']) for x in imported)
+        motions.extend(MotionAsset.model_validate(x['motion']) for x in imported)
         if len({x.motion_id for x in motions}) != len(motions) or len({x.gloss_id for x in gloss}) != len(gloss):
             raise ValueError('Duplicate IDs')
         for g in gloss:
@@ -58,7 +65,8 @@ def registry():
 
 def asset(root, m):
     p = (root/m.path).resolve()
-    if not p.is_relative_to((root/'data/approved_motion_assets').resolve()) or not p.is_file():
+    allowed = p.is_relative_to((root/'data/approved_motion_assets').resolve()) or p.is_relative_to(capture_library.storage()/'motions')
+    if not allowed or not p.is_file():
         raise HTTPException(503, 'Asset unavailable or outside registered directory')
     try:
         d = json.loads(p.read_text())
@@ -88,6 +96,103 @@ def db():
 
 @app.get('/health')
 def health(): return {'status': 'ok'}
+
+@app.get('/capabilities')
+def capabilities():
+    return {**capture_library.capabilities(), 'nlp': mode()}
+
+@app.get('/library')
+def captured_library():
+    entries=capture_library.library()
+    root,glosses,motions=registry()
+    existing={entry['motion']['motion_id'] for entry in entries}
+    for motion in motions:
+        if motion.synthetic or motion.motion_id in existing: continue
+        payload=json.loads(asset(root,motion).read_text())
+        gloss=next(g for g in glosses if g.gloss_id==motion.gloss_id)
+        entries.append({'gloss':gloss.model_dump(),'motion':motion.model_dump(),
+            'source':payload.get('attribution',{}).get('credit',gloss.source_id),
+            'quality':payload.get('quality',{}),'curated':True})
+    return {'entries': entries}
+
+@app.delete('/library/{motion_id}')
+def delete_library_entry(motion_id: str):
+    try: capture_library.remove_entry(motion_id)
+    except FileNotFoundError: raise HTTPException(404, 'Mouvement inconnu')
+    return {'removed': motion_id}
+
+@app.post('/captures', status_code=202)
+async def capture(file: UploadFile = File(...), rights_confirmed: bool = Form(...)):
+    if not rights_confirmed:
+        raise HTTPException(422, 'Confirmez que vous avez le droit de traiter cette vidéo.')
+    is_json=(file.filename or '').lower().endswith('.json')
+    if not is_json and not capture_library.capabilities()['capture']:
+        raise HTTPException(503, 'Runtime de capture absent. Lancez bash scripts/setup-models.sh motion.')
+    with capture_library.LOCK:
+        if len(capture_library.ACTIVE) >= 4:
+            raise HTTPException(429, 'Quatre captures sont déjà en attente. Réessayez après leur traitement.')
+    folder=capture_library.storage()/'captures'/str(uuid.uuid4())
+    folder.mkdir(parents=True)
+    source=folder/'source.mp4'
+    size=0
+    with source.open('wb') as stream:
+        while chunk := await file.read(1024*1024):
+            size+=len(chunk)
+            if size>50*1024*1024:
+                source.unlink(missing_ok=True)
+                raise HTTPException(413, 'Vidéo limitée à 50 Mo et 60 secondes.')
+            stream.write(chunk)
+    if not size:
+        source.unlink(missing_ok=True)
+        raise HTTPException(422, 'Le fichier est vide.')
+    if is_json:
+        from .services.landmark_import import convert_animics
+        try:
+            imported=convert_animics(json.loads(source.read_text()))
+        except (ValueError,KeyError,TypeError,UnicodeDecodeError) as exc:
+            source.unlink(missing_ok=True)
+            raise HTTPException(422,f'Export JSON invalide : {exc}')
+        quality=imported.get('quality',{'pose_coverage':1,'left_hand_coverage':0,'right_hand_coverage':0,'face_coverage':0,'sampled_frames':len(imported['frames'])})
+        imported['quality']=quality
+        imported.setdefault('warnings',[])
+        capture_library.write_json(folder/'motion.json',imported)
+        job={'job_id':folder.name,'status':'ready','progress':100,'filename':(file.filename or 'export.json')[:200],'duration_ms':imported['duration_ms'],'quality':quality,'warnings':imported['warnings']}
+        capture_library.write_json(folder/'status.json',job)
+        return job
+    return capture_library.create_job(source, (file.filename or 'video')[:200])
+
+@app.get('/captures/{job_id}')
+def capture_status(job_id: str):
+    try: return capture_library.get_job(job_id)
+    except (ValueError, FileNotFoundError): raise HTTPException(404, 'Capture inconnue')
+
+@app.get('/captures/{job_id}/motion')
+def capture_motion(job_id: str):
+    try:
+        folder=capture_library.job_folder(job_id)
+        if capture_library.get_job(job_id)['status']!='ready':
+            raise HTTPException(409, 'Le mouvement n’est pas encore disponible.')
+        return FileResponse(folder/'motion.json',media_type='application/json')
+    except (ValueError,FileNotFoundError): raise HTTPException(404, 'Capture inconnue')
+
+@app.get('/captures/{job_id}/source')
+def capture_source(job_id: str):
+    try: return FileResponse(capture_library.job_folder(job_id)/'source.mp4')
+    except (ValueError,FileNotFoundError): raise HTTPException(404, 'Capture inconnue')
+
+class RegisterCapture(BaseModel):
+    concept: str = Field(min_length=1,max_length=100)
+    aliases: list[str] = Field(default_factory=list,max_length=30)
+    source: str = Field(min_length=1,max_length=500)
+    license: str = Field(min_length=1,max_length=200)
+
+@app.post('/captures/{job_id}/register')
+def register_capture(job_id: str, body: RegisterCapture):
+    if not body.concept.strip() or not body.source.strip() or not body.license.strip():
+        raise HTTPException(422, 'Le concept, la source et les droits sont obligatoires.')
+    try: return capture_library.register(job_id,body.concept,body.aliases,body.source,body.license)
+    except FileNotFoundError: raise HTTPException(404, 'Capture inconnue')
+    except ValueError as exc: raise HTTPException(409,str(exc))
 
 @app.get('/glossary')
 def glossary(): return {'entries': registry()[1]}
@@ -129,7 +234,11 @@ def compose(body: TextRequest):
         selected.append(m)
         segments.append(dict(gloss_id=g.gloss_id, motion_id=m.motion_id, start_ms=t, duration_ms=m.duration_ms, asset_url='/assets/'+Path(m.path).name))
         t += m.duration_ms
-    plan = AnimationPlan(plan_id=str(uuid.uuid4()), source_text=draft['source_text'], target_language='LSF', segments=segments, unknowns=draft['unknowns'], duration_ms=t, linguistic_review='pending', animation_review=('approved' if selected and all(m.animation_review == 'approved' for m in selected) else 'pending'), rights_status=('cleared' if selected and all(m.rights_status == 'cleared' for m in selected) else 'pending'), render_allowed_for_publication=False, audio_features=audio)
+    from .services.animation_timing import segment_timing
+    timing,t,timing_mode=segment_timing(selected,audio)
+    for segment,(start,length) in zip(segments,timing):
+        segment.update(start_ms=start,duration_ms=length)
+    plan = AnimationPlan(timing_mode=timing_mode,plan_id=str(uuid.uuid4()), source_text=draft['source_text'], target_language='LSF', segments=segments, unknowns=draft['unknowns'], duration_ms=t, linguistic_review='pending', animation_review=('approved' if selected and all(m.animation_review == 'approved' for m in selected) else 'pending'), rights_status=('cleared' if selected and all(m.rights_status == 'cleared' for m in selected) else 'pending'), render_allowed_for_publication=False, audio_features=audio)
     with db() as c: c.execute('INSERT INTO plans VALUES (?,?)', (plan.plan_id, plan.model_dump_json()))
     return plan
 
@@ -164,29 +273,34 @@ def render(request: PlanRequest):
     return {'plan': p, 'assets': assets, 'video_exported': False}
 
 @app.post('/analyze-audio', response_model=AudioFeatures)
-async def audio(file: UploadFile = File(...)):
+async def audio(file: UploadFile = File(...), include_emotion: bool = Query(False)):
+    from starlette.concurrency import run_in_threadpool
+    from .services.audio_analysis import analyse
     raw = await file.read(10*1024*1024+1)
-    if len(raw) > 10*1024*1024: raise HTTPException(413, 'Maximum WAV size 10 MiB')
+    if len(raw)>10*1024*1024: raise HTTPException(413,'Audio limité à 10 Mo.')
+    if not raw: raise HTTPException(422,'Le fichier est vide.')
     try:
-        with wave.open(io.BytesIO(raw)) as w:
-            rate, channels, width, n = w.getframerate(), w.getnchannels(), w.getsampwidth(), w.getnframes()
-            if rate < 8000 or rate > 96000 or channels not in (1,2) or width not in (1,2,4) or not 0 < n/rate <= 60: raise ValueError('Unsupported WAV or duration (maximum 60 seconds)')
-            data = w.readframes(n)
-            if len(data) != n*channels*width: raise ValueError('Truncated WAV')
-            x = np.frombuffer(data, dtype={1:'u1',2:'<i2',4:'<i4'}[width]).astype(float)
-            x = (x-128)/128 if width == 1 else x/(2**(width*8-1))
-            x = x.reshape(-1, channels).mean(axis=1)
-    except (wave.Error, EOFError, ValueError) as e: raise HTTPException(422, str(e))
-    frames = []
-    step = int(rate*.04)
-    for start in range(0,len(x),step):
-        chunk = x[start:start+step]; energy = float(np.sqrt(np.mean(chunk**2))); pitch = None
-        if energy >= .01 and len(chunk) >= rate/50:
-            stride = max(1, rate//8000)
-            pitch_rate = rate/stride
-            y = chunk[::stride]-chunk[::stride].mean(); corr = np.correlate(y,y,mode='full')[len(y)-1:]
-            lo, hi = int(pitch_rate/500), min(int(pitch_rate/60),len(corr)-1)
-            lag = lo+int(np.argmax(corr[lo:hi+1]))
-            if corr[0] > 0 and corr[lag]/corr[0] > .35: pitch = float(pitch_rate/lag)
-        frames.append(dict(start_ms=round(start/rate*1000), end_ms=max(1,round((start+len(chunk))/rate*1000)), pitch_hz=pitch, energy=energy, is_pause=energy<.01))
-    return dict(duration_ms=max(1,round(n/rate*1000)), frames=frames, emotion_hypothesis=None, model_version='numpy-autocorrelation-rms-v1', warnings=['Emotion unavailable: no real emotion adapter configured.', 'F0 is an autocorrelation estimate; noise and harmonics can cause errors.'])
+        return await run_in_threadpool(analyse,raw,file.filename or 'voice.wav',include_emotion)
+    except ValueError as exc: raise HTTPException(422,str(exc))
+    except subprocess.TimeoutExpired: raise HTTPException(504,'Le traitement audio a dépassé le délai autorisé.')
+    except FileNotFoundError: raise HTTPException(503,'FFmpeg est nécessaire pour décoder les médias.')
+
+
+@app.get('/research/status')
+def research_status():
+    from .services.research_status import status
+    return status()
+
+class ResearchRequest(BaseModel):
+    text: str = Field(min_length=1,max_length=500)
+    run_id: str = Field(min_length=1,max_length=100)
+
+@app.post('/research/predict')
+def research_predict(body: ResearchRequest):
+    from .services.research_status import predict
+    if not body.text.strip(): raise HTTPException(422,'Saisissez une phrase.')
+    try: return predict(body.text,body.run_id)
+    except FileNotFoundError as exc: raise HTTPException(404,str(exc))
+    except BlockingIOError as exc: raise HTTPException(429,str(exc))
+    except subprocess.TimeoutExpired: raise HTTPException(504,'Délai d’inférence dépassé.')
+    except RuntimeError as exc: raise HTTPException(503,str(exc))

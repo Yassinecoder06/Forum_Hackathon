@@ -1,393 +1,353 @@
-import React, { useEffect, useRef, useCallback } from 'react';
-import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { MotionFile } from '../../types/contract';
-import { interpolateJointPositions, InterpolatedJoints } from '../../utils/motionInterpolator';
+import { useEffect, useRef } from "react";
+import * as THREE from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import type { MotionFile } from "../../types/contract";
+import { interpolateJointPositions } from "../../utils/motionInterpolator";
 
-interface AvatarCanvasProps {
+type Props = {
   motion: MotionFile | null;
   currentTimeMs: number;
   expressiveModulation?: boolean;
   energyFactor?: number;
   showSkeletonDebug?: boolean;
-  onResetView?: () => void;
-}
-
-// Upper-body bone hierarchy for SignaCulture v1 (head, neck, hips, shoulders, elbows, wrists)
-// Explicit: No finger data available in current fixtures; body-only prototype.
-const BONE_CONNECTIONS: Array<[string, string]> = [
-  ['hips', 'neck'],
-  ['neck', 'head'],
-  ['neck', 'left_shoulder'],
-  ['left_shoulder', 'left_elbow'],
-  ['left_elbow', 'left_wrist'],
-  ['neck', 'right_shoulder'],
-  ['right_shoulder', 'right_elbow'],
-  ['right_elbow', 'right_wrist'],
+  emotion?: Record<string, number | string> | null;
+  onCanvasReady?: (canvas: HTMLCanvasElement) => void;
+};
+const CONNECTIONS: [string, string, number, "shirt" | "skin"][] = [
+  ["left_shoulder", "left_elbow", 0.062, "shirt"],
+  ["right_shoulder", "right_elbow", 0.062, "shirt"],
+  ["left_elbow", "left_wrist", 0.039, "skin"],
+  ["right_elbow", "right_wrist", 0.039, "skin"],
 ];
+const FINGERS = ["thumb", "index", "middle", "ring", "pinky"];
+const up = new THREE.Vector3(0, 1, 0);
 
-// Default camera parameters
-const DEFAULT_CAMERA_POS = new THREE.Vector3(0, 1.3, 2.2);
-const DEFAULT_CAMERA_TARGET = new THREE.Vector3(0, 1.25, 0);
-
-export const AvatarCanvas: React.FC<AvatarCanvasProps> = ({
-  motion,
-  currentTimeMs,
-  expressiveModulation = false,
-  energyFactor = 0.5,
-  showSkeletonDebug = false,
-}) => {
-  const mountRef = useRef<HTMLDivElement>(null);
-  const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
-  const sceneRef = useRef<THREE.Scene | null>(null);
-  const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
-  const controlsRef = useRef<OrbitControls | null>(null);
-
-  // Mesh and resources registries for proper disposal
-  const jointMeshesRef = useRef<Map<string, THREE.Mesh>>(new Map());
-  const boneMeshesRef = useRef<Map<string, THREE.Mesh>>(new Map());
-  const torsoMeshRef = useRef<THREE.Mesh | null>(null);
-  const currentJointsRef = useRef<InterpolatedJoints>({});
-  const disposablesRef = useRef<Array<THREE.BufferGeometry | THREE.Material>>([]);
-
-  // Setup Three.js scene
+export function AvatarCanvas(props: Props) {
+  const mount = useRef<HTMLDivElement>(null);
+  const latest = useRef(props);
+  latest.current = props;
   useEffect(() => {
-    const container = mountRef.current;
-    if (!container) return;
-
-    const width = container.clientWidth || 600;
-    const height = container.clientHeight || 500;
-
-    // 1. Scene
+    const host = mount.current;
+    if (!host) return;
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x0b0f19); // Rich dark slate
-    sceneRef.current = scene;
-
-    // 2. Camera
-    const camera = new THREE.PerspectiveCamera(42, width / height, 0.1, 50);
-    camera.position.copy(DEFAULT_CAMERA_POS);
-    cameraRef.current = camera;
-
-    // 3. Renderer
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
-    renderer.setSize(width, height);
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      alpha: true,
+      preserveDrawingBuffer: true,
+    });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setClearColor(0xeff4e8, 0);
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.1;
-    container.appendChild(renderer.domElement);
-    rendererRef.current = renderer;
-
-    // 4. OrbitControls
+    renderer.toneMappingExposure = 1.35;
+    host.appendChild(renderer.domElement);
+    latest.current.onCanvasReady?.(renderer.domElement);
+    const camera = new THREE.PerspectiveCamera(31, 1, 0.01, 30);
+    camera.position.set(0.1, 1.42, 2.35);
     const controls = new OrbitControls(camera, renderer.domElement);
+    controls.target.set(0, 1.42, 0);
     controls.enableDamping = true;
-    controls.dampingFactor = 0.08;
-    controls.target.copy(DEFAULT_CAMERA_TARGET);
-    controls.minDistance = 0.8;
-    controls.maxDistance = 6.0;
-    controls.maxPolarAngle = Math.PI / 2 + 0.1; // Don't go below floor
-    controlsRef.current = controls;
-
-    // 5. Lighting
-    const ambientLight = new THREE.AmbientLight(0xf1f5f9, 0.7);
-    scene.add(ambientLight);
-
-    const keyLight = new THREE.DirectionalLight(0xffffff, 1.4);
-    keyLight.position.set(1.5, 3.0, 2.5);
-    keyLight.castShadow = true;
-    keyLight.shadow.mapSize.width = 1024;
-    keyLight.shadow.mapSize.height = 1024;
-    keyLight.shadow.bias = -0.001;
-    scene.add(keyLight);
-
-    const rimLight = new THREE.DirectionalLight(0x38bdf8, 1.0); // Cyan rim light
-    rimLight.position.set(-2.0, 2.5, -2.0);
-    scene.add(rimLight);
-
-    const fillLight = new THREE.DirectionalLight(0xa78bfa, 0.5); // Lavender fill light
-    fillLight.position.set(-1.5, 1.5, 2.0);
-    scene.add(fillLight);
-
-    // 6. Ground Studio Grid
-    const grid = new THREE.GridHelper(5, 20, 0x6366f1, 0x1e293b);
-    grid.position.y = 0.0;
-    scene.add(grid);
-    disposablesRef.current.push(grid.geometry);
-    if (Array.isArray(grid.material)) {
-      disposablesRef.current.push(...grid.material);
-    } else {
-      disposablesRef.current.push(grid.material);
+    controls.enablePan = false;
+    controls.minDistance = 1.6;
+    controls.maxDistance = 4;
+    controls.minPolarAngle = 0.5;
+    controls.maxPolarAngle = 2;
+    controls.update();
+    scene.add(new THREE.HemisphereLight(0xffffff, 0xbdcba9, 3.2));
+    const key = new THREE.DirectionalLight(0xfff5e7, 3.5);
+    key.position.set(-2, 4, 4);
+    key.castShadow = true;
+    key.shadow.mapSize.set(1024, 1024);
+    key.shadow.bias = -0.0005;
+    scene.add(key);
+    const fill = new THREE.DirectionalLight(0xdcecd3, 1.7);
+    fill.position.set(2, 2, -1);
+    scene.add(fill);
+    const skin = new THREE.MeshStandardMaterial({
+      color: 0xe7b99b,
+      roughness: 0.85,
+    });
+    const shirt = new THREE.MeshStandardMaterial({
+      color: 0x638976,
+      roughness: 0.95,
+    });
+    const hair = new THREE.MeshStandardMaterial({
+      color: 0x423a33,
+      roughness: 0.95,
+    });
+    const dark = new THREE.MeshStandardMaterial({
+      color: 0x3e3b32,
+      roughness: 0.8,
+    });
+    const lip = new THREE.MeshStandardMaterial({
+      color: 0x9d6355,
+      roughness: 0.9,
+    });
+    const mesh = (
+      geometry: THREE.BufferGeometry,
+      material: THREE.Material,
+      parent: THREE.Object3D = scene,
+    ) => {
+      const m = new THREE.Mesh(geometry, material);
+      m.castShadow = true;
+      m.receiveShadow = true;
+      parent.add(m);
+      return m;
+    };
+    const sphere = new THREE.SphereGeometry(1, 24, 18);
+    const cylinder = new THREE.CylinderGeometry(1, 1, 1, 20);
+    const limbs = CONNECTIONS.map(([a, b, r, mat]) => ({
+      a,
+      b,
+      r,
+      mesh: mesh(cylinder, mat === "shirt" ? shirt : skin),
+    }));
+    const shoulders = [mesh(sphere, shirt), mesh(sphere, shirt)];
+    const elbows = [mesh(sphere, skin), mesh(sphere, skin)];
+    const torso = mesh(new THREE.CylinderGeometry(0.205, 0.135, 1, 32), shirt);
+    const neck = mesh(cylinder, skin);
+    const collar = mesh(new THREE.TorusGeometry(0.068, 0.013, 8, 32), shirt);
+    collar.rotation.x = Math.PI / 2;
+    const head = new THREE.Group();
+    scene.add(head);
+    const skull = mesh(new THREE.SphereGeometry(0.115, 40, 32), skin, head);
+    skull.scale.set(1, 1.27, 0.91);
+    const hairCap = mesh(
+      new THREE.SphereGeometry(
+        0.117,
+        32,
+        20,
+        0,
+        Math.PI * 2,
+        0,
+        Math.PI * 0.46,
+      ),
+      hair,
+      head,
+    );
+    hairCap.scale.set(1, 1.3, 0.93);
+    hairCap.position.y = 0.006;
+    for (const sign of [-1, 1]) {
+      const ear = mesh(sphere, skin, head);
+      ear.scale.set(0.018, 0.032, 0.018);
+      ear.position.set(sign * 0.112, -0.005, 0);
+      const eye = mesh(sphere, dark, head);
+      eye.scale.set(0.008, 0.011, 0.005);
+      eye.position.set(sign * 0.041, 0.015, 0.099);
     }
-
-    // Floor disc shadow
-    const floorGeo = new THREE.CircleGeometry(1.5, 32);
-    const floorMat = new THREE.MeshBasicMaterial({ color: 0x05070f, depthWrite: false });
-    const floorDisc = new THREE.Mesh(floorGeo, floorMat);
-    floorDisc.rotation.x = -Math.PI / 2;
-    floorDisc.position.y = 0.001;
-    scene.add(floorDisc);
-    disposablesRef.current.push(floorGeo, floorMat);
-
-    // 7. Avatar Materials
-    const jointMaterial = new THREE.MeshStandardMaterial({
-      color: 0x38bdf8,
-      roughness: 0.25,
-      metalness: 0.4,
-      emissive: 0x0369a1,
-      emissiveIntensity: 0.2,
+    const nose = mesh(sphere, skin, head);
+    nose.scale.set(0.015, 0.023, 0.022);
+    nose.position.set(0, -0.006, 0.103);
+    const mouth = mesh(
+      new THREE.TubeGeometry(
+        new THREE.QuadraticBezierCurve3(
+          new THREE.Vector3(-0.029, -0.041, 0.104),
+          new THREE.Vector3(0, -0.055, 0.112),
+          new THREE.Vector3(0.029, -0.041, 0.104),
+        ),
+        16,
+        0.0022,
+        6,
+        false,
+      ),
+      lip,
+      head,
+    );
+    const brows = [-1, 1].map((sign) => {
+      const brow = mesh(
+        new THREE.CapsuleGeometry(0.0025, 0.027, 3, 8),
+        hair,
+        head,
+      );
+      brow.rotation.z = Math.PI / 2;
+      brow.position.set(sign * 0.042, 0.041, 0.102);
+      return brow;
     });
-    const boneMaterial = new THREE.MeshStandardMaterial({
-      color: 0x818cf8,
-      roughness: 0.35,
-      metalness: 0.2,
-    });
-    const headMaterial = new THREE.MeshStandardMaterial({
-      color: 0x38bdf8,
-      roughness: 0.2,
-      metalness: 0.3,
-      emissive: 0x0284c7,
-      emissiveIntensity: 0.25,
-    });
-    const torsoMaterial = new THREE.MeshStandardMaterial({
-      color: 0x4f46e5,
-      roughness: 0.4,
-      metalness: 0.3,
-      transparent: true,
-      opacity: 0.85,
-    });
-    disposablesRef.current.push(jointMaterial, boneMaterial, headMaterial, torsoMaterial);
-
-    // 8. Create Joint Meshes
-    const jointKeys = [
-      'hips',
-      'neck',
-      'head',
-      'left_shoulder',
-      'right_shoulder',
-      'left_elbow',
-      'right_elbow',
-      'left_wrist',
-      'right_wrist',
-    ];
-
-    const jointMeshes = new Map<string, THREE.Mesh>();
-    for (const key of jointKeys) {
-      let radius = 0.04;
-      let mat = jointMaterial;
-      if (key === 'head') {
-        radius = 0.09;
-        mat = headMaterial;
-      } else if (key === 'hips') {
-        radius = 0.055;
-      } else if (key === 'neck') {
-        radius = 0.04;
-      } else if (key.includes('shoulder')) {
-        radius = 0.045;
-      } else if (key.includes('wrist')) {
-        radius = 0.038;
+    const palms = new Map<string, THREE.Mesh>();
+    const fingers: { a: string; b: string; mesh: THREE.Mesh }[] = [];
+    for (const side of ["left", "right"]) {
+      const palm = mesh(sphere, skin);
+      palms.set(side, palm);
+      for (const finger of FINGERS) {
+        for (let i = 1; i <= 4; i++) {
+          const a = i === 1 ? `${side}_wrist` : `${side}_${finger}_${i - 1}`;
+          const b = `${side}_${finger}_${i}`;
+          fingers.push({ a, b, mesh: mesh(cylinder, skin) });
+          const joint = mesh(sphere, skin);
+          joint.scale.setScalar(0.007);
+          joint.visible = false;
+          fingers.push({ a: b, b, mesh: joint });
+        }
       }
-
-      const sphereGeo = new THREE.SphereGeometry(radius, 24, 24);
-      disposablesRef.current.push(sphereGeo);
-      const mesh = new THREE.Mesh(sphereGeo, mat);
-      mesh.castShadow = true;
-      mesh.receiveShadow = true;
-      mesh.name = `joint_${key}`;
-      scene.add(mesh);
-      jointMeshes.set(key, mesh);
     }
-    jointMeshesRef.current = jointMeshes;
-
-    // 9. Create Bone Meshes
-    const boneMeshes = new Map<string, THREE.Mesh>();
-    const unitCylinder = new THREE.CylinderGeometry(0.026, 0.026, 1, 16);
-    unitCylinder.translate(0, 0.5, 0); // Origin at bottom base
-    disposablesRef.current.push(unitCylinder);
-
-    for (const [from, to] of BONE_CONNECTIONS) {
-      const boneKey = `${from}_to_${to}`;
-      const boneMesh = new THREE.Mesh(unitCylinder, boneMaterial);
-      boneMesh.castShadow = true;
-      boneMesh.receiveShadow = true;
-      boneMesh.name = `bone_${boneKey}`;
-      scene.add(boneMesh);
-      boneMeshes.set(boneKey, boneMesh);
+    const ground = mesh(
+      new THREE.CircleGeometry(0.6, 64),
+      new THREE.ShadowMaterial({ color: 0x45622f, opacity: 0.12 }),
+    );
+    ground.rotation.x = -Math.PI / 2;
+    ground.position.y = 0.78;
+    ground.castShadow = false;
+    const resize = () => {
+      const w = host.clientWidth,
+        h = host.clientHeight;
+      if (!w || !h) return;
+      renderer.setSize(w, h);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    };
+    const observer = new ResizeObserver(resize);
+    observer.observe(host);
+    resize();
+    const p0 = new THREE.Vector3(),
+      p1 = new THREE.Vector3(),
+      dir = new THREE.Vector3();
+    function placeBone(
+      m: THREE.Mesh,
+      a: number[],
+      b: number[],
+      radius: number,
+    ) {
+      p0.fromArray(a);
+      p1.fromArray(b);
+      dir.subVectors(p1, p0);
+      const length = dir.length();
+      m.visible = length > 0.0001;
+      if (!m.visible) return;
+      m.position.copy(p0).add(p1).multiplyScalar(0.5);
+      m.quaternion.setFromUnitVectors(up, dir.normalize());
+      m.scale.set(radius, length, radius);
     }
-    boneMeshesRef.current = boneMeshes;
-
-    // 10. Torso Chest Volume
-    const torsoGeo = new THREE.CylinderGeometry(0.18, 0.12, 0.42, 16);
-    disposablesRef.current.push(torsoGeo);
-    const torsoMesh = new THREE.Mesh(torsoGeo, torsoMaterial);
-    torsoMesh.castShadow = true;
-    scene.add(torsoMesh);
-    torsoMeshRef.current = torsoMesh;
-
-    // 11. Render Loop
-    let animationFrameId: number;
-    const animate = () => {
-      animationFrameId = requestAnimationFrame(animate);
-      controls.update();
-      renderer.render(scene, camera);
-    };
-    animate();
-
-    // 12. Resize Handler
-    const handleResize = () => {
-      if (!container || !rendererRef.current || !cameraRef.current) return;
-      const w = container.clientWidth;
-      const h = container.clientHeight;
-      cameraRef.current.aspect = w / h;
-      cameraRef.current.updateProjectionMatrix();
-      rendererRef.current.setSize(w, h);
-    };
-
-    const resizeObserver = new ResizeObserver(handleResize);
-    resizeObserver.observe(container);
-
-    // Comprehensive unmount cleanup: dispose controls, geometries, materials, renderer
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-      resizeObserver.disconnect();
-
-      // Dispose controls
-      controls.dispose();
-
-      // Dispose all registered geometries and materials
-      disposablesRef.current.forEach((res) => {
-        try {
-          res.dispose();
-        } catch {
-          // ignore
+    let id = 0;
+    function render() {
+      id = requestAnimationFrame(render);
+      const {
+        motion,
+        currentTimeMs,
+        expressiveModulation,
+        emotion,
+        energyFactor,
+      } = latest.current;
+      const joints = interpolateJointPositions(motion, currentTimeMs);
+      for (const item of limbs) {
+        const a = joints[item.a],
+          b = joints[item.b];
+        item.mesh.visible = !!(a && b);
+        if (a && b) placeBone(item.mesh, a, b, item.r);
+      }
+      ["left", "right"].forEach((side, i) => {
+        const shoulder = joints[`${side}_shoulder`],
+          elbow = joints[`${side}_elbow`],
+          wrist = joints[`${side}_wrist`];
+        shoulders[i].visible = !!shoulder;
+        elbows[i].visible = !!elbow;
+        if (shoulder) {
+          shoulders[i].position.fromArray(shoulder);
+          shoulders[i].scale.setScalar(0.062);
+        }
+        if (elbow) {
+          elbows[i].position.fromArray(elbow);
+          elbows[i].scale.setScalar(0.037);
+        }
+        const palm = palms.get(side)!;
+        palm.visible = !!wrist;
+        if (wrist) {
+          palm.position.fromArray(wrist);
+          palm.scale.set(0.037, 0.052, 0.019);
+          const index = joints[`${side}_middle_1`];
+          const ref =
+            index ||
+            (elbow
+              ? [
+                  wrist[0] + (wrist[0] - elbow[0]) * 0.2,
+                  wrist[1] + (wrist[1] - elbow[1]) * 0.2,
+                  wrist[2] + (wrist[2] - elbow[2]) * 0.2,
+                ]
+              : [wrist[0], wrist[1] - 0.05, wrist[2]]);
+          dir.fromArray(ref).sub(palm.position);
+          if (dir.lengthSq() > 0.00001)
+            palm.quaternion.setFromUnitVectors(up, dir.normalize());
         }
       });
-      disposablesRef.current = [];
-
-      // Clear registries
-      jointMeshesRef.current.clear();
-      boneMeshesRef.current.clear();
-      torsoMeshRef.current = null;
-
-      // Dispose renderer
-      renderer.dispose();
-      if (container.contains(renderer.domElement)) {
-        container.removeChild(renderer.domElement);
+      for (const f of fingers) {
+        const a = joints[f.a],
+          b = joints[f.b];
+        f.mesh.visible = !!(a && b);
+        if (!a || !b) continue;
+        if (f.a === f.b) f.mesh.position.fromArray(a);
+        else placeBone(f.mesh, a, b, 0.006);
       }
+      const hips = joints.hips,
+        top = joints.neck,
+        nosePoint = joints.head;
+      if (hips && top) {
+        placeBone(torso, hips, top, 1);
+        const length = new THREE.Vector3(...top).distanceTo(
+          new THREE.Vector3(...hips),
+        );
+        torso.scale.set(1, length, 1);
+        collar.position.fromArray(top);
+        placeBone(neck, top, [top[0], top[1] + 0.1, top[2]], 0.053);
+      }
+      if (nosePoint) {
+        head.position.fromArray(nosePoint);
+        head.position.y += 0.025;
+      }
+      // Model hypotheses only affect the experimental facial layer. Hand and arm
+      // trajectories remain measured; there is no arbitrary limb scaling.
+      const joy = expressiveModulation ? Number(emotion?.happy || 0) : 0;
+      const sadness = expressiveModulation ? Number(emotion?.sad || 0) : 0;
+      mouth.scale.y = 1 + joy * 0.6 - sadness * 0.4;
+      brows[0].rotation.z =
+        Math.PI / 2 +
+        (expressiveModulation ? Number(emotion?.angry || 0) * 0.25 : 0);
+      brows[1].rotation.z =
+        Math.PI / 2 -
+        (expressiveModulation ? Number(emotion?.angry || 0) * 0.25 : 0);
+      // Facial capture ratios drive mouth opening when actual measurements exist.
+      const face = motion?.frames.find(
+        (f, i) =>
+          f.time_ms <= currentTimeMs &&
+          (!motion.frames[i + 1] ||
+            motion.frames[i + 1].time_ms > currentTimeMs),
+      )?.face;
+      mouth.scale.y = face?.mouth_open
+        ? 1 + Math.min(2, face.mouth_open * 4)
+        : mouth.scale.y;
+      key.intensity =
+        3.5 + (expressiveModulation ? (energyFactor || 0) * 0.12 : 0);
+      controls.update();
+      renderer.render(scene, camera);
+    }
+    render();
+    return () => {
+      cancelAnimationFrame(id);
+      observer.disconnect();
+      controls.dispose();
+      const geometries = new Set<THREE.BufferGeometry>(),
+        materials = new Set<THREE.Material>();
+      scene.traverse((obj) => {
+        if (obj instanceof THREE.Mesh) {
+          geometries.add(obj.geometry);
+          for (const mat of Array.isArray(obj.material)
+            ? obj.material
+            : [obj.material])
+            materials.add(mat);
+        }
+      });
+      geometries.forEach((g) => g.dispose());
+      materials.forEach((m) => m.dispose());
+      renderer.dispose();
+      renderer.domElement.remove();
     };
   }, []);
-
-  // Update Avatar pose whenever currentTimeMs, motion, or expressive modulation changes
-  useEffect(() => {
-    const interpolated = interpolateJointPositions(motion, currentTimeMs, {
-      expressiveModulation,
-      energyFactor,
-    });
-    currentJointsRef.current = interpolated;
-
-    // 1. Update Joint Meshes
-    const jointMeshes = jointMeshesRef.current;
-    for (const [key, mesh] of jointMeshes.entries()) {
-      const coords = interpolated[key];
-      if (coords) {
-        mesh.position.set(coords[0], coords[1], coords[2]);
-        mesh.visible = true;
-      } else {
-        mesh.visible = false;
-      }
-    }
-
-    // 2. Update Bones
-    const boneMeshes = boneMeshesRef.current;
-    const up = new THREE.Vector3(0, 1, 0);
-
-    for (const [from, to] of BONE_CONNECTIONS) {
-      const boneKey = `${from}_to_${to}`;
-      const boneMesh = boneMeshes.get(boneKey);
-      const pFrom = interpolated[from];
-      const pTo = interpolated[to];
-
-      if (boneMesh && pFrom && pTo) {
-        const vFrom = new THREE.Vector3(...pFrom);
-        const vTo = new THREE.Vector3(...pTo);
-        const length = vFrom.distanceTo(vTo);
-
-        if (length > 0.001) {
-          boneMesh.position.copy(vFrom);
-          boneMesh.scale.set(1, length, 1);
-
-          const dir = new THREE.Vector3().subVectors(vTo, vFrom).normalize();
-          const quat = new THREE.Quaternion().setFromUnitVectors(up, dir);
-          boneMesh.quaternion.copy(quat);
-          boneMesh.visible = true;
-        } else {
-          boneMesh.visible = false;
-        }
-      } else if (boneMesh) {
-        boneMesh.visible = false;
-      }
-    }
-
-    // 3. Update Torso Position
-    if (torsoMeshRef.current && interpolated['hips'] && interpolated['neck']) {
-      const vHips = new THREE.Vector3(...interpolated['hips']);
-      const vNeck = new THREE.Vector3(...interpolated['neck']);
-      const torsoPos = new THREE.Vector3().addVectors(vHips, vNeck).multiplyScalar(0.5);
-      torsoMeshRef.current.position.copy(torsoPos);
-
-      const length = vHips.distanceTo(vNeck);
-      torsoMeshRef.current.scale.set(1, length / 0.42, 1);
-
-      const dir = new THREE.Vector3().subVectors(vNeck, vHips).normalize();
-      const quat = new THREE.Quaternion().setFromUnitVectors(up, dir);
-      torsoMeshRef.current.quaternion.copy(quat);
-      torsoMeshRef.current.visible = !showSkeletonDebug;
-    }
-  }, [motion, currentTimeMs, expressiveModulation, energyFactor, showSkeletonDebug]);
-
-  // Reset Camera View
-  const handleResetCamera = useCallback(() => {
-    if (cameraRef.current && controlsRef.current) {
-      cameraRef.current.position.copy(DEFAULT_CAMERA_POS);
-      controlsRef.current.target.copy(DEFAULT_CAMERA_TARGET);
-      controlsRef.current.update();
-    }
-  }, []);
-
   return (
-    <div className="relative w-full h-full min-h-[460px] rounded-2xl overflow-hidden bg-slate-950 border border-slate-800 shadow-2xl flex flex-col">
-      {/* 3D Canvas Container */}
-      <div ref={mountRef} className="w-full flex-1 cursor-grab active:cursor-grabbing outline-none" />
-
-      {/* Floating View Controls */}
-      <div className="absolute top-3 right-3 flex items-center gap-2 z-10">
-        <button
-          onClick={handleResetCamera}
-          title="Recentrer la caméra 3D"
-          className="px-2.5 py-1 text-xs font-medium bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white rounded-lg border border-slate-700/60 shadow backdrop-blur transition-colors"
-        >
-          Recentrer 3D
-        </button>
-      </div>
-
-      {/* Skeleton / Joint Debug Coordinates Overlay */}
-      {showSkeletonDebug && (
-        <div className="absolute bottom-3 left-3 max-w-xs bg-slate-900/90 border border-slate-700/70 rounded-xl p-3 text-[11px] font-mono text-slate-300 backdrop-blur-md shadow-xl z-10 max-h-48 overflow-y-auto">
-          <p className="font-semibold text-sky-400 mb-1 border-b border-slate-800 pb-1">
-            Repère 3D SignaCulture (Y up, X right, Z fwd)
-          </p>
-          <div className="space-y-0.5">
-            {Object.entries(currentJointsRef.current).map(([name, coords]) => (
-              <div key={name} className="flex justify-between gap-2">
-                <span className="text-slate-400">{name}:</span>
-                <span className="text-slate-200">
-                  [{coords[0].toFixed(2)}, {coords[1].toFixed(2)}, {coords[2].toFixed(2)}]
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+    <div className="avatar-stage">
+      <div ref={mount} aria-label="Avatar 3D interactif" />
+      <span className="avatar-view-note">
+        Glissez pour explorer · Faites défiler pour zoomer
+      </span>
     </div>
   );
-};
+}

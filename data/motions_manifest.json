@@ -1,16 +1,16 @@
 [
   {
-    "motion_id": "SYNTHETIC_001",
+    "motion_id": "LSF_BONJOUR_COMMONS",
     "gloss_id": "LSF_CONCEPT_001",
-    "path": "data/approved_motion_assets/SYNTHETIC_001.json",
+    "path": "data/approved_motion_assets/LSF_BONJOUR_COMMONS.json",
     "rig_version": "signaculture-v1",
-    "fps": 10,
-    "duration_ms": 1000,
-    "license": "CC0-1.0",
-    "quality_status": "synthetic_technical_fixture_not_validated_LSF",
+    "fps": 12.5,
+    "duration_ms": 2440,
+    "license": "CC-BY-3.0",
+    "quality_status": "captured_pending_linguistic_and_animation_review",
     "rights_status": "cleared",
     "animation_review": "pending",
-    "synthetic": true
+    "synthetic": false
   },
   {
     "motion_id": "SYNTHETIC_002",

@@ -7,3 +7,6 @@ node_modules/
 dist/
 *.pyc
 .env
+.venv-*/
+.models/
+.runtime/

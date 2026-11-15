@@ -4,9 +4,9 @@
     "concept_fr": "bonjour",
     "gloss": "BONJOUR",
     "language": "LSF",
-    "variant": "concept français non validé LSF",
-    "source_id": "SRC_ORIGINAL_FIXTURES",
-    "motion_id": "SYNTHETIC_001",
+    "variant": "France LSF · source vidéo identifiée, retargeting à relire",
+    "source_id": "COMMONS_LAURA_JAUVERT_BONJOUR",
+    "motion_id": "LSF_BONJOUR_COMMONS",
     "aliases": [
       "bonjour"
     ],
