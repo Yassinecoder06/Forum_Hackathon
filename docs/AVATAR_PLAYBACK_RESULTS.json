@@ -1,0 +1,403 @@
+{
+  "kind": "Local animation engineering regression; no linguistic approval or mesh collision guarantee",
+  "baseline_commit": "6d2284f",
+  "baseline_retarget_sha256": "3dac26c8efa271a38767ff96145deb0d90aab3878b32623993151b1f6a7621c1",
+  "sample_interval_ms": 40,
+  "contact_proxy_radius_m": 0.008,
+  "source_contact_guard_m": 0.035,
+  "sources_unchanged": true,
+  "before": [
+    {
+      "source_id": "DICTASIGN_PORTAL_380",
+      "source_video_sha256": "f5babb380ada473feaade8cef15004fabe621409dea4d01a8355dc227499f085",
+      "frames": 22,
+      "elapsed_ms": 45.547212,
+      "prepare": null,
+      "steady_sample_p95_ms": 1.8482459999999605,
+      "finger_local_rotation_delta_40ms_degrees": {
+        "max": 176.6595485173125,
+        "p95": 56.6123564806716
+      },
+      "hand_capsule_proxy_meters": {
+        "radius": 0.008,
+        "noncontact_samples": 0,
+        "noncontact_mean_penetration": null,
+        "noncontact_max_penetration": 0,
+        "all_max_penetration": 0
+      },
+      "brows": {
+        "samples": 44,
+        "saturated_before": 40,
+        "saturated_after": 0
+      },
+      "deterministic_seek": true,
+      "source_unchanged": true
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_490",
+      "source_video_sha256": "722d9c41055c16d82a2bede52aa59ad6e6e4d44648f96527c83631c08e184d86",
+      "frames": 30,
+      "elapsed_ms": 50.89419499999997,
+      "prepare": null,
+      "steady_sample_p95_ms": 0.50685500000003,
+      "finger_local_rotation_delta_40ms_degrees": {
+        "max": 176.002789385985,
+        "p95": 79.81239813843706
+      },
+      "hand_capsule_proxy_meters": {
+        "radius": 0.008,
+        "noncontact_samples": 27,
+        "noncontact_mean_penetration": 0.0005458592721702542,
+        "noncontact_max_penetration": 0.008810958322210915,
+        "all_max_penetration": 0.015791482475016064
+      },
+      "brows": {
+        "samples": 60,
+        "saturated_before": 29,
+        "saturated_after": 0
+      },
+      "deterministic_seek": true,
+      "source_unchanged": true
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_905",
+      "source_video_sha256": "de4c4c2da6ca772997c29011440ac2c36bc1895ea010a1d1fe70c9a72d83f981",
+      "frames": 28,
+      "elapsed_ms": 36.30511900000005,
+      "prepare": null,
+      "steady_sample_p95_ms": 0.41307699999998704,
+      "finger_local_rotation_delta_40ms_degrees": {
+        "max": 168.83988976965682,
+        "p95": 58.300153063640415
+      },
+      "hand_capsule_proxy_meters": {
+        "radius": 0.008,
+        "noncontact_samples": 22,
+        "noncontact_mean_penetration": 0,
+        "noncontact_max_penetration": 0,
+        "all_max_penetration": 0.01558184518693278
+      },
+      "brows": {
+        "samples": 56,
+        "saturated_before": 46,
+        "saturated_after": 0
+      },
+      "deterministic_seek": true,
+      "source_unchanged": true
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_535",
+      "source_video_sha256": "fb9f6aadd95f6dfb82b12f13151df90b7ebcf1d8ddb6d1ba2f6c8484cc75ba88",
+      "frames": 28,
+      "elapsed_ms": 29.965686000000005,
+      "prepare": null,
+      "steady_sample_p95_ms": 0.18962100000004511,
+      "finger_local_rotation_delta_40ms_degrees": {
+        "max": 176.83498706178355,
+        "p95": 35.077896965545726
+      },
+      "hand_capsule_proxy_meters": {
+        "radius": 0.008,
+        "noncontact_samples": 33,
+        "noncontact_mean_penetration": 0.0022857570918246787,
+        "noncontact_max_penetration": 0.009193870802956151,
+        "all_max_penetration": 0.012135583553799224
+      },
+      "brows": {
+        "samples": 56,
+        "saturated_before": 0,
+        "saturated_after": 0
+      },
+      "deterministic_seek": true,
+      "source_unchanged": true
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_926",
+      "source_video_sha256": "02e67e26cd5f27bc0850e32b62abad23d2b959143889413196cffd654f6517b1",
+      "frames": 43,
+      "elapsed_ms": 43.481348000000025,
+      "prepare": null,
+      "steady_sample_p95_ms": 0.26780199999996057,
+      "finger_local_rotation_delta_40ms_degrees": {
+        "max": 177.82815073182152,
+        "p95": 78.72017610135416
+      },
+      "hand_capsule_proxy_meters": {
+        "radius": 0.008,
+        "noncontact_samples": 6,
+        "noncontact_mean_penetration": 0.006112604265468006,
+        "noncontact_max_penetration": 0.014835234949493783,
+        "all_max_penetration": 0.015990897037166187
+      },
+      "brows": {
+        "samples": 86,
+        "saturated_before": 58,
+        "saturated_after": 0
+      },
+      "deterministic_seek": true,
+      "source_unchanged": true
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_988",
+      "source_video_sha256": "7588463c2350ff07bd7c3e0dd5fae1951d714f9201210fea09a48f97dc7f4145",
+      "frames": 54,
+      "elapsed_ms": 48.99918200000002,
+      "prepare": null,
+      "steady_sample_p95_ms": 0.275086999999985,
+      "finger_local_rotation_delta_40ms_degrees": {
+        "max": 177.80414028638373,
+        "p95": 49.82399518495612
+      },
+      "hand_capsule_proxy_meters": {
+        "radius": 0.008,
+        "noncontact_samples": 0,
+        "noncontact_mean_penetration": null,
+        "noncontact_max_penetration": 0,
+        "all_max_penetration": 0.015978925599722374
+      },
+      "brows": {
+        "samples": 108,
+        "saturated_before": 5,
+        "saturated_after": 0
+      },
+      "deterministic_seek": true,
+      "source_unchanged": true
+    }
+  ],
+  "after": [
+    {
+      "source_id": "DICTASIGN_PORTAL_380",
+      "source_video_sha256": "f5babb380ada473feaade8cef15004fabe621409dea4d01a8355dc227499f085",
+      "frames": 22,
+      "elapsed_ms": 28.284620999999987,
+      "prepare": {
+        "preparedMs": 22.30304700000002,
+        "rejectedSpikes": 7,
+        "correctedFrames": 0,
+        "contactFrames": 0,
+        "maxCorrection": 0,
+        "maxPenetration": 0
+      },
+      "steady_sample_p95_ms": 0.021297000000004118,
+      "finger_local_rotation_delta_40ms_degrees": {
+        "max": 41.33663585888399,
+        "p95": 12.718903644744122
+      },
+      "hand_capsule_proxy_meters": {
+        "radius": 0.008,
+        "noncontact_samples": 0,
+        "noncontact_mean_penetration": null,
+        "noncontact_max_penetration": 0,
+        "all_max_penetration": 0
+      },
+      "brows": {
+        "samples": 44,
+        "saturated_before": 40,
+        "saturated_after": 0,
+        "engineering_rest_reference": {
+          "brow_left": 0.41540114335175415,
+          "brow_right": 0.44008561025606047
+        },
+        "max_up_after": 0.027723249486389396,
+        "max_down_after": 0.11140120981189851
+      },
+      "deterministic_seek": true,
+      "source_unchanged": true
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_490",
+      "source_video_sha256": "722d9c41055c16d82a2bede52aa59ad6e6e4d44648f96527c83631c08e184d86",
+      "frames": 30,
+      "elapsed_ms": 51.72085800000002,
+      "prepare": {
+        "preparedMs": 41.487235999999996,
+        "rejectedSpikes": 0,
+        "correctedFrames": 11,
+        "contactFrames": 24,
+        "maxCorrection": 0.010781849819139112,
+        "maxPenetration": 0.01591081762467226
+      },
+      "steady_sample_p95_ms": 0.01756399999999303,
+      "finger_local_rotation_delta_40ms_degrees": {
+        "max": 64.99222816450609,
+        "p95": 18.708608945945343
+      },
+      "hand_capsule_proxy_meters": {
+        "radius": 0.008,
+        "noncontact_samples": 27,
+        "noncontact_mean_penetration": 0.0005061666638900571,
+        "noncontact_max_penetration": 0.008940985672008583,
+        "all_max_penetration": 0.014033487805746774
+      },
+      "brows": {
+        "samples": 60,
+        "saturated_before": 29,
+        "saturated_after": 0,
+        "engineering_rest_reference": {
+          "brow_left": 0.3981232232407492,
+          "brow_right": 0.41232939308245414
+        },
+        "max_up_after": 0.04959987084033603,
+        "max_down_after": 0.1022275643562195
+      },
+      "deterministic_seek": true,
+      "source_unchanged": true
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_905",
+      "source_video_sha256": "de4c4c2da6ca772997c29011440ac2c36bc1895ea010a1d1fe70c9a72d83f981",
+      "frames": 28,
+      "elapsed_ms": 31.484790000000032,
+      "prepare": {
+        "preparedMs": 21.830365,
+        "rejectedSpikes": 4,
+        "correctedFrames": 0,
+        "contactFrames": 32,
+        "maxCorrection": 0,
+        "maxPenetration": 0.015875144214623407
+      },
+      "steady_sample_p95_ms": 0.012926999999990585,
+      "finger_local_rotation_delta_40ms_degrees": {
+        "max": 65.9769569493948,
+        "p95": 19.39149690185091
+      },
+      "hand_capsule_proxy_meters": {
+        "radius": 0.008,
+        "noncontact_samples": 22,
+        "noncontact_mean_penetration": 0,
+        "noncontact_max_penetration": 0,
+        "all_max_penetration": 0.014955611666571562
+      },
+      "brows": {
+        "samples": 56,
+        "saturated_before": 46,
+        "saturated_after": 0,
+        "engineering_rest_reference": {
+          "brow_left": 0.37133706024290297,
+          "brow_right": 0.39011888011648477
+        },
+        "max_up_after": 0.11301242889692355,
+        "max_down_after": 0
+      },
+      "deterministic_seek": true,
+      "source_unchanged": true
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_535",
+      "source_video_sha256": "fb9f6aadd95f6dfb82b12f13151df90b7ebcf1d8ddb6d1ba2f6c8484cc75ba88",
+      "frames": 28,
+      "elapsed_ms": 65.79047299999996,
+      "prepare": {
+        "preparedMs": 46.07827600000002,
+        "rejectedSpikes": 1,
+        "correctedFrames": 26,
+        "contactFrames": 41,
+        "maxCorrection": 0.004862117227812698,
+        "maxPenetration": 0.012683835960237652
+      },
+      "steady_sample_p95_ms": 0.04085699999995995,
+      "finger_local_rotation_delta_40ms_degrees": {
+        "max": 53.46362191215662,
+        "p95": 11.964058052414403
+      },
+      "hand_capsule_proxy_meters": {
+        "radius": 0.008,
+        "noncontact_samples": 33,
+        "noncontact_mean_penetration": 0.0004179245928393737,
+        "noncontact_max_penetration": 0.012683835960237652,
+        "all_max_penetration": 0.012683835960237652
+      },
+      "brows": {
+        "samples": 56,
+        "saturated_before": 0,
+        "saturated_after": 0,
+        "engineering_rest_reference": {
+          "brow_left": 0.24439591023292304,
+          "brow_right": 0.2521227198341563
+        },
+        "max_up_after": 0,
+        "max_down_after": 0.07995371651842649
+      },
+      "deterministic_seek": true,
+      "source_unchanged": true
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_926",
+      "source_video_sha256": "02e67e26cd5f27bc0850e32b62abad23d2b959143889413196cffd654f6517b1",
+      "frames": 43,
+      "elapsed_ms": 87.05766100000005,
+      "prepare": {
+        "preparedMs": 59.873553000000015,
+        "rejectedSpikes": 10,
+        "correctedFrames": 7,
+        "contactFrames": 129,
+        "maxCorrection": 0.014852175726101351,
+        "maxPenetration": 0.015972721959447586
+      },
+      "steady_sample_p95_ms": 0.04614800000001651,
+      "finger_local_rotation_delta_40ms_degrees": {
+        "max": 61.904153726214375,
+        "p95": 26.47747729611317
+      },
+      "hand_capsule_proxy_meters": {
+        "radius": 0.008,
+        "noncontact_samples": 6,
+        "noncontact_mean_penetration": 0.0009711465073094488,
+        "noncontact_max_penetration": 0.005826879043856693,
+        "all_max_penetration": 0.01567783579864153
+      },
+      "brows": {
+        "samples": 86,
+        "saturated_before": 58,
+        "saturated_after": 0,
+        "engineering_rest_reference": {
+          "brow_left": 0.3654285438878079,
+          "brow_right": 0.3832927120414623
+        },
+        "max_up_after": 0.09325385188718573,
+        "max_down_after": 0
+      },
+      "deterministic_seek": true,
+      "source_unchanged": true
+    },
+    {
+      "source_id": "DICTASIGN_PORTAL_988",
+      "source_video_sha256": "7588463c2350ff07bd7c3e0dd5fae1951d714f9201210fea09a48f97dc7f4145",
+      "frames": 54,
+      "elapsed_ms": 66.80138700000003,
+      "prepare": {
+        "preparedMs": 50.82508900000005,
+        "rejectedSpikes": 4,
+        "correctedFrames": 0,
+        "contactFrames": 177,
+        "maxCorrection": 0,
+        "maxPenetration": 0.0159411434526671
+      },
+      "steady_sample_p95_ms": 0.011905999999953565,
+      "finger_local_rotation_delta_40ms_degrees": {
+        "max": 82.258309944929,
+        "p95": 20.64129036037574
+      },
+      "hand_capsule_proxy_meters": {
+        "radius": 0.008,
+        "noncontact_samples": 0,
+        "noncontact_mean_penetration": null,
+        "noncontact_max_penetration": 0,
+        "all_max_penetration": 0.0159411434526671
+      },
+      "brows": {
+        "samples": 108,
+        "saturated_before": 5,
+        "saturated_after": 0,
+        "engineering_rest_reference": {
+          "brow_left": 0.31772094520466954,
+          "brow_right": 0.3211821956234685
+        },
+        "max_up_after": 0.17597904874039097,
+        "max_down_after": 0
+      },
+      "deterministic_seek": true,
+      "source_unchanged": true
+    }
+  ]
+}

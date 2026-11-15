@@ -9,6 +9,10 @@ from types import SimpleNamespace
 import cv2
 import mediapipe as mp
 import numpy as np
+if __package__:
+    from .hand_tracking import assign_hands
+else:
+    from hand_tracking import assign_hands
 
 BODY = {'head': 0, 'left_shoulder': 11, 'right_shoulder': 12,
         'left_elbow': 13, 'right_elbow': 14, 'left_wrist': 15, 'right_wrist': 16}
@@ -76,6 +80,7 @@ def extract(source, target, progress, raw_target=None):
     stride = max(1,math.ceil(fps/20))
     frames, missing, left, right, faces, processed = [],0,0,0,0,0
     raw_frames=[]
+    previous_hands={}
     def raw_points(landmarks,world=False):
         if landmarks is None:return None
         values=[]
@@ -101,18 +106,20 @@ def extract(source, target, progress, raw_target=None):
                     image=cv2.resize(image,None,fx=960/max(image.shape[:2]),fy=960/max(image.shape[:2]))
                 rgb=cv2.cvtColor(image,cv2.COLOR_BGR2RGB)
                 result=model.process(rgb)
+                hand_sources={side:'holistic' if getattr(result,f'{side}_hand_landmarks') else 'missing' for side in ('left','right')}
                 if result.pose_landmarks and (not result.left_hand_landmarks or not result.right_hand_landmarks):
                     detected=hand_model.process(rgb)
                     sides={'left':result.left_hand_landmarks,'right':result.right_hand_landmarks}
                     if detected.multi_hand_landmarks:
-                        for hand in detected.multi_hand_landmarks:
-                            wrist=hand.landmark[0]
-                            distances={side:math.hypot(wrist.x-result.pose_landmarks.landmark[index].x,wrist.y-result.pose_landmarks.landmark[index].y) for side,index in [('left',15),('right',16)]}
-                            side=min(distances,key=distances.get)
-                            if sides[side] is None and distances[side]<.18:
-                                sides[side]=hand
+                        wrists={side:(result.pose_landmarks.landmark[i].x,result.pose_landmarks.landmark[i].y) for side,i in [('left',15),('right',16)]}
+                        points=[(hand.landmark[0].x,hand.landmark[0].y) for hand in detected.multi_hand_landmarks]
+                        assignments=assign_hands(points,wrists,{s:h is not None for s,h in sides.items()},previous_hands)
+                        for side,chosen in assignments.items():
+                            sides[side]=detected.multi_hand_landmarks[chosen]
+                            hand_sources[side]='hands_fallback'
                     result=SimpleNamespace(pose_landmarks=result.pose_landmarks,pose_world_landmarks=result.pose_world_landmarks,
                         face_landmarks=result.face_landmarks,left_hand_landmarks=sides['left'],right_hand_landmarks=sides['right'])
+                previous_hands={side:(hand.landmark[0].x,hand.landmark[0].y) for side in ('left','right') if (hand:=getattr(result,f'{side}_hand_landmarks')) is not None}
                 if raw_target is not None:
                     # Animics Keyframe recorder names/axis convention, pinned reference
                     # upf-gti/animics daf09928 src/Mediapipe.js processLandmarks/recording.
@@ -126,7 +133,8 @@ def extract(source, target, progress, raw_target=None):
                 if result.pose_landmarks:
                     try:
                         joints,hands,face=pose_frame(result,image.shape[1],image.shape[0])
-                        frames.append({'time_ms':round(index*1000/fps),'joints':joints,'face':face})
+                        frames.append({'time_ms':round(index*1000/fps),'joints':joints,'face':face,
+                            'hand_tracking':{s:{'observed':hands[s],'source':hand_sources[s]} for s in ('left','right')}})
                         left+=int(hands['left']);right+=int(hands['right']);faces+=int(face is not None)
                     except ValueError: missing+=1
                 else: missing+=1
@@ -149,7 +157,7 @@ def extract(source, target, progress, raw_target=None):
         'face_coverage':round(faces/processed,3),'missing_frames':missing}
     motion={'rig_version':'signaculture-v1','fps':fps/stride,'duration_ms':duration,
         'joints':list(BODY)+['hips','neck'],'tracked_joints':joint_names,'frames':frames,
-        'quality':quality,'synthetic':False,'capture_method':'mediapipe-holistic-hands-fallback-0.10.21',
+        'quality':quality,'synthetic':False,'capture_method':'mediapipe-holistic-hands-fallback-0.10.21-assignment-v2',
         'warnings':['Profondeur monoculaire approximative. Les occultations nécessitent une revue.']}
     target.write_text(json.dumps(motion,allow_nan=False))
     if raw_target is not None:

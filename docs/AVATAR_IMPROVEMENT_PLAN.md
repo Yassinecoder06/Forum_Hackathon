@@ -1,5 +1,7 @@
 # Avatar hand and eyebrow improvement plan
 
+Implemented playback changes and measured limitations are recorded in [AVATAR_PLAYBACK.md](AVATAR_PLAYBACK.md). The original observations and proposed sequence below are preserved for comparison.
+
 Requested scope: inspect the working avatar and propose improvements. This review changes no animation, capture or source data. No new model training is needed for the first fixes.
 
 ## Evidence from the running application

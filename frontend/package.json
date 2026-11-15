@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "node scripts/test-motion.mjs"
+    "test": "node scripts/test-motion.mjs",
+    "measure:avatar": "node scripts/measure-avatar.mjs"
   },
   "dependencies": {
     "lucide-react": "^1.16.0",

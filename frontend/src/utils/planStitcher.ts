@@ -1,5 +1,16 @@
 import type { AnimationPlan, MotionFile, MotionFrame } from "../types/contract";
 import { interpolateJointPositions } from "./motionInterpolator";
+import { faceCalibration, sampleFace } from "./avatarPlayback";
+
+function calibratedFace(clip: MotionFile, frame: MotionFrame): MotionFrame["face"] {
+  const reference = faceCalibration(clip);
+  return frame.face ? { ...frame.face,
+    brow_left_neutral: reference?.brow_left ?? frame.face.brow_left_neutral ?? .38,
+    brow_right_neutral: reference?.brow_right ?? frame.face.brow_right_neutral ?? .38,
+    // A blend weight between calibrated and fallback rendering, not confidence.
+    brow_reference_blend: reference || Number.isFinite(frame.face.brow_left_neutral) ? 1 : 0,
+  } : frame.face;
+}
 
 /** All source frames retain their measured coordinates. Audio timing only changes
  * when those frames play, with explicit holds during measured pauses. */
@@ -27,6 +38,7 @@ export function stitchAnimationPlan(
         const u = t / transition,
           blend = u * u * u * (10 + u * (-15 + 6 * u));
         const bridge: MotionFrame = {
+          playback_origin: "transition",
           time_ms: Math.round(position + t),
           joints: {},
         };
@@ -40,12 +52,13 @@ export function stitchAnimationPlan(
               number,
             ];
         }
-        if (a.face && b.face) {
+        const faceA = calibratedFace(previous, a), faceB = calibratedFace(clip, b);
+        if (faceA && faceB) {
           bridge.face = {};
-          for (const key of Object.keys(a.face))
-            if (Number.isFinite(b.face[key]))
+          for (const key of Object.keys(faceA))
+            if (Number.isFinite(faceB[key]))
               bridge.face[key] =
-                a.face[key] + (b.face[key] - a.face[key]) * blend;
+                faceA[key] + (faceB[key] - faceA[key]) * blend;
         }
         frames.set(bridge.time_ms, bridge);
       }
@@ -56,6 +69,7 @@ export function stitchAnimationPlan(
     for (const frame of clip.frames)
       frames.set(position + frame.time_ms, {
         ...frame,
+        face: calibratedFace(clip, frame),
         time_ms: position + frame.time_ms,
       });
     position += clip.duration_ms;
@@ -93,12 +107,9 @@ export function stitchAnimationPlan(
       } else break;
     }
     const sourceTime = Math.min(position, (elapsed / voiced) * position);
-    const face = source.frames.find(
-      (f, i) =>
-        f.time_ms <= sourceTime &&
-        (!source.frames[i + 1] || source.frames[i + 1].time_ms > sourceTime),
-    )?.face;
+    const face = sampleFace(source, sourceTime);
     output.push({
+      playback_origin: "audio_sample",
       time_ms: time,
       joints: interpolateJointPositions(source, sourceTime),
       face,

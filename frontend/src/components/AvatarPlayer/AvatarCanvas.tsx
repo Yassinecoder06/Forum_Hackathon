@@ -5,6 +5,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import type { MotionFile } from "../../types/contract";
 import { interpolateJointPositions } from "../../utils/motionInterpolator";
 import { HumanoidRetargeter } from "../../utils/retargetHumanoid";
+import { browWeights, faceCalibration, sampleFace } from "../../utils/avatarPlayback";
 type Props = {
   motion: MotionFile | null;
   currentTimeMs: number;
@@ -145,13 +146,19 @@ export function AvatarCanvas(props: Props) {
           joints[`${side}_wrist`] = [sign * 0.16, 1.02, 0.09];
         }
       }
-      retarget?.apply(joints);
-      const face = motion?.frames.find(
-        (f, i) =>
-          f.time_ms <= currentTimeMs &&
-          (!motion.frames[i + 1] ||
-            motion.frames[i + 1].time_ms > currentTimeMs),
-      )?.face;
+      if (motion && host) {
+        const tracking = retarget?.applyMotion(motion, currentTimeMs);
+        host.dataset.handTracking = JSON.stringify(tracking);
+        host.dataset.rigDiagnostics = JSON.stringify(retarget?.diagnostics);
+        const note = host.querySelector<HTMLElement>(".hand-tracking-note");
+        if (note) {
+          const uncertain = tracking && Object.values(tracking).some((s) => s !== "observed");
+          note.textContent = uncertain ? "Suivi des mains incomplet · pose estimée à vérifier" : "";
+        }
+      } else retarget?.apply(joints);
+      const face = sampleFace(motion, currentTimeMs);
+      const calibration = motion ? faceCalibration(motion) : undefined;
+      const browLimit = .18 + .47 * THREE.MathUtils.clamp(face?.brow_reference_blend ?? (calibration ? 1 : 0), 0, 1);
       const joy = expressiveModulation ? Number(emotion?.happy || 0) : 0,
         sad = expressiveModulation ? Number(emotion?.sad || 0) : 0,
         angry = expressiveModulation ? Number(emotion?.angry || 0) : 0;
@@ -160,15 +167,18 @@ export function AvatarCanvas(props: Props) {
         face && Number.isFinite(face.mouth_open) ? face.mouth_open * 2 : 0,
       );
       for (const side of ["Left", "Right"]) {
-        const brow = face?.[side === "Left" ? "brow_left" : "brow_right"];
+        const key = side === "Left" ? "brow_left" : "brow_right";
+        const brow = face?.[key];
+        const weights = browWeights(brow, face?.[`${key}_neutral`] ?? calibration?.[key], browLimit);
         morph(
           `browOuterUp${side}`,
-          brow !== undefined ? (brow - 0.055) * 3 : joy * 0.15,
+          brow !== undefined ? weights.up : joy * 0.15,
         );
-        morph(`browDown${side}`, brow !== undefined ? 0 : angry * 0.2);
+        morph(`browDown${side}`, brow !== undefined ? weights.down : angry * 0.2);
         morph(`mouthSmile${side}`, face ? 0 : joy * 0.2);
         morph(`mouthFrown${side}`, face ? 0 : sad * 0.15);
       }
+      morph("browInnerUp", face ? (browWeights(face.brow_left, face.brow_left_neutral ?? calibration?.brow_left, browLimit).up + browWeights(face.brow_right, face.brow_right_neutral ?? calibration?.brow_right, browLimit).up) * .2 : 0);
       controls.update();
       renderer.render(scene, camera);
     }
@@ -190,7 +200,9 @@ export function AvatarCanvas(props: Props) {
           {status}
         </span>
       )}
-      <div ref={mount} aria-label="Avatar 3D articulé" />
+      <div ref={mount} aria-label="Avatar 3D articulé">
+        <span className="hand-tracking-note" aria-live="off" />
+      </div>
       <span className="avatar-view-note">
         Avatar Noa · UPF-GTI / Ready Player Me
       </span>
