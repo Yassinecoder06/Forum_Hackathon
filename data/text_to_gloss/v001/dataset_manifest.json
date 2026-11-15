@@ -1,0 +1,72 @@
+{
+  "version": "v001",
+  "experiment": "SOURCE_ANNOTATED_RESEARCH_ONLY",
+  "source_revision": "d1a6c6487eeddf67a14a5e61116b7cc12a0d1f6a",
+  "source_sha256": "6eb75a3483fb99d8237b247b452495f61722a51ecf53b91bbe6756df5a6da57d",
+  "raw_segments": 108,
+  "derived_pairs": 106,
+  "strict_approved_pairs": 0,
+  "counts": {
+    "val": 28,
+    "train": 39,
+    "test": 39
+  },
+  "groups": [
+    {
+      "split": "train",
+      "count": 39,
+      "recordings": [
+        "https://cocoon.huma-num.fr/data/cuxac/CUC022_low.mp4"
+      ],
+      "documents": [
+        "LS-Colin_champignon",
+        "LS-Colin_cheval"
+      ]
+    },
+    {
+      "split": "val",
+      "count": 28,
+      "recordings": [
+        "./recit-agnieska.mp4"
+      ],
+      "documents": [
+        "STK_vacances-sud"
+      ]
+    },
+    {
+      "split": "test",
+      "count": 20,
+      "recordings": [
+        "./Souvenir_JAN_1.mp4"
+      ],
+      "documents": [
+        "Alpha_entretien_etudiant_souvenir"
+      ]
+    },
+    {
+      "split": "test",
+      "count": 19,
+      "recordings": [
+        "./Trajet_LEN_1.mp4"
+      ],
+      "documents": [
+        "Alpha_entretien_etudiant_trajet"
+      ]
+    }
+  ],
+  "split_algorithm": "recording/signer/exact-French/exact-gloss/near-French union; size descending; first train, second val, rest test",
+  "near_duplicate_threshold": 0.9,
+  "duplicate_edges": [],
+  "seed": 42,
+  "files": {
+    "train.jsonl": "569a22ffebd51532e316deb1507f05e64f8327237f45ff66ece57b9abf118d0b",
+    "val.jsonl": "c18236c232fed7c19ea829beeb22abec48323462a85b94d469454848c489e2c4",
+    "test.jsonl": "b55e2d67b1910453d839730095fab29a1dde9d4fda123b95f99ee502f244c103"
+  },
+  "limitations": [
+    "Single source; source-disjoint evaluation impossible",
+    "Signer identities across unrelated corpora unknown",
+    "Free translations, not formal parallel benchmark",
+    "No local linguistic approval"
+  ]
+}

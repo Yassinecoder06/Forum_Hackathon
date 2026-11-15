@@ -1,0 +1,101 @@
+{
+  "sha": "701563bb9de3a5e7d64d52632bb40973f17388bf",
+  "node_id": "MDY6Q29tbWl0MTE0MDQ3OTY2OjcwMTU2M2JiOWRlM2E1ZTdkNjRkNTI2MzJiYjQwOTczZjE3Mzg4YmY=",
+  "commit": {
+    "author": {
+      "name": "Edouard Lopez",
+      "email": "contact@edouard-lopez.com",
+      "date": "2020-10-02T21:28:41Z"
+    },
+    "committer": {
+      "name": "Edouard Lopez",
+      "email": "contact@edouard-lopez.com",
+      "date": "2020-10-02T21:28:41Z"
+    },
+    "message": "add links to coming resources",
+    "tree": {
+      "sha": "7cd8077d96c8960b9e7bbdec55232f2409a6ea04",
+      "url": "https://api.github.com/repos/parlr/lsf-data/git/trees/7cd8077d96c8960b9e7bbdec55232f2409a6ea04"
+    },
+    "url": "https://api.github.com/repos/parlr/lsf-data/git/commits/701563bb9de3a5e7d64d52632bb40973f17388bf",
+    "comment_count": 0,
+    "verification": {
+      "verified": true,
+      "reason": "valid",
+      "signature": "-----BEGIN PGP SIGNATURE-----\n\niQIzBAABCgAdFiEEfhON8HrMeDdFn2WtD5CpbF/rYHYFAl93m4kACgkQD5CpbF/r\nYHYoRQ/9EiA8AjFYpuEl0memQiwFCYaKgkm0aizyofqwCIGyzqgSrtznUYigqi/C\n4+8kBgtmGDOBYVOHFHC13MAlNW2RrZLHlkxsSLc5uYWYyktmFbN7YFW3m6S/9NRP\nXp23TKJdGV4XEuEP4DlEPOYGdf7hrf1Oe0ysgUCdK9cMOsq5QZ1oPzi+cjtPpLLr\nR5Mp3c+4qzG4fM4Ly77Kdb7IWDWgAe8KHS+GZF+ZV25LHwNWkhkOFkZqy55iJPYR\n3Nj9AGAcV5v+cjMo3Ge7O8XNnvRIjg1fsHtOTymRATAR0aFBn6WTqpEKjcaGRaO7\nyEsXBf4tFPNctLiajbWzNJPy35rq6PlHHHTNTEwdRD9Bs17C1is4Otq62aH+QjWY\n2rU8uKI0COBF/x6x3oAodnJMgmIsNnv6GKWbuPDxGURI9i7oP0C4TZZY34mipI84\n/iw5CXU9da2p+ciYpTG3rzb4zJ1s/lx5Boti7Qztp3xQ20YD1ci7nSiXI3ZKqD0b\n/sTMm5mpjgH1jtsam47dwH434ICX6y/SwCabGAh1BhjwicJYN6rLXN1JBDoRwtov\ngK5H5RlBonL++oObm19ySZiONJU7eutIU6I6oCXvQRg1k8558YomDBRIBhYd72xT\nCxv6xI3PxNQt9nSqV0BOjpkbPup+yx0Xh9SlEhXImRwK81nWifs=\n=9rVT\n-----END PGP SIGNATURE-----",
+      "payload": "tree 7cd8077d96c8960b9e7bbdec55232f2409a6ea04\nparent 57c675a9f5a80eb83fb9f3d1c681a1b3b8580c64\nauthor Edouard Lopez <contact@edouard-lopez.com> 1601674121 +0200\ncommitter Edouard Lopez <contact@edouard-lopez.com> 1601674121 +0200\n\nadd links to coming resources\n",
+      "verified_at": "2024-11-10T16:22:08Z"
+    }
+  },
+  "url": "https://api.github.com/repos/parlr/lsf-data/commits/701563bb9de3a5e7d64d52632bb40973f17388bf",
+  "html_url": "https://github.com/parlr/lsf-data/commit/701563bb9de3a5e7d64d52632bb40973f17388bf",
+  "comments_url": "https://api.github.com/repos/parlr/lsf-data/commits/701563bb9de3a5e7d64d52632bb40973f17388bf/comments",
+  "author": {
+    "login": "edouard-lopez",
+    "id": 1212392,
+    "node_id": "MDQ6VXNlcjEyMTIzOTI=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1212392?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/edouard-lopez",
+    "html_url": "https://github.com/edouard-lopez",
+    "followers_url": "https://api.github.com/users/edouard-lopez/followers",
+    "following_url": "https://api.github.com/users/edouard-lopez/following{/other_user}",
+    "gists_url": "https://api.github.com/users/edouard-lopez/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/edouard-lopez/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/edouard-lopez/subscriptions",
+    "organizations_url": "https://api.github.com/users/edouard-lopez/orgs",
+    "repos_url": "https://api.github.com/users/edouard-lopez/repos",
+    "events_url": "https://api.github.com/users/edouard-lopez/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/edouard-lopez/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "committer": {
+    "login": "edouard-lopez",
+    "id": 1212392,
+    "node_id": "MDQ6VXNlcjEyMTIzOTI=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1212392?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/edouard-lopez",
+    "html_url": "https://github.com/edouard-lopez",
+    "followers_url": "https://api.github.com/users/edouard-lopez/followers",
+    "following_url": "https://api.github.com/users/edouard-lopez/following{/other_user}",
+    "gists_url": "https://api.github.com/users/edouard-lopez/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/edouard-lopez/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/edouard-lopez/subscriptions",
+    "organizations_url": "https://api.github.com/users/edouard-lopez/orgs",
+    "repos_url": "https://api.github.com/users/edouard-lopez/repos",
+    "events_url": "https://api.github.com/users/edouard-lopez/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/edouard-lopez/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "parents": [
+    {
+      "sha": "57c675a9f5a80eb83fb9f3d1c681a1b3b8580c64",
+      "url": "https://api.github.com/repos/parlr/lsf-data/commits/57c675a9f5a80eb83fb9f3d1c681a1b3b8580c64",
+      "html_url": "https://github.com/parlr/lsf-data/commit/57c675a9f5a80eb83fb9f3d1c681a1b3b8580c64"
+    }
+  ],
+  "stats": {
+    "total": 34,
+    "additions": 32,
+    "deletions": 2
+  },
+  "files": [
+    {
+      "sha": "f38e330b7aaf3ca7b90dc5e120ea2e4075ccb845",
+      "filename": "README.md",
+      "status": "modified",
+      "additions": 32,
+      "deletions": 2,
+      "changes": 34,
+      "blob_url": "https://github.com/parlr/lsf-data/blob/701563bb9de3a5e7d64d52632bb40973f17388bf/README.md",
+      "raw_url": "https://github.com/parlr/lsf-data/raw/701563bb9de3a5e7d64d52632bb40973f17388bf/README.md",
+      "contents_url": "https://api.github.com/repos/parlr/lsf-data/contents/README.md?ref=701563bb9de3a5e7d64d52632bb40973f17388bf",
+      "patch": "@@ -23,7 +23,37 @@\n ### Source de données\n \n - [LSF @ Éducation Nationale](http://lsf.education.fr/index.php?page=recherche_alphabetique)\n-- Apprendre 300 mots du quotidien en LSF [partie 1](https://www.youtube.com/watch?v=rz3jw0_XXoc) et [partie 2](https://www.youtube.com/watch?v=DbTKAbY-i0A) par L. Jauvert\n+- Laura Jauvert signe:\n+  - [Apprendre 300 mots du quotidien en LSF (partie 1)][laura-300-signes-quotidien-partie-1]\n+  - [Apprendre 300 mots du quotidien en LSF (partie 2)][laura-300-signes-quotidien-partie-2]\n+  - [Apprendre 150 signes LSF par ordre alphabétique (A-B-C)][laura-150-signes-ordre-alphabétique]\n+  - [Apprendre 70 signes du sport en LSF][laura-signes-sport]\n+  - [Apprendre 100 mots du quotidien des enfants en LSF (Partie 2)][laura-100-signes-quotidien-des-enfants]\n+  - [Apprendre 100 mots du quotidien de bébé en LSF (Partie 1)][laura-100-signes-quotidien-de-bébé]\n+  - [Les pronoms en LSF][laura-les-pronoms]\n+  - [Famille et Couleurs en LSF][laura-famille-et-couleurs]\n+  - [Apprendre 80 verbes en LSF][laura-80-verbes]\n+  - [Apprendre 150 mots en LSF][laura-150-mots]\n+  - [Le temps en LSF : avant et après][laura-le-temps-avant-et-après]\n+  - [Le temps en LSF : Durée et Horaire][le-temps-en-lsf-durée-et-horaire]\n+  - [Apprendre Les jours et les Mois en LSF][apprendre-les-jours-et-les-mois-en-lsf]\n+  - [Alphabet et Chiffres en LSF][alphabet-et-chiffres-en-lsf]\n - Primitives sémantiques\n   - [La sémantique naturelle d’Anna Wierzbicka et les enjeux interculturels](https://journals.openedition.org/questionsdecommunication/4611) par  Arkadiusz Koselak, 2003.\n-  - [La métalangue sémantique naturelle: acquis et défis](https://www.academia.edu/5296087/La_m%C3%A9talangue_s%C3%A9mantique_naturelle_acquis_et_d%C3%A9fis) par  Bert Peeters, 2010.\n\\ No newline at end of file\n+  - [La métalangue sémantique naturelle: acquis et défis](https://www.academia.edu/5296087/La_m%C3%A9talangue_s%C3%A9mantique_naturelle_acquis_et_d%C3%A9fis) par  Bert Peeters, 2010.\n+\n+\n+[laura-300-signes-quotidien-partie-1]: https://www.youtube.com/watch?v=rz3jw0_XXoc\n+[laura-300-signes-quotidien-partie-2]: https://www.youtube.com/watch?v=DbTKAbY-i0A\n+[laura-150-signes-ordre-alphabétique]: https://www.youtube.com/watch?v=fO3HTRqgFCw\n+[laura-signes-sport]: https://www.youtube.com/watch?v=Yoiq0kRlLuA\n+[laura-100-signes-quotidien-des-enfants]: https://www.youtube.com/watch?v=ix9vWvHpw4k\n+[laura-100-signes-quotidien-de-bébé]: https://www.youtube.com/watch?v=g65_E-IQNQU\n+[laura-les-pronoms]: https://www.youtube.com/watch?v=QCkaWte8Bi8\n+[laura-famille-et-couleurs]: https://www.youtube.com/watch?v=U_IKWI5cBA0\n+[laura-80-verbes]: https://www.youtube.com/watch?v=z_kmShkxyuY\n+[laura-150-mots]: https://www.youtube.com/watch?v=ZJQpuAFTryk\n+[laura-le-temps-avant-et-après]: https://www.youtube.com/watch?v=q2UXq89V5VY\n+[le-temps-en-lsf-durée-et-horaire]: https://www.youtube.com/watch?v=L2vtMW6s8h0]\n+[apprendre-les-jours-et-les-mois-en-lsf]: https://www.youtube.com/watch?v=TSy1WKsoVrM]\n+[alphabet-et-chiffres-en-lsf]: https://www.youtube.com/watch?v=sK3NyDGAO48]"
+    }
+  ]
+}

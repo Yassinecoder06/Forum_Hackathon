@@ -1,0 +1,132 @@
+{
+  "run_id": "t5-small-cpu-smoke",
+  "model_base": "google-t5/t5-small",
+  "model_revision": "df1b051c49625cf57a3d0d8d3863ed4d13564fe4",
+  "mode": "source-annotated-research",
+  "lora": true,
+  "trainable_parameters": 294912,
+  "epochs": 2,
+  "best_epoch": 2,
+  "learning_rate": 0.0003,
+  "batch_size": 1,
+  "gradient_accumulation": 4,
+  "precision": "fp32",
+  "seed": 42,
+  "counts": {
+    "train": 39,
+    "val": 28,
+    "test": 39
+  },
+  "group_counts": {
+    "train": 1,
+    "val": 1,
+    "test": 2
+  },
+  "dataset_manifest_sha256": "598c055aad28fcb3c65fc8965df3aedd549acdd96b0213cb774cf1ce8d71218e",
+  "train_seconds": 8.265747346998978,
+  "total_seconds": 27.07608840299872,
+  "cuda_device": null,
+  "peak_allocated_mib": null,
+  "peak_reserved_mib": null,
+  "torch_version": "2.15.0+cpu",
+  "loss_history": [
+    {
+      "epoch": 1,
+      "train_loss": 4.974281109296358,
+      "val_loss": 4.538123164858137,
+      "elapsed_seconds": 4.691846478999651
+    },
+    {
+      "epoch": 2,
+      "train_loss": 4.7272547880808515,
+      "val_loss": 4.3328598482268195,
+      "elapsed_seconds": 8.254428958000062
+    }
+  ],
+  "metrics": {
+    "val": {
+      "retrieval": {
+        "exact_match": 0.0,
+        "token_wer": 1.1288659793814433,
+        "corpus_bleu": 0.0,
+        "bleu_signature": "sacrebleu 2.6.0; case:mixed; tok:none; smooth:exp; effective_order:no; scale:0-100",
+        "predicted_oov_vs_train": 0.0,
+        "reference_oov_vs_train": 0.9072164948453608,
+        "motion_registry_oov": null,
+        "motion_registry_note": "No approved source-gloss-to-motion mapping; train vocabulary OOV is separate",
+        "examples": 28,
+        "reference_tokens": 194,
+        "predicted_tokens": 153
+      },
+      "lexical": {
+        "exact_match": 0.0,
+        "token_wer": 1.8865979381443299,
+        "corpus_bleu": 0.14384082769509013,
+        "bleu_signature": "sacrebleu 2.6.0; case:mixed; tok:none; smooth:exp; effective_order:no; scale:0-100",
+        "predicted_oov_vs_train": 0.9700272479564033,
+        "reference_oov_vs_train": 0.9072164948453608,
+        "motion_registry_oov": null,
+        "motion_registry_note": "No approved source-gloss-to-motion mapping; train vocabulary OOV is separate",
+        "examples": 28,
+        "reference_tokens": 194,
+        "predicted_tokens": 367
+      },
+      "model": {
+        "exact_match": 0.0,
+        "token_wer": 2.0670103092783507,
+        "corpus_bleu": 0.0,
+        "bleu_signature": "sacrebleu 2.6.0; case:mixed; tok:none; smooth:exp; effective_order:no; scale:0-100",
+        "predicted_oov_vs_train": 1.0,
+        "reference_oov_vs_train": 0.9072164948453608,
+        "motion_registry_oov": null,
+        "motion_registry_note": "No approved source-gloss-to-motion mapping; train vocabulary OOV is separate",
+        "examples": 28,
+        "reference_tokens": 194,
+        "predicted_tokens": 401
+      }
+    },
+    "test": {
+      "retrieval": {
+        "exact_match": 0.0,
+        "token_wer": 1.1116504854368932,
+        "corpus_bleu": 0.0,
+        "bleu_signature": "sacrebleu 2.6.0; case:mixed; tok:none; smooth:exp; effective_order:no; scale:0-100",
+        "predicted_oov_vs_train": 0.0,
+        "reference_oov_vs_train": 0.9174757281553398,
+        "motion_registry_oov": null,
+        "motion_registry_note": "No approved source-gloss-to-motion mapping; train vocabulary OOV is separate",
+        "examples": 39,
+        "reference_tokens": 206,
+        "predicted_tokens": 186
+      },
+      "lexical": {
+        "exact_match": 0.0,
+        "token_wer": 1.9660194174757282,
+        "corpus_bleu": 0.14413320945670471,
+        "bleu_signature": "sacrebleu 2.6.0; case:mixed; tok:none; smooth:exp; effective_order:no; scale:0-100",
+        "predicted_oov_vs_train": 0.9631449631449631,
+        "reference_oov_vs_train": 0.9174757281553398,
+        "motion_registry_oov": null,
+        "motion_registry_note": "No approved source-gloss-to-motion mapping; train vocabulary OOV is separate",
+        "examples": 39,
+        "reference_tokens": 206,
+        "predicted_tokens": 407
+      },
+      "model": {
+        "exact_match": 0.0,
+        "token_wer": 2.0728155339805827,
+        "corpus_bleu": 0.0,
+        "bleu_signature": "sacrebleu 2.6.0; case:mixed; tok:none; smooth:exp; effective_order:no; scale:0-100",
+        "predicted_oov_vs_train": 1.0,
+        "reference_oov_vs_train": 0.9174757281553398,
+        "motion_registry_oov": null,
+        "motion_registry_note": "No approved source-gloss-to-motion mapping; train vocabulary OOV is separate",
+        "examples": 39,
+        "reference_tokens": 206,
+        "predicted_tokens": 424
+      }
+    }
+  },
+  "checkpoint": "/home/jmal/Projects/Active/Forum_Hackathon/.worktrees/wt-codex2/training/checkpoints/t5-small-cpu-smoke",
+  "limitations": "ENGINEERING PROOF ONLY; free translations; tiny single-source corpus; no local linguistic approval; no SOTA claim"
+}

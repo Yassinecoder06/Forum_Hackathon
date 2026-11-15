@@ -1,0 +1,11 @@
+# Dataset card — v001 source-annotated research
+
+Attribution: Guillaume, Lou; Herrera, Santiago; Périn, Philomène; Bogliotti, Caroline; Kahane, Sylvain, with UD conversion/validation contributor Bruno Guillaume. Source UD French Sign Language STKAutogramm v2.19, commit d1a6c6487eeddf67a14a5e61116b7cc12a0d1f6a. Original repository/license URLs and citations in SOURCE_AUDIT.md and raw/stk/README.md. Text and derived JSONL under CC BY-SA4.0; source license retained. No video permission inferred.
+
+France LSF only. 108 source units from five documents /four recordings; 106 derived pairs after merging two consecutive repeated-free-translation cases. Raw integer token FORM labels form targets, with exact bracketed/pointer forms. MISC nonmanual/timing/English channels are retained in raw catalog annotations, not model targets. `text_fr` is explicitly a free translation; UD declares Parallel:no. No newly authored sentence pairs. Five example inspections saved in inspected_examples.json.
+
+Train39 /val28 /test39, recording component counts1/1/2. Largest component LS-Colin recording is training, next STK holiday narrative validation, two Alpha interview recordings test. Frozen files SHA256 in data/text_to_gloss/v001/dataset_manifest.json. Source-disjoint evaluation impossible. Signer identifiers are document-scoped; cross-corpus identities unknown. Near-duplicate union threshold.90, min20chars; exact French/gloss union also prevents leakage. No official UD translation split claim.
+
+ZERO locally approved records. `approved` mode requires TRAIN_APPROVED and APPROVED exactly; none exported. The user authorized separate source-annotated research with explicit pending local review. This corpus is far too small and topically split for a meaningful translation benchmark; held-out token OOV vs train is91.75%. Free translation boundaries and annotation conventions can cause ambiguous/missing correspondences. No fluent Deaf-signer comprehension study has occurred.
+
+447 Commons lexical video references imported from lead's existing inventory; these remain in separate lexical/assets tables and do not add sentence pairs. No synthetic base glossary or motion files touched. Metadata records pending motion/linguistic review; licenses do not certify sign quality.

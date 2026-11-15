@@ -1,0 +1,102 @@
+{
+  "sha": "5c485156b6eee26b2f83ca153e825bf4201fd99b",
+  "url": "https://api.github.com/repos/surfacesyntacticud/SUD_French_Sign_Language-STKAutogramm/git/trees/5c485156b6eee26b2f83ca153e825bf4201fd99b",
+  "tree": [
+    {
+      "path": ".gitignore",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "45b9019ad4c03d626994d72d783f464ddeba03f0",
+      "size": 13,
+      "url": "https://api.github.com/repos/surfacesyntacticud/SUD_French_Sign_Language-STKAutogramm/git/blobs/45b9019ad4c03d626994d72d783f464ddeba03f0"
+    },
+    {
+      "path": "Alpha_entretien_etudiant_souvenir.conllu",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c539954b7a91adf5136ca8836197b014a9b11cd8",
+      "size": 17695,
+      "url": "https://api.github.com/repos/surfacesyntacticud/SUD_French_Sign_Language-STKAutogramm/git/blobs/c539954b7a91adf5136ca8836197b014a9b11cd8"
+    },
+    {
+      "path": "Alpha_entretien_etudiant_trajet.conllu",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8dc34f4d93b9b9cef870bcf333642daaa61a7cb4",
+      "size": 15102,
+      "url": "https://api.github.com/repos/surfacesyntacticud/SUD_French_Sign_Language-STKAutogramm/git/blobs/8dc34f4d93b9b9cef870bcf333642daaa61a7cb4"
+    },
+    {
+      "path": "LICENSE.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9af2e0b2f73cf29fe1f60cb6376b176d9c2ba846",
+      "size": 202,
+      "url": "https://api.github.com/repos/surfacesyntacticud/SUD_French_Sign_Language-STKAutogramm/git/blobs/9af2e0b2f73cf29fe1f60cb6376b176d9c2ba846"
+    },
+    {
+      "path": "LS-Colin_champignon.conllu",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "004128d3b57a1dabb3ac35ecf439201966d36ca7",
+      "size": 27917,
+      "url": "https://api.github.com/repos/surfacesyntacticud/SUD_French_Sign_Language-STKAutogramm/git/blobs/004128d3b57a1dabb3ac35ecf439201966d36ca7"
+    },
+    {
+      "path": "LS-Colin_cheval.conllu",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a850e41286595f26ec0f47337a9ac2ba00c6053b",
+      "size": 11010,
+      "url": "https://api.github.com/repos/surfacesyntacticud/SUD_French_Sign_Language-STKAutogramm/git/blobs/a850e41286595f26ec0f47337a9ac2ba00c6053b"
+    },
+    {
+      "path": "README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "506830d406f6623c93ddf9c95104f82a9cd8b99e",
+      "size": 3616,
+      "url": "https://api.github.com/repos/surfacesyntacticud/SUD_French_Sign_Language-STKAutogramm/git/blobs/506830d406f6623c93ddf9c95104f82a9cd8b99e"
+    },
+    {
+      "path": "STK_vacances-sud.conllu",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ef04e73277924c4494a6ef6ff9986f6e0c84e8be",
+      "size": 35380,
+      "url": "https://api.github.com/repos/surfacesyntacticud/SUD_French_Sign_Language-STKAutogramm/git/blobs/ef04e73277924c4494a6ef6ff9986f6e0c84e8be"
+    },
+    {
+      "path": "UNUSED",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "a2bf10e2ccc2e1a70d4e51e1959b1c03a5c827dc",
+      "url": "https://api.github.com/repos/surfacesyntacticud/SUD_French_Sign_Language-STKAutogramm/git/trees/a2bf10e2ccc2e1a70d4e51e1959b1c03a5c827dc"
+    },
+    {
+      "path": "merge.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "49bee0612a1b471fecc62d3463738bdf64954fde",
+      "size": 257,
+      "url": "https://api.github.com/repos/surfacesyntacticud/SUD_French_Sign_Language-STKAutogramm/git/blobs/49bee0612a1b471fecc62d3463738bdf64954fde"
+    },
+    {
+      "path": "presentation-CAP-petite-enfance.conllu",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2be04fe2b3d54d28c45506aa6c22cd57678eae0e",
+      "size": 12773,
+      "url": "https://api.github.com/repos/surfacesyntacticud/SUD_French_Sign_Language-STKAutogramm/git/blobs/2be04fe2b3d54d28c45506aa6c22cd57678eae0e"
+    },
+    {
+      "path": "presentation-primaire-populaire.conllu",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c430c5d821ad6506bea390d365a85bc749fb1a35",
+      "size": 16714,
+      "url": "https://api.github.com/repos/surfacesyntacticud/SUD_French_Sign_Language-STKAutogramm/git/blobs/c430c5d821ad6506bea390d365a85bc749fb1a35"
+    }
+  ],
+  "truncated": false
+}

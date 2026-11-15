@@ -1,0 +1,70 @@
+{
+  "key": "07e08135-7bdf-4874-80a4-ad2af8ce5baa",
+  "service": "core",
+  "type": "collection",
+  "id": "7abcf879-4f33-4f23-80b9-3e272f661f94",
+  "status": "published",
+  "visibility": "visible",
+  "lock": "root",
+  "author": "braffort",
+  "creationDate": "1574763537579",
+  "lastModificationDate": "1576793459874",
+  "owner": "root",
+  "parent": null,
+  "children": null,
+  "object": {
+    "id": "7abcf879-4f33-4f23-80b9-3e272f661f94",
+    "version": 16,
+    "metadatasContent": "",
+    "key": "07e08135-7bdf-4874-80a4-ad2af8ce5baa",
+    "name": "annotations",
+    "clock": 1,
+    "root": false,
+    "segments": [
+      "object\tDicta-Sign-LSF_Annotation.csv\t1576078858997\t2539982\ttext/csv\t23e7465a-fd8e-4eaa-840c-3622812a2c07\nobject\tDicta-Sign-LSF_ID.csv\t1576270519898\t47769\ttext/csv\t7a094e23-06dc-484e-919b-36db60a4faa9\nobject\tDicta-Sign-LSF_AnnotationGuide-fr.pdf\t1576490489354\t147591\tapplication/pdf\ta4d388e4-5e81-4d08-98bf-22b090d17eb4\nobject\tDicta-Sign-LSF_AnnotationGuide-en.pdf\t1576490507941\t146304\tapplication/pdf\ta344d33b-be31-482a-95e7-6c34c305e57b"
+    ],
+    "elements": [
+      {
+        "type": "object",
+        "name": "Dicta-Sign-LSF_ID.csv",
+        "modification": 1576270519898,
+        "size": 47769,
+        "mimeType": "text/csv",
+        "key": "7a094e23-06dc-484e-919b-36db60a4faa9"
+      },
+      {
+        "type": "object",
+        "name": "Dicta-Sign-LSF_AnnotationGuide-en.pdf",
+        "modification": 1576490507941,
+        "size": 146304,
+        "mimeType": "application/pdf",
+        "key": "a344d33b-be31-482a-95e7-6c34c305e57b"
+      },
+      {
+        "type": "object",
+        "name": "Dicta-Sign-LSF_AnnotationGuide-fr.pdf",
+        "modification": 1576490489354,
+        "size": 147591,
+        "mimeType": "application/pdf",
+        "key": "a4d388e4-5e81-4d08-98bf-22b090d17eb4"
+      },
+      {
+        "type": "object",
+        "name": "Dicta-Sign-LSF_Annotation.csv",
+        "modification": 1576078858997,
+        "size": 2539982,
+        "mimeType": "text/csv",
+        "key": "23e7465a-fd8e-4eaa-840c-3622812a2c07"
+      }
+    ],
+    "empty": false,
+    "objectIdentifier": {
+      "service": "core",
+      "type": "collection",
+      "id": "7abcf879-4f33-4f23-80b9-3e272f661f94"
+    },
+    "metadatas": [],
+    "objectName": "annotations",
+    "objectKey": "07e08135-7bdf-4874-80a4-ad2af8ce5baa"
+  }
+}

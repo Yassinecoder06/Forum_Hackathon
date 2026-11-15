@@ -1,0 +1,7 @@
+.venv-train/
+weights/
+checkpoints/
+__pycache__/
+.pytest_cache/
+*.pyc
+.venv-smoke/
