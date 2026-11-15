@@ -112,7 +112,8 @@ def captured_library():
         gloss=next(g for g in glosses if g.gloss_id==motion.gloss_id)
         entries.append({'gloss':gloss.model_dump(),'motion':motion.model_dump(),
             'source':payload.get('attribution',{}).get('credit',gloss.source_id),
-            'quality':payload.get('quality',{}),'curated':True})
+            'quality':payload.get('quality',{}),'curated':True,
+            'source_video_url':'/examples/bonjour.webm' if motion.motion_id=='LSF_BONJOUR_COMMONS' else None})
     return {'entries': entries}
 
 @app.delete('/library/{motion_id}')
@@ -177,8 +178,17 @@ def capture_motion(job_id: str):
 
 @app.get('/captures/{job_id}/source')
 def capture_source(job_id: str):
-    try: return FileResponse(capture_library.job_folder(job_id)/'source.mp4')
+    try:
+        path=capture_library.job_folder(job_id)/'source.mp4'
+        if not path.is_file(): raise FileNotFoundError()
+        with path.open('rb') as stream: magic=stream.read(4)
+        media='video/webm' if magic==bytes.fromhex('1a45dfa3') else 'video/mp4'
+        return FileResponse(path,media_type=media)
     except (ValueError,FileNotFoundError): raise HTTPException(404, 'Capture inconnue')
+
+@app.get('/examples/bonjour.webm')
+def bonjour_source():
+    return FileResponse(ROOT/'data/public_examples/bonjour.webm',media_type='video/webm')
 
 class RegisterCapture(BaseModel):
     concept: str = Field(min_length=1,max_length=100)

@@ -1,0 +1,120 @@
+{
+  "status": "complete",
+  "total": 446,
+  "processed": 446,
+  "imported": 439,
+  "failed": 0,
+  "retained_for_quality_review": [
+    {
+      "source_id": "WMC_75162098",
+      "status": "quality_review_needed",
+      "quality": {
+        "sampled_frames": 34,
+        "pose_frames": 34,
+        "pose_coverage": 1.0,
+        "left_hand_coverage": 0.235,
+        "right_hand_coverage": 0.324,
+        "face_coverage": 1.0,
+        "missing_frames": 0
+      },
+      "concept": "apporter"
+    },
+    {
+      "source_id": "WMC_75162589",
+      "status": "quality_review_needed",
+      "quality": {
+        "sampled_frames": 39,
+        "pose_frames": 39,
+        "pose_coverage": 1.0,
+        "left_hand_coverage": 0.103,
+        "right_hand_coverage": 0.333,
+        "face_coverage": 1.0,
+        "missing_frames": 0
+      },
+      "concept": "avant"
+    },
+    {
+      "source_id": "WMC_75162411",
+      "status": "quality_review_needed",
+      "quality": {
+        "sampled_frames": 39,
+        "pose_frames": 39,
+        "pose_coverage": 1.0,
+        "left_hand_coverage": 0.128,
+        "right_hand_coverage": 0.179,
+        "face_coverage": 1.0,
+        "missing_frames": 0
+      },
+      "concept": "collant (vêtement)"
+    },
+    {
+      "source_id": "WMC_75161787",
+      "status": "quality_review_needed",
+      "quality": {
+        "sampled_frames": 36,
+        "pose_frames": 36,
+        "pose_coverage": 1.0,
+        "left_hand_coverage": 0.333,
+        "right_hand_coverage": 0.278,
+        "face_coverage": 1.0,
+        "missing_frames": 0
+      },
+      "concept": "pantalon"
+    },
+    {
+      "source_id": "WMC_75161764",
+      "status": "quality_review_needed",
+      "quality": {
+        "sampled_frames": 33,
+        "pose_frames": 33,
+        "pose_coverage": 1.0,
+        "left_hand_coverage": 0.242,
+        "right_hand_coverage": 0.182,
+        "face_coverage": 1.0,
+        "missing_frames": 0
+      },
+      "concept": "robe"
+    },
+    {
+      "source_id": "WMC_75162366",
+      "status": "quality_review_needed",
+      "quality": {
+        "sampled_frames": 32,
+        "pose_frames": 32,
+        "pose_coverage": 1.0,
+        "left_hand_coverage": 0.344,
+        "right_hand_coverage": 0.312,
+        "face_coverage": 1.0,
+        "missing_frames": 0
+      },
+      "concept": "s'asseoir"
+    },
+    {
+      "source_id": "WMC_75162677",
+      "status": "quality_review_needed",
+      "quality": {
+        "sampled_frames": 36,
+        "pose_frames": 36,
+        "pose_coverage": 1.0,
+        "left_hand_coverage": 0.0,
+        "right_hand_coverage": 0.0,
+        "face_coverage": 1.0,
+        "missing_frames": 0
+      },
+      "concept": "short (vêtement)"
+    }
+  ],
+  "curated_bonjour": 1,
+  "motion_library_total": 440,
+  "inventory_total": 447,
+  "all_videos_retrieved": true,
+  "human_lsf_validation": "pending",
+  "criteria": {
+    "pose_coverage_min": 0.8,
+    "at_least_one_hand_coverage_min": 0.35,
+    "note": "Technical extraction threshold only; not linguistic or intelligibility validation"
+  },
+  "provenance": "data/source_inventory/commons_lsf.json",
+  "runtime": ".runtime/captures; .runtime/motions; .runtime/library.json",
+  "reproduce": ".venv/bin/python scripts/ingest_commons_signs.py --all --author-mirror --workers 2"
+}

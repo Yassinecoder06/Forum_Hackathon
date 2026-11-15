@@ -59,6 +59,11 @@ import pytest
 from backend.app import main
 from backend.app.services import text_lookup
 
+@pytest.fixture(autouse=True)
+def isolated_runtime(tmp_path, monkeypatch):
+    monkeypatch.setenv('SIGNACULTURE_STORAGE', str(tmp_path/'runtime'))
+    monkeypatch.setenv('SIGNACULTURE_DB_PATH', str(tmp_path/'plans.sqlite'))
+
 @pytest.fixture
 def registry_copy(tmp_path, monkeypatch):
     shutil.copytree(main.ROOT/'data', tmp_path/'data')

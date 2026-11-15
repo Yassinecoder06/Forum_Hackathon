@@ -1,3 +1,9 @@
+# Current state — 2026-11-15
+
+Only the lead root checkout and `.worktrees/wt-codex2` remain. Only codex2 (GPT-6.1 Sol medium, pane wS:p4) is delegated work. No Gemini or codex1 agents are used. Useful prior branches were merged. The real capture/audio/studio rewrite and research milestones are integrated on main. All 447 inventoried lexical videos were retrieved; 440 motion assets are available and seven require tracking review. Three measured text-model experiments failed to provide useful general translation. See README.md and research/IMPLEMENTATION_STATUS.md for current results.
+
+The following log is historical and describes earlier development stages.
+
 # SignaCulture AI — exécution par worktrees
 
 Le plan source est conservé dans `SignaCulture_AI_Plan_Developpement.md`.

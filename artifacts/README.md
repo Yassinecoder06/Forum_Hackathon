@@ -1,10 +1,11 @@
-# Livrables locaux — SignaCulture AI
+# Livrables locaux
 
-- `SignaCulture_Presentation.pdf` : dix diapositives françaises, exportées depuis `docs/slides.md`.
-- `SignaCulture_Demo_FR.mp4` : walkthrough de 75 secondes de l'application locale, avec narration française de synthèse (eSpeak NG) et indications à l'écran.
-- `demo_narration.txt` : texte effectivement utilisé pour cette voix de synthèse.
-- `browser/studio.png`, `browser/audio.png`, `browser/mobile.png` : captures du parcours navigateur automatisé.
+Les captures `browser/studio.png`, `audio.png`, `library.png`, `mobile.png` et `research.png` montrent le studio actuel. `browser/preview.webm` est un vrai export de l’avatar, produit par le navigateur pendant le test automatisé. Les crédits des mouvements restent affichés dans l’interface et l’export. Les mouvements reconstruits demandent une revue LSF ; ce ne sont pas des traductions validées.
 
-La vidéo montre le logiciel et six mouvements synthétiques de test. Elle ne représente pas une traduction LSF approuvée ni une démonstration d'emotion2vec. Aucun corpus vidéo de signants n'a été téléchargé ou redistribué. La vidéo est une capture de présentation ; `/render` reste un endpoint d'aperçu sans export vidéo applicatif.
+La bibliothèque de cette session contient 440 captures réelles, issues de 447 concepts récupérés. Sept captures nécessitent une revue du suivi des mains et ne sont pas enregistrées. Les données volumineuses sont locales et ignorées par Git ; voir `data/source_inventory/ingestion_report.json`.
 
-Vérifications réalisées : 54 tests Python (modèle spaCy français installé et réellement exécuté), lint frontend, build de production, 7 smoke tests HTTP contre FastAPI réel, parcours Playwright desktop/mobile et gestion des erreurs réseau. Le contrôle des worktrees et les limites restantes sont documentés dans `ORCHESTRATION.md`.
+Les expériences textuelles sont dans `research/runs/` : T5-small CPU et deux mT5-small RTX 4060. Les résultats sont négatifs pour la traduction, avec prédictions et limites conservées.
+
+`SignaCulture_Presentation.pdf`, `SignaCulture_Demo_FR.mp4` et `demo_narration.txt` sont des **livrables historiques du premier prototype**, antérieurs au studio actuel et à l’ingestion réelle. Ils ne décrivent pas les capacités actuelles ; consulter le README racine et les nouvelles captures.
+
+Vérification actuelle : 58 tests API/schémas/mouvement, 12 tests de recherche, lint et build frontend, tests navigateur contre les vrais services. Aucun résultat état de l’art ni validation par des signants n’est revendiqué.

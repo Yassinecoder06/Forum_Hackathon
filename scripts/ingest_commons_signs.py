@@ -86,15 +86,52 @@ def inventory():
     print(f'Inventory: {len(entries)} France-LSF files, {sum(x["eligible_for_motion"] for x in entries)} with compatible reported licences.',flush=True)
     return entries
 
+def prepare_author_mirrors(entries):
+    revision='701563bb9de3a5e7d64d52632bb40973f17388bf'
+    tree_path=ROOT/'research/parlr_tree.json'
+    if not tree_path.exists(): return entries
+    tree={item['path']:item for item in json.loads(tree_path.read_text())['tree']}
+    segments={}
+    for part in (1,2):
+        filename=f'data/partie-{part}:-Apprendre-300-mots-du-quotidien-en-LSF.jauvert-laura.hd.ass'
+        url='https://raw.githubusercontent.com/parlr/lsf-data/'+revision+'/'+quote(filename)
+        raw=fetch(url)
+        for line in raw.decode('utf-8-sig').splitlines():
+            if line.startswith('Dialogue:'):
+                fields=line.split(',',9)
+                label=re.sub(r'\{[^}]*\}','',fields[-1]).strip().casefold()
+                segments[label]={'part':part,'start':fields[1],'end':fields[2],'subtitle_source':url}
+    matched=0
+    for entry in entries:
+        path='videos/jauvert/'+entry['concept_fr']+'.webm'
+        # Never generalize the repository MIT licence to videos. A candidate
+        # must match BOTH an individually licensed Commons concept and the
+        # subtitle of the same identified original work by this author.
+        if entry['eligible_for_motion'] and entry['concept_fr'] in segments and path in tree:
+            entry['author_mirror']={'url':'https://raw.githubusercontent.com/parlr/lsf-data/'+revision+'/'+quote(path),
+                'git_revision':revision,'git_blob_sha1':tree[path]['sha'],'path':path,
+                'original_segment':segments[entry['concept_fr']],
+                'note':'Author repository rendition of the matched licensed original work; resolution/cut may differ from Commons.'}
+            matched+=1
+    store.write_json(ROOT/'data/source_inventory/commons_lsf.json',{'category':CATEGORY,'api':API,'entries':entries})
+    print(f'Author source matched for {matched} individually licensed concepts.',flush=True)
+    return entries
+
 def ingest(entry):
     job_id=str(uuid.uuid5(uuid.NAMESPACE_URL,entry['source_url']))
     folder=store.storage()/'captures'/job_id;folder.mkdir(parents=True,exist_ok=True)
     path=folder/'source.mp4';motion_path=folder/'motion.json'
     if not path.exists():
-        raw=fetch(entry['download_url'])
-        if entry['source_sha1'] and hashlib.sha1(raw).hexdigest()!=entry['source_sha1']:
+        mirror=entry.get('author_mirror')
+        url=mirror['url'] if mirror else entry['download_url']
+        raw=fetch(url)
+        if mirror:
+            blob=hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\x00'+raw).hexdigest()
+            if blob!=mirror['git_blob_sha1']: raise ValueError('Author repository blob checksum mismatch')
+        elif entry['source_sha1'] and hashlib.sha1(raw).hexdigest()!=entry['source_sha1']:
             raise ValueError('Source SHA1 does not match Commons metadata')
         path.write_bytes(raw)
+        store.write_json(folder/'source_provenance.json',{'retrieved_from':url,'sha256':hashlib.sha256(raw).hexdigest(),'canonical_licence_source':entry['source_url'],'author_mirror':mirror})
     if not motion_path.exists():
         result=subprocess.run([str(store.runtime_python('motion')),str(ROOT/'backend/app/workers/capture.py'),str(path),str(motion_path),str(folder/'progress.json')],capture_output=True,text=True,timeout=240,cwd=ROOT)
         if result.returncode:
@@ -121,10 +158,13 @@ def main():
     parser.add_argument('--refresh',action='store_true');parser.add_argument('--limit',type=int,default=0)
     parser.add_argument('--all',action='store_true',help='Explicitly retrieve and extract all eligible inventory clips')
     parser.add_argument('--workers',type=int,default=2)
+    parser.add_argument('--author-mirror',action='store_true',help='Use only exact concept/original-subtitle matched author repository renditions')
     args=parser.parse_args();saved=ROOT/'data/source_inventory/commons_lsf.json'
     entries=inventory() if args.refresh or not saved.exists() else json.loads(saved.read_text())['entries']
+    if args.author_mirror: entries=prepare_author_mirrors(entries)
     if not args.all and not args.limit: return
     eligible=[e for e in entries if e['eligible_for_motion'] and e['concept_fr']!='bonjour']
+    if args.author_mirror: eligible.sort(key=lambda e:(not bool(e.get('author_mirror')),e['concept_fr']))
     if not args.all: eligible=eligible[:args.limit]
     results=[];state={'status':'running','total':len(eligible),'processed':0,'imported':0,'failed':0,'results':results}
     store.write_json(store.storage()/'corpus_status.json',state)

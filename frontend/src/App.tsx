@@ -7,6 +7,7 @@ import {
   ChevronRight,
   CircleHelp,
   Film,
+  FlaskConical,
   Hand,
   Library,
   Loader2,
@@ -19,6 +20,8 @@ import {
   Waves,
   X,
 } from "lucide-react";
+import { request } from "./services/api";
+import { ResearchPanel } from "./components/ResearchPanel";
 import { AvatarCanvas } from "./components/AvatarPlayer/AvatarCanvas";
 import { stitchAnimationPlan } from "./utils/planStitcher";
 import type {
@@ -29,8 +32,15 @@ import type {
 } from "./types/contract";
 import "./studio.css";
 
-type Page = "studio" | "library" | "capture";
+type Page = "studio" | "library" | "capture" | "research";
 type Capabilities = {
+  corpus?: {
+    status: string;
+    total: number;
+    processed: number;
+    imported: number;
+    failed: number;
+  } | null;
   capture: boolean;
   emotion: boolean;
   nlp: string;
@@ -53,29 +63,14 @@ type CaptureJob = {
   duration_ms?: number;
 };
 type LibraryEntry = {
+  capture_id?: string;
+  source_video_url?: string;
   gloss: GlossEntry;
   motion: { motion_id: string; duration_ms: number; path: string };
   source: string;
   quality: Quality;
 };
 
-async function request<T>(path: string, options?: RequestInit): Promise<T> {
-  const res = await fetch(`/api${path}`, options);
-  if (!res.ok) {
-    let message = `Le service a retourné une erreur (${res.status}).`;
-    try {
-      const body = await res.json();
-      message =
-        typeof body.detail === "string"
-          ? body.detail
-          : "Vérifiez les champs saisis.";
-    } catch {
-      /* keep readable HTTP error */
-    }
-    throw new Error(message);
-  }
-  return res.json();
-}
 const json = (body: unknown) => ({
   method: "POST",
   headers: { "Content-Type": "application/json" },
@@ -110,6 +105,7 @@ export default function App() {
   const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
   const [recording, setRecording] = useState(false);
   const [sourceUrl, setSourceUrl] = useState("");
+  const [referenceUrl, setReferenceUrl] = useState("");
   const [captureFile, setCaptureFile] = useState<File | null>(null);
   const [rights, setRights] = useState(false);
   const [job, setJob] = useState<CaptureJob | null>(null);
@@ -151,6 +147,8 @@ export default function App() {
   }, []);
   useEffect(() => {
     void refresh();
+    const timer = window.setInterval(() => void refresh(), 15000);
+    return () => clearInterval(timer);
   }, [refresh]);
   useEffect(
     () => () => {
@@ -245,9 +243,27 @@ export default function App() {
       );
       if (token !== generation.current) return;
       setPlan(result);
+      const entry =
+        result.segments.length === 1
+          ? library.find(
+              (e) => e.motion.motion_id === result.segments[0].motion_id,
+            )
+          : undefined;
+      setReferenceUrl(
+        entry?.capture_id
+          ? `/api/captures/${entry.capture_id}/source`
+          : entry?.source_video_url
+            ? `/api${entry.source_video_url}`
+            : "",
+      );
       if (files.length) {
         setMotion(stitchAnimationPlan(result, new Map(files)));
-        setLabel(result.segments.length === 1 ? glossary.find(g=>g.gloss_id===result.segments[0].gloss_id)?.concept_fr || "Votre séquence" : "Votre séquence");
+        setLabel(
+          result.segments.length === 1
+            ? glossary.find((g) => g.gloss_id === result.segments[0].gloss_id)
+                ?.concept_fr || "Votre séquence"
+            : "Votre séquence",
+        );
         setPlaying(true);
       } else setLabel("Aucun mouvement trouvé");
     } catch (err) {
@@ -347,9 +363,20 @@ export default function App() {
     setPlan(null);
     setTime(0);
     try {
-      const meta = await request<{ path: string }>(`/motions/${id}`);
+      const meta = await request<{ path: string; synthetic?: boolean }>(
+        `/motions/${id}`,
+      );
       const filename = meta.path.split("/").pop();
-      setMotion(await request<MotionFile>(`/assets/${filename}`));
+      const clip = await request<MotionFile>(`/assets/${filename}`);
+      setMotion({ ...clip, synthetic: meta.synthetic ?? clip.synthetic });
+      const entry = library.find((e) => e.motion.motion_id === id);
+      setReferenceUrl(
+        entry?.capture_id
+          ? `/api/captures/${entry.capture_id}/source`
+          : entry?.source_video_url
+            ? `/api${entry.source_video_url}`
+            : "",
+      );
       setLabel(name);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Mouvement introuvable.");
@@ -483,6 +510,13 @@ export default function App() {
             <Plus />
             <span>Capturer</span>
           </button>
+          <button
+            className={page === "research" ? "nav-item active" : "nav-item"}
+            onClick={() => setPage("research")}
+          >
+            <FlaskConical />
+            <span>Recherche</span>
+          </button>
         </nav>
         <a
           className="nav-help"
@@ -508,7 +542,9 @@ export default function App() {
                 ? "Nouveau récit"
                 : page === "capture"
                   ? "Nouvelle capture"
-                  : "Mes mouvements"}
+                  : page === "research"
+                    ? "Données & modèles"
+                    : "Mes mouvements"}
             </strong>
           </span>
           <button className="connection" onClick={() => void refresh()}>
@@ -529,6 +565,10 @@ export default function App() {
                   <>
                     Du geste à la <em>matière.</em>
                   </>
+                ) : page === "research" ? (
+                  <>
+                    Mesurer, puis <em>progresser.</em>
+                  </>
                 ) : (
                   <>
                     Une bibliothèque <em>vivante.</em>
@@ -540,7 +580,9 @@ export default function App() {
                   ? "Composez un récit visuel, enrichissez-le de votre voix et explorez le mouvement."
                   : page === "capture"
                     ? "Transformez vos vidéos en mouvements réutilisables, du corps jusqu’aux doigts."
-                    : "Retrouvez vos captures et les concepts qui leur donnent un sens."}
+                    : page === "research"
+                      ? "Des sources identifiées, des expériences reproductibles et des résultats mesurés."
+                      : "Retrouvez vos captures et les concepts qui leur donnent un sens."}
               </p>
             </div>
             <span className="project-tag">
@@ -558,6 +600,7 @@ export default function App() {
           )}
           <div className="studio-layout">
             <section className="editor-column">
+              {page === "research" && <ResearchPanel />}
               {page === "studio" && (
                 <>
                   <div className="card text-card">
@@ -1259,7 +1302,9 @@ export default function App() {
                 <p>
                   {page === "capture"
                     ? "Les points absents lors d’une occultation ne sont pas recréés. Vérifiez les mains avant de conserver le mouvement."
-                    : motion?.synthetic ? "Cette séquence contient des mouvements de test synthétiques. Ils ne représentent pas des signes LSF validés." : "Reconstruction à partir de captures. Une revue LSF reste nécessaire avant une diffusion comme traduction."}
+                    : motion?.synthetic
+                      ? "Cette séquence contient des mouvements de test synthétiques. Ils ne représentent pas des signes LSF validés."
+                      : "Reconstruction à partir de captures. Une revue LSF reste nécessaire avant une diffusion comme traduction."}
                 </p>
               </div>
               {(
@@ -1281,6 +1326,22 @@ export default function App() {
                   </a>
                 </p>
               ))}
+              {referenceUrl && (
+                <details className="reference-video">
+                  <summary>Comparer avec la vidéo d’origine</summary>
+                  <video
+                    key={referenceUrl}
+                    src={referenceUrl}
+                    controls
+                    preload="metadata"
+                    playsInline
+                  />
+                  <p>
+                    Vérifiez la configuration des mains et les occultations dans
+                    la source.
+                  </p>
+                </details>
+              )}
               <div className="pipeline-strip">
                 <span>Texte</span>
                 <ChevronRight size={12} />

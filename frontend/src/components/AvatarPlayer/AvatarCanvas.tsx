@@ -312,9 +312,20 @@ export function AvatarCanvas(props: Props) {
           (!motion.frames[i + 1] ||
             motion.frames[i + 1].time_ms > currentTimeMs),
       )?.face;
-      mouth.scale.y = face?.mouth_open
-        ? 1 + Math.min(2, face.mouth_open * 4)
-        : mouth.scale.y;
+      if (face && Number.isFinite(face.mouth_open))
+        mouth.scale.y = 1 + Math.min(2, face.mouth_open * 4);
+      // Measured non-manual channels always take priority over audio hypotheses.
+      brows.forEach((brow, index) => {
+        const value = face?.[index === 0 ? "brow_left" : "brow_right"];
+        brow.position.y = 0.041;
+        if (value !== undefined && Number.isFinite(value)) {
+          brow.rotation.z = Math.PI / 2;
+          brow.position.y += Math.max(
+            -0.008,
+            Math.min(0.012, (value - 0.06) * 0.15),
+          );
+        }
+      });
       key.intensity =
         3.5 + (expressiveModulation ? (energyFactor || 0) * 0.12 : 0);
       controls.update();
