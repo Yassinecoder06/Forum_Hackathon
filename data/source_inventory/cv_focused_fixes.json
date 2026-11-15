@@ -1,0 +1,124 @@
+[
+  {
+    "concept": "pain",
+    "source_sha256": "5e7700f6b485865c93afb3afe521e89aa8e9b755bd4f9e43bb48311219917228",
+    "source": "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/captures/4a265a67-ca09-5921-a55c-8854d478c12e/source.mp4",
+    "frames": 69,
+    "recovered": [
+      {
+        "frame": 39,
+        "time_ms": 1560,
+        "side": "left"
+      },
+      {
+        "frame": 41,
+        "time_ms": 1640,
+        "side": "left"
+      }
+    ],
+    "lost_existing_observations": 0,
+    "disagreeing_hypotheses_rejected": 58,
+    "accuracy_validated": false,
+    "active_assets_replaced": false,
+    "raised_wrist_review": {
+      "left": {
+        "before_visible_raised_wrist_missing": 10,
+        "after_visible_raised_wrist_missing": 8
+      },
+      "right": {
+        "before_visible_raised_wrist_missing": 0,
+        "after_visible_raised_wrist_missing": 0
+      }
+    }
+  },
+  {
+    "concept": "livre",
+    "source_sha256": "d973947426a336c1d727fa9779e2ee24255f02a3ef4b15e02b018b57f04443d4",
+    "source": "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/captures/5ae7a790-8cfb-5b59-91d4-655c97ea33df/source.mp4",
+    "frames": 84,
+    "recovered": [],
+    "lost_existing_observations": 0,
+    "disagreeing_hypotheses_rejected": 72,
+    "accuracy_validated": false,
+    "active_assets_replaced": false,
+    "raised_wrist_review": {
+      "left": {
+        "before_visible_raised_wrist_missing": 0,
+        "after_visible_raised_wrist_missing": 0
+      },
+      "right": {
+        "before_visible_raised_wrist_missing": 1,
+        "after_visible_raised_wrist_missing": 1
+      }
+    }
+  },
+  {
+    "concept": "travail",
+    "source_sha256": "42fb5ea31a565b6439ca976a48ab3d94836ead2fa58db67e81bfb3131d2f2cc2",
+    "source": "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/captures/3803a3c8-82ff-5ab4-80be-0f66b278ddd6/source.mp4",
+    "frames": 47,
+    "recovered": [
+      {
+        "frame": 21,
+        "time_ms": 840,
+        "side": "right"
+      }
+    ],
+    "lost_existing_observations": 0,
+    "disagreeing_hypotheses_rejected": 11,
+    "accuracy_validated": false,
+    "active_assets_replaced": false,
+    "raised_wrist_review": {
+      "left": {
+        "before_visible_raised_wrist_missing": 0,
+        "after_visible_raised_wrist_missing": 0
+      },
+      "right": {
+        "before_visible_raised_wrist_missing": 1,
+        "after_visible_raised_wrist_missing": 0
+      }
+    }
+  },
+  {
+    "concept": "chat",
+    "source_sha256": "3d29e2f6de144a172cb0965e020a2f3458e613d0b91069b93e6860846ad9cf92",
+    "source": "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/captures/8069af08-c0fc-52f8-b958-23443f63c2d8/source.mp4",
+    "frames": 41,
+    "recovered": [],
+    "lost_existing_observations": 0,
+    "disagreeing_hypotheses_rejected": 37,
+    "accuracy_validated": false,
+    "active_assets_replaced": false,
+    "raised_wrist_review": {
+      "left": {
+        "before_visible_raised_wrist_missing": 4,
+        "after_visible_raised_wrist_missing": 4
+      },
+      "right": {
+        "before_visible_raised_wrist_missing": 1,
+        "after_visible_raised_wrist_missing": 1
+      }
+    }
+  },
+  {
+    "concept": "chercher",
+    "source_sha256": "166ace5e6a37c0800c68410f1bf874ca0d0ac2a4483ab47e62852101b47065b4",
+    "source": "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/captures/195ec46a-9fc5-5bdf-a07f-5944a23f83b2/source.mp4",
+    "frames": 39,
+    "recovered": [],
+    "lost_existing_observations": 0,
+    "disagreeing_hypotheses_rejected": 53,
+    "accuracy_validated": false,
+    "active_assets_replaced": false,
+    "raised_wrist_review": {
+      "left": {
+        "before_visible_raised_wrist_missing": 1,
+        "after_visible_raised_wrist_missing": 1
+      },
+      "right": {
+        "before_visible_raised_wrist_missing": 0,
+        "after_visible_raised_wrist_missing": 0
+      }
+    }
+  }
+]

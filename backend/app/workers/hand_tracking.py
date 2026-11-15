@@ -30,6 +30,19 @@ def consistent_hand(a, b, width, height):
     return max(errors) <= max(3.,palm*.35) and sum(errors)/21 <= max(1.5,palm*.15)
 
 
+def agreed_candidates(forward, backward, width, height):
+    """Keep actual forward detections corroborated in reverse; collapse repeats."""
+    accepted=[]
+    for hand in forward:
+        if not any(consistent_hand(hand, other, width, height) for other in backward):
+            continue
+        if any(math.hypot(hand.landmark[0].x-other.landmark[0].x,hand.landmark[0].y-other.landmark[0].y)<.03
+               and consistent_hand(hand,other,width,height) for other in accepted):
+            continue
+        accepted.append(hand)
+    return accepted
+
+
 def assign_hands(detections, wrists, existing=None, previous=None, max_distance=.18):
     """Return side->detection index. Existing Holistic sides stay locked.
 

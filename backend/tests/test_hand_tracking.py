@@ -1,7 +1,7 @@
 from backend.app.workers.hand_tracking import assign_hands
 from backend.app.workers.hand_tracking import roi_box, map_roi_hand
 from types import SimpleNamespace
-from backend.app.workers.hand_tracking import consistent_hand
+from backend.app.workers.hand_tracking import consistent_hand, agreed_candidates
 
 
 def test_two_detections_get_distinct_anatomical_sides():
@@ -51,3 +51,11 @@ def test_scale_agreement_rejects_different_or_unresolved_hands():
     assert consistent_hand(a,close,320,240)
     assert not consistent_hand(a,wrong,320,240)
     assert not consistent_hand(a,a,10,10)
+
+
+def test_bidirectional_agreement_deduplicates_one_physical_hand():
+    def hand(offset):return SimpleNamespace(landmark=[SimpleNamespace(x=offset+i*.005,y=.3,z=0) for i in range(21)])
+    a,b,other=hand(.1),hand(.101),hand(.6)
+    result=agreed_candidates([a,b,other],[b],320,240)
+    assert result==[a], 'Repeated crop detections must not become two different hands'
+    assert agreed_candidates([a],[other],320,240)==[]
