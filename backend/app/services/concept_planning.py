@@ -31,7 +31,7 @@ def propose(text,vocabulary):
         with tempfile.TemporaryDirectory(prefix='signaculture-concepts-') as folder:
             vocab=Path(folder)/'vocabulary.json'
             vocab.write_text(json.dumps(vocabulary,ensure_ascii=False))
-            result=subprocess.run([str(python),str(script),'--text',text,'--vocabulary',str(vocab),'--model',str(weights)],capture_output=True,text=True,timeout=180,cwd=ROOT)
+            result=subprocess.run([str(python),str(script),'--text',text,'--vocabulary',str(vocab),'--model',str(weights)],capture_output=True,text=True,timeout=270,cwd=ROOT)
         if result.returncode: raise RuntimeError('La proposition locale a échoué. La sélection manuelle reste disponible.')
         try: output=json.loads(result.stdout.strip().splitlines()[-1])
         except (ValueError,IndexError): raise RuntimeError('La réponse du modèle est illisible.')

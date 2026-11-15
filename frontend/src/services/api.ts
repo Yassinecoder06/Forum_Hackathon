@@ -10,7 +10,7 @@ export async function request<T>(
         path.startsWith("/concepts/propose") ||
           path.startsWith("/research/predict") ||
           path.startsWith("/analyze-audio")
-          ? 190000
+          ? 280000
           : 20000,
       ),
   });

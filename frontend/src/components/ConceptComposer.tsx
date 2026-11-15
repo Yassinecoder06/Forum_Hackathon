@@ -105,15 +105,23 @@ export function ConceptComposer({
       <p>
         Choisissez les signes disponibles et leur ordre. Une proposition
         automatique reste un brouillon ; elle ne valide pas la grammaire LSF.
+        Vérifiez notamment les noms propres, la négation, les questions et les
+        quantités : leur détection automatique reste imparfaite.
       </p>
       <button
         className="secondary-button"
         onClick={() => void suggest()}
-        disabled={busy || !text.trim()}
+        disabled={busy || !text.trim() || text.length > 500}
       >
         {busy ? <Loader2 size={14} className="spin" /> : null}Proposer des
         concepts
       </button>
+      {text.length > 500 && (
+        <p>
+          La proposition automatique accepte 500 caractères. La sélection
+          manuelle reste disponible.
+        </p>
+      )}
       <label>
         Rechercher un signe
         <input
