@@ -1711,3 +1711,61 @@ h1 em {
 .reference-video p {
   line-height: 1.6;
 }
+
+.concept-composer summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.concept-composer p {
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--muted);
+}
+.concept-composer label {
+  display: block;
+  margin-top: 16px;
+  font-size: 12px;
+}
+.concept-composer input {
+  display: block;
+  width: 100%;
+  margin: 8px 0;
+  padding: 12px;
+  border: 1px solid #dce4d4;
+  border-radius: 8px;
+}
+.concept-options {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.concept-options button,
+.concept-composer .secondary-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: #eef3e7;
+  border-radius: 8px;
+  border: 1px solid #dce4d4;
+  font-size: 12px;
+}
+.concept-sequence {
+  padding-left: 22px;
+}
+.concept-sequence li {
+  margin: 8px 0;
+  padding: 6px 0;
+  font-size: 13px;
+}
+.concept-sequence li span {
+  display: inline-block;
+  min-width: 45%;
+  overflow-wrap: anywhere;
+}
+.concept-sequence li button {
+  padding: 6px;
+  background: none;
+  border: 0;
+  color: var(--ink);
+}

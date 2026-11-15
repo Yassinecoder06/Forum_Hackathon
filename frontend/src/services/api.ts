@@ -7,9 +7,10 @@ export async function request<T>(
     signal:
       options?.signal ||
       AbortSignal.timeout(
-        path.startsWith("/research/predict") ||
+        path.startsWith("/concepts/propose") ||
+          path.startsWith("/research/predict") ||
           path.startsWith("/analyze-audio")
-          ? 130000
+          ? 190000
           : 20000,
       ),
   });

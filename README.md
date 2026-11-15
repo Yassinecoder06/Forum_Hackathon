@@ -29,6 +29,10 @@ L’inventaire contient 447 concepts France-LSF avec licences par fichier, créd
 - Inférence locale emotion2vec, affichée comme hypothèse. Les signaux faciaux capturés priment sur la modulation expressive expérimentale.
 - Catalogue SQLite séparant vidéos lexicales, annotations et paires de recherche ; provenance, licences, splits et évaluations conservés.
 
+## Composition assistée et revue
+
+Dans Studio, ouvrir « Préparer et corriger les concepts ». On peut sélectionner les signes réels, les réordonner, prévisualiser la sélection et télécharger une fiche JSON pour une revue linguistique. Ces fiches restent des brouillons, jamais des données expertes automatiquement approuvées. Une proposition sémantique locale est en cours d’évaluation ; voir [la solution](docs/SEMANTIC_SOLUTION.md).
+
 ## Résultats mesurés
 
 128 paires de recherche issues d’annotations publiées UD/SUD STKAutogramm : **61 entraînement / 28 validation / 39 test**. Les traductions françaises libres ne forment pas un corpus parallèle validé. Les vidéos lexicales ne deviennent jamais des paires de phrases inventées. Zéro approbation linguistique locale.

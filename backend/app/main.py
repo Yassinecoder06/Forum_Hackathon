@@ -236,7 +236,9 @@ def lookup(body: TextRequest):
 @app.post('/compose-animation', response_model=AnimationPlan)
 def compose(body: TextRequest):
     draft = lookup(body)
-    audio = body.audio_features
+    return compose_draft(draft, body.audio_features)
+
+def compose_draft(draft, audio=None):
     segments, t = [], 0
     selected = []
     for g in draft['gloss_sequence']:
@@ -313,4 +315,40 @@ def research_predict(body: ResearchRequest):
     except FileNotFoundError as exc: raise HTTPException(404,str(exc))
     except BlockingIOError as exc: raise HTTPException(429,str(exc))
     except subprocess.TimeoutExpired: raise HTTPException(504,'Délai d’inférence dépassé.')
+    except RuntimeError as exc: raise HTTPException(503,str(exc))
+
+
+@app.get('/concepts/vocabulary')
+def concept_vocabulary():
+    _,glosses,motions=registry()
+    available={m.motion_id for m in motions if not m.synthetic}
+    return {'concepts':[{'id':g.gloss_id,'concept':g.concept_fr} for g in glosses if g.motion_id in available]}
+
+class ConceptSequenceRequest(BaseModel):
+    text: str = Field(min_length=1,max_length=4000)
+    concept_ids: list[str] = Field(min_length=1,max_length=40)
+    unsupported: list[str] = Field(default_factory=list,max_length=50)
+    audio_features: AudioFeatures | None = None
+
+@app.post('/compose-concepts',response_model=AnimationPlan)
+def compose_concepts(body: ConceptSequenceRequest):
+    _,glosses,motions=registry()
+    available={m.motion_id for m in motions if not m.synthetic}
+    allowed={g.gloss_id:g for g in glosses if g.motion_id in available}
+    if any(identifier not in allowed for identifier in body.concept_ids):
+        raise HTTPException(422,'Un concept sélectionné est inconnu ou synthétique.')
+    return compose_draft({'source_text':body.text,'gloss_sequence':[allowed[i] for i in body.concept_ids],
+        'unknowns':body.unsupported},body.audio_features)
+
+class ConceptProposalRequest(BaseModel):
+    text: str = Field(min_length=1,max_length=500)
+
+@app.post('/concepts/propose')
+def propose_concepts(body: ConceptProposalRequest):
+    from .services.concept_planning import propose
+    if not body.text.strip(): raise HTTPException(422,'Saisissez une phrase.')
+    try: return propose(body.text,concept_vocabulary()['concepts'])
+    except FileNotFoundError as exc: raise HTTPException(503,str(exc))
+    except BlockingIOError as exc: raise HTTPException(429,str(exc))
+    except subprocess.TimeoutExpired: raise HTTPException(504,'La proposition a dépassé le délai autorisé.')
     except RuntimeError as exc: raise HTTPException(503,str(exc))

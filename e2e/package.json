@@ -1,1 +1,12 @@
-{"name":"signaculture-browser-checks","private":true,"type":"module","scripts":{"test":"node smoke.mjs"},"devDependencies":{"playwright":"^1.58.0"}}
+{
+  "name": "signaculture-browser-checks",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node smoke.mjs",
+    "test:concepts": "node concepts.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.58.0"
+  }
+}

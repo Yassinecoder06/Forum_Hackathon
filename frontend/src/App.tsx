@@ -21,6 +21,7 @@ import {
   X,
 } from "lucide-react";
 import { request } from "./services/api";
+import { ConceptComposer } from "./components/ConceptComposer";
 import { ResearchPanel } from "./components/ResearchPanel";
 import { AvatarCanvas } from "./components/AvatarPlayer/AvatarCanvas";
 import { stitchAnimationPlan } from "./utils/planStitcher";
@@ -273,6 +274,28 @@ export default function App() {
     } finally {
       if (token === generation.current) setBusy(false);
     }
+  }
+
+  async function loadConceptPlan(result: AnimationPlan) {
+    const files = await Promise.all(
+      result.segments.map(
+        async (seg) =>
+          [
+            seg.motion_id,
+            await request<MotionFile>(
+              seg.asset_url || `/assets/${seg.motion_id}.json`,
+            ),
+          ] as const,
+      ),
+    );
+    generation.current += 1;
+    setPlan(result);
+    setMotion(stitchAnimationPlan(result, new Map(files)));
+    setTime(0);
+    setPlaying(true);
+    setLabel("Sélection de concepts");
+    setReferenceUrl("");
+    setError("");
   }
 
   async function analyseAudio(file: File) {
@@ -660,6 +683,13 @@ export default function App() {
                       {busy ? "Composition en cours…" : "Créer l’animation"}
                       <ArrowRight size={17} />
                     </button>
+                  </div>
+                  <div className="card">
+                    <ConceptComposer
+                      text={text}
+                      audio={audio}
+                      onPlan={loadConceptPlan}
+                    />
                   </div>
                   <div className="card audio-card">
                     <div className="card-heading">

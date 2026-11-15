@@ -1,0 +1,19 @@
+{
+  "schema_version": "concept-review-v1",
+  "source_text": "Demain, je vous dis bonjour.",
+  "concepts": [
+    {
+      "id": "LSF_CAPTURE_8904879fd1315a46",
+      "concept": "demain"
+    },
+    {
+      "id": "LSF_CONCEPT_001",
+      "concept": "bonjour"
+    }
+  ],
+  "unsupported": [],
+  "origin": "interactive_concept_draft",
+  "linguistic_review": "pending",
+  "translation_validated": false,
+  "created_at": "2026-11-15T08:58:36.671Z"
+}
