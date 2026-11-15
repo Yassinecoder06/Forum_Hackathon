@@ -1,6 +1,21 @@
 """Deterministic one-to-one fallback assignment; no detector confidence invented."""
 import itertools
 import math
+from copy import deepcopy
+
+
+def roi_box(cx, cy, size, width, height):
+    size = min(int(size), width, height)
+    return max(0, min(width-size, int(cx-size/2))), max(0, min(height-size, int(cy-size/2))), size
+
+
+def map_roi_hand(hand, x0, y0, size, width, height):
+    mapped = deepcopy(hand)
+    for point in mapped.landmark:
+        point.x = (x0 + point.x*size)/width
+        point.y = (y0 + point.y*size)/height
+        point.z *= size/width
+    return mapped
 
 
 def assign_hands(detections, wrists, existing=None, previous=None, max_distance=.18):

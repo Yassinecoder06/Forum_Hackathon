@@ -10,9 +10,9 @@ import cv2
 import mediapipe as mp
 import numpy as np
 if __package__:
-    from .hand_tracking import assign_hands
+    from .hand_tracking import assign_hands, roi_box, map_roi_hand
 else:
-    from hand_tracking import assign_hands
+    from hand_tracking import assign_hands, roi_box, map_roi_hand
 
 BODY = {'head': 0, 'left_shoulder': 11, 'right_shoulder': 12,
         'left_elbow': 13, 'right_elbow': 14, 'left_wrist': 15, 'right_wrist': 16}
@@ -81,6 +81,7 @@ def extract(source, target, progress, raw_target=None):
     frames, missing, left, right, faces, processed = [],0,0,0,0,0
     raw_frames=[]
     previous_hands={}
+    hand_disagreements={'left':0,'right':0}
     def raw_points(landmarks,world=False):
         if landmarks is None:return None
         values=[]
@@ -94,7 +95,7 @@ def extract(source, target, progress, raw_target=None):
         temp.write_text(json.dumps({'progress':value}))
         temp.replace(progress)
     try:
-        with mp.solutions.holistic.Holistic(model_complexity=1, min_detection_confidence=.5, min_tracking_confidence=.5) as model, mp.solutions.hands.Hands(max_num_hands=2, min_detection_confidence=.35, min_tracking_confidence=.4) as hand_model:
+        with mp.solutions.holistic.Holistic(model_complexity=1, min_detection_confidence=.5, min_tracking_confidence=.5) as model, mp.solutions.hands.Hands(max_num_hands=2, min_detection_confidence=.35, min_tracking_confidence=.4) as hand_model, mp.solutions.hands.Hands(static_image_mode=True,max_num_hands=2,min_detection_confidence=.5) as roi_model:
             index = 0
             while True:
                 ok, image = cap.read()
@@ -119,13 +120,45 @@ def extract(source, target, progress, raw_target=None):
                             hand_sources[side]='hands_fallback'
                     result=SimpleNamespace(pose_landmarks=result.pose_landmarks,pose_world_landmarks=result.pose_world_landmarks,
                         face_landmarks=result.face_landmarks,left_hand_landmarks=sides['left'],right_hand_landmarks=sides['right'])
+                # Detect missing hands at higher local resolution. A separate
+                # static detector keeps crop coordinates out of the full-frame tracker.
+                if result.pose_landmarks:
+                    sides={s:getattr(result,f'{s}_hand_landmarks') for s in ('left','right')}
+                    h,w=image.shape[:2];pose=result.pose_landmarks.landmark
+                    shoulder=math.hypot((pose[11].x-pose[12].x)*w,(pose[11].y-pose[12].y)*h)
+                    candidates=[]
+                    for side,wi,ei in [('left',15,13),('right',16,14)]:
+                        if sides[side] is not None or pose[wi].visibility<.5:continue
+                        cx,cy=pose[wi].x*w,pose[wi].y*h
+                        size=max(64,shoulder*.8,math.hypot((pose[wi].x-pose[ei].x)*w,(pose[wi].y-pose[ei].y)*h)*1.5)
+                        x0,y0,size=roi_box(cx,cy,size,w,h);x1,y1=x0+size,y0+size
+                        if x1-x0<24 or y1-y0<24:continue
+                        crop=cv2.resize(rgb[y0:y1,x0:x1],(384,384))
+                        found=roi_model.process(crop)
+                        for hand in found.multi_hand_landmarks or []:
+                            mapped=map_roi_hand(hand,x0,y0,size,w,h)
+                            wrist=mapped.landmark[0]
+                            if not any(math.hypot(wrist.x-c.landmark[0].x,wrist.y-c.landmark[0].y)<.02 for c in candidates):
+                                candidates.append(mapped)
+                    if candidates:
+                        wrists={s:(pose[i].x,pose[i].y) for s,i in [('left',15),('right',16)]}
+                        chosen=assign_hands([(c.landmark[0].x,c.landmark[0].y) for c in candidates],wrists,{s:v is not None for s,v in sides.items()},previous_hands,max_distance=.10)
+                        for s,i in chosen.items():sides[s]=candidates[i];hand_sources[s]='hands_roi'
+                        result=SimpleNamespace(pose_landmarks=result.pose_landmarks,pose_world_landmarks=result.pose_world_landmarks,face_landmarks=result.face_landmarks,left_hand_landmarks=sides['left'],right_hand_landmarks=sides['right'])
                 previous_hands={side:(hand.landmark[0].x,hand.landmark[0].y) for side in ('left','right') if (hand:=getattr(result,f'{side}_hand_landmarks')) is not None}
+                hand_diagnostics={}
+                for side,wi in [('left',15),('right',16)]:
+                    hand=getattr(result,f'{side}_hand_landmarks')
+                    gap=math.hypot(hand.landmark[0].x-result.pose_landmarks.landmark[wi].x,hand.landmark[0].y-result.pose_landmarks.landmark[wi].y) if hand is not None and result.pose_landmarks else None
+                    suspect=gap is not None and gap>.12
+                    hand_disagreements[side]+=int(suspect)
+                    hand_diagnostics[side]={'observed':hand is not None,'source':hand_sources[side],'wrist_disagreement_normalized':gap,'review_required':suspect or hand_sources[side]=='hands_roi'}
                 if raw_target is not None:
                     # Animics Keyframe recorder names/axis convention, pinned reference
                     # upf-gti/animics daf09928 src/Mediapipe.js processLandmarks/recording.
                     # Holistic does not expose independent world-hand points: keep them null.
                     raw_frames.append({'dt':0. if not raw_frames else stride/fps,'time_ms':round(index*1000/fps),
-                        'image_width':image.shape[1],'image_height':image.shape[0],
+                        'image_width':image.shape[1],'image_height':image.shape[0],'hand_diagnostics':hand_diagnostics,
                         'PLM':raw_points(result.pose_landmarks),'PWLM':raw_points(result.pose_world_landmarks,True),
                         'LLM':raw_points(result.left_hand_landmarks),'RLM':raw_points(result.right_hand_landmarks),
                         'LWLM':None,'RWLM':None,'FLM':raw_points(result.face_landmarks)})
@@ -134,7 +167,7 @@ def extract(source, target, progress, raw_target=None):
                     try:
                         joints,hands,face=pose_frame(result,image.shape[1],image.shape[0])
                         frames.append({'time_ms':round(index*1000/fps),'joints':joints,'face':face,
-                            'hand_tracking':{s:{'observed':hands[s],'source':hand_sources[s]} for s in ('left','right')}})
+                            'hand_tracking':hand_diagnostics})
                         left+=int(hands['left']);right+=int(hands['right']);faces+=int(face is not None)
                     except ValueError: missing+=1
                 else: missing+=1
@@ -150,14 +183,14 @@ def extract(source, target, progress, raw_target=None):
         last=deepcopy(frames[-1]);last['time_ms']=duration;frames.append(last)
     joint_names=sorted(set().union(*(f['joints'] for f in frames)))
     # Do not invent fingers during occlusion. Sparse finger keys are intentional;
-    # the player hides a hand when its landmarks are missing.
+    # the player separately labels/fades missing-hand playback estimates.
     quality={'sampled_frames':processed,'pose_frames':processed-missing,
         'pose_coverage':round((processed-missing)/processed,3),
         'left_hand_coverage':round(left/processed,3),'right_hand_coverage':round(right/processed,3),
-        'face_coverage':round(faces/processed,3),'missing_frames':missing}
+        'face_coverage':round(faces/processed,3),'missing_frames':missing,'hand_wrist_disagreement_frames':hand_disagreements}
     motion={'rig_version':'signaculture-v1','fps':fps/stride,'duration_ms':duration,
         'joints':list(BODY)+['hips','neck'],'tracked_joints':joint_names,'frames':frames,
-        'quality':quality,'synthetic':False,'capture_method':'mediapipe-holistic-hands-fallback-0.10.21-assignment-v2',
+        'quality':quality,'synthetic':False,'capture_method':'mediapipe-holistic-hands-fallback-0.10.21-roi-v3',
         'warnings':['Profondeur monoculaire approximative. Les occultations nécessitent une revue.']}
     target.write_text(json.dumps(motion,allow_nan=False))
     if raw_target is not None:
