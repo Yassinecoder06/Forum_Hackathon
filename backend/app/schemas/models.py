@@ -44,7 +44,7 @@ class TranslationDraft(ContractModel):
     lemmas: list[str]
     gloss_sequence: list[GlossEntry]
     unknowns: list[str]
-    linguistic_review: ReviewStatus
+    linguistic_review: Literal["pending"]
     translation_validated: Literal[False]
 
 

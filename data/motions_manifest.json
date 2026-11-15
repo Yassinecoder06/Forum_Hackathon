@@ -1,0 +1,80 @@
+[
+  {
+    "motion_id": "SYNTHETIC_001",
+    "gloss_id": "LSF_CONCEPT_001",
+    "path": "data/approved_motion_assets/SYNTHETIC_001.json",
+    "rig_version": "signaculture-v1",
+    "fps": 10,
+    "duration_ms": 1000,
+    "license": "CC0-1.0",
+    "quality_status": "synthetic_technical_fixture_not_validated_LSF",
+    "rights_status": "cleared",
+    "animation_review": "pending",
+    "synthetic": true
+  },
+  {
+    "motion_id": "SYNTHETIC_002",
+    "gloss_id": "LSF_CONCEPT_002",
+    "path": "data/approved_motion_assets/SYNTHETIC_002.json",
+    "rig_version": "signaculture-v1",
+    "fps": 10,
+    "duration_ms": 1000,
+    "license": "CC0-1.0",
+    "quality_status": "synthetic_technical_fixture_not_validated_LSF",
+    "rights_status": "cleared",
+    "animation_review": "pending",
+    "synthetic": true
+  },
+  {
+    "motion_id": "SYNTHETIC_003",
+    "gloss_id": "LSF_CONCEPT_003",
+    "path": "data/approved_motion_assets/SYNTHETIC_003.json",
+    "rig_version": "signaculture-v1",
+    "fps": 10,
+    "duration_ms": 1000,
+    "license": "CC0-1.0",
+    "quality_status": "synthetic_technical_fixture_not_validated_LSF",
+    "rights_status": "cleared",
+    "animation_review": "pending",
+    "synthetic": true
+  },
+  {
+    "motion_id": "SYNTHETIC_004",
+    "gloss_id": "LSF_CONCEPT_004",
+    "path": "data/approved_motion_assets/SYNTHETIC_004.json",
+    "rig_version": "signaculture-v1",
+    "fps": 10,
+    "duration_ms": 1000,
+    "license": "CC0-1.0",
+    "quality_status": "synthetic_technical_fixture_not_validated_LSF",
+    "rights_status": "cleared",
+    "animation_review": "pending",
+    "synthetic": true
+  },
+  {
+    "motion_id": "SYNTHETIC_005",
+    "gloss_id": "LSF_CONCEPT_005",
+    "path": "data/approved_motion_assets/SYNTHETIC_005.json",
+    "rig_version": "signaculture-v1",
+    "fps": 10,
+    "duration_ms": 1000,
+    "license": "CC0-1.0",
+    "quality_status": "synthetic_technical_fixture_not_validated_LSF",
+    "rights_status": "cleared",
+    "animation_review": "pending",
+    "synthetic": true
+  },
+  {
+    "motion_id": "SYNTHETIC_006",
+    "gloss_id": "LSF_CONCEPT_006",
+    "path": "data/approved_motion_assets/SYNTHETIC_006.json",
+    "rig_version": "signaculture-v1",
+    "fps": 10,
+    "duration_ms": 1000,
+    "license": "CC0-1.0",
+    "quality_status": "synthetic_technical_fixture_not_validated_LSF",
+    "rights_status": "cleared",
+    "animation_review": "pending",
+    "synthetic": true
+  }
+]
