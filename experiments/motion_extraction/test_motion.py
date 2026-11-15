@@ -83,9 +83,10 @@ def test_real_backend_asset_validator(tmp_path):
     import types
     import json
     from pathlib import Path
-    backend_app = os.environ.get('SIGNACULTURE_BACKEND_APP')
-    if not backend_app:
-        pytest.skip('Set SIGNACULTURE_BACKEND_APP to backend/app for integration validation')
+    backend_app = Path(os.environ.get('SIGNACULTURE_BACKEND_APP',
+                       Path(__file__).resolve().parents[2] / 'backend/app'))
+    if not (backend_app / 'main.py').is_file():
+        pytest.skip('Backend app/main.py is absent; set SIGNACULTURE_BACKEND_APP for an isolated worktree')
     package = types.ModuleType('_motion_backend')
     package.__path__ = [str(Path(backend_app).resolve())]
     sys.modules[package.__name__] = package
