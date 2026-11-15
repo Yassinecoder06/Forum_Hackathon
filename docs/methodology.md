@@ -81,6 +81,6 @@ Le plan de validation prévoit 5 expériences comparatives :
 | Composant Méthodologique | Statut MVP Actuel | Statut Cible / En Attente |
 |---|---|---|
 | **Text-to-Gloss** | Matcher déterministe sur vocabulaire contrôlé | Modèle hybride avec gestion avancée de la syntaxe LSF |
-| **Prosodie Audio** | DSP F0 + RMS + détection de silences en ms | Modèle emotion2vec+ calibré avec quantification CPU/GPU |
+| **Prosodie Audio** | DSP F0 + RMS + détection de silences en ms | Expérimentation d'un modèle local emotion2vec+ |
 | **Rig Cinématique** | 9 articulations majeures + interpolation linéaire | Intégration complète des 21 points des doigts et du maillage facial (FACS) |
 | **Évaluation Humaine** | Tests unitaires et d'intégration automatisés | Séances de tests perceptuels avec des locuteurs sourds natifs |
