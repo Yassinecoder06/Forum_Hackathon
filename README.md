@@ -31,7 +31,7 @@ L’inventaire contient 447 concepts France-LSF avec licences par fichier, créd
 
 ## Composition assistée et revue
 
-Dans Studio, ouvrir « Préparer et corriger les concepts ». On peut sélectionner les signes réels, les réordonner, prévisualiser la sélection et télécharger une fiche JSON pour une revue linguistique. Ces fiches restent des brouillons, jamais des données expertes automatiquement approuvées. Une proposition sémantique locale est en cours d’évaluation ; voir [la solution](docs/SEMANTIC_SOLUTION.md).
+Dans Studio, ouvrir « Préparer et corriger les concepts ». On peut sélectionner les signes réels, les réordonner, prévisualiser la sélection et télécharger une fiche JSON pour une revue linguistique. Ces fiches restent des brouillons, jamais des données expertes automatiquement approuvées. Une proposition sémantique locale Qwen3.5-9B est disponible en option : démarrer `python3 scripts/start-concept-server.py`, puis cliquer « Proposer des concepts ». Le modèle utilise environ 5,2 Go de VRAM avec offload partiel. Le premier essai logiciel donne 13/24 séquences exactes contre 12/24 pour le lookup ; le runtime corrigé ensuite reste non scoré. Voir [la solution](docs/SEMANTIC_SOLUTION.md) et [le rapport mesuré](research/CONCEPT_PLANNER_REPORT.md).
 
 ## Résultats mesurés
 
@@ -57,7 +57,7 @@ CHROME_PATH=/chemin/vers/chrome npm --prefix e2e test
 .worktrees/wt-codex2/training/.venv-train/bin/python -m pytest training/test_catalog.py training/test_adaptation.py
 ```
 
-58 tests API/schémas/mouvement et 12 tests de protocole de recherche passent. Le contrôle navigateur couvre composition, recherche temporelle, téléchargement réel, audio, import, persistance, mobile et erreurs réseau. Les [captures et aperçu vidéo](artifacts/README.md) documentent le logiciel exécuté.
+65 tests API/schémas/mouvement et 18 tests de recherche passent. Un test strictement marqué xfail conserve le défaut connu de détection du prénom Alice. Le contrôle navigateur couvre composition, recherche temporelle, téléchargement réel, audio, import, persistance, mobile et erreurs réseau. Les [captures et aperçu vidéo](artifacts/README.md) documentent le logiciel exécuté.
 
 Les modèles `.models/`, environnements, checkpoints et captures `.runtime/` sont ignorés par Git. Aucun téléchargement automatique n’a lieu lors d’une requête API. Le modèle français optionnel se configure dans [backend/README.md](backend/README.md).
 

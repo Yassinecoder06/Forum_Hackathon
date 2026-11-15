@@ -8,4 +8,6 @@ Les expériences textuelles sont dans `research/runs/` : T5-small CPU et deux mT
 
 `SignaCulture_Presentation.pdf`, `SignaCulture_Demo_FR.mp4` et `demo_narration.txt` sont des **livrables historiques du premier prototype**, antérieurs au studio actuel et à l’ingestion réelle. Ils ne décrivent pas les capacités actuelles ; consulter le README racine et les nouvelles captures.
 
-Vérification actuelle : 58 tests API/schémas/mouvement, 12 tests de recherche, lint et build frontend, tests navigateur contre les vrais services. Aucun résultat état de l’art ni validation par des signants n’est revendiqué.
+`browser/concepts.png`, `semantic.png` et `concept-review.json` documentent la sélection manuelle, la proposition locale réelle et la fiche de revue non validée.
+
+Vérification actuelle : 65 tests API/schémas/mouvement, 18 tests de recherche, un défaut de détection de prénom conservé en xfail strict, lint et build frontend, tests navigateur contre les vrais services. Aucun résultat état de l’art ni validation par des signants n’est revendiqué.
