@@ -8,7 +8,6 @@ export async function request<T>(
       options?.signal ||
       AbortSignal.timeout(
         path.startsWith("/pipeline/lexical") ||
-          path.startsWith("/concepts/propose") ||
           path.startsWith("/research/predict") ||
           path.startsWith("/analyze-audio")
           ? 280000

@@ -42,7 +42,7 @@ L’inventaire contient 447 concepts France-LSF avec licences par fichier, créd
 
 ## Composition assistée et revue
 
-Dans Studio, ouvrir « Préparer et corriger les concepts ». On peut sélectionner les signes réels, les réordonner, prévisualiser la sélection et télécharger une fiche JSON pour une revue linguistique. Ces fiches restent des brouillons, jamais des données expertes automatiquement approuvées. Une proposition sémantique locale Qwen3.5-9B est disponible en option : démarrer `python3 scripts/start-concept-server.py`, puis cliquer « Proposer des concepts ». Le modèle utilise environ 5,2 Go de VRAM avec offload partiel. Le premier essai logiciel donne 13/24 séquences exactes contre 12/24 pour le lookup ; le runtime corrigé ensuite reste non scoré. Voir [la solution](docs/SEMANTIC_SOLUTION.md) et [le rapport mesuré](research/CONCEPT_PLANNER_REPORT.md).
+Dans Studio, ouvrir « Préparer et corriger les concepts ». On peut sélectionner les signes réels, les réordonner, prévisualiser la sélection et télécharger une fiche JSON pour une revue linguistique. Ces fiches restent des brouillons, jamais des données expertes automatiquement approuvées. Le modèle de proposition Qwen a été retiré à la demande de l’utilisateur. La sélection reste manuelle, avec recherche dans le dictionnaire français et sens non représenté explicite.
 
 ## Résultats mesurés
 

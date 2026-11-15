@@ -26,13 +26,6 @@ def checkpoint_runtime(report):
     runtime=next((p for p in choices if p.is_file()),None)
     return (checkpoint,runtime) if runtime else None
 
-def concept_report():
-    path=ROOT/'research/runs/pretrained-concept-planner/metrics.json'
-    try:
-        value=json.loads(path.read_text())
-        return {k:value.get(k) for k in ['kind','metrics','vocabulary_count','invalid_external_ids','device_peak_mib','limitations']}
-    except (ValueError,OSError): return None
-
 def transition_report():
     path=ROOT/'research/runs/transition-intrasign-v1/metrics.json'
     try:
@@ -49,7 +42,7 @@ def status():
     try: lexical=len(json.loads(inventory.read_text())['entries'])
     except (ValueError,OSError,KeyError): lexical=0
     return {'lexical_video_references':lexical,'datasets':manifests,'runs':reports(),
-        'corpus':corpus_status(),'concept_experiment':concept_report(),'transition_experiment':transition_report(),'linguistic_review':'pending','translation_validated':False}
+        'corpus':corpus_status(),'transition_experiment':transition_report(),'linguistic_review':'pending','translation_validated':False}
 
 def predict(text,run_id):
     report=next((r for r in reports() if r['run_id']==run_id),None)

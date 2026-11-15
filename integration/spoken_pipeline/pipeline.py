@@ -1,5 +1,5 @@
 """Pinned upstream France-LSF lexical lookup -> masked poses -> 2D diagnostic."""
-import argparse,contextlib,copy,hashlib,io,json,re,subprocess,sys,time
+import argparse,contextlib,copy,hashlib,io,json,os,re,shutil,subprocess,sys,time
 from pathlib import Path
 import numpy as np
 import simplemma
@@ -83,7 +83,7 @@ def run(lexicon,out,text=None,glosses=None,fps=25.,video=True):
     if video:
         visualizer=PoseVisualizer(readback,thickness=2)
         mp4=out/'diagnostic.mp4';gif=out/'diagnostic.gif'
-        visualizer.save_video(str(mp4),visualizer.draw(),custom_ffmpeg='/usr/bin/ffmpeg')
+        visualizer.save_video(str(mp4),visualizer.draw(),custom_ffmpeg=os.getenv('SIGNACULTURE_FFMPEG') or shutil.which('ffmpeg') or '/usr/bin/ffmpeg')
         visualizer.save_gif(str(gif),visualizer.draw())
         probe=json.loads(subprocess.check_output(['ffprobe','-v','error','-count_frames','-show_entries','stream=codec_name,width,height,nb_read_frames,r_frame_rate','-show_entries','format=duration','-of','json',str(mp4)],text=True))
         report.update(video_path=str(mp4.resolve()),gif_path=str(gif.resolve()),video_sha256=sha(mp4),gif_sha256=sha(gif),ffprobe=probe)

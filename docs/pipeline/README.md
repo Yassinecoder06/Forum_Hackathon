@@ -2,9 +2,9 @@
 
 The four-page vector PDF is saved at the repository root as `SignaCulture_Full_Pipeline.pdf`.
 
-1. Current application: French text, default concept lookup, optional Qwen drafts, motion composition, audio analysis, avatar and WebM export.
+1. Current application: French text, default concept lookup, manual editable concept sequences, motion composition, audio analysis, avatar and WebM export.
 2. Video ingestion: rights, checksums, MediaPipe, tracking review, real motion library and traceability.
-3. Research: separate UD/SUD data and T5/mT5 experiments, Qwen evaluation, and limits of paper coverage. Playback uses deterministic transitions; the new CGAN remains a within-sign research experiment.
+3. Research: separate UD/SUD data and T5/mT5 experiments, archived retired-model evaluation, and limits of paper coverage. Playback uses deterministic transitions; the new CGAN remains a within-sign research experiment.
 4. Architecture of the supplied T5–GAN paper, now read in full, and the missing implementation components.
 
 The SVG pages and HTML are editable sources. Counts and metrics describe the implementation snapshot of 15 November 2026.

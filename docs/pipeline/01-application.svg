@@ -58,11 +58,11 @@
 <path d="M960,520 L1030,520" fill="none" stroke="#23684f" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#green)"/>
 <path d="M1290,520 L1360,520" fill="none" stroke="#23684f" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#green)"/>
 <rect x="340" y="705" width="290" height="165" rx="17" fill="#edf3f7" stroke="#336a91" stroke-width="1.4"/>
-<text x="360" y="729" fill="#336a91" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">OPTIONAL ASSISTANT</text>
-<text x="360" y="760" fill="#336a91" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Qwen3.5-9B</text>
-<text x="360" y="791" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Local pretrained model</text>
-<text x="360" y="814" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Proposes library concepts</text>
-<text x="360" y="837" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Restricted to valid IDs</text>
+<text x="360" y="729" fill="#336a91" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">MANUAL SELECTION</text>
+<text x="360" y="760" fill="#336a91" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Dictionary search</text>
+<text x="360" y="791" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Existing French concepts</text>
+<text x="360" y="814" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">User chooses valid IDs</text>
+<text x="360" y="837" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">No language-model inference</text>
 <rect x="700" y="705" width="260" height="165" rx="17" fill="#edf3f7" stroke="#336a91" stroke-width="1.4"/>
 <text x="720" y="729" fill="#336a91" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">HUMAN CONTROL</text>
 <text x="720" y="760" fill="#336a91" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Editable draft</text>

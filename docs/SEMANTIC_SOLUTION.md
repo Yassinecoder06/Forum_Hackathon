@@ -1,3 +1,5 @@
+> ARCHIVE : le modèle Qwen, son endpoint et sa proposition dans l’interface ont été retirés à la demande de l’utilisateur. Le texte ci-dessous décrit uniquement une ancienne expérience. La sélection manuelle et le lookup restent actifs.
+
 > Current evidence update: the supplied seven-page `research_paper.pdf` has now been read. See [verified comparison](../research/PAPER_B_VERIFIED_REVIEW.md); the new CGAN is a research-only intra-sign experiment, not a validated inter-sign model.
 
 # Solution en cours : séparer compréhension française et production LSF

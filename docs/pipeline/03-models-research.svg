@@ -48,12 +48,13 @@
 <path d="M800,565 L880,565" fill="none" stroke="#74578d" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#purple)"/>
 <rect x="40" y="765" width="500" height="250" rx="17" fill="#edf3f7" stroke="#336a91" stroke-width="1.4"/>
 <text x="60" y="789" fill="#336a91" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">SEPARATE OPTIONAL EXPERIMENT</text>
-<text x="60" y="820" fill="#336a91" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Qwen: semantic concept proposals</text>
-<text x="60" y="851" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Pretrained local Qwen3.5-9B GGUF.</text>
-<text x="60" y="874" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Fixed engineering check: 24 French inputs.</text>
-<text x="60" y="897" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">13/24 exact concept sequences vs 12/24 literal</text>
-<text x="60" y="920" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">lookup.</text>
-<text x="60" y="943" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Mean latency 7.8 s; GPU peak ≈ 5.2 GB.</text>
+<text x="60" y="820" fill="#336a91" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Retired concept-planner experiment</text>
+<text x="60" y="851" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Archived local-model trial; removed from</text>
+<text x="60" y="874" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">application.</text>
+<text x="60" y="897" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Fixed engineering check: 24 French inputs.</text>
+<text x="60" y="920" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">13/24 exact concept sequences vs 12/24 literal</text>
+<text x="60" y="943" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">lookup.</text>
+<text x="60" y="966" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Mean latency 7.8 s; GPU peak ≈ 5.2 GB.</text>
 <rect x="590" y="765" width="500" height="250" rx="17" fill="#edf3f7" stroke="#336a91" stroke-width="1.4"/>
 <text x="610" y="789" fill="#336a91" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">MEASURED VERSION ≠ CURRENT RUNTIME</text>
 <text x="610" y="820" fill="#336a91" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Correction and limitations</text>

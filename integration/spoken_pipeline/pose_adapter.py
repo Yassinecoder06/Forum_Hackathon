@@ -45,11 +45,12 @@ def _store(data,conf,frame,offset,points,scale):
         data[frame,0,offset+j]=[vals[0]*scale[0],vals[1]*scale[1],vals[2]*scale[2]]
         conf[frame,0,offset+j]=min(1.,confidence)
 
-def raw_to_pose(path):
+def raw_to_pose(path,source_path=None):
     frames=json.load(gzip.open(path,'rt',encoding='utf-8'))
     if not frames:raise ValueError('Empty raw Animics capture')
-    source=Path(path).with_name('source.mp4')
-    width=frames[0].get('image_width');height=frames[0].get('image_height')
+    source=Path(source_path) if source_path else Path(path).with_name('source.mp4')
+    dimensions=next((f for f in frames if f.get('image_width') and f.get('image_height')),frames[0])
+    width=dimensions.get('image_width');height=dimensions.get('image_height')
     if not width or not height:
         video=cv2.VideoCapture(str(source))
         try:width=int(video.get(cv2.CAP_PROP_FRAME_WIDTH));height=int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
@@ -96,7 +97,8 @@ def read_entries(main=DEFAULT_MAIN,allow_local_preview=False):
         pending=m.get('rights_status')!='cleared'
         if pending and not allow_local_preview:blocked.append(g['gloss_id']);continue
         if pending and not str(r.get('source_id','')).startswith('DICTASIGN_PORTAL_'):blocked.append(g['gloss_id']);continue
-        entries.append(dict(id=g['gloss_id'],concept=g['concept_fr'],gloss=r.get('canonical_gloss',g['gloss']),aliases=g.get('aliases',[]),source_id=r.get('source_id',g['source_id']),motion_path=m['path'],capture_id=r.get('capture_id'),license=m.get('license'),rights_status=m.get('rights_status'),source_url=r.get('attribution',{}).get('source_url',r.get('source')),credit=r.get('attribution',{}).get('credit'),priority=0 if str(r.get('source_id','')).startswith('DICTASIGN_PORTAL_') else 10,local_preview_only=pending))
+        motion_path=Path(m['path']);motion_path=motion_path if motion_path.is_absolute() else main/motion_path
+        entries.append(dict(id=g['gloss_id'],concept=g['concept_fr'],gloss=r.get('canonical_gloss',g['gloss']),aliases=g.get('aliases',[]),source_id=r.get('source_id',g['source_id']),motion_path=str(motion_path),raw_path=r.get('raw_animics_path'),capture_id=r.get('capture_id'),license=m.get('license'),rights_status=m.get('rights_status'),source_url=r.get('attribution',{}).get('source_url',r.get('source')),credit=r.get('attribution',{}).get('credit'),priority=0 if str(r.get('source_id','')).startswith('DICTASIGN_PORTAL_') else 10,local_preview_only=pending))
     motions={x['motion_id']:x for x in json.loads((main/'data/motions_manifest.json').read_text())}
     for g in json.loads((main/'data/glossary.json').read_text()):
         m=motions.get(g['motion_id'],{})
@@ -114,8 +116,10 @@ def export_lexicon(out,main=DEFAULT_MAIN,allow_local_preview=False):
     entries,blocked,library_sha=read_entries(main,allow_local_preview);rows=[];records=[];errors=[]
     for e in entries:
         try:
-            raw=Path(main)/'.runtime/captures'/str(e['capture_id'])/'animics-landmarks.json.gz'
-            pose,origin=raw_to_pose(raw) if e['capture_id'] and raw.exists() else motion_to_pose(e['motion_path'])
+            capture=Path(main)/'.runtime/captures'/str(e['capture_id'])
+            raw=Path(e['raw_path']) if e.get('raw_path') else capture/'animics-landmarks.json.gz'
+            if not raw.is_absolute():raw=Path(main)/raw
+            pose,origin=raw_to_pose(raw,capture/'source.mp4') if e['capture_id'] and raw.exists() else motion_to_pose(e['motion_path'])
             filename='poses/'+e['id']+'.pose'
             with (out/filename).open('wb') as f:pose.write(f)
             record=dict(**e,pose_path=filename,frames=len(pose.body.data),fps=float(pose.body.fps),pose_sha256=sha(out/filename),origin=origin,tracked_samples=int((pose.body.confidence>0).sum()),missing_samples=int((pose.body.confidence==0).sum()),language='fsl',review='pending')

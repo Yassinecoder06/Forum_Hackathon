@@ -22,7 +22,7 @@ import assert from "node:assert/strict";
     await page
       .getByLabel("Votre texte en français", { exact: true })
       .fill("Demain, je vous dis bonjour.");
-    await page.locator(".concept-composer summary").click();
+    await page.getByText("Préparer et corriger les concepts", {exact:true}).click();
     await page.getByLabel("Rechercher un concept").fill("bonjour");
     await page
       .locator(".concept-options")
@@ -58,37 +58,7 @@ import assert from "node:assert/strict";
       path: "../artifacts/browser/concepts.png",
       fullPage: true,
     });
-    if (process.env.SEMANTIC_CHECK === "1") {
-      await page
-        .getByLabel("Votre texte en français", { exact: true })
-        .fill("Bonjour");
-      const proposed = page.waitForResponse(
-        (r) => r.url().endsWith("/concepts/propose"),
-        { timeout: 280000 },
-      );
-      await page
-        .getByRole("button", { name: "Proposer des concepts", exact: true })
-        .click();
-      const response = await proposed;
-      assert.equal(response.status(), 200);
-      const draft = await response.json();
-      assert.equal(draft.translation_validated, false);
-      assert(draft.concept_ids.includes("LSF_CONCEPT_001"));
-      await page
-        .locator(".concept-sequence li")
-        .getByText("bonjour", { exact: true })
-        .waitFor();
-      await page
-        .getByRole("button", { name: "Prévisualiser cette sélection" })
-        .click();
-      await page.screenshot({
-        path: "../artifacts/browser/semantic.png",
-        fullPage: true,
-      });
-      console.log(
-        "Actual local Qwen proposal, editable Bonjour and unvalidated preview passed.",
-      );
-    }
+    assert.equal(await page.getByRole("button", {name:"Proposer des concepts",exact:true}).count(),0);
     await page.setViewportSize({ width: 390, height: 844 });
     assert(
       await page.evaluate(

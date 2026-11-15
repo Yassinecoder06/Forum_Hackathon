@@ -47,7 +47,7 @@
 <text x="60" y="819" fill="#23684f" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">IMPLEMENTED, WITH IMPORTANT DIFFERENCES</text>
 <text x="60" y="850" fill="#23684f" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">What SignaCulture already has</text>
 <text x="60" y="881" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Related MediaPipe extraction and a real motion library.</text>
-<text x="60" y="904" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Controlled lookup; optional editable Qwen concept drafts.</text>
+<text x="60" y="904" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Controlled lookup and manually edited concept sequences.</text>
 <text x="60" y="927" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">3D avatar, video preview export, audio DSP and emotion2vec.</text>
 <text x="60" y="950" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">T5/mT5 and a five-point CGAN experiment; different data from paper.</text>
 <rect x="880" y="795" width="760" height="235" rx="17" fill="#faf2e5" stroke="#996522" stroke-width="1.4"/>

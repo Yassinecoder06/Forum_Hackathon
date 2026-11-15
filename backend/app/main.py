@@ -364,20 +364,6 @@ def compose_concepts(body: ConceptSequenceRequest):
     return compose_draft({'source_text':body.text,'gloss_sequence':[allowed[i] for i in body.concept_ids],
         'unknowns':body.unsupported},body.audio_features)
 
-class ConceptProposalRequest(BaseModel):
-    text: str = Field(min_length=1,max_length=500)
-
-@app.post('/concepts/propose')
-def propose_concepts(body: ConceptProposalRequest):
-    from .services.concept_planning import propose
-    if not body.text.strip(): raise HTTPException(422,'Saisissez une phrase.')
-    try: return propose(body.text,concept_vocabulary()['concepts'])
-    except FileNotFoundError as exc: raise HTTPException(503,str(exc))
-    except BlockingIOError as exc: raise HTTPException(429,str(exc))
-    except subprocess.TimeoutExpired: raise HTTPException(504,'La proposition a dépassé le délai autorisé.')
-    except RuntimeError as exc: raise HTTPException(503,str(exc))
-
-
 @app.get('/avatar/model')
 def avatar_model():
     path=capture_library.storage()/'avatar-candidates/Noa.glb'
@@ -413,8 +399,11 @@ def dictasign_lexicon():
         'source_url':'https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/concepts_fre.html',
         'entries':entries},headers={'Content-Disposition':'attachment; filename="dictasign-lexicon.json"'})
 
+class LexicalPipelineRequest(BaseModel):
+    text: str = Field(min_length=1,max_length=500)
+
 @app.post('/pipeline/lexical')
-def lexical_sequence(body: ConceptProposalRequest):
+def lexical_sequence(body: LexicalPipelineRequest):
     from .services.lexical_pipeline import run
     if not body.text.strip():raise HTTPException(422,'Saisissez des mots ou des glosses.')
     try:return run(body.text)

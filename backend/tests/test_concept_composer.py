@@ -27,23 +27,9 @@ def test_selected_real_concepts_preserve_order_repetition_and_review_gate(client
 def test_invalid_or_synthetic_sequences_rejected(client,identifiers):
     assert client.post('/compose-concepts',json={'text':'Bonjour','concept_ids':identifiers}).status_code==422
 
-def test_proposals_reject_unknown_model_ids_and_preserve_negation(client,monkeypatch):
-    import subprocess
-    from pathlib import Path
-    from backend.app.services import concept_planning as service
-    import json
-    monkeypatch.setattr(service,'runtime',lambda:(Path('python'),Path('planner'),Path('weights')))
-    identifier=client.get('/concepts/vocabulary').json()['concepts'][0]['id']
-    def response(ids):
-        return subprocess.CompletedProcess([],0,stdout=json.dumps({'concept_ids':ids,'unsupported':[],'translation_validated':True}))
-    monkeypatch.setattr(service.subprocess,'run',lambda *a,**kw:response(['invented']))
-    assert client.post('/concepts/propose',json={'text':'Bonjour'}).status_code==503
-    monkeypatch.setattr(service.subprocess,'run',lambda *a,**kw:response([identifier]))
-    output=client.post('/concepts/propose',json={'text':'Ne dis pas bonjour ?'}).json()
-    assert output['concept_ids']==[identifier]
-    assert output['translation_validated'] is False and output['linguistic_review']=='pending'
-    assert any('Négation' in s for s in output['unsupported'])
-    assert any('Question' in s for s in output['unsupported'])
+def test_model_proposal_endpoint_is_removed(client):
+    assert client.post('/concepts/propose',json={'text':'Bonjour'}).status_code==404
+    assert 'concept_experiment' not in client.get('/research/status').json()
 
 def test_research_screen_keeps_concept_metrics_separate(tmp_path,monkeypatch):
     import json

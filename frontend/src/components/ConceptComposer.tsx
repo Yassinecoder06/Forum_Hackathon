@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { ArrowDown, ArrowUp, Loader2, Plus, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ArrowDown, ArrowUp, Plus, X } from "lucide-react";
 import { request } from "../services/api";
 import type { AnimationPlan, AudioFeatures } from "../types/contract";
 type Concept = { id: string; concept: string };
@@ -12,7 +12,6 @@ export function ConceptComposer({
   audio: AudioFeatures | null;
   onPlan: (plan: AnimationPlan) => Promise<void>;
 }) {
-  const version = useRef(0);
   const [vocabulary, setVocabulary] = useState<Concept[]>([]),
     [ids, setIds] = useState<string[]>([]);
   const [search, setSearch] = useState(""),
@@ -25,32 +24,9 @@ export function ConceptComposer({
       .catch(() => setError("Bibliothèque indisponible."));
   }, []);
   useEffect(() => {
-    version.current += 1;
     setIds([]);
     setUnsupported([]);
   }, [text]);
-  async function suggest() {
-    const current = version.current;
-    setBusy(true);
-    setError("");
-    try {
-      const result = await request<{
-        concept_ids: string[];
-        unsupported: string[];
-      }>("/concepts/propose", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text }),
-      });
-      if (current !== version.current) return;
-      setIds(result.concept_ids);
-      setUnsupported(result.unsupported);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Proposition indisponible.");
-    } finally {
-      setBusy(false);
-    }
-  }
   async function compose() {
     setBusy(true);
     setError("");
@@ -61,7 +37,7 @@ export function ConceptComposer({
         body: JSON.stringify({
           text,
           concept_ids: ids,
-          unsupported,
+          unsupported: unsupported.filter((s) => s.trim()),
           audio_features: audio,
         }),
       });
@@ -77,7 +53,7 @@ export function ConceptComposer({
       schema_version: "concept-review-v1",
       source_text: text,
       concepts: ids.map((id) => vocabulary.find((c) => c.id === id)),
-      unsupported,
+      unsupported: unsupported.filter((s) => s.trim()),
       origin: "interactive_concept_draft",
       linguistic_review: "pending",
       translation_validated: false,
@@ -103,25 +79,10 @@ export function ConceptComposer({
     <details className="concept-composer">
       <summary>Préparer et corriger les concepts</summary>
       <p>
-        Choisissez les signes disponibles et leur ordre. Une proposition
-        automatique reste un brouillon ; elle ne valide pas la grammaire LSF.
-        Vérifiez notamment les noms propres, la négation, les questions et les
-        quantités : leur détection automatique reste imparfaite.
+        Choisissez les signes disponibles et leur ordre. Cette sélection reste
+        un brouillon à vérifier, notamment pour les noms propres, la négation,
+        les questions et les quantités. Elle ne valide pas la grammaire LSF.
       </p>
-      <button
-        className="secondary-button"
-        onClick={() => void suggest()}
-        disabled={busy || !text.trim() || text.length > 500}
-      >
-        {busy ? <Loader2 size={14} className="spin" /> : null}Proposer des
-        concepts
-      </button>
-      {text.length > 500 && (
-        <p>
-          La proposition automatique accepte 500 caractères. La sélection
-          manuelle reste disponible.
-        </p>
-      )}
       <label>
         Rechercher un signe
         <input
@@ -184,6 +145,14 @@ export function ConceptComposer({
           </li>
         ))}
       </ol>
+      <label>
+        Sens non représenté (un élément par ligne)
+        <textarea
+          aria-label="Sens non représenté"
+          value={unsupported.join("\n")}
+          onChange={(e) => setUnsupported(e.target.value.split("\n"))}
+        />
+      </label>
       {unsupported.length > 0 && (
         <p role="status">Sens à traiter : {unsupported.join(" · ")}</p>
       )}

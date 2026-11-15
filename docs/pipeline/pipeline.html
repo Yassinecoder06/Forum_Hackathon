@@ -58,11 +58,11 @@
 <path d="M960,520 L1030,520" fill="none" stroke="#23684f" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#green)"/>
 <path d="M1290,520 L1360,520" fill="none" stroke="#23684f" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#green)"/>
 <rect x="340" y="705" width="290" height="165" rx="17" fill="#edf3f7" stroke="#336a91" stroke-width="1.4"/>
-<text x="360" y="729" fill="#336a91" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">OPTIONAL ASSISTANT</text>
-<text x="360" y="760" fill="#336a91" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Qwen3.5-9B</text>
-<text x="360" y="791" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Local pretrained model</text>
-<text x="360" y="814" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Proposes library concepts</text>
-<text x="360" y="837" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Restricted to valid IDs</text>
+<text x="360" y="729" fill="#336a91" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">MANUAL SELECTION</text>
+<text x="360" y="760" fill="#336a91" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Dictionary search</text>
+<text x="360" y="791" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Existing French concepts</text>
+<text x="360" y="814" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">User chooses valid IDs</text>
+<text x="360" y="837" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">No language-model inference</text>
 <rect x="700" y="705" width="260" height="165" rx="17" fill="#edf3f7" stroke="#336a91" stroke-width="1.4"/>
 <text x="720" y="729" fill="#336a91" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">HUMAN CONTROL</text>
 <text x="720" y="760" fill="#336a91" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Editable draft</text>
@@ -243,12 +243,13 @@
 <path d="M800,565 L880,565" fill="none" stroke="#74578d" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#purple)"/>
 <rect x="40" y="765" width="500" height="250" rx="17" fill="#edf3f7" stroke="#336a91" stroke-width="1.4"/>
 <text x="60" y="789" fill="#336a91" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">SEPARATE OPTIONAL EXPERIMENT</text>
-<text x="60" y="820" fill="#336a91" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Qwen: semantic concept proposals</text>
-<text x="60" y="851" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Pretrained local Qwen3.5-9B GGUF.</text>
-<text x="60" y="874" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Fixed engineering check: 24 French inputs.</text>
-<text x="60" y="897" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">13/24 exact concept sequences vs 12/24 literal</text>
-<text x="60" y="920" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">lookup.</text>
-<text x="60" y="943" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Mean latency 7.8 s; GPU peak ≈ 5.2 GB.</text>
+<text x="60" y="820" fill="#336a91" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Retired concept-planner experiment</text>
+<text x="60" y="851" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Archived local-model trial; removed from</text>
+<text x="60" y="874" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">application.</text>
+<text x="60" y="897" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Fixed engineering check: 24 French inputs.</text>
+<text x="60" y="920" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">13/24 exact concept sequences vs 12/24 literal</text>
+<text x="60" y="943" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">lookup.</text>
+<text x="60" y="966" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Mean latency 7.8 s; GPU peak ≈ 5.2 GB.</text>
 <rect x="590" y="765" width="500" height="250" rx="17" fill="#edf3f7" stroke="#336a91" stroke-width="1.4"/>
 <text x="610" y="789" fill="#336a91" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">MEASURED VERSION ≠ CURRENT RUNTIME</text>
 <text x="610" y="820" fill="#336a91" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Correction and limitations</text>
@@ -320,7 +321,7 @@
 <text x="60" y="819" fill="#23684f" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">IMPLEMENTED, WITH IMPORTANT DIFFERENCES</text>
 <text x="60" y="850" fill="#23684f" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">What SignaCulture already has</text>
 <text x="60" y="881" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Related MediaPipe extraction and a real motion library.</text>
-<text x="60" y="904" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Controlled lookup; optional editable Qwen concept drafts.</text>
+<text x="60" y="904" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Controlled lookup and manually edited concept sequences.</text>
 <text x="60" y="927" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">3D avatar, video preview export, audio DSP and emotion2vec.</text>
 <text x="60" y="950" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">T5/mT5 and a five-point CGAN experiment; different data from paper.</text>
 <rect x="880" y="795" width="760" height="235" rx="17" fill="#faf2e5" stroke="#996522" stroke-width="1.4"/>
