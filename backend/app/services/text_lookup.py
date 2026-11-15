@@ -1,0 +1,61 @@
+"""Controlled lookup with optional installed French spaCy model; never downloads."""
+from functools import lru_cache
+import os
+import re
+
+TOKEN = re.compile(r'[^\W_]+', re.UNICODE)
+
+@lru_cache(maxsize=4)
+def load_model(name):
+    if not name:
+        return None
+    try:
+        import spacy
+        model = spacy.load(name)
+        return model if model.lang == 'fr' and 'lemmatizer' in model.pipe_names else None
+    except (ImportError, OSError, ValueError):
+        return None
+
+def model():
+    return load_model(os.getenv('SIGNACULTURE_SPACY_MODEL', 'fr_core_news_sm'))
+
+def mode():
+    return 'spacy-fr-lemmatizer' if model() is not None else 'unicode-regex-fallback-no-lemmatizer'
+
+def tokenize(text):
+    spans = list(TOKEN.finditer(text))
+    tokens = [m.group() for m in spans]
+    lemmas = [t.casefold() for t in tokens]
+    nlp = model()
+    if nlp is not None:
+        doc = nlp(text)
+        for i, span in enumerate(spans):
+            aligned = [t for t in doc if t.idx == span.start() and t.idx+len(t.text) == span.end()]
+            if len(aligned) == 1 and aligned[0].lemma_:
+                lemmas[i] = aligned[0].lemma_.casefold()
+    return tokens, lemmas
+
+def lookup_text(text, entries):
+    tokens, lemmas = tokenize(text)
+    surfaces = [t.casefold() for t in tokens]
+    candidates = []
+    for entry in entries:
+        for phrase in [entry.concept_fr, *entry.aliases]:
+            ts, ls = tokenize(phrase)
+            if ts:
+                candidates.append(([t.casefold() for t in ts], ls, entry))
+    sequence, unknowns, i = [], [], 0
+    while i < len(tokens):
+        matches = [(len(ts), entry) for ts, ls, entry in candidates
+                   if surfaces[i:i+len(ts)] == ts or lemmas[i:i+len(ls)] == ls]
+        if matches:
+            size = max(n for n, _ in matches)
+            best = {g.gloss_id:g for n,g in matches if n == size}
+            if len(best) == 1:
+                sequence.append(next(iter(best.values())))
+                i += size
+                continue
+        unknowns.append(tokens[i])
+        i += 1
+    return dict(source_text=text, tokens=tokens, lemmas=lemmas, gloss_sequence=sequence,
+                unknowns=unknowns, linguistic_review='pending', translation_validated=False)
