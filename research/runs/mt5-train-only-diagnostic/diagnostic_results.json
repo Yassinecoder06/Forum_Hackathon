@@ -1,0 +1,168 @@
+{
+  "config": {
+    "base": "google/mt5-small",
+    "revision": "73fb5dbe4756edadc8fbe8c769b0a109493acf7a",
+    "rank": 16,
+    "alpha": 32,
+    "dropout": 0.05,
+    "target_modules": [
+      "q",
+      "k",
+      "v",
+      "o",
+      "wi_0",
+      "wi_1",
+      "wo"
+    ],
+    "lr": 0.001,
+    "seed": 42
+  },
+  "first_gradient_norm": 3419.328857421875,
+  "steps": 200,
+  "history": [
+    {
+      "step": 0,
+      "teacher_forced_loss": 36.10545301437378,
+      "train_exact_match": 0.0,
+      "train_wer": 1.0,
+      "predictions": [
+        "<extra_id_0>",
+        "<extra_id_0>.",
+        "<extra_id_0>",
+        "<extra_id_0>"
+      ],
+      "elapsed_seconds": 0.5599607630028913
+    },
+    {
+      "step": 25,
+      "teacher_forced_loss": 8.110507130622864,
+      "train_exact_match": 0.0,
+      "train_wer": 1.0,
+      "predictions": [
+        "<extra_id_0>]",
+        "<extra_id_0>]",
+        "<extra_id_0>]]]]]]]]]]]]]]]]]])]]]]]]]]]]]]]]]]]]]]])",
+        "<extra_id_0>]"
+      ],
+      "elapsed_seconds": 9.165044774999842
+    },
+    {
+      "step": 50,
+      "teacher_forced_loss": 4.800920009613037,
+      "train_exact_match": 0.0,
+      "train_wer": 2.9473684210526314,
+      "predictions": [
+        "<extra_id_0>] []] []] []] []] []] []] []] []] []] []] []] []] []] []] []] []] []] []] []] []] []] []] []] []] []] []] []] []] []] []] []] []] []] []] []] []] []] []]] []]]",
+        "<extra_id_0>] []]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]",
+        "<extra_id_0>]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]",
+        "<extra_id_0>] []]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]"
+      ],
+      "elapsed_seconds": 24.412321091000194
+    },
+    {
+      "step": 75,
+      "teacher_forced_loss": 2.952049732208252,
+      "train_exact_match": 0.0,
+      "train_wer": 7.368421052631579,
+      "predictions": [
+        "[CUISETTE] [REUISETTE] [RE] [RE] [RE] [CUISETTE] [RE] [RE] [CUISETTE] [CUISETTE] [RE] [CUISETTE] [RE] [CUISETTE] [CUISETTE] [CUISETTE] [CUISETTE] [CUISETTE] [CUISETTE] [CUISETTE] [CUISETTE] [RE] [CUISETTE] [CUISETTE] [CUISETTE] [RE] [CUISETTE] [CUISETTE] [CUISETTE] [",
+        "[SUEMENT] [SUCEMENT] [SUCEMENT] [SUCEMENT] [SU] [SU] [SU] [SU] [SU] [SU] [SU] [SU] [SU] [SU] [SU] [SU] [SU] [SU] [SU] [SU] [SU] [SU] [SU] [SU] [SU] [SU] [SU] [SU] [SU] [SU] [SU] [SU] [SU] [SU] [SU] [SU] [SU] [SU] [SU] [SU] [",
+        "[CUISEMENT] [CUISEMENT] [CUISEMENT] [CUISEMENT] [CUISEMENT] [CUISEMENT] [CUISEMENT] [CUISEMENT] [CUISEMENT] [CUISEMENT] [CUISEMENT] [CUISEMENT] [CUISEMENT] [CUISEMENT] [CUISEMENT] [CUISEMENT] [CUISEMENT] [CUISEMENT] [CUISEMENT] [CUISEMENT] [CUISEMENT] [CUISEMENT] [CUISEMENT] [CUISEMENT] [CUISEMENT] [CUIS",
+        "[P] [P] [P] [P] [P] [P] [P] [P] [P] [P] [P] [P] [P] [P] [P] [P] [P] [P] [P] [P] [P] [P] [P] [P] [P] [P] [P] [P] [P] [P] [P] [P] [P] [P] [P] [P] [P] [P] [P] [P] [P] [P] [P"
+      ],
+      "elapsed_seconds": 39.71465277400057
+    },
+    {
+      "step": 100,
+      "teacher_forced_loss": 0.8899679929018021,
+      "train_exact_match": 0.0,
+      "train_wer": 5.526315789473684,
+      "predictions": [
+        "PNT[RECETTE] [RECETTE] [RECETTE] [RECETTE] [RECETTE] [RECETTE] [RECETTE] [RECETTE] [RECETTE] [RECETTE] [RECETTE] [RECETTE] [RECETTE] [RECETTE] [RECETTE] [RECETTE] [RECETTE] [RECETTE] [RECETTE] [RECETTE] [RECETTE] [RECETTE] [RECETTE] [RECETTE] [RECETTE] [RECETTE] [RECETTE] [RECETTE] [RECETTE] [RECETTE] [RECETTE] [REC",
+        "PNT[RECETTE] [SUILLEMENT] [SUILLEMENT] [SUILLEMENT] [SUILLEMENT] [SUILLEMENT] [SUILLEMENT] [SUILLEMENT] [SUILLEMENT] [SUILLEMENT] [SUILLEMENT] [SUILLEMENT] [SUILLEMENT] [SUILLEMENT] [SUILLEMENT] [SUILLEMENT] [SUILLEMENT] [SUILLEMENT] [SUILLEMENT] [SUILLEMENT] [SUILLEMENT] [SUILLEMENT] [SUCRE] [SUCRE] [SUCRE] [SU",
+        "PNT[QUATRIEMEMENT] [POIVRE] [POIVRE] [POIVRE] [POIVRE] [POIVRE] [POIVRE] [POIVRE] [POIVRE] [POIVRE] [POIVRE] [POIVRE] [POIVRE] [POIVRE] [POIVRE] [POIVRE] [POIVRE] [POIVRE] [POIVRE] [POIVRE] [POIVRE] [POIVRE] [POIVRE] [POIVRE] [POIVRE]",
+        "PNT[RECETTE] [POIVRE] [POIVRE] [POIVRE] [POIVRE] [POIVRE] [POIVRE] [POIVRE] [POIVRE] [POIVRE] [POIVRE] [POIVRE] [POIVRE] [POIVRE] [POIVRE] [POIVRE] [POIVRE] [POIVRE] [POIVRE] [POIVRE] [POIVRE] [POIVRE] [POIVRE] [POIVRE] [POIVRE] [PO"
+      ],
+      "elapsed_seconds": 54.99454564000189
+    },
+    {
+      "step": 125,
+      "teacher_forced_loss": 0.3996336944401264,
+      "train_exact_match": 0.25,
+      "train_wer": 0.7894736842105263,
+      "predictions": [
+        "PNT[TROISIEMEMENT] [POIVRE]",
+        "PNT[TROISIEMEMENT] [SUCRE] [SUCRE]",
+        "PNT[QUATRIEMEMENT] [POIVRE]",
+        "PNT[TROISIEMEMENT] [POIVRE] [POIVRE]"
+      ],
+      "elapsed_seconds": 63.75603602100091
+    },
+    {
+      "step": 150,
+      "teacher_forced_loss": 0.22882414609193802,
+      "train_exact_match": 0.25,
+      "train_wer": 3.0,
+      "predictions": [
+        "PNT[TROISIEMEMENT] [CUISINE] position-neutre",
+        "PNT[TROISIEMEMENT] [UN] [SUCRE] [SUCRE] [un-peu] [un-peu] [un-peu] [un-peu] [un-peu] [un-peu] [un-peu] [un-peu] [un-peu] [un-peu] [un-peu] [un-peu] [un-peu] [un-peu] [un-peu] [un-peu] [un-peu] [un-peu",
+        "PNT[QUATRIEMEMENT] [POIVRE]",
+        "PNT[CINQUIEMEMENT] [SEL] [SEL] [SEL] [SEL] [SEL] [SEL] [SEL] [SEL] [SEL] [SEL] [SEL] [SEL] [SEL] [SEL] [SEL] [SEL] [SEL] [SEL] [SEL] [SEL] [SEL] [SEL] [SEL] [SEL] [SEL] [SEL] [SEL] [SEL] [SEL] [SEL] [SEL] [SEL] [SEL] [SEL] [SEL] [FEUILLE] [FLEUR] [FLEUR] [FL"
+      ],
+      "elapsed_seconds": 75.73289988800025
+    },
+    {
+      "step": 175,
+      "teacher_forced_loss": 0.14021027297712862,
+      "train_exact_match": 0.5,
+      "train_wer": 0.5263157894736842,
+      "predictions": [
+        "PNT[RECETTE] [CUISINE] position-neutre",
+        "PNT[TROISIEMEMENT] [UN] [CUILLÈRE] [SUCRE] [un-peu]",
+        "PNT[QUATRIEMEMENT] [POIVRE]",
+        "PNT[CINQUIEMEMENT] [SEL] [PI_TYPIQUE] [PI_TYPIQUE] [PI_TYPIQUE] [PI_TYPIQUE] [PI_TYPIQUE] [PI_TYPIQUE] [PI_TYPIQUE] [PI_TYPIQUE] [PI_TYPIQUE] [PI_TYPIQUE] [PI_TYPIQUE]"
+      ],
+      "elapsed_seconds": 85.38111283200124
+    },
+    {
+      "step": 200,
+      "teacher_forced_loss": 0.11028003215324134,
+      "train_exact_match": 0.5,
+      "train_wer": 0.42105263157894735,
+      "predictions": [
+        "[RECETTE] [CUISINE] position-neutre",
+        "PNT[TROISIEMEMENT] [UN] [SUCRE] [SUCRE] [SUCRE] [un-peu]",
+        "PNT[QUATRIEMEMENT] [POIVRE]",
+        "PNT[CINQUIEMEMENT] [SEL] [PI_TYPIQUE]"
+      ],
+      "elapsed_seconds": 94.07125238200024
+    }
+  ],
+  "selected_examples": [
+    {
+      "pair_id": "stk:LS-Colin_champignon__1",
+      "french_text": "Recette de cuisine.",
+      "reference": "[RECETTE] [CUISINE] position-neutre"
+    },
+    {
+      "pair_id": "stk:LS-Colin_champignon__10",
+      "french_text": "Troisièmement, une cuillère de sucre.",
+      "reference": "PNT[TROISIEMEMENT] [UN] [CUILLÈRE] [SUCRE] [un-peu]"
+    },
+    {
+      "pair_id": "stk:LS-Colin_champignon__11",
+      "french_text": "Quatrièmement, du poivre.",
+      "reference": "PNT[QUATRIEMEMENT] [POIVRE]"
+    },
+    {
+      "pair_id": "stk:LS-Colin_champignon__12",
+      "french_text": "Quatrièmement, du poivre. Cinquièmement, du sel, des feuilles qui ressemblent à des fleurs, typique de Chine.",
+      "reference": "PNT[CINQUIEMEMENT] [SEL] [FEUILLE] [PAREIL]~ [PROCHE] [FLEUR] [PI_TYPIQUE] [CHINE] [PI_TYPIQUE]"
+    }
+  ],
+  "runtime_seconds": 94.07132500700027,
+  "peak_allocated_mib": 1681.7353515625,
+  "peak_reserved_mib": 1784.0,
+  "scope": "TRAIN ONLY: no validation or test read, no checkpoint deployed",
+  "conclusion": "Training loss/outputs recorded; exact overfit not attained"
+}

@@ -1,0 +1,34 @@
+{
+  "test_examples": 39,
+  "unique_model_outputs": 28,
+  "sentinel_outputs": 0,
+  "empty_outputs": 0,
+  "note": "Descriptive analysis of the already-completed single test prediction pass; no additional model evaluation or setting changes",
+  "examples": [
+    {
+      "pair_id": "stk:Alpha_entretien_etudiant_souvenir__1",
+      "reference": "[euh] [PI_TEMPORALITE] [[CHIFFRE]] [ANNÉE] [MEILLEUR] [SOUVENIR] [VIE]",
+      "prediction": "[MÉCHER] [MÉCHER] [MÉCHER] [MÉCHER] [MÉCHER] [MÉCHER] [MÉCHER] [MÉCHER] [MÉCHER] [MÉCHER] [MÉCHER] [MÉCHER] [MÉCHER] [MÉCHER] [MÉCHER] [MÉCHER] [MÉCHER] [MÉCHER] [MÉCHER] [MÉCHER] [MÉCHER] [MÉCHER] [MÉCHER] [MÉCHER] [MÉCHER] [MÉCHER] [MÉCHER] [MÉCHER] [MÉCHER] [MÉCHER] [MÉCHER] [MÉCHER]"
+    },
+    {
+      "pair_id": "stk:Alpha_entretien_etudiant_souvenir__10",
+      "reference": "[PI_TEMPORALITE] [PI_TEMPORALITE] [JOUR] SignedName[Macron] [ÉLÉCTION] [PRÉSIDENT]",
+      "prediction": "[DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE]"
+    },
+    {
+      "pair_id": "stk:Alpha_entretien_etudiant_souvenir__11",
+      "reference": "[PI_CELUI-CI] [QUI]",
+      "prediction": "[DÉCOUVOIR] [DÉCOUVOIR] [DÉCOUVOIR] [DÉCOUVOIR] [DÉCOUVOIR] [DÉCOUVOIR] [DÉCOUVOIR] [DÉCOUVOIR] [DÉCOUVOIR] [DÉCOUVOIR] [DÉCOUVOIR] [DÉCOUVOIR] [DÉCOUVOIR] [DÉCOUVOIR] [DÉCOUVOIR] [DÉCOUVOIR] [DÉCOUVOIR] [DÉCOUVOIR] [DÉCOUVOIR] [DÉCOUVOIR] [DÉCOUVOIR] [DÉ"
+    },
+    {
+      "pair_id": "stk:Alpha_entretien_etudiant_souvenir__12",
+      "reference": "PNT[MOI] [BARCELONE] [FRANCE] [QUI] [ÉLÉCTION] [OUI] [DRÔLE]",
+      "prediction": "[DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE] [DÉPLACE]"
+    },
+    {
+      "pair_id": "stk:Alpha_entretien_etudiant_souvenir__13",
+      "reference": "[IL-Y-A] [CONTRE]",
+      "prediction": "[SAUCE] [SAUCE] [SAUCE] [SAUCE] [SAUCE] [SAUCE] [SAUCE] [SAUCE] [SAUCE] [SAUCE] [SAUCE] [SAUCE] [SAUCE] [SAUCE] [SAUCE] [SAUCE] [SAUCE] [SAUCE] [SAUCE] [SAUCE] [SAUCE] [SAUCE] [SAUCE] [SAUCE] [SAUCE] [SAUC"
+    }
+  ]
+}

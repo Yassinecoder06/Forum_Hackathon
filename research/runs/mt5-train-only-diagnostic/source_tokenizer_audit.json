@@ -1,0 +1,626 @@
+{
+  "records": 61,
+  "max_source_tokens": 105,
+  "max_target_tokens": 138,
+  "source_unknown_tokens": 0,
+  "source_roundtrip_mismatches": [
+    "stk:LS-Colin_champignon__6"
+  ],
+  "all_ids_in_range": true,
+  "sentinel_token_id": 2,
+  "sentinel_in_special_token_ids": true,
+  "configured_extra_ids": 0,
+  "note": "Official tokenizer extra_ids=0 means sentinel-looking vocabulary strings may survive skip_special_tokens; no decode filtering is applied",
+  "examples": [
+    {
+      "pair_id": "stk:LS-Colin_champignon__1",
+      "source_tokens": 13,
+      "target_tokens": 15,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: Recette de cuisine.",
+      "source_text": "French to LSF gloss: Recette de cuisine.",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "stk:LS-Colin_champignon__10",
+      "source_tokens": 21,
+      "target_tokens": 29,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: Troisièmement, une cuillère de sucre.",
+      "source_text": "French to LSF gloss: Troisièmement, une cuillère de sucre.",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "stk:LS-Colin_champignon__11",
+      "source_tokens": 17,
+      "target_tokens": 14,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: Quatrièmement, du poivre.",
+      "source_text": "French to LSF gloss: Quatrièmement, du poivre.",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "stk:LS-Colin_champignon__12",
+      "source_tokens": 45,
+      "target_tokens": 48,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: Quatrièmement, du poivre. Cinquièmement, du sel, des feuilles qui ressemblent à des fleurs, typique de Chine.",
+      "source_text": "French to LSF gloss: Quatrièmement, du poivre. Cinquièmement, du sel, des feuilles qui ressemblent à des fleurs, typique de Chine.",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "stk:LS-Colin_champignon__13",
+      "source_tokens": 42,
+      "target_tokens": 37,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: Ces feuilles ont un nom que je ne connais vraiment pas, j'en connais l'odeur, c'est tout.",
+      "source_text": "French to LSF gloss: Ces feuilles ont un nom que je ne connais vraiment pas, j'en connais l'odeur, c'est tout.",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "stk:LS-Colin_champignon__14",
+      "source_tokens": 18,
+      "target_tokens": 14,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: Tout y est, voilà !",
+      "source_text": "French to LSF gloss: Tout y est, voilà !",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "stk:LS-Colin_champignon__15",
+      "source_tokens": 47,
+      "target_tokens": 79,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: Comment on fait : D'abord, il faut laver les champignons, tout laver, les couper en morceaux, les mettre dans une passoire.",
+      "source_text": "French to LSF gloss: Comment on fait : D'abord, il faut laver les champignons, tout laver, les couper en morceaux, les mettre dans une passoire.",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "stk:LS-Colin_champignon__16",
+      "source_tokens": 28,
+      "target_tokens": 27,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: Il ne faut pas qu'ils soient mouillés, les laisser sécher.",
+      "source_text": "French to LSF gloss: Il ne faut pas qu'ils soient mouillés, les laisser sécher.",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "stk:LS-Colin_champignon__17",
+      "source_tokens": 53,
+      "target_tokens": 78,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: J'avais oublié: il faut ajouter deux gousses d'ail, bien écrasées et les mettre dans la poêle avec deux cuillerées d'huile.",
+      "source_text": "French to LSF gloss: J'avais oublié: il faut ajouter deux gousses d'ail, bien écrasées et les mettre dans la poêle avec deux cuillerées d'huile.",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "stk:LS-Colin_champignon__18",
+      "source_tokens": 24,
+      "target_tokens": 29,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: Laisser frire jusqu'à ce que cela devienne marron.",
+      "source_text": "French to LSF gloss: Laisser frire jusqu'à ce que cela devienne marron.",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "stk:LS-Colin_champignon__19",
+      "source_tokens": 34,
+      "target_tokens": 35,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: Prendre les champignons et les mettre dans la poëlle et bien mélanger. Puis les laisser.",
+      "source_text": "French to LSF gloss: Prendre les champignons et les mettre dans la poëlle et bien mélanger. Puis les laisser.",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "stk:LS-Colin_champignon__2",
+      "source_tokens": 12,
+      "target_tokens": 10,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: Voilà !",
+      "source_text": "French to LSF gloss: Voilà !",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "stk:LS-Colin_champignon__20",
+      "source_tokens": 15,
+      "target_tokens": 18,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: Préparer la sauce :",
+      "source_text": "French to LSF gloss: Préparer la sauce :",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "stk:LS-Colin_champignon__21",
+      "source_tokens": 32,
+      "target_tokens": 48,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: Dans un petit récipient, verser trois cuillères de sauce soja (un peu visqueux),",
+      "source_text": "French to LSF gloss: Dans un petit récipient, verser trois cuillères de sauce soja (un peu visqueux),",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "stk:LS-Colin_champignon__22",
+      "source_tokens": 35,
+      "target_tokens": 34,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: Mettre le sucre, mettre le sel, ajouter le poivre, et mélanger. C'est tout.",
+      "source_text": "French to LSF gloss: Mettre le sucre, mettre le sel, ajouter le poivre, et mélanger. C'est tout.",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "stk:LS-Colin_champignon__23",
+      "source_tokens": 74,
+      "target_tokens": 73,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: Lorsque c'est à mi-cuisson, verser le bol de sauce dans la poëlle, laisser chauffer, mélanger et laisser jusqu'à ce que le liquide en surface soit un peu absorbé, il ne faut pas le laisser absorber entièrement.",
+      "source_text": "French to LSF gloss: Lorsque c'est à mi-cuisson, verser le bol de sauce dans la poëlle, laisser chauffer, mélanger et laisser jusqu'à ce que le liquide en surface soit un peu absorbé, il ne faut pas le laisser absorber entièrement.",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "stk:LS-Colin_champignon__24",
+      "source_tokens": 29,
+      "target_tokens": 35,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: Eteindre le feu et verser le contenu de la poêle dans un saladier.",
+      "source_text": "French to LSF gloss: Eteindre le feu et verser le contenu de la poêle dans un saladier.",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "stk:LS-Colin_champignon__25",
+      "source_tokens": 39,
+      "target_tokens": 39,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: Mettre encore du poivre, le hacher et le répandre sur la préparation ainsi que les feuilles-fleurs.",
+      "source_text": "French to LSF gloss: Mettre encore du poivre, le hacher et le répandre sur la préparation ainsi que les feuilles-fleurs.",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "stk:LS-Colin_champignon__26",
+      "source_tokens": 28,
+      "target_tokens": 11,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: Poser le plat sur la table. Vous pouvez commencer (à manger).",
+      "source_text": "French to LSF gloss: Poser le plat sur la table. Vous pouvez commencer (à manger).",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "stk:LS-Colin_champignon__27",
+      "source_tokens": 17,
+      "target_tokens": 10,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: C'est vraiment délicieux!...",
+      "source_text": "French to LSF gloss: C'est vraiment délicieux!...",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "stk:LS-Colin_champignon__28",
+      "source_tokens": 13,
+      "target_tokens": 9,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: C'est fini!",
+      "source_text": "French to LSF gloss: C'est fini!",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "stk:LS-Colin_champignon__3",
+      "source_tokens": 19,
+      "target_tokens": 34,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: \"Champignons à la sauce soja\"",
+      "source_text": "French to LSF gloss: \"Champignons à la sauce soja\"",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "stk:LS-Colin_champignon__4",
+      "source_tokens": 22,
+      "target_tokens": 35,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: c'est une recette qui vient du Viêt-Nam.",
+      "source_text": "French to LSF gloss: c'est une recette qui vient du Viêt-Nam.",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "stk:LS-Colin_champignon__5",
+      "source_tokens": 40,
+      "target_tokens": 43,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: Bon, il faut plusieurs choses, d'abord des champignons, n'importe lesquels, comme vous voulez",
+      "source_text": "French to LSF gloss: Bon, il faut plusieurs choses, d'abord des champignons, n'importe lesquels, comme vous voulez",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "stk:LS-Colin_champignon__6",
+      "source_tokens": 38,
+      "target_tokens": 48,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: vous pouvez choisir des champignons de n'importe quel type, en trompette, en forme ronde, etc...",
+      "source_text": "French to LSF gloss: vous pouvez choisir des champignons de n'importe quel type, en trompette, en forme ronde, etc…",
+      "source_roundtrip_equal": false,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "stk:LS-Colin_champignon__7",
+      "source_tokens": 15,
+      "target_tokens": 5,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: Vous êtes libre.",
+      "source_text": "French to LSF gloss: Vous êtes libre.",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "stk:LS-Colin_champignon__8",
+      "source_tokens": 19,
+      "target_tokens": 40,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: En premier, il en faut 200 grammes.",
+      "source_text": "French to LSF gloss: En premier, il en faut 200 grammes.",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "stk:LS-Colin_champignon__9",
+      "source_tokens": 33,
+      "target_tokens": 64,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: Deuxièmement, de la sauce soja , il en faut 3 cuillères à soupe.",
+      "source_text": "French to LSF gloss: Deuxièmement, de la sauce soja , il en faut 3 cuillères à soupe.",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "stk:LS-Colin_cheval__1",
+      "source_tokens": 22,
+      "target_tokens": 13,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: Dans la plaine, l'herbe ondule,",
+      "source_text": "French to LSF gloss: Dans la plaine, l'herbe ondule,",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "stk:LS-Colin_cheval__10",
+      "source_tokens": 31,
+      "target_tokens": 26,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: [Il va] chercher une valisette de pharmacie, la dépose et l'ouvre.",
+      "source_text": "French to LSF gloss: [Il va] chercher une valisette de pharmacie, la dépose et l'ouvre.",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "stk:LS-Colin_cheval__11",
+      "source_tokens": 36,
+      "target_tokens": 21,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: La vache s'approche de la boite et prend quelque chose. La vache soigne le cheval",
+      "source_text": "French to LSF gloss: La vache s'approche de la boite et prend quelque chose. La vache soigne le cheval",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "stk:LS-Colin_cheval__12",
+      "source_tokens": 29,
+      "target_tokens": 16,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: [Le cheval se fait soigner par la vache] et il se laisse faire.",
+      "source_text": "French to LSF gloss: [Le cheval se fait soigner par la vache] et il se laisse faire.",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "stk:LS-Colin_cheval__2",
+      "source_tokens": 39,
+      "target_tokens": 42,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: un animal se tient là, avec deux oreilles, une queue, une crinière : c'est un cheval.",
+      "source_text": "French to LSF gloss: un animal se tient là, avec deux oreilles, une queue, une crinière : c'est un cheval.",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "stk:LS-Colin_cheval__3",
+      "source_tokens": 62,
+      "target_tokens": 59,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: Il galope, puis soudain s'arrête, intrigué : des piquets qui soutiennent une barrière. Un oiseau est perché sur la barrière, le cheval le regarde et loin devant lui",
+      "source_text": "French to LSF gloss: Il galope, puis soudain s'arrête, intrigué : des piquets qui soutiennent une barrière. Un oiseau est perché sur la barrière, le cheval le regarde et loin devant lui",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "stk:LS-Colin_cheval__4",
+      "source_tokens": 15,
+      "target_tokens": 14,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: une vache rumine.",
+      "source_text": "French to LSF gloss: une vache rumine.",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "stk:LS-Colin_cheval__5",
+      "source_tokens": 30,
+      "target_tokens": 19,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: Le cheval observe la barrière : \"Moi, je veux sauter par dessus...\"",
+      "source_text": "French to LSF gloss: Le cheval observe la barrière : \"Moi, je veux sauter par dessus...\"",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "stk:LS-Colin_cheval__6",
+      "source_tokens": 23,
+      "target_tokens": 25,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: Il galope, saute [et] heurte la barrière",
+      "source_text": "French to LSF gloss: Il galope, saute [et] heurte la barrière",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "stk:LS-Colin_cheval__8",
+      "source_tokens": 25,
+      "target_tokens": 16,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: [Il] tombe. Il a mal, à la jambe.",
+      "source_text": "French to LSF gloss: [Il] tombe. Il a mal, à la jambe.",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "stk:LS-Colin_cheval__9",
+      "source_tokens": 24,
+      "target_tokens": 16,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: L'oiseau, voyant la chute, s'envole",
+      "source_text": "French to LSF gloss: L'oiseau, voyant la chute, s'envole",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "sud:presentation-CAP-petite-enfance__1",
+      "source_tokens": 26,
+      "target_tokens": 55,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: Bienvenue dans ton CAP Petite enfance avec les cours par ordinateur.",
+      "source_text": "French to LSF gloss: Bienvenue dans ton CAP Petite enfance avec les cours par ordinateur.",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "sud:presentation-CAP-petite-enfance__10",
+      "source_tokens": 20,
+      "target_tokens": 22,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: Voilà, on vous laisse commencer.",
+      "source_text": "French to LSF gloss: Voilà, on vous laisse commencer.",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "sud:presentation-CAP-petite-enfance__11",
+      "source_tokens": 17,
+      "target_tokens": 19,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: Au revoir et bon courage !",
+      "source_text": "French to LSF gloss: Au revoir et bon courage !",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "sud:presentation-CAP-petite-enfance__2",
+      "source_tokens": 18,
+      "target_tokens": 31,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: Ce projet est encore expérimental.",
+      "source_text": "French to LSF gloss: Ce projet est encore expérimental.",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "sud:presentation-CAP-petite-enfance__3",
+      "source_tokens": 41,
+      "target_tokens": 75,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: L’objectif est de créer un diplôme de formation de la petite enfance pour les personnes entendantes mais aussi pour les sourds.",
+      "source_text": "French to LSF gloss: L’objectif est de créer un diplôme de formation de la petite enfance pour les personnes entendantes mais aussi pour les sourds.",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "sud:presentation-CAP-petite-enfance__4",
+      "source_tokens": 32,
+      "target_tokens": 55,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: La démarche : il y a des vidéos toutes prêtes signées en LSF",
+      "source_text": "French to LSF gloss: La démarche : il y a des vidéos toutes prêtes signées en LSF",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "sud:presentation-CAP-petite-enfance__5",
+      "source_tokens": 15,
+      "target_tokens": 29,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: que tu trouveras sur internet.",
+      "source_text": "French to LSF gloss: que tu trouveras sur internet.",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "sud:presentation-CAP-petite-enfance__6",
+      "source_tokens": 18,
+      "target_tokens": 62,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: Cela s’appelle e-learning.",
+      "source_text": "French to LSF gloss: Cela s’appelle e-learning.",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "sud:presentation-CAP-petite-enfance__7",
+      "source_tokens": 21,
+      "target_tokens": 23,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: Merci beaucoup à tous pour votre aide.",
+      "source_text": "French to LSF gloss: Merci beaucoup à tous pour votre aide.",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "sud:presentation-CAP-petite-enfance__8",
+      "source_tokens": 43,
+      "target_tokens": 67,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: Si vous remarquez des difficultés ou des problèmes, vous pouvez nous contacter pour faire évoluer et améliorer la plateforme.",
+      "source_text": "French to LSF gloss: Si vous remarquez des difficultés ou des problèmes, vous pouvez nous contacter pour faire évoluer et améliorer la plateforme.",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "sud:presentation-CAP-petite-enfance__9",
+      "source_tokens": 21,
+      "target_tokens": 38,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: Merci aussi pour vos questions, nous vous répondrons.",
+      "source_text": "French to LSF gloss: Merci aussi pour vos questions, nous vous répondrons.",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "sud:presentation-primaire-populaire__1",
+      "source_tokens": 20,
+      "target_tokens": 11,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: Bonjour à toutes et à tous,",
+      "source_text": "French to LSF gloss: Bonjour à toutes et à tous,",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "sud:presentation-primaire-populaire__10",
+      "source_tokens": 105,
+      "target_tokens": 138,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: Pourtant, aujourd’hui, à l’heure où on est, on a 7 candidats et candidates déclarées pour les élections présidentielles de 2022, sur ce qu’on va dire l’arc humaniste, c’est-à-dire les gens qui vont défendre les plus pauvres, les plus vulnérables, et l’écologie pour sauver la planète.",
+      "source_text": "French to LSF gloss: Pourtant, aujourd’hui, à l’heure où on est, on a 7 candidats et candidates déclarées pour les élections présidentielles de 2022, sur ce qu’on va dire l’arc humaniste, c’est-à-dire les gens qui vont défendre les plus pauvres, les plus vulnérables, et l’écologie pour sauver la planète.",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "sud:presentation-primaire-populaire__11",
+      "source_tokens": 27,
+      "target_tokens": 32,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: Si il y a 7 candidats et candidates, personne ne gagne !",
+      "source_text": "French to LSF gloss: Si il y a 7 candidats et candidates, personne ne gagne !",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "sud:presentation-primaire-populaire__2",
+      "source_tokens": 40,
+      "target_tokens": 42,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: je suis Charlotte Marchandise, je suis avec Pascal di Piazza et Sylvain Liotté-Stasse à la technique",
+      "source_text": "French to LSF gloss: je suis Charlotte Marchandise, je suis avec Pascal di Piazza et Sylvain Liotté-Stasse à la technique",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "sud:presentation-primaire-populaire__3",
+      "source_tokens": 42,
+      "target_tokens": 56,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: et on est très heureux de vous présenter une vidéo pour présenter la primaire populaire en Langue des Signes Française.",
+      "source_text": "French to LSF gloss: et on est très heureux de vous présenter une vidéo pour présenter la primaire populaire en Langue des Signes Française.",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "sud:presentation-primaire-populaire__4",
+      "source_tokens": 52,
+      "target_tokens": 89,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: La primaire populaire c’est une initiative qui vient de groupes de militants pour le climat, pour la jeunesse, contre les discriminations, contre le sexisme, contre le racisme",
+      "source_text": "French to LSF gloss: La primaire populaire c’est une initiative qui vient de groupes de militants pour le climat, pour la jeunesse, contre les discriminations, contre le sexisme, contre le racisme",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "sud:presentation-primaire-populaire__5",
+      "source_tokens": 21,
+      "target_tokens": 11,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: et qui s’est mobilisée en disant :",
+      "source_text": "French to LSF gloss: et qui s’est mobilisée en disant :",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "sud:presentation-primaire-populaire__6",
+      "source_tokens": 50,
+      "target_tokens": 77,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: « on a besoin de s’approprier la politique, on a besoin que la justice sociale, que l’écologie, que la démocratie gagnent en 2022",
+      "source_text": "French to LSF gloss: « on a besoin de s’approprier la politique, on a besoin que la justice sociale, que l’écologie, que la démocratie gagnent en 2022",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "sud:presentation-primaire-populaire__7",
+      "source_tokens": 42,
+      "target_tokens": 64,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: pour nous donner un futur parce qu’il y a 10 millions de pauvres en France, parce que le climat s’emballe »",
+      "source_text": "French to LSF gloss: pour nous donner un futur parce qu’il y a 10 millions de pauvres en France, parce que le climat s’emballe »",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "sud:presentation-primaire-populaire__8",
+      "source_tokens": 46,
+      "target_tokens": 42,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: On pouvait à un moment donné, penser que les partis politiques, des gauches et de l’écologie en général, feraient ce travail-là.",
+      "source_text": "French to LSF gloss: On pouvait à un moment donné, penser que les partis politiques, des gauches et de l’écologie en général, feraient ce travail-là.",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    },
+    {
+      "pair_id": "sud:presentation-primaire-populaire__9",
+      "source_tokens": 24,
+      "target_tokens": 39,
+      "source_unk_count": 0,
+      "source_roundtrip": "French to LSF gloss: Ils ont des programmes qui défendent ces projets-là.",
+      "source_text": "French to LSF gloss: Ils ont des programmes qui défendent ces projets-là.",
+      "source_roundtrip_equal": true,
+      "all_ids_in_range": true
+    }
+  ]
+}

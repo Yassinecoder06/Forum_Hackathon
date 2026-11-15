@@ -1,0 +1,8 @@
+{
+  "best_epoch": 11,
+  "epochs_executed": 21,
+  "best_validation_loss": 3.294313885582607,
+  "validation_loss_aggregation": "token",
+  "train_seconds": 113.91646862199923,
+  "test_read": false
+}
