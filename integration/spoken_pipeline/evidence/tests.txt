@@ -1,0 +1,16 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.14, pytest-9.2.0, pluggy-1.7.0
+cachedir: integration/spoken_pipeline/.pytest_cache
+rootdir: /home/jmal/Projects/Active/Forum_Hackathon/.worktrees/wt-codex2
+configfile: pytest.ini
+collected 8 items
+
+integration/spoken_pipeline/test_adapter.py ........                     [100%]
+
+=============================== warnings summary ===============================
+integration/spoken_pipeline/.venv/lib/python3.11/site-packages/pose_format/utils/openpose.py:153
+  /home/jmal/Projects/Active/Forum_Hackathon/.worktrees/wt-codex2/integration/spoken_pipeline/.venv/lib/python3.11/site-packages/pose_format/utils/openpose.py:153: DeprecationWarning: invalid escape sequence '\D'
+    OPENPOSE_FRAME_PATTERN = "(?:^|\D)(\d+)\\_keypoints.json"
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+========================= 8 passed, 1 warning in 2.10s =========================

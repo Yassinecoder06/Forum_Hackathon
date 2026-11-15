@@ -1,0 +1,17 @@
+{
+  "upstream_revision": "fec7ac393989f4b6541ab5f860819262a54f27c7",
+  "source_library_sha256": "c46e28953bd80d84d13828b1175f13310a8c0101aefe509296d4121f9c93a55b",
+  "allow_local_preview": false,
+  "redistribution_allowed": "Per-source CC BY attribution terms; no linguistic approval",
+  "counts": {
+    "entries": 440,
+    "csv_rows": 440,
+    "raw_animics": 0,
+    "retargeted": 440
+  },
+  "export_errors": [],
+  "seconds": 3.7450837249998585,
+  "pose_format": "0.15.0",
+  "all_assets_captured_at_export_snapshot": true,
+  "full_portal_ingestion_complete": false
+}

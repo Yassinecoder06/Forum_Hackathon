@@ -1,0 +1,39 @@
+{
+  "text": "Bonjour motinconnu",
+  "input_glosses": null,
+  "spoken_language": "fr",
+  "signed_language": "fsl",
+  "language_variant": "France LSF, not LSF-CH",
+  "candidate": true,
+  "translation_validated": false,
+  "linguistic_review": "pending",
+  "unknowns": [
+    "motinconnu"
+  ],
+  "ambiguities": [],
+  "glosses": [
+    "BONJOUR"
+  ],
+  "selected_ids": [
+    "LSF_CONCEPT_001"
+  ],
+  "sources": [
+    {
+      "id": "LSF_CONCEPT_001",
+      "source_id": "COMMONS_LAURA_JAUVERT_BONJOUR",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Bonjour.webm",
+      "license": "CC-BY-3.0",
+      "rights_status": "cleared"
+    }
+  ],
+  "local_preview_only": false,
+  "upstream_revision": "fec7ac393989f4b6541ab5f860819262a54f27c7",
+  "lexical_prototype": true,
+  "warnings": [
+    "Lexical source-order lookup is not linguistic LSF translation",
+    "No fingerspelling, synthetic fixture or language fallback",
+    "Diagnostic 2D skeleton; not a validated avatar or complete paper reproduction"
+  ],
+  "status": "blocked_unknown_or_ambiguous",
+  "seconds": 0.12803209199773846
+}

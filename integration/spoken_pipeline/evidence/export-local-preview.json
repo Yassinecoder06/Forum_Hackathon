@@ -1,0 +1,17 @@
+{
+  "upstream_revision": "fec7ac393989f4b6541ab5f860819262a54f27c7",
+  "source_library_sha256": "075833d23d2f7bc260a7dfc00cafed77c8abc86b0fc7d14513387f83be039a46",
+  "allow_local_preview": true,
+  "redistribution_allowed": false,
+  "counts": {
+    "entries": 638,
+    "csv_rows": 638,
+    "raw_animics": 198,
+    "retargeted": 440
+  },
+  "export_errors": [],
+  "seconds": 12.622973027995613,
+  "pose_format": "0.15.0",
+  "all_assets_captured_at_export_snapshot": true,
+  "full_portal_ingestion_complete": false
+}
