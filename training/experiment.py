@@ -15,6 +15,21 @@ def read(split,data,mode):
     if not rows or not all(gate(r) for r in rows):raise ValueError('Data failed '+mode+' gate')
     return rows
 
+def validate_exports(data, splits, mode):
+    manifest=json.loads((data/'dataset_manifest.json').read_text())
+    for split,rows in splits.items():
+        if sha(data/(split+'.jsonl'))!=manifest['files'][split+'.jsonl']:
+            raise ValueError('Frozen dataset checksum mismatch: '+split)
+        if mode=='source-annotated-research':
+            with sqlite3.connect('file:'+str(ROOT/'data/catalog/catalog.sqlite')+'?mode=ro',uri=True) as db:
+                for r in rows:
+                    found=db.execute('SELECT record_json FROM pairs WHERE pair_id=?',(r['pair_id'],)).fetchone()
+                    if not found or json.loads(found[0])!=r:
+                        raise ValueError('Record differs from source-derived catalog: '+r['pair_id'])
+                    source=db.execute('SELECT revision,license_id FROM sources WHERE source_id=?',(r['source_id'],)).fetchone()
+                    if source!=(r['source_revision'],r['license_id']):
+                        raise ValueError('Unverified source revision/license')
+
 def distance(a,b):
     prev=list(range(len(b)+1))
     for i,x in enumerate(a,1):
@@ -57,11 +72,12 @@ def main():
     p.add_argument('--device',choices=['cuda','cpu'],default='cuda');p.add_argument('--lr',type=float,default=3e-4)
     a=p.parse_args();a.base_path=str(Path(a.base_path).resolve());random.seed(42);np.random.seed(42);torch.manual_seed(42);torch.set_num_threads(4)
     data={s:read(s,a.data,a.mode) for s in ['train','val','test']};train=data['train']
+    validate_exports(a.data,data,a.mode)
     for s in ['val','test']:
         assert not {r['split_group'] for r in train}&{r['split_group'] for r in data[s]}
     out=ROOT/'research/runs'/a.run;out.mkdir(parents=True,exist_ok=False)
     ckpt=ROOT/'training/checkpoints'/a.run;ckpt.mkdir(parents=True,exist_ok=False)
-    tokenizer=AutoTokenizer.from_pretrained(a.base_path)
+    tokenizer=AutoTokenizer.from_pretrained(a.base_path,use_fast=not a.base.startswith("google/mt5"))
     model=AutoModelForSeq2SeqLM.from_pretrained(a.base_path)
     if a.lora:
         from peft import LoraConfig,TaskType,get_peft_model
@@ -127,7 +143,7 @@ def main():
         checkpoint=str(ckpt),limitations='ENGINEERING PROOF ONLY; free translations; tiny single-source corpus; no local linguistic approval; no SOTA claim')
     dump(out/'metrics.json',report)
     checkpoint_hashes={p.name:sha(p) for p in ckpt.iterdir() if p.is_file()}
-    dump(ckpt/'research_metadata.json',dict(checkpoint_sha256=checkpoint_hashes,model_base=a.base,model_revision=a.revision,run_id=a.run,lora=a.lora,prefix='French to LSF gloss: ',linguistic_review='PENDING_LOCAL_REVIEW',dataset_manifest_sha256=report['dataset_manifest_sha256']))
+    dump(ckpt/'research_metadata.json',dict(checkpoint_sha256=checkpoint_hashes,model_base=a.base,model_revision=a.revision,run_id=a.run,lora=a.lora,tokenizer_use_fast=not a.base.startswith('google/mt5'),prefix='French to LSF gloss: ',linguistic_review='PENDING_LOCAL_REVIEW',dataset_manifest_sha256=report['dataset_manifest_sha256']))
     db=sqlite3.connect(ROOT/'data/catalog/catalog.sqlite');db.execute('INSERT INTO model_runs VALUES(?,?,?,?,?,?,?)',(a.run,a.base,a.revision,report['dataset_manifest_sha256'],json.dumps(vars(a),default=str),json.dumps(report),str(ckpt)));db.commit();db.close()
     print(json.dumps(report,ensure_ascii=False,indent=2),flush=True)
 if __name__=='__main__':main()

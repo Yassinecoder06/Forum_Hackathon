@@ -1,0 +1,72 @@
+{
+  "version": "v002",
+  "mode": "SOURCE_ANNOTATED_RESEARCH_ONLY",
+  "parent_manifest_sha256": "598c055aad28fcb3c65fc8965df3aedd549acdd96b0213cb774cf1ce8d71218e",
+  "revisions": {
+    "ud": "d1a6c6487eeddf67a14a5e61116b7cc12a0d1f6a",
+    "sud": "5c485156b6eee26b2f83ca153e825bf4201fd99b"
+  },
+  "files": {
+    "train.jsonl": "76ac122dbe2a3cb644a1afc073ecf781e22f36ece45c471422785f1ef843250d",
+    "val.jsonl": "c18236c232fed7c19ea829beeb22abec48323462a85b94d469454848c489e2c4",
+    "test.jsonl": "b55e2d67b1910453d839730095fab29a1dde9d4fda123b95f99ee502f244c103"
+  },
+  "raw_files": {
+    "Alpha_entretien_etudiant_trajet.conllu": "ded73b983bc971388378afa8fd670b10218a1c3496866f15cdf8590b85dadb14",
+    "STK_vacances-sud.conllu": "40e84338c99dd2ee9f78225a69ec22ea4890d723449bc5468d32bd20e5b2bdd3",
+    "README.md": "c989e4d9350b0f748e0e0deee14aeb97f12f0cf8bbebe0baf51763f5bc9ea54c",
+    "LICENSE.txt": "899b1804a12ebc090b96339614eede1b64b686721b650a71430b55b5235f7f79",
+    "LS-Colin_cheval.conllu": "8ef6f3eafbbb7185a39b132260baaf61c36a3f2a5bd5741ec79f6abf7deb6307",
+    "LS-Colin_champignon.conllu": "b7714a846e89f181551e047bf6676d0bceb6e6f357d674e6dd6957e12c208f4d",
+    "Alpha_entretien_etudiant_souvenir.conllu": "bb203f280b715d4967f72d4d8c44fe1d3a5ff14e28bc6842cd2cc60d0cb31306",
+    "presentation-CAP-petite-enfance.conllu": "04aa47bdb7d7251ca4310cc81ff7b3723109dc639cdd1e6e861f6713070b4e72",
+    "presentation-primaire-populaire.conllu": "df5457cf7039df8b88d8de981e2fb0556dde7892b957dea53f654484297fb57d"
+  },
+  "counts": {
+    "train": 61,
+    "val": 28,
+    "test": 39
+  },
+  "group_counts": {
+    "train": 3,
+    "val": 1,
+    "test": 2
+  },
+  "added_pairs": 22,
+  "excluded": [],
+  "overlapping_documents_not_added": [
+    {
+      "file": "Alpha_entretien_etudiant_souvenir.conllu",
+      "segments": 20,
+      "reason": "Same document/recording as UD; not independent data"
+    },
+    {
+      "file": "Alpha_entretien_etudiant_trajet.conllu",
+      "segments": 19,
+      "reason": "Same document/recording as UD; not independent data"
+    },
+    {
+      "file": "LS-Colin_champignon.conllu",
+      "segments": 28,
+      "reason": "Same document/recording as UD; not independent data"
+    },
+    {
+      "file": "LS-Colin_cheval.conllu",
+      "segments": 12,
+      "reason": "Same document/recording as UD; not independent data"
+    },
+    {
+      "file": "STK_vacances-sud.conllu",
+      "segments": 29,
+      "reason": "Same document/recording as UD; not independent data"
+    }
+  ],
+  "strict_approved_pairs": 0,
+  "split_algorithm": "v001 val/test frozen byte-identical; only new SUD documents added to train after duplicate/near-duplicate checks",
+  "limitations": [
+    "Upstream source manual gloss/free-translation annotations; new documents lack dedicated provenance detail in README",
+    "Not a formal parallel translation corpus",
+    "Not locally approved",
+    "Cross-corpus signer identities unknown"
+  ]
+}

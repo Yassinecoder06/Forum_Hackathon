@@ -1,12 +1,15 @@
 """Return a candidate gloss sequence with research provenance, never an approval."""
-import argparse,json
+import argparse,json,hashlib
 from pathlib import Path
 import torch
 from transformers import AutoTokenizer,AutoModelForSeq2SeqLM
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('--text',required=True);p.add_argument('--model',type=Path,required=True);p.add_argument('--device',choices=['cpu','cuda'],default='cpu');a=p.parse_args()
-    meta=json.loads((a.model/'research_metadata.json').read_text());tok=AutoTokenizer.from_pretrained(a.model)
+    meta=json.loads((a.model/'research_metadata.json').read_text())
+    for name,expected in meta['checkpoint_sha256'].items():
+        if hashlib.sha256((a.model/name).read_bytes()).hexdigest()!=expected: raise ValueError('Checkpoint checksum mismatch: '+name)
+    tok=AutoTokenizer.from_pretrained(a.model,use_fast=meta.get("tokenizer_use_fast",True))
     if meta['lora']:
         from peft import PeftModel,PeftConfig
         c=PeftConfig.from_pretrained(a.model)

@@ -1,0 +1,168 @@
+{
+  "run_id": "mt5-small-lora-expanded-slow",
+  "model_base": "google/mt5-small",
+  "model_revision": "73fb5dbe4756edadc8fbe8c769b0a109493acf7a",
+  "mode": "source-annotated-research",
+  "lora": true,
+  "trainable_parameters": 344064,
+  "epochs": 8,
+  "best_epoch": 8,
+  "learning_rate": 0.0002,
+  "batch_size": 1,
+  "gradient_accumulation": 4,
+  "precision": "bf16 autocast",
+  "seed": 42,
+  "counts": {
+    "train": 61,
+    "val": 28,
+    "test": 39
+  },
+  "group_counts": {
+    "train": 3,
+    "val": 1,
+    "test": 2
+  },
+  "dataset_manifest_sha256": "f90ce1457c2fe16f234cd4b8cc1e5f0281b0cf484f646714112d9a7cdc3e1a03",
+  "train_seconds": 28.55740777400206,
+  "total_seconds": 33.29560913200112,
+  "cuda_device": "NVIDIA GeForce RTX 4060 Laptop GPU",
+  "peak_allocated_mib": 1904.1005859375,
+  "peak_reserved_mib": 2196.0,
+  "torch_version": "2.7.1+cu128",
+  "loss_history": [
+    {
+      "epoch": 1,
+      "train_loss": 25.327035997734693,
+      "val_loss": 20.190142359052384,
+      "elapsed_seconds": 4.191634704002354
+    },
+    {
+      "epoch": 2,
+      "train_loss": 27.064035024799285,
+      "val_loss": 18.939688648496354,
+      "elapsed_seconds": 7.5839553700025135
+    },
+    {
+      "epoch": 3,
+      "train_loss": 25.7622468197932,
+      "val_loss": 18.273297377995082,
+      "elapsed_seconds": 11.127073331001156
+    },
+    {
+      "epoch": 4,
+      "train_loss": 26.315769023582583,
+      "val_loss": 17.375205857413157,
+      "elapsed_seconds": 14.58917569100231
+    },
+    {
+      "epoch": 5,
+      "train_loss": 23.111880552573282,
+      "val_loss": 17.32304515157427,
+      "elapsed_seconds": 17.988100165002834
+    },
+    {
+      "epoch": 6,
+      "train_loss": 22.68328302414691,
+      "val_loss": 16.380007096699305,
+      "elapsed_seconds": 21.466273762001947
+    },
+    {
+      "epoch": 7,
+      "train_loss": 21.08061559083032,
+      "val_loss": 15.706242765699114,
+      "elapsed_seconds": 25.003416819999984
+    },
+    {
+      "epoch": 8,
+      "train_loss": 16.95246832488013,
+      "val_loss": 13.922053694725037,
+      "elapsed_seconds": 28.49113395600216
+    }
+  ],
+  "metrics": {
+    "val": {
+      "retrieval": {
+        "exact_match": 0.0,
+        "token_wer": 1.1443298969072164,
+        "corpus_bleu": 0.0,
+        "bleu_signature": "sacrebleu 2.6.0; case:mixed; tok:none; smooth:exp; effective_order:no; scale:0-100",
+        "predicted_oov_vs_train": 0.0,
+        "reference_oov_vs_train": 0.8144329896907216,
+        "motion_registry_oov": null,
+        "motion_registry_note": "No approved source-gloss-to-motion mapping; train vocabulary OOV is separate",
+        "examples": 28,
+        "reference_tokens": 194,
+        "predicted_tokens": 155
+      },
+      "lexical": {
+        "exact_match": 0.0,
+        "token_wer": 1.8762886597938144,
+        "corpus_bleu": 0.1710565357228816,
+        "bleu_signature": "sacrebleu 2.6.0; case:mixed; tok:none; smooth:exp; effective_order:no; scale:0-100",
+        "predicted_oov_vs_train": 0.896457765667575,
+        "reference_oov_vs_train": 0.8144329896907216,
+        "motion_registry_oov": null,
+        "motion_registry_note": "No approved source-gloss-to-motion mapping; train vocabulary OOV is separate",
+        "examples": 28,
+        "reference_tokens": 194,
+        "predicted_tokens": 367
+      },
+      "model": {
+        "exact_match": 0.0,
+        "token_wer": 1.1082474226804124,
+        "corpus_bleu": 0.0,
+        "bleu_signature": "sacrebleu 2.6.0; case:mixed; tok:none; smooth:exp; effective_order:no; scale:0-100",
+        "predicted_oov_vs_train": 0.9864864864864865,
+        "reference_oov_vs_train": 0.8144329896907216,
+        "motion_registry_oov": null,
+        "motion_registry_note": "No approved source-gloss-to-motion mapping; train vocabulary OOV is separate",
+        "examples": 28,
+        "reference_tokens": 194,
+        "predicted_tokens": 74
+      }
+    },
+    "test": {
+      "retrieval": {
+        "exact_match": 0.0,
+        "token_wer": 1.2087378640776698,
+        "corpus_bleu": 0.3009639808175593,
+        "bleu_signature": "sacrebleu 2.6.0; case:mixed; tok:none; smooth:exp; effective_order:no; scale:0-100",
+        "predicted_oov_vs_train": 0.0,
+        "reference_oov_vs_train": 0.8252427184466019,
+        "motion_registry_oov": null,
+        "motion_registry_note": "No approved source-gloss-to-motion mapping; train vocabulary OOV is separate",
+        "examples": 39,
+        "reference_tokens": 206,
+        "predicted_tokens": 227
+      },
+      "lexical": {
+        "exact_match": 0.0,
+        "token_wer": 1.9320388349514563,
+        "corpus_bleu": 0.19352402920994116,
+        "bleu_signature": "sacrebleu 2.6.0; case:mixed; tok:none; smooth:exp; effective_order:no; scale:0-100",
+        "predicted_oov_vs_train": 0.8673218673218673,
+        "reference_oov_vs_train": 0.8252427184466019,
+        "motion_registry_oov": null,
+        "motion_registry_note": "No approved source-gloss-to-motion mapping; train vocabulary OOV is separate",
+        "examples": 39,
+        "reference_tokens": 206,
+        "predicted_tokens": 407
+      },
+      "model": {
+        "exact_match": 0.0,
+        "token_wer": 1.0,
+        "corpus_bleu": 0.0,
+        "bleu_signature": "sacrebleu 2.6.0; case:mixed; tok:none; smooth:exp; effective_order:no; scale:0-100",
+        "predicted_oov_vs_train": 0.975,
+        "reference_oov_vs_train": 0.8252427184466019,
+        "motion_registry_oov": null,
+        "motion_registry_note": "No approved source-gloss-to-motion mapping; train vocabulary OOV is separate",
+        "examples": 39,
+        "reference_tokens": 206,
+        "predicted_tokens": 40
+      }
+    }
+  },
+  "checkpoint": "/home/jmal/Projects/Active/Forum_Hackathon/.worktrees/wt-codex2/training/checkpoints/mt5-small-lora-expanded-slow",
+  "limitations": "ENGINEERING PROOF ONLY; free translations; tiny single-source corpus; no local linguistic approval; no SOTA claim"
+}

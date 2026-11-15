@@ -1,0 +1,83 @@
+{
+  "key": "bc0a72a1-3c45-417a-bf07-a915f5101f94",
+  "service": "core",
+  "type": "collection",
+  "id": "78351d65-e679-4e90-9bf8-aed9c9ca88a7",
+  "status": "published",
+  "visibility": "visible",
+  "lock": "root",
+  "author": "hannahbull",
+  "creationDate": "1573813481873",
+  "lastModificationDate": "1685976574912",
+  "owner": "root",
+  "parent": "ce0fc478-0f67-4323-8667-853fc87ae35f",
+  "children": "02dbd67f-81de-49d8-891b-b9a220a3c155",
+  "object": {
+    "id": "78351d65-e679-4e90-9bf8-aed9c9ca88a7",
+    "version": 3,
+    "metadatasContent": "ortolang-item-json/8dc892b3-239d-4cc1-8958-7a781ca23fd7\nortolang-workspace-json/182f2a19-3e21-4c7a-acc5-28109225c666\nsystem-rating-json/476afc8b-4bca-44c8-94d3-3b757c91dd79",
+    "key": "bc0a72a1-3c45-417a-bf07-a915f5101f94",
+    "name": "root",
+    "clock": 7,
+    "root": true,
+    "segments": [
+      "object\tshort_example_video.mp4\t1573910341517\t5291415\tvideo/mp4\t861b37ea-bc6d-4a80-9537-0fba2241517c\nobject\tmediapi-skel.png\t1574079852587\t84244\timage/png\ta1c21a13-574e-43ea-a81b-79b91c3cabbb\ncollection\tdata\t1685033847800\t0\tortolang/collection\t940c8b91-4d4f-4695-886d-0b295c7e42ed\ncollection\tinformation\t1685102514191\t0\tortolang/collection\t5a6e3c70-60c5-4ad6-86de-f74d65b4fbfe"
+    ],
+    "elements": [
+      {
+        "type": "object",
+        "name": "short_example_video.mp4",
+        "modification": 1573910341517,
+        "size": 5291415,
+        "mimeType": "video/mp4",
+        "key": "861b37ea-bc6d-4a80-9537-0fba2241517c"
+      },
+      {
+        "type": "collection",
+        "name": "data",
+        "modification": 1685033847800,
+        "size": 0,
+        "mimeType": "ortolang/collection",
+        "key": "940c8b91-4d4f-4695-886d-0b295c7e42ed"
+      },
+      {
+        "type": "collection",
+        "name": "information",
+        "modification": 1685102514191,
+        "size": 0,
+        "mimeType": "ortolang/collection",
+        "key": "5a6e3c70-60c5-4ad6-86de-f74d65b4fbfe"
+      },
+      {
+        "type": "object",
+        "name": "mediapi-skel.png",
+        "modification": 1574079852587,
+        "size": 84244,
+        "mimeType": "image/png",
+        "key": "a1c21a13-574e-43ea-a81b-79b91c3cabbb"
+      }
+    ],
+    "empty": false,
+    "objectIdentifier": {
+      "service": "core",
+      "type": "collection",
+      "id": "78351d65-e679-4e90-9bf8-aed9c9ca88a7"
+    },
+    "metadatas": [
+      {
+        "name": "ortolang-item-json",
+        "key": "8dc892b3-239d-4cc1-8958-7a781ca23fd7"
+      },
+      {
+        "name": "ortolang-workspace-json",
+        "key": "182f2a19-3e21-4c7a-acc5-28109225c666"
+      },
+      {
+        "name": "system-rating-json",
+        "key": "476afc8b-4bca-44c8-94d3-3b757c91dd79"
+      }
+    ],
+    "objectName": "root",
+    "objectKey": "bc0a72a1-3c45-417a-bf07-a915f5101f94"
+  }
+}
