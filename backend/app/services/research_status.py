@@ -12,6 +12,7 @@ def reports():
     for path in sorted((ROOT/'research/runs').glob('*/metrics.json')):
         try: value=json.loads(path.read_text())
         except (ValueError,OSError): continue
+        if not isinstance(value,dict) or 'model_base' not in value or 'test' not in value.get('metrics',{}): continue
         value['inference_ready']=checkpoint_runtime(value) is not None
         result.append(value)
     return result
@@ -25,6 +26,13 @@ def checkpoint_runtime(report):
     runtime=next((p for p in choices if p.is_file()),None)
     return (checkpoint,runtime) if runtime else None
 
+def concept_report():
+    path=ROOT/'research/runs/pretrained-concept-planner/metrics.json'
+    try:
+        value=json.loads(path.read_text())
+        return {k:value.get(k) for k in ['kind','metrics','vocabulary_count','invalid_external_ids','device_peak_mib','limitations']}
+    except (ValueError,OSError): return None
+
 def status():
     manifests=[]
     for path in sorted((ROOT/'data/text_to_gloss').glob('v*/dataset_manifest.json')):
@@ -34,7 +42,7 @@ def status():
     try: lexical=len(json.loads(inventory.read_text())['entries'])
     except (ValueError,OSError,KeyError): lexical=0
     return {'lexical_video_references':lexical,'datasets':manifests,'runs':reports(),
-        'corpus':corpus_status(),'linguistic_review':'pending','translation_validated':False}
+        'corpus':corpus_status(),'concept_experiment':concept_report(),'linguistic_review':'pending','translation_validated':False}
 
 def predict(text,run_id):
     report=next((r for r in reports() if r['run_id']==run_id),None)

@@ -34,6 +34,13 @@ type Dataset = {
   limitations?: string[];
 };
 type Research = {
+  concept_experiment?: {
+    metrics: Record<
+      string,
+      { examples: number; ordered_exact: number; latency_mean_seconds: number }
+    >;
+    device_peak_mib: number;
+  } | null;
   lexical_video_references: number;
   datasets: Dataset[];
   runs: Run[];
@@ -105,6 +112,51 @@ export function ResearchPanel() {
   const dataset = status?.datasets[status.datasets.length - 1];
   return (
     <>
+      {status?.concept_experiment && (
+        <div className="card">
+          <h2>Propositions de concepts · essai logiciel</h2>
+          <p className="research-note">
+            24 phrases de test rédigées pour le logiciel ; aucun score de
+            traduction LSF.
+          </p>
+          <div className="experiment-metrics">
+            <div>
+              <strong>
+                {Math.round(
+                  status.concept_experiment.metrics.model.ordered_exact * 24,
+                )}{" "}
+                / 24
+              </strong>
+              <span>Séquences exactes · modèle évalué</span>
+            </div>
+            <div>
+              <strong>
+                {Math.round(
+                  status.concept_experiment.metrics.literal_existing
+                    .ordered_exact * 24,
+                )}{" "}
+                / 24
+              </strong>
+              <span>Lookup existant</span>
+            </div>
+            <div>
+              <strong>
+                {status.concept_experiment.metrics.model.latency_mean_seconds.toFixed(
+                  1,
+                )}{" "}
+                s
+              </strong>
+              <span>Latence moyenne</span>
+            </div>
+          </div>
+          <p className="research-note">
+            Gain faible et erreurs conservées. Le runtime a ensuite reçu une
+            correction du traitement des noms ; ces scores ne mesurent pas cette
+            version corrigée. La proposition reste un brouillon éditable,
+            distinct des expériences de traduction ci-dessous.
+          </p>
+        </div>
+      )}
       <div className="card">
         <div className="card-heading">
           <span className="file-icon">

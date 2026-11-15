@@ -43,3 +43,13 @@ def test_proposals_reject_unknown_model_ids_and_preserve_negation(client,monkeyp
     assert output['translation_validated'] is False and output['linguistic_review']=='pending'
     assert any('Négation' in s for s in output['unsupported'])
     assert any('Question' in s for s in output['unsupported'])
+
+def test_research_screen_keeps_concept_metrics_separate(tmp_path,monkeypatch):
+    import json
+    from backend.app.services import research_status
+    for name,payload in [('translation',{'run_id':'translation','model_base':'t5-small','metrics':{'test':{}}}),('concepts',{'kind':'SOFTWARE_CONCEPT_PLANNING_NOT_LSF_TRANSLATION','metrics':{'model':{'examples':24}}})]:
+        folder=tmp_path/'research/runs'/name
+        folder.mkdir(parents=True)
+        (folder/'metrics.json').write_text(json.dumps(payload))
+    monkeypatch.setattr(research_status,'ROOT',tmp_path)
+    assert [r['run_id'] for r in research_status.reports()]==['translation']
