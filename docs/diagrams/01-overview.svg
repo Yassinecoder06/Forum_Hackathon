@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1600" height="900" viewBox="0 0 1600 900"><defs><marker id="m-green" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#23684f" stroke-width="1.6"/></marker><marker id="m-blue" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#336a91" stroke-width="1.6"/></marker><marker id="m-amber" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#a0661c" stroke-width="1.6"/></marker><marker id="m-purple" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#74578d" stroke-width="1.6"/></marker><marker id="m-gray" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#8a9893" stroke-width="1.6"/></marker></defs><rect width="1600" height="900" fill="#ffffff"/>
+<text x="64" y="84" fill="#1d3a33" font-size="36" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">From a French sentence to a signing avatar</text>
+<text x="64" y="122" fill="#6b7d77" font-size="19" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">The whole application in five steps. Every sign comes from a real recorded signer.</text>
+<rect x="64" y="350" width="248" height="124" rx="14" fill="#eef5f0" stroke="#23684f" stroke-width="1.3"/>
+<text x="188.0" y="384" fill="#23684f" font-size="21" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="middle">French text</text>
+<text x="188.0" y="412" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="middle">Typed in the Studio</text>
+<rect x="366" y="350" width="248" height="124" rx="14" fill="#eef5f0" stroke="#23684f" stroke-width="1.3"/>
+<text x="490.0" y="384" fill="#23684f" font-size="21" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="middle">Concept lookup</text>
+<text x="490.0" y="412" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="middle">Words → known signs</text>
+<text x="490.0" y="435" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="middle">Unknown words shown</text>
+<path d="M316,412 L360,412" fill="none" stroke="#23684f" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#m-green)"/>
+<rect x="668" y="350" width="248" height="124" rx="14" fill="#eef5f0" stroke="#23684f" stroke-width="1.3"/>
+<text x="792.0" y="384" fill="#23684f" font-size="21" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="middle">Sign sequence</text>
+<text x="792.0" y="412" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="middle">Ordered list of</text>
+<text x="792.0" y="435" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="middle">sign IDs (glosses)</text>
+<path d="M618,412 L662,412" fill="none" stroke="#23684f" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#m-green)"/>
+<rect x="970" y="350" width="248" height="124" rx="14" fill="#eef5f0" stroke="#23684f" stroke-width="1.3"/>
+<text x="1094.0" y="384" fill="#23684f" font-size="21" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="middle">Motion stitching</text>
+<text x="1094.0" y="412" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="middle">Recorded clips joined</text>
+<text x="1094.0" y="435" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="middle">with smooth bridges</text>
+<path d="M920,412 L964,412" fill="none" stroke="#23684f" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#m-green)"/>
+<rect x="1272" y="350" width="248" height="124" rx="14" fill="#eef5f0" stroke="#23684f" stroke-width="1.3"/>
+<text x="1396.0" y="384" fill="#23684f" font-size="21" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="middle">3D avatar</text>
+<text x="1396.0" y="412" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="middle">Plays the motion,</text>
+<text x="1396.0" y="435" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="middle">exports a video</text>
+<path d="M1222,412 L1266,412" fill="none" stroke="#23684f" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#m-green)"/>
+<rect x="380.0" y="176" width="824.0" height="96" rx="14" fill="#edf3f8" stroke="#336a91" stroke-width="1.3"/>
+<text x="792.0" y="210" fill="#336a91" font-size="21" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="middle">Real sign library</text>
+<text x="792.0" y="238" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="middle">1,446 signs captured from LSF videos (Dicta-Sign + Wikimedia Commons)</text>
+<path d="M490.0,272 L490.0,344" fill="none" stroke="#336a91" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#m-blue)"/>
+<text x="502.0" y="318" fill="#336a91" font-size="14" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">known words</text>
+<path d="M1094.0,272 L1094.0,344" fill="none" stroke="#336a91" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#m-blue)"/>
+<text x="1106.0" y="318" fill="#336a91" font-size="14" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">motion clips</text>
+<text x="64" y="534" fill="#6b7d77" font-size="13" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">EXAMPLE</text>
+<rect x="78.0" y="554" width="220" height="44" rx="22" fill="#ffffff" stroke="#dfe5e1" stroke-width="1.3"/>
+<text x="188.0" y="582" fill="#1d3a33" font-size="16" font-weight="600" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="middle">« chat »</text>
+<rect x="380.0" y="554" width="220" height="44" rx="22" fill="#ffffff" stroke="#dfe5e1" stroke-width="1.3"/>
+<text x="490.0" y="582" fill="#1d3a33" font-size="16" font-weight="600" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="middle">chat</text>
+<rect x="682.0" y="554" width="220" height="44" rx="22" fill="#ffffff" stroke="#dfe5e1" stroke-width="1.3"/>
+<text x="792.0" y="582" fill="#1d3a33" font-size="16" font-weight="600" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="middle">CHAT</text>
+<rect x="984.0" y="554" width="220" height="44" rx="22" fill="#ffffff" stroke="#dfe5e1" stroke-width="1.3"/>
+<text x="1094.0" y="582" fill="#1d3a33" font-size="16" font-weight="600" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="middle">2.93 s · 42 frames</text>
+<clipPath id="c1"><rect x="1272" y="550" width="248" height="260" rx="12"/></clipPath><image href="examples/avatar_1.png" xlink:href="examples/avatar_1.png" x="1272" y="550" width="248" height="260" preserveAspectRatio="xMidYMid slice" clip-path="url(#c1)"/><rect x="1272" y="550" width="248" height="260" rx="12" fill="none" stroke="#dfe5e1"/>
+<line x1="64" y1="852" x2="1536" y2="852" stroke="#dfe5e1"/>
+<text x="64" y="878" fill="#6b7d77" font-size="13" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">Example: CHAT · source video: Laura Jauvert · montage Edouard-lopez · CC BY 3.0 · Wikimedia Commons (LL-Q33302 fsl)</text>
+</svg>

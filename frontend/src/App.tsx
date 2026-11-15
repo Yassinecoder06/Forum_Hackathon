@@ -101,7 +101,9 @@ export default function App() {
   const [caps, setCaps] = useState<Capabilities | null>(null);
   const [glossary, setGlossary] = useState<GlossEntry[]>([]);
   const [library, setLibrary] = useState<LibraryEntry[]>([]);
-  const [text, setText] = useState("Bonjour.");
+  // A showcase link can open the Studio with ?text=... and play it immediately.
+  const linkedText = useRef(new URLSearchParams(window.location.search).get("text"));
+  const [text, setText] = useState(linkedText.current || "Bonjour.");
   const [plan, setPlan] = useState<AnimationPlan | null>(null);
   const [motion, setMotion] = useState<MotionFile | null>(null);
   const [label, setLabel] = useState("Une scène prête pour votre histoire");
@@ -175,6 +177,13 @@ export default function App() {
     },
     [sourceUrl],
   );
+
+  // Compose the linked sentence once, after the library has loaded.
+  useEffect(() => {
+    if (!linkedText.current || !connected || !library.length) return;
+    linkedText.current = null;
+    void compose();
+  }, [connected, library.length]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!playing || !duration) return;
@@ -459,7 +468,7 @@ export default function App() {
     const chunks: Blob[] = [];
     let frame = 0;
     const draw = () => {
-      ctx.fillStyle = "#eff4e8";
+      ctx.fillStyle = "#f5efe7";
       ctx.fillRect(0, 0, 1280, 960);
       const ratio = Math.min(1280 / canvas.width, 900 / canvas.height);
       const width = canvas.width * ratio,
@@ -471,7 +480,7 @@ export default function App() {
         width,
         height,
       );
-      ctx.fillStyle = "rgba(20,47,41,.8)";
+      ctx.fillStyle = "rgba(48,28,19,.8)";
       ctx.fillRect(0, 884, 1280, 76);
       ctx.fillStyle = "#fff";
       ctx.font = "18px sans-serif";
@@ -491,7 +500,7 @@ export default function App() {
         )
           .map((a) => `${a.credit} · ${a.license} · ${a.source_url}`)
           .join(" / ") +
-          " · Avatar Noa: UPF-GTI / Ready Player Me · revue locale",
+          " · Avatar Eva: UPF-GTI / Ready Player Me · revue locale",
         28,
         943,
         1224,
@@ -576,9 +585,9 @@ export default function App() {
       </aside>
       <div className="workspace">
         <header className="topbar">
-          <div className="wordmark">
+          <a className="wordmark" href="/" title="Présentation du projet">
             signaculture<span>AI</span>
-          </div>
+          </a>
           <span className="topbar-divider" />
           <span className="project-name">
             Mon espace de création <ChevronRight size={14} />
@@ -677,16 +686,13 @@ export default function App() {
                     </div>
                     <div className="suggestions">
                       <span>Essayez</span>
+                      {/* Each phrase resolves every content word to a real captured sign. */}
                       {[
-                        ...(library.some((e) => e.gloss.concept_fr === "merci")
-                          ? ["Bonjour, merci."]
-                          : ["Bonjour."]),
-                        ...(library.some(
-                          (e) => e.gloss.concept_fr === "demain",
-                        ) &&
-                        library.some((e) => e.gloss.concept_fr === "travailler")
-                          ? ["Demain, travailler."]
-                          : []),
+                        "Bonjour, comment ça va ?",
+                        "Je veux boire de l'eau.",
+                        "Je visite Paris avec ma famille.",
+                        "Le musée est fermé demain.",
+                        "Je veux apprendre la langue des signes.",
                       ].map((phrase) => (
                         <button
                           key={phrase}

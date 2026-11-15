@@ -5,6 +5,7 @@ import re
 import simplemma
 
 TOKEN = re.compile(r'[^\W_]+', re.UNICODE)
+ELISION = {'j': 'je', 't': 'te', 'm': 'me', 's': 'se', 'n': 'ne', 'c': 'ce', 'qu': 'que', 'jusqu': 'jusque', 'lorsqu': 'lorsque'}
 
 @lru_cache(maxsize=4)
 def load_model(name):
@@ -34,6 +35,13 @@ def tokenize(text):
             aligned = [t for t in doc if t.idx == span.start() and t.idx+len(t.text) == span.end()]
             if len(aligned) == 1 and aligned[0].lemma_:
                 lemmas[i] = aligned[0].lemma_.casefold()
+    # French elision: "j'aime" tokenizes as "j" + "aime"; restore the full word
+    # so it can match its dictionary entry (j' -> je, t' -> te, qu' -> que ...).
+    for i, span in enumerate(spans):
+        surface = tokens[i].casefold()
+        elided = text[span.end():span.end() + 1] in ("'", "’")
+        if elided and surface in ELISION and lemmas[i] == surface:
+            lemmas[i] = ELISION[surface]
     return tokens, lemmas
 
 @lru_cache(maxsize=4096)

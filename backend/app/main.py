@@ -366,9 +366,13 @@ def compose_concepts(body: ConceptSequenceRequest):
 
 @app.get('/avatar/model')
 def avatar_model():
-    path=capture_library.storage()/'avatar-candidates/Noa.glb'
-    if not path.is_file(): raise HTTPException(503,'Le modèle 3D local est absent. Exécutez scripts/setup-avatar.py.')
-    return FileResponse(path,media_type='model/gltf-binary')
+    # Explicit choice among checksum-pinned local candidates; no silent fallback.
+    name=os.getenv('SIGNACULTURE_AVATAR','ReadyEva')
+    if name not in ('ReadyEva','Noa'): raise HTTPException(503,f'Avatar inconnu : {name}')
+    path=capture_library.storage()/f'avatar-candidates/{name}.glb'
+    if not path.is_file(): raise HTTPException(503,f'Le modèle 3D local {name} est absent. Exécutez scripts/setup-avatar.py.')
+    # Revalidate on every load (ETag) so switching avatars is never masked by cache.
+    return FileResponse(path,media_type='model/gltf-binary',headers={'Cache-Control':'no-cache'})
 
 
 @app.get('/captures/{job_id}/landmarks')

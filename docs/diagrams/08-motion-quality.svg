@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1600" height="900" viewBox="0 0 1600 900"><defs><marker id="m-green" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#23684f" stroke-width="1.6"/></marker><marker id="m-blue" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#336a91" stroke-width="1.6"/></marker><marker id="m-amber" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#a0661c" stroke-width="1.6"/></marker><marker id="m-purple" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#74578d" stroke-width="1.6"/></marker><marker id="m-gray" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#8a9893" stroke-width="1.6"/></marker></defs><rect width="1600" height="900" fill="#ffffff"/>
+<text x="64" y="84" fill="#1d3a33" font-size="36" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">Motion quality: measured improvements</text>
+<text x="64" y="122" fill="#6b7d77" font-size="19" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">Engineering measurements on real captures. Lower is better everywhere.</text>
+<text x="64" y="180" fill="#1d3a33" font-size="19" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">Filling missing frames inside a sign (93 test windows)</text>
+<rect x="64" y="196" width="740" height="56" rx="10" fill="#f4f7f5"/>
+<text x="82" y="230.0" fill="#6b7d77" font-size="15" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">Method</text>
+<text x="312" y="230.0" fill="#6b7d77" font-size="15" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">RMSE</text>
+<text x="482" y="230.0" fill="#6b7d77" font-size="15" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">Boundary</text>
+<text x="652" y="230.0" fill="#6b7d77" font-size="15" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">Per clip</text>
+<rect x="64" y="255" width="740" height="50" rx="10" fill="#eef5f0"/>
+<line x1="64" y1="308" x2="804" y2="308" stroke="#dfe5e1"/>
+<text x="82" y="286.0" fill="#23684f" font-size="16" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">CGAN (trained)</text>
+<text x="312" y="286.0" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">0.315</text>
+<text x="482" y="286.0" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">0.167</text>
+<text x="652" y="286.0" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">0.252</text>
+<line x1="64" y1="364" x2="804" y2="364" stroke="#dfe5e1"/>
+<text x="82" y="342.0" fill="#1d3a33" font-size="16" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">Linear</text>
+<text x="312" y="342.0" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">0.320</text>
+<text x="482" y="342.0" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">0.167</text>
+<text x="652" y="342.0" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">0.273</text>
+<line x1="64" y1="420" x2="804" y2="420" stroke="#dfe5e1"/>
+<text x="82" y="398.0" fill="#1d3a33" font-size="16" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">Quintic</text>
+<text x="312" y="398.0" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">0.330</text>
+<text x="482" y="398.0" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">0.173</text>
+<text x="652" y="398.0" fill="#1d3a33" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">0.285</text>
+<text x="64" y="454" fill="#6b7d77" font-size="15" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">The CGAN wins by a small margin within a sign. Between signs the player uses deterministic</text>
+<text x="64" y="476" fill="#6b7d77" font-size="15" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">quintic bridges, which need no training.</text>
+<text x="880" y="180" fill="#1d3a33" font-size="19" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">Finger jitter (95th percentile, ° per 40 ms)</text>
+<text x="880" y="233" fill="#1d3a33" font-size="15" font-weight="600" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">BONJOUR</text>
+<rect x="1030" y="216" width="294.32" height="12" rx="6" fill="#e3e8e5"/>
+<rect x="1030" y="231" width="66.03999999999999" height="12" rx="6" fill="#23684f"/>
+<text x="1332.32" y="227" fill="#6b7d77" font-size="13" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">56.6</text>
+<text x="1104.04" y="242" fill="#23684f" font-size="13" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">12.7</text>
+<text x="880" y="279" fill="#1d3a33" font-size="15" font-weight="600" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">BIBLIOTHÈQUE</text>
+<rect x="1030" y="262" width="414.96" height="12" rx="6" fill="#e3e8e5"/>
+<rect x="1030" y="277" width="97.24" height="12" rx="6" fill="#23684f"/>
+<text x="1452.96" y="273" fill="#6b7d77" font-size="13" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">79.8</text>
+<text x="1135.24" y="288" fill="#23684f" font-size="13" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">18.7</text>
+<text x="880" y="325" fill="#1d3a33" font-size="15" font-weight="600" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">MERCI</text>
+<rect x="1030" y="308" width="303.15999999999997" height="12" rx="6" fill="#e3e8e5"/>
+<rect x="1030" y="323" width="100.88" height="12" rx="6" fill="#23684f"/>
+<text x="1341.1599999999999" y="319" fill="#6b7d77" font-size="13" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">58.3</text>
+<text x="1138.88" y="334" fill="#23684f" font-size="13" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">19.4</text>
+<text x="880" y="371" fill="#1d3a33" font-size="15" font-weight="600" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">RENCONTRER</text>
+<rect x="1030" y="354" width="182.52" height="12" rx="6" fill="#e3e8e5"/>
+<rect x="1030" y="369" width="62.400000000000006" height="12" rx="6" fill="#23684f"/>
+<text x="1220.52" y="365" fill="#6b7d77" font-size="13" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">35.1</text>
+<text x="1100.4" y="380" fill="#23684f" font-size="13" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">12.0</text>
+<text x="880" y="417" fill="#1d3a33" font-size="15" font-weight="600" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">ENSEMBLE</text>
+<rect x="1030" y="400" width="409.24" height="12" rx="6" fill="#e3e8e5"/>
+<rect x="1030" y="415" width="137.8" height="12" rx="6" fill="#23684f"/>
+<text x="1447.24" y="411" fill="#6b7d77" font-size="13" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">78.7</text>
+<text x="1175.8" y="426" fill="#23684f" font-size="13" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">26.5</text>
+<text x="880" y="463" fill="#1d3a33" font-size="15" font-weight="600" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">LAVER</text>
+<rect x="1030" y="446" width="258.96" height="12" rx="6" fill="#e3e8e5"/>
+<rect x="1030" y="461" width="107.12" height="12" rx="6" fill="#23684f"/>
+<text x="1296.96" y="457" fill="#6b7d77" font-size="13" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">49.8</text>
+<text x="1145.12" y="472" fill="#23684f" font-size="13" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">20.6</text>
+<rect x="880" y="500" width="14" height="10" rx="3" fill="#e3e8e5"/>
+<text x="902" y="510" fill="#6b7d77" font-size="13" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">before</text>
+<rect x="970" y="500" width="14" height="10" rx="3" fill="#23684f"/>
+<text x="992" y="510" fill="#6b7d77" font-size="13" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">after</text>
+<rect x="64" y="650" width="460" height="120" rx="14" fill="#fafbfa" stroke="#dfe5e1" stroke-width="1"/>
+<text x="88" y="705" fill="#23684f" font-size="32" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">16.3 → 0.3 mm</text>
+<text x="88" y="742" fill="#6b7d77" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">Mean hand overlap, 14 phrases (−98%)</text>
+<rect x="564" y="650" width="460" height="120" rx="14" fill="#fafbfa" stroke="#dfe5e1" stroke-width="1"/>
+<text x="588" y="705" fill="#23684f" font-size="32" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">44.0 → 18.2 mm</text>
+<text x="588" y="742" fill="#6b7d77" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">Worst hand overlap, 14 phrases</text>
+<rect x="1064" y="650" width="460" height="120" rx="14" fill="#fafbfa" stroke="#dfe5e1" stroke-width="1"/>
+<text x="1088" y="705" fill="#23684f" font-size="32" font-weight="700" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">178 → 0</text>
+<text x="1088" y="742" fill="#6b7d77" font-size="16" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">Saturated eyebrow samples (of 410)</text>
+<line x1="64" y1="852" x2="1536" y2="852" stroke="#dfe5e1"/>
+<text x="64" y="878" fill="#6b7d77" font-size="13" font-weight="400" font-family="Inter,Arial,Helvetica,sans-serif" text-anchor="start">Sources: research/runs/transition-intrasign-v1/metrics.json, docs/AVATAR_PLAYBACK.md, docs/HAND_COLLISION_FIX.md</text>
+</svg>

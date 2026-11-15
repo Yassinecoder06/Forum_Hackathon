@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SignaCulture AI — Du français à la LSF</title>
+  <meta name="description" content="SignaCulture AI : un avatar 3D qui enchaîne de vrais signes LSF capturés, à partir d'une phrase en français.">
+  <link rel="icon" type="image/svg+xml" href="/studio/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="nav">
+    <a class="brand" href="#top">signaculture<span>AI</span></a>
+    <nav aria-label="Sections">
+      <a href="#essayer">Essayer</a>
+      <a href="#exemples">Exemples</a>
+      <a href="#fonctionnement">Fonctionnement</a>
+      <a href="#resultats">Résultats</a>
+      <a href="#limites">Limites</a>
+    </nav>
+    <a class="button small" href="/studio/">Ouvrir le Studio</a>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-text">
+        <p class="kicker">Forum Hackathon · IA éthique · LSF</p>
+        <h1>Du français à la langue des signes, <em>signe par signe.</em></h1>
+        <p class="lead">Écrivez une phrase. SignaCulture retrouve chaque mot dans une bibliothèque de vrais signes
+          LSF filmés, puis un avatar 3D les enchaîne avec des transitions fluides.</p>
+        <div class="cta">
+          <a class="button" href="#essayer">Essayer maintenant</a>
+          <a class="button ghost" href="#exemples">Voir les exemples</a>
+        </div>
+        <dl class="stats" id="stats">
+          <div><dt id="stat-signs">1 446</dt><dd>signes réels capturés</dd></div>
+          <div><dt id="stat-dicta">1 025</dt><dd>vidéos Dicta-Sign traitées</dd></div>
+          <div><dt>100 %</dt><dd>local, sans cloud</dd></div>
+        </dl>
+      </div>
+      <figure class="hero-media">
+        <div class="frame"><video id="hero-video" autoplay muted loop playsinline preload="auto"></video></div>
+        <figcaption><span id="hero-text"></span><span class="chips" id="hero-glosses"></span></figcaption>
+      </figure>
+    </section>
+
+    <section id="essayer" class="band">
+      <div class="section-head">
+        <p class="kicker">Démo en direct</p>
+        <h2>Essayez avec votre propre phrase</h2>
+        <p>La phrase s'ouvre dans le Studio, qui compose et joue l'animation immédiatement.</p>
+      </div>
+      <form class="try" id="try-form" action="/studio/" method="get">
+        <label for="try-text" class="visually-hidden">Votre phrase en français</label>
+        <input id="try-text" name="text" type="text" maxlength="300" required
+               placeholder="Ex. : Je veux boire de l'eau." autocomplete="off">
+        <button class="button" type="submit">Signer cette phrase →</button>
+      </form>
+      <div class="suggest" id="suggest" aria-label="Phrases d'exemple"></div>
+      <p class="hint">Les petits mots sans signe propre (de, la, l'…) sont signalés plutôt qu'inventés.</p>
+    </section>
+
+    <section id="exemples">
+      <div class="section-head">
+        <p class="kicker">Exemples réels</p>
+        <h2>Cinq phrases, enregistrées par le Studio</h2>
+        <p>Chaque vidéo est un export réel de l'application. Cliquez sur un signe pour voir la vidéo source d'origine.</p>
+      </div>
+      <div class="gallery" id="gallery"></div>
+    </section>
+
+    <section id="fonctionnement" class="band">
+      <div class="section-head">
+        <p class="kicker">Fonctionnement</p>
+        <h2>De la vidéo d'un signeur à l'avatar</h2>
+      </div>
+      <div class="tabs" role="tablist" aria-label="Étapes du pipeline" id="tabs"></div>
+      <figure class="diagram" id="diagram">
+        <img id="diagram-img" alt="" loading="lazy">
+        <figcaption id="diagram-caption"></figcaption>
+      </figure>
+    </section>
+
+    <section id="resultats">
+      <div class="section-head">
+        <p class="kicker">Résultats mesurés</p>
+        <h2>Ce qui marche, ce qui ne marche pas encore</h2>
+      </div>
+      <div class="results">
+        <article class="card">
+          <h3>Traduire le texte en signes</h3>
+          <p>Quatre approches testées sur 39 phrases. Avec 128 paires de phrases seulement, aucun modèle ne traduit :
+            l'application utilise donc une recherche fiable dans le dictionnaire.</p>
+          <table>
+            <thead><tr><th>Approche</th><th>Exact</th><th>WER ↓</th></tr></thead>
+            <tbody>
+              <tr class="best"><td>Recherche (retrieval)</td><td>0 %</td><td>120,9 %</td></tr>
+              <tr><td>T5-small + LoRA</td><td>0 %</td><td>207,3 %</td></tr>
+              <tr><td>mT5-small, 8 époques</td><td>0 %</td><td>100 %</td></tr>
+              <tr><td>mT5-small, 21 époques</td><td>0 %</td><td>518,0 %</td></tr>
+            </tbody>
+          </table>
+        </article>
+        <article class="card">
+          <h3>Qualité du mouvement</h3>
+          <p>Mesures d'ingénierie sur de vraies captures, avant → après nos corrections.</p>
+          <ul class="figures">
+            <li><strong>16,3 → 0,3 mm</strong><span>chevauchement moyen des mains (14 phrases, −98 %)</span></li>
+            <li><strong>79,8 → 18,7°</strong><span>tremblement des doigts, pire signe (BIBLIOTHÈQUE)</span></li>
+            <li><strong>178 → 0</strong><span>sourcils saturés sur 410 échantillons</span></li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>Données</h3>
+          <table>
+            <thead><tr><th>Source</th><th>Vidéos</th><th>Retenues</th></tr></thead>
+            <tbody>
+              <tr><td>Dicta-Sign (Hambourg)</td><td>1 025</td><td>1 007</td></tr>
+              <tr><td>Wikimedia Commons</td><td>446</td><td>439</td></tr>
+              <tr><td>UD/SUD STKAutogramm</td><td colspan="2">128 phrases annotées (recherche)</td></tr>
+            </tbody>
+          </table>
+          <p class="note">Les clips dont le suivi des mains est insuffisant restent hors de la bibliothèque.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="limites" class="band">
+      <div class="section-head">
+        <p class="kicker">Éthique &amp; limites</p>
+        <h2>Ce que SignaCulture n'est pas</h2>
+      </div>
+      <div class="limits">
+        <p><strong>Pas une traduction.</strong> L'application enchaîne des signes du dictionnaire ; elle ne produit pas la grammaire de la LSF.</p>
+        <p><strong>Relecture humaine obligatoire.</strong> Aucune sortie n'est validée par un signeur ; la publication reste bloquée sans revue.</p>
+        <p><strong>Rien d'inventé.</strong> Une main non vue dans la vidéo n'est jamais reconstruite : elle revient au repos.</p>
+        <p><strong>Usage local.</strong> Les droits de redistribution des vidéos Dicta-Sign et de l'avatar sont en attente : cette page est une démonstration locale, à ne pas mettre en ligne.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Vidéos sources : projet Dicta-Sign (portail LSF, Université de Hambourg) ; Laura Jauvert, montage Edouard-lopez, CC BY 3.0, Wikimedia Commons.
+      Avatar Eva : UPF-GTI / Ready Player Me, revue locale. Captures MediaPipe, rendu Three.js.</p>
+    <p>SignaCulture AI · prototype de recherche · <a href="/studio/">Studio</a> · <a href="/diagrams/">Diagrammes</a></p>
+  </footer>
+
+  <dialog id="source-dialog" aria-labelledby="source-title">
+    <form method="dialog"><button class="close" aria-label="Fermer">×</button></form>
+    <h3 id="source-title"></h3>
+    <video id="source-video" controls autoplay muted loop playsinline></video>
+    <p id="source-credit" class="note"></p>
+  </dialog>
+  <script src="app.js"></script>
+</body>
+</html>

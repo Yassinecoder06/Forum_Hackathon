@@ -1,0 +1,254 @@
+{
+  "generated": "2026-11-15T22:13:46.603Z",
+  "library_count": 1446,
+  "dictasign": {
+    "videos": 1025,
+    "imported": 1007,
+    "review": 18
+  },
+  "examples": [
+    {
+      "text": "Je veux boire de l'eau.",
+      "slug": "je-veux-boire-de-l-eau",
+      "duration_ms": 6016,
+      "unknowns": [
+        "de",
+        "l"
+      ],
+      "video": "media/je-veux-boire-de-l-eau.webm",
+      "signs": [
+        {
+          "gloss": "JE",
+          "concept": "je",
+          "duration_ms": 1201,
+          "source_video": "/api/captures/4d1d077a-b14b-50a4-b658-cfafbc462810/source",
+          "source_page": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/cs/cs_529.html",
+          "credit": "Dicta-Sign project / French LSF lexical portal",
+          "license": "Not specified per portal asset; local research preview; redistribution pending"
+        },
+        {
+          "gloss": "VOULOIR",
+          "concept": "vouloir",
+          "duration_ms": 1080,
+          "source_video": "/api/captures/2d5b78ea-f2db-5d7d-abc8-2b5df1be7cd5/source",
+          "source_page": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/cs/cs_986.html",
+          "credit": "Dicta-Sign project / French LSF lexical portal",
+          "license": "Not specified per portal asset; local research preview; redistribution pending"
+        },
+        {
+          "gloss": "BOIRE",
+          "concept": "boire",
+          "duration_ms": 868,
+          "source_video": "/api/captures/e68dbc70-d633-5484-b444-fbef8dbeac59/source",
+          "source_page": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/cs/cs_253.html",
+          "credit": "Dicta-Sign project / French LSF lexical portal",
+          "license": "Not specified per portal asset; local research preview; redistribution pending"
+        },
+        {
+          "gloss": "EAU",
+          "concept": "eau",
+          "duration_ms": 1868,
+          "source_video": "/api/captures/81287632-3b17-5f8d-9233-1acbe4f43a2b/source",
+          "source_page": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/cs/cs_992.html",
+          "credit": "Dicta-Sign project / French LSF lexical portal",
+          "license": "Not specified per portal asset; local research preview; redistribution pending"
+        }
+      ]
+    },
+    {
+      "text": "Je visite Paris avec ma famille.",
+      "slug": "je-visite-paris-avec-ma-famille",
+      "duration_ms": 9310,
+      "unknowns": [],
+      "video": "media/je-visite-paris-avec-ma-famille.webm",
+      "signs": [
+        {
+          "gloss": "JE",
+          "concept": "je",
+          "duration_ms": 1201,
+          "source_video": "/api/captures/4d1d077a-b14b-50a4-b658-cfafbc462810/source",
+          "source_page": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/cs/cs_529.html",
+          "credit": "Dicta-Sign project / French LSF lexical portal",
+          "license": "Not specified per portal asset; local research preview; redistribution pending"
+        },
+        {
+          "gloss": "VISITE",
+          "concept": "visite",
+          "duration_ms": 1480,
+          "source_video": "/api/captures/e2ea4941-a999-56cd-9933-662bb09c2b5c/source",
+          "source_page": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/cs/cs_980.html",
+          "credit": "Dicta-Sign project / French LSF lexical portal",
+          "license": "Not specified per portal asset; local research preview; redistribution pending"
+        },
+        {
+          "gloss": "PARIS",
+          "concept": "Paris",
+          "duration_ms": 1560,
+          "source_video": "/api/captures/d80a4fd1-9539-5977-bf98-a3f731726bdc/source",
+          "source_page": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/cs/cs_632.html",
+          "credit": "Dicta-Sign project / French LSF lexical portal",
+          "license": "Not specified per portal asset; local research preview; redistribution pending"
+        },
+        {
+          "gloss": "AVEC",
+          "concept": "avec",
+          "duration_ms": 801,
+          "source_video": "/api/captures/e6240351-6f5c-5f19-8458-16e318065d49/source",
+          "source_page": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/cs/cs_1027.html",
+          "credit": "Dicta-Sign project / French LSF lexical portal",
+          "license": "Not specified per portal asset; local research preview; redistribution pending"
+        },
+        {
+          "gloss": "MON",
+          "concept": "mon",
+          "duration_ms": 1068,
+          "source_video": "/api/captures/896624b1-5484-568d-a3a0-fe5cdfa1cad6/source",
+          "source_page": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/cs/cs_562.html",
+          "credit": "Dicta-Sign project / French LSF lexical portal",
+          "license": "Not specified per portal asset; local research preview; redistribution pending"
+        },
+        {
+          "gloss": "FAMILLE",
+          "concept": "famille",
+          "duration_ms": 1535,
+          "source_video": "/api/captures/80217797-d730-5cc0-a2bf-34417b3a2912/source",
+          "source_page": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/cs/cs_311.html",
+          "credit": "Dicta-Sign project / French LSF lexical portal",
+          "license": "Not specified per portal asset; local research preview; redistribution pending"
+        }
+      ]
+    },
+    {
+      "text": "Bonjour, comment ça va ?",
+      "slug": "bonjour-comment-ca-va",
+      "duration_ms": 4101,
+      "unknowns": [],
+      "video": "media/bonjour-comment-ca-va.webm",
+      "signs": [
+        {
+          "gloss": "BONJOUR",
+          "concept": "bonjour",
+          "duration_ms": 1001,
+          "source_video": "/api/captures/e7e9436f-2bd5-56fb-96f1-f833253c3668/source",
+          "source_page": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/cs/cs_380.html",
+          "credit": "Dicta-Sign project / French LSF lexical portal",
+          "license": "Not specified per portal asset; local research preview; redistribution pending"
+        },
+        {
+          "gloss": "COMMENT",
+          "concept": "comment",
+          "duration_ms": 934,
+          "source_video": "/api/captures/87efd56c-6254-57c7-a0b6-fe7bd6500891/source",
+          "source_page": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/cs/cs_426.html",
+          "credit": "Dicta-Sign project / French LSF lexical portal",
+          "license": "Not specified per portal asset; local research preview; redistribution pending"
+        },
+        {
+          "gloss": "ÇA VA",
+          "concept": "ça va",
+          "duration_ms": 1500,
+          "source_video": "/api/captures/de19e272-71ba-5598-9632-c760f71b34dd/source",
+          "source_page": "https://commons.wikimedia.org/wiki/File%3ALL-Q33302_%28fsl%29-Laura_Jauvert-%C3%87a_va.webm",
+          "credit": "Original video:  Jauvert Laura  Video editing:  Edouard-lopez",
+          "license": "CC BY 3.0"
+        }
+      ]
+    },
+    {
+      "text": "Le musée est fermé demain.",
+      "slug": "le-musee-est-ferme-demain",
+      "duration_ms": 4803,
+      "unknowns": [
+        "Le",
+        "est"
+      ],
+      "video": "media/le-musee-est-ferme-demain.webm",
+      "signs": [
+        {
+          "gloss": "MUSEE",
+          "concept": "musée",
+          "duration_ms": 1401,
+          "source_video": "/api/captures/00fbbb40-9493-59f9-840f-5e3113cf4fa5/source",
+          "source_page": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/cs/cs_559.html",
+          "credit": "Dicta-Sign project / French LSF lexical portal",
+          "license": "Not specified per portal asset; local research preview; redistribution pending"
+        },
+        {
+          "gloss": "FERME",
+          "concept": "fermé",
+          "duration_ms": 1134,
+          "source_video": "/api/captures/3195fcc1-7854-5c0b-aee9-6e4829bd64fb/source",
+          "source_page": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/cs/cs_157.html",
+          "credit": "Dicta-Sign project / French LSF lexical portal",
+          "license": "Not specified per portal asset; local research preview; redistribution pending"
+        },
+        {
+          "gloss": "DEMAIN",
+          "concept": "demain",
+          "duration_ms": 1602,
+          "source_video": "/api/captures/c458fee7-4657-5889-9eb7-dcb94ad8efe6/source",
+          "source_page": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/cs/cs_929.html",
+          "credit": "Dicta-Sign project / French LSF lexical portal",
+          "license": "Not specified per portal asset; local research preview; redistribution pending"
+        }
+      ]
+    },
+    {
+      "text": "Je veux apprendre la langue des signes.",
+      "slug": "je-veux-apprendre-la-langue-des-signes",
+      "duration_ms": 8028,
+      "unknowns": [
+        "la",
+        "des"
+      ],
+      "video": "media/je-veux-apprendre-la-langue-des-signes.webm",
+      "signs": [
+        {
+          "gloss": "JE",
+          "concept": "je",
+          "duration_ms": 1201,
+          "source_video": "/api/captures/4d1d077a-b14b-50a4-b658-cfafbc462810/source",
+          "source_page": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/cs/cs_529.html",
+          "credit": "Dicta-Sign project / French LSF lexical portal",
+          "license": "Not specified per portal asset; local research preview; redistribution pending"
+        },
+        {
+          "gloss": "VOULOIR",
+          "concept": "vouloir",
+          "duration_ms": 1080,
+          "source_video": "/api/captures/2d5b78ea-f2db-5d7d-abc8-2b5df1be7cd5/source",
+          "source_page": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/cs/cs_986.html",
+          "credit": "Dicta-Sign project / French LSF lexical portal",
+          "license": "Not specified per portal asset; local research preview; redistribution pending"
+        },
+        {
+          "gloss": "APPRENDRE",
+          "concept": "apprendre",
+          "duration_ms": 1668,
+          "source_video": "/api/captures/bfa36581-5fc5-5ba8-995d-ca6649463497/source",
+          "source_page": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/cs/cs_482.html",
+          "credit": "Dicta-Sign project / French LSF lexical portal",
+          "license": "Not specified per portal asset; local research preview; redistribution pending"
+        },
+        {
+          "gloss": "LANGUE",
+          "concept": "langue",
+          "duration_ms": 867,
+          "source_video": "/api/captures/8a3969d6-ca26-533d-b995-a8a6ba26a82f/source",
+          "source_page": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/cs/cs_930.html",
+          "credit": "Dicta-Sign project / French LSF lexical portal",
+          "license": "Not specified per portal asset; local research preview; redistribution pending"
+        },
+        {
+          "gloss": "SIGNE",
+          "concept": "signe",
+          "duration_ms": 1880,
+          "source_video": "/api/captures/bd4b9104-8fa4-57ca-9282-6259e49ac11d/source",
+          "source_page": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/cs/cs_788.html",
+          "credit": "Dicta-Sign project / French LSF lexical portal",
+          "license": "Not specified per portal asset; local research preview; redistribution pending"
+        }
+      ]
+    }
+  ]
+}
