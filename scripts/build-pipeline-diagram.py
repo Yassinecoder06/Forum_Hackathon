@@ -40,7 +40,7 @@ class Page:
  def finish(self,name):
   self.parts.append('<path d="M40 1134 H1640" stroke="#ced8cc"/>')
   self.text(40,1164,'Implementation snapshot · 15 November 2026 · Local research prototype · Human LSF review pending',16,'muted')
-  self.text(1490,1164,f'{self.n} / 3',18,'green',700)
+  self.text(1490,1164,f'{self.n} / 4',18,'green',700)
   self.parts.append('</svg>');path=OUT/name;path.write_text('\n'.join(self.parts));return path
 
 p=Page(1,'From French input to a 3D signing preview','Current application flow. Solid arrows = default path; dashed arrows = optional assistance or audio controls.')
@@ -96,7 +96,7 @@ p.box(880,795,760,220,'Traceability and review',['Local captures, original files
 p.note(40,1080,'Boundary: 447 isolated-sign videos are NOT 447 sentence-level French–gloss training pairs.',120,'amber',21)
 files.append(p.finish('02-motion-data.svg'))
 
-p=Page(3,'Models, evaluation and paper coverage','No GAN is implemented. This is not a full Paper B reproduction; the original PDF was unavailable locally.')
+p=Page(3,'Models, evaluation and paper coverage','No GAN is implemented in SignaCulture. The supplied paper has now been read; its architecture appears on page 4.')
 p.box(40,185,340,180,'UD / SUD STKAutogramm',['Published gloss annotations','French free translations','Versions + annotation lineage'],color='purple',tag='Sentence research data')
 p.box(460,185,340,180,'Audit and derive',['Deduplicate overlap','Preserve source annotations','0 local linguistic approvals'],color='purple',tag='Catalog / eligibility')
 p.box(880,185,340,180,'Frozen dataset splits',['128 research pairs (v002)','61 train / 28 validation / 39 test','Grouped by recordings'],color='purple',tag='Leakage controls')
@@ -110,8 +110,26 @@ p.box(40,765,500,250,'Qwen: semantic concept proposals',['Pretrained local Qwen3
 p.box(590,765,500,250,'Correction and limitations',['Name detection falsely removed valid concepts.', 'The runtime was repaired after evaluation.', 'Original scores stay frozen; repaired runtime is unscored.', 'NER is advisory; editable human review is always required.'],color='blue',tag='Measured version ≠ current runtime')
 p.box(1140,765,500,250,'What is still needed',['Qualified LSF sentence-level review.', 'Larger, aligned France-LSF phrase data.', 'Validation of nonmanuals and intelligibility.', 'Institutionally restricted datasets remain metadata-only.'],color='amber',tag='Toward reliable translation')
 p.note(40,1071,'Repository evidence: research/IMPLEMENTATION_STATUS.md · research/CONCEPT_PLANNER_REPORT.md',145,size=17)
-p.note(40,1097,'Scope evidence: docs/SEMANTIC_SOLUTION.md · Paper details in the user brief are not independently reproduced.',145,size=17)
+p.note(40,1097,'Verified paper comparison: research/PAPER_B_VERIFIED_REVIEW.md · Paper results are not reproduced here.',145,size=17)
 files.append(p.finish('03-models-research.svg'))
+p=Page(4,'What the supplied T5–GAN paper actually does','Source: research_paper.pdf · Muanji et al., Procedia Computer Science 290 (2026), pp. 578–584.')
+p.box(40,190,470,180,'Voice or typed French',['Voice → Google ASR API.', 'Typed French bypasses ASR.', 'This stage is different from emotion analysis.'],color='purple',tag='1 · Input / speech recognition')
+p.box(605,190,470,180,'Fine-tuned T5-base',['220M parameters; 319 added gloss tokens.', '2,500 French–gloss training corpus pairs.', 'AdamW; 20 epochs; LR 2e-5; batch 4.'],color='purple',tag='2 · Neural translation')
+p.box(1170,190,470,180,'Hybrid post-correction',['47 expert canonicalization rules.', 'RapidFuzz matching, threshold 85%.', 'Rule-based reordering; validate glosses.'],color='purple',tag='3 · Canonical gloss sequence')
+p.arrow([(510,280),(605,280)],'purple')
+p.arrow([(1075,280),(1170,280)],'purple')
+p.box(1170,485,470,195,'Retrieve sign landmarks',['319 isolated signs; MediaPipe Holistic.', 'Landmark sequences retrieved from CSV.', 'Adjacent sign endpoints condition transitions.'],color='purple',tag='4 · Gloss-to-motion lookup')
+p.arrow([(1405,370),(1405,485)],'purple')
+p.box(605,485,470,195,'Conditional GAN transitions',['MLP generator + discriminator.', '5 selected landmarks → 10 features.', '10 frames at 30 fps; adversarial + L1, λ=1000.'],color='purple',tag='5 · Co-articulation between signs')
+p.box(40,485,470,195,'Pygame animation',['Stylized 2D avatar.', 'Full 3D and richer hands are future work.', 'No implemented emotion2vec branch in this paper.'],color='purple',tag='6 · Rendering')
+p.arrow([(1170,580),(1075,580)],'purple')
+p.arrow([(605,580),(510,580)],'purple')
+p.box(40,795,760,235,'What SignaCulture already has',['Related MediaPipe extraction and a real motion library.', 'Controlled lookup; optional editable Qwen concept drafts.', '3D avatar, video preview export, audio DSP and emotion2vec.', 'T5 / mT5 experiments with different data and training settings.'],tag='Implemented, with important differences')
+p.box(880,795,760,235,'Paper modules still missing',['No matching T5-base + 319-token reproduction or 47-rule correction.', 'No trained conditional GAN or paired transition training set.', 'No Google ASR path and no comparable interpreter evaluation.', 'Original corpus / code: paper says available upon request.'],color='amber',tag='Not a full reproduction')
+p.note(40,1071,'Paper-reported data: 379 real + 1,000 synthetic transition pairs. These are not our extracted isolated clips.',145,size=17)
+p.note(40,1097,'Read all 7 supplied pages. Exact comparison and reproducibility caveats: research/PAPER_B_VERIFIED_REVIEW.md',145,size=17)
+files.append(p.finish('04-paper-architecture.svg'))
+
 html='''<!doctype html><html lang="en"><meta charset="utf-8"><title>SignaCulture — Full Pipeline</title><style>@page{size:A3 landscape;margin:0}*{box-sizing:border-box}html,body{margin:0;background:#f7f8f3}.page{width:420mm;height:297mm;break-after:page;overflow:hidden}.page:last-child{break-after:auto}.page svg{display:block;width:100%;height:100%}</style>'''+''.join('<section class="page">'+f.read_text()+'</section>' for f in files)+'</html>'
 (OUT/'pipeline.html').write_text(html)
-print('Generated three SVG pages and docs/pipeline/pipeline.html')
+print('Generated four SVG pages and docs/pipeline/pipeline.html')

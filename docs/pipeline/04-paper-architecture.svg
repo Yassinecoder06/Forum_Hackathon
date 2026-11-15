@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1680" height="1188" viewBox="0 0 1680 1188"><defs><marker id="ink" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#193b34" stroke-width="1.5"/></marker><marker id="muted" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#60746d" stroke-width="1.5"/></marker><marker id="green" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#23684f" stroke-width="1.5"/></marker><marker id="blue" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#336a91" stroke-width="1.5"/></marker><marker id="amber" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#996522" stroke-width="1.5"/></marker><marker id="purple" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#74578d" stroke-width="1.5"/></marker></defs><rect width="1680" height="1188" fill="#f7f8f3"/>
+<text x="40" y="47" fill="#23684f" font-size="17" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">SIGNACULTURE  /  SYSTEM MAP</text>
+<text x="40" y="99" fill="#193b34" font-size="39" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">What the supplied T5–GAN paper actually does</text>
+<text x="40" y="137" fill="#60746d" font-size="20" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Source: research_paper.pdf · Muanji et al., Procedia Computer Science 290 (2026), pp. 578–584.</text>
+<rect x="40" y="190" width="470" height="180" rx="17" fill="#f2eef7" stroke="#74578d" stroke-width="1.4"/>
+<text x="60" y="214" fill="#74578d" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">1 · INPUT / SPEECH RECOGNITION</text>
+<text x="60" y="245" fill="#74578d" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Voice or typed French</text>
+<text x="60" y="276" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Voice → Google ASR API.</text>
+<text x="60" y="299" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Typed French bypasses ASR.</text>
+<text x="60" y="322" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">This stage is different from emotion analysis.</text>
+<rect x="605" y="190" width="470" height="180" rx="17" fill="#f2eef7" stroke="#74578d" stroke-width="1.4"/>
+<text x="625" y="214" fill="#74578d" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">2 · NEURAL TRANSLATION</text>
+<text x="625" y="245" fill="#74578d" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Fine-tuned T5-base</text>
+<text x="625" y="276" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">220M parameters; 319 added gloss tokens.</text>
+<text x="625" y="299" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">2,500 French–gloss training corpus pairs.</text>
+<text x="625" y="322" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">AdamW; 20 epochs; LR 2e-5; batch 4.</text>
+<rect x="1170" y="190" width="470" height="180" rx="17" fill="#f2eef7" stroke="#74578d" stroke-width="1.4"/>
+<text x="1190" y="214" fill="#74578d" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">3 · CANONICAL GLOSS SEQUENCE</text>
+<text x="1190" y="245" fill="#74578d" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Hybrid post-correction</text>
+<text x="1190" y="276" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">47 expert canonicalization rules.</text>
+<text x="1190" y="299" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">RapidFuzz matching, threshold 85%.</text>
+<text x="1190" y="322" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Rule-based reordering; validate glosses.</text>
+<path d="M510,280 L605,280" fill="none" stroke="#74578d" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#purple)"/>
+<path d="M1075,280 L1170,280" fill="none" stroke="#74578d" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#purple)"/>
+<rect x="1170" y="485" width="470" height="195" rx="17" fill="#f2eef7" stroke="#74578d" stroke-width="1.4"/>
+<text x="1190" y="509" fill="#74578d" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">4 · GLOSS-TO-MOTION LOOKUP</text>
+<text x="1190" y="540" fill="#74578d" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Retrieve sign landmarks</text>
+<text x="1190" y="571" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">319 isolated signs; MediaPipe Holistic.</text>
+<text x="1190" y="594" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Landmark sequences retrieved from CSV.</text>
+<text x="1190" y="617" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Adjacent sign endpoints condition transitions.</text>
+<path d="M1405,370 L1405,485" fill="none" stroke="#74578d" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#purple)"/>
+<rect x="605" y="485" width="470" height="195" rx="17" fill="#f2eef7" stroke="#74578d" stroke-width="1.4"/>
+<text x="625" y="509" fill="#74578d" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">5 · CO-ARTICULATION BETWEEN SIGNS</text>
+<text x="625" y="540" fill="#74578d" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Conditional GAN transitions</text>
+<text x="625" y="571" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">MLP generator + discriminator.</text>
+<text x="625" y="594" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">5 selected landmarks → 10 features.</text>
+<text x="625" y="617" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">10 frames at 30 fps; adversarial + L1, λ=1000.</text>
+<rect x="40" y="485" width="470" height="195" rx="17" fill="#f2eef7" stroke="#74578d" stroke-width="1.4"/>
+<text x="60" y="509" fill="#74578d" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">6 · RENDERING</text>
+<text x="60" y="540" fill="#74578d" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Pygame animation</text>
+<text x="60" y="571" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Stylized 2D avatar.</text>
+<text x="60" y="594" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Full 3D and richer hands are future work.</text>
+<text x="60" y="617" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">No implemented emotion2vec branch in this paper.</text>
+<path d="M1170,580 L1075,580" fill="none" stroke="#74578d" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#purple)"/>
+<path d="M605,580 L510,580" fill="none" stroke="#74578d" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#purple)"/>
+<rect x="40" y="795" width="760" height="235" rx="17" fill="#edf3e9" stroke="#23684f" stroke-width="1.4"/>
+<text x="60" y="819" fill="#23684f" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">IMPLEMENTED, WITH IMPORTANT DIFFERENCES</text>
+<text x="60" y="850" fill="#23684f" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">What SignaCulture already has</text>
+<text x="60" y="881" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Related MediaPipe extraction and a real motion library.</text>
+<text x="60" y="904" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Controlled lookup; optional editable Qwen concept drafts.</text>
+<text x="60" y="927" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">3D avatar, video preview export, audio DSP and emotion2vec.</text>
+<text x="60" y="950" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">T5 / mT5 experiments with different data and training settings.</text>
+<rect x="880" y="795" width="760" height="235" rx="17" fill="#faf2e5" stroke="#996522" stroke-width="1.4"/>
+<text x="900" y="819" fill="#996522" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">NOT A FULL REPRODUCTION</text>
+<text x="900" y="850" fill="#996522" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Paper modules still missing</text>
+<text x="900" y="881" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">No matching T5-base + 319-token reproduction or 47-rule correction.</text>
+<text x="900" y="904" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">No trained conditional GAN or paired transition training set.</text>
+<text x="900" y="927" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">No Google ASR path and no comparable interpreter evaluation.</text>
+<text x="900" y="950" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Original corpus / code: paper says available upon request.</text>
+<text x="40" y="1071" fill="#60746d" font-size="17" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Paper-reported data: 379 real + 1,000 synthetic transition pairs. These are not our extracted isolated clips.</text>
+<text x="40" y="1097" fill="#60746d" font-size="17" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Read all 7 supplied pages. Exact comparison and reproducibility caveats: research/PAPER_B_VERIFIED_REVIEW.md</text>
+<path d="M40 1134 H1640" stroke="#ced8cc"/>
+<text x="40" y="1164" fill="#60746d" font-size="16" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Implementation snapshot · 15 November 2026 · Local research prototype · Human LSF review pending</text>
+<text x="1490" y="1164" fill="#23684f" font-size="18" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">4 / 4</text>
+</svg>

@@ -1,3 +1,5 @@
+> Current evidence update: the lead has now read the supplied seven-page `research_paper.pdf`. Earlier PDF-unavailable / not-read notes below are historical. See [verified review](PAPER_B_VERIFIED_REVIEW.md).
+
 # Primary-source audit — 2026-11-15
 
 Scope: France LSF (`fsl`, local `LSF_FR`). Source expert annotation is not new local linguistic approval. No videos downloaded by this engineer. Sources without verified compatible terms remain metadata only. The user authorized public licensed text research, not fabricated translations or bypass of institutional restrictions.

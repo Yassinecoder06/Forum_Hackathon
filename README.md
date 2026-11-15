@@ -46,7 +46,7 @@ Dans Studio, ouvrir « Préparer et corriger les concepts ». On peut sélection
 
 Ces modèles **ne sont pas des traducteurs utilisables**. Le troisième essai réduit la perte de validation mais produit des répétitions ; son test est une réutilisation d’un test d’ingénierie, pas une confirmation indépendante. Aucun résultat état de l’art n’est revendiqué. Voir [l’investigation](research/ADAPTATION_INVESTIGATION.md), [la carte des données](research/DATASET_CARD.md), [les résultats](research/IMPLEMENTATION_STATUS.md) et [les commandes de reproduction](training/README.md).
 
-Le PDF Paper B n’était pas disponible et l’accès officiel était bloqué. Les descriptions du brief restent des sources secondaires. Dicta-Sign, Rosetta et MEDIAPI sont catalogués avec leurs limites d’accès ; aucun accès institutionnel n’a été simulé.
+Le PDF fourni `research_paper.pdf` a maintenant été lu intégralement. La [comparaison vérifiée](research/PAPER_B_VERIFIED_REVIEW.md) distingue les composants du papier de notre implémentation ; aucun GAN n’est actuellement implémenté. Les anciennes mentions d’un PDF absent décrivent un état antérieur et sont corrigées par cette revue. Dicta-Sign, Rosetta et MEDIAPI sont catalogués avec leurs limites d’accès ; aucun accès institutionnel n’a été simulé.
 
 ## Vérification
 

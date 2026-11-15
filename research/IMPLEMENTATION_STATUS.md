@@ -1,3 +1,5 @@
+> Current evidence update: the lead has now read the supplied seven-page `research_paper.pdf`. Earlier PDF-unavailable / not-read notes below are historical. See [verified review](PAPER_B_VERIFIED_REVIEW.md).
+
 # Implementation status — completed 2026-11-15
 
 Branch `feat/research-training`; sole engineer codex2. All project writes in training/, research/, data/catalog/, data/text_to_gloss/. Initial measured milestone committed as `8405a87`; expanded milestone `078cafb` was merged by lead; this follow-up records the requested adaptation investigation. No weights or environments committed. No motion/audio/UI/backend/frontend changes.

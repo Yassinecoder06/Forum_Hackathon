@@ -1,3 +1,5 @@
+> Current evidence update: the supplied seven-page `research_paper.pdf` has now been read. See [verified comparison](../research/PAPER_B_VERIFIED_REVIEW.md); no GAN is currently implemented.
+
 # Solution en cours : séparer compréhension française et production LSF
 
 Les essais mT5 ont échoué avec 61 phrases d’entraînement. L’étape suivante réutilise la compréhension d’un modèle préentraîné pour proposer des concepts existants, puis laisse l’utilisateur corriger leur ordre et leur sélection avant une prévisualisation. Cela améliore potentiellement l’accès à la bibliothèque, sans prétendre apprendre une langue signée à partir de 61 exemples.

@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1680" height="1188" viewBox="0 0 1680 1188"><defs><marker id="ink" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#193b34" stroke-width="1.5"/></marker><marker id="muted" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#60746d" stroke-width="1.5"/></marker><marker id="green" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#23684f" stroke-width="1.5"/></marker><marker id="blue" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#336a91" stroke-width="1.5"/></marker><marker id="amber" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#996522" stroke-width="1.5"/></marker><marker id="purple" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#74578d" stroke-width="1.5"/></marker></defs><rect width="1680" height="1188" fill="#f7f8f3"/>
 <text x="40" y="47" fill="#23684f" font-size="17" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">SIGNACULTURE  /  SYSTEM MAP</text>
 <text x="40" y="99" fill="#193b34" font-size="39" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Models, evaluation and paper coverage</text>
-<text x="40" y="137" fill="#60746d" font-size="20" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">No GAN is implemented. This is not a full Paper B reproduction; the original PDF was unavailable locally.</text>
+<text x="40" y="137" fill="#60746d" font-size="20" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">No GAN is implemented in SignaCulture. The supplied paper has now been read; its architecture appears on page 4.</text>
 <rect x="40" y="185" width="340" height="180" rx="17" fill="#f2eef7" stroke="#74578d" stroke-width="1.4"/>
 <text x="60" y="209" fill="#74578d" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">SENTENCE RESEARCH DATA</text>
 <text x="60" y="240" fill="#74578d" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">UD / SUD STKAutogramm</text>
@@ -72,8 +72,8 @@
 <text x="1160" y="920" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Institutionally restricted datasets remain metadata-</text>
 <text x="1160" y="943" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">only.</text>
 <text x="40" y="1071" fill="#60746d" font-size="17" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Repository evidence: research/IMPLEMENTATION_STATUS.md · research/CONCEPT_PLANNER_REPORT.md</text>
-<text x="40" y="1097" fill="#60746d" font-size="17" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Scope evidence: docs/SEMANTIC_SOLUTION.md · Paper details in the user brief are not independently reproduced.</text>
+<text x="40" y="1097" fill="#60746d" font-size="17" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Verified paper comparison: research/PAPER_B_VERIFIED_REVIEW.md · Paper results are not reproduced here.</text>
 <path d="M40 1134 H1640" stroke="#ced8cc"/>
 <text x="40" y="1164" fill="#60746d" font-size="16" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Implementation snapshot · 15 November 2026 · Local research prototype · Human LSF review pending</text>
-<text x="1490" y="1164" fill="#23684f" font-size="18" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">3 / 3</text>
+<text x="1490" y="1164" fill="#23684f" font-size="18" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">3 / 4</text>
 </svg>
