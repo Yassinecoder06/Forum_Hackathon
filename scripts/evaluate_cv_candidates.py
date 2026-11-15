@@ -7,6 +7,9 @@ ROOT=Path(__file__).resolve().parents[1]
 def run(row,output):
  folder=output/row['capture_id'];folder.mkdir(parents=True,exist_ok=True)
  source=ROOT/'.runtime/captures'/row['capture_id']/'source.mp4';raw=folder/'animics-landmarks.json.gz'
+ expected=row.get('provenance',{}).get('source_sha256')
+ if expected and hashlib.sha256(source.read_bytes()).hexdigest()!=expected:
+  raise ValueError('Source video checksum mismatch: '+row['capture_id'])
  if not raw.exists():
   with (folder/'worker.log').open('w') as log:
    subprocess.run([str(ROOT/'.venv-motion/bin/python'),str(ROOT/'backend/app/workers/capture.py'),str(source),str(folder/'motion.json'),str(folder/'progress.json'),'--raw-animics',str(raw)],check=True,stdout=log,stderr=log)
