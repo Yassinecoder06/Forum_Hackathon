@@ -72,6 +72,9 @@ jobs:
       - name: Install dependencies (Strict npm ci)
         run: npm ci
 
+      - name: Run motion and retargeting checks
+        run: npm test
+
       - name: Run Frontend Lint
         run: npm run lint
 
@@ -95,6 +98,7 @@ jobs:
           python3 -m pip install -r backend/requirements.txt
           npm ci --prefix frontend
           npm ci --prefix e2e
+          python3 scripts/setup-avatar.py
           cd e2e
           npx playwright install --with-deps chromium
       - name: Verify full application

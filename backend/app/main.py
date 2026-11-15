@@ -25,6 +25,7 @@ app.add_middleware(CORSMiddleware, allow_origins=os.getenv('SIGNACULTURE_CORS_OR
 class TextRequest(BaseModel):
     text: str = Field(min_length=1, max_length=10000)
     audio_features: AudioFeatures | None = None
+    include_synthetic: bool = False
 
 class PlanRequest(BaseModel):
     plan_id: str
@@ -205,7 +206,10 @@ def register_capture(job_id: str, body: RegisterCapture):
     except ValueError as exc: raise HTTPException(409,str(exc))
 
 @app.get('/glossary')
-def glossary(): return {'entries': registry()[1]}
+def glossary(include_synthetic: bool = Query(False)):
+    _,entries,motions=registry()
+    allowed={m.motion_id for m in motions if include_synthetic or not m.synthetic}
+    return {'entries':[g for g in entries if g.motion_id in allowed]}
 
 @app.get('/motions/{motion_id}')
 def motion(motion_id: str):
@@ -230,8 +234,9 @@ def lookup(body: TextRequest):
     text = body.text
     if not isinstance(text, str) or not text.strip() or len(text) > 10000:
         raise HTTPException(422, 'text must contain 1–10000 characters')
-    _, entries, _ = registry()
-    return lookup_text(text, entries)
+    _, entries, motions = registry()
+    allowed={m.motion_id for m in motions if body.include_synthetic or not m.synthetic}
+    return lookup_text(text, [g for g in entries if g.motion_id in allowed])
 
 @app.post('/compose-animation', response_model=AnimationPlan)
 def compose(body: TextRequest):
@@ -247,10 +252,11 @@ def compose_draft(draft, audio=None):
         segments.append(dict(gloss_id=g.gloss_id, motion_id=m.motion_id, start_ms=t, duration_ms=m.duration_ms, asset_url='/assets/'+Path(m.path).name))
         t += m.duration_ms
     from .services.animation_timing import segment_timing
-    timing,t,timing_mode=segment_timing(selected,audio)
+    transition_ms=333 if len(selected)>1 else 0
+    timing,t,timing_mode=segment_timing(selected,audio,transition_ms)
     for segment,(start,length) in zip(segments,timing):
         segment.update(start_ms=start,duration_ms=length)
-    plan = AnimationPlan(timing_mode=timing_mode,plan_id=str(uuid.uuid4()), source_text=draft['source_text'], target_language='LSF', segments=segments, unknowns=draft['unknowns'], duration_ms=t, linguistic_review='pending', animation_review=('approved' if selected and all(m.animation_review == 'approved' for m in selected) else 'pending'), rights_status=('cleared' if selected and all(m.rights_status == 'cleared' for m in selected) else 'pending'), render_allowed_for_publication=False, audio_features=audio)
+    plan = AnimationPlan(transition_ms=transition_ms,timing_mode=timing_mode,plan_id=str(uuid.uuid4()), source_text=draft['source_text'], target_language='LSF', segments=segments, unknowns=draft['unknowns'], duration_ms=t, linguistic_review='pending', animation_review=('approved' if selected and all(m.animation_review == 'approved' for m in selected) else 'pending'), rights_status=('cleared' if selected and all(m.rights_status == 'cleared' for m in selected) else 'pending'), render_allowed_for_publication=False, audio_features=audio)
     with db() as c: c.execute('INSERT INTO plans VALUES (?,?)', (plan.plan_id, plan.model_dump_json()))
     return plan
 
@@ -352,3 +358,10 @@ def propose_concepts(body: ConceptProposalRequest):
     except BlockingIOError as exc: raise HTTPException(429,str(exc))
     except subprocess.TimeoutExpired: raise HTTPException(504,'La proposition a dépassé le délai autorisé.')
     except RuntimeError as exc: raise HTTPException(503,str(exc))
+
+
+@app.get('/avatar/model')
+def avatar_model():
+    path=capture_library.storage()/'avatar-candidates/Noa.glb'
+    if not path.is_file(): raise HTTPException(503,'Le modèle 3D local est absent. Exécutez scripts/setup-avatar.py.')
+    return FileResponse(path,media_type='model/gltf-binary')

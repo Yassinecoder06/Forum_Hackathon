@@ -32,10 +32,10 @@ def test_json_capture_lookup_and_persistence(isolated):
     record=client.post(f"/captures/{job['job_id']}/register",json={'concept':'bonjour','aliases':['salutation'],'source':'automated fixture test','license':'CC0-1.0'})
     assert record.status_code==200
     entry=record.json();assert entry['motion']['synthetic'] is True
-    lookup=client.post('/gloss-lookup',json={'text':'bonjour salutation'}).json()
+    lookup=client.post('/gloss-lookup',json={'text':'bonjour salutation','include_synthetic':True}).json()
     assert len(lookup['gloss_sequence'])==2
     assert all(g['motion_id']==entry['motion']['motion_id'] for g in lookup['gloss_sequence'])
-    plan=client.post('/compose-animation',json={'text':'bonjour'}).json()
+    plan=client.post('/compose-animation',json={'text':'bonjour','include_synthetic':True}).json()
     assert plan['segments'][0]['motion_id']==entry['motion']['motion_id']
     assert client.get('/assets/'+Path(entry['motion']['path']).name).status_code==200
     assert client.post('/render',json={'plan_id':plan['plan_id'],'purpose':'publication'}).status_code==403
@@ -66,3 +66,10 @@ def test_audio_timing_keeps_pause_boundaries():
     segments,duration,mode=segment_timing([asset,asset],audio)
     assert segments==[(0,2000),(2000,1000)]
     assert duration==3000 and mode=='audio_voiced'
+
+
+def test_clip_transitions_have_dedicated_time():
+    asset=MotionAsset(motion_id='M',gloss_id='G',path='test.json',rig_version='signaculture-v1',fps=10,duration_ms=1000,license='test',quality_status='test',rights_status='pending',animation_review='pending',synthetic=True)
+    segments,duration,mode=segment_timing([asset,asset],None,333)
+    assert segments==[(0,1000),(1333,1000)]
+    assert duration==2333 and mode=='original'

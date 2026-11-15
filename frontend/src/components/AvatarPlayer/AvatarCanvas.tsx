@@ -1,9 +1,10 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import type { MotionFile } from "../../types/contract";
 import { interpolateJointPositions } from "../../utils/motionInterpolator";
-
+import { HumanoidRetargeter } from "../../utils/retargetHumanoid";
 type Props = {
   motion: MotionFile | null;
   currentTimeMs: number;
@@ -13,351 +14,185 @@ type Props = {
   emotion?: Record<string, number | string> | null;
   onCanvasReady?: (canvas: HTMLCanvasElement) => void;
 };
-const CONNECTIONS: [string, string, number, "shirt" | "skin"][] = [
-  ["left_shoulder", "left_elbow", 0.062, "shirt"],
-  ["right_shoulder", "right_elbow", 0.062, "shirt"],
-  ["left_elbow", "left_wrist", 0.039, "skin"],
-  ["right_elbow", "right_wrist", 0.039, "skin"],
-];
-const FINGERS = ["thumb", "index", "middle", "ring", "pinky"];
-const up = new THREE.Vector3(0, 1, 0);
-
 export function AvatarCanvas(props: Props) {
-  const mount = useRef<HTMLDivElement>(null);
-  const latest = useRef(props);
+  const mount = useRef<HTMLDivElement>(null),
+    latest = useRef(props);
   latest.current = props;
+  const [status, setStatus] = useState("Chargement du personnage articulé…"),
+    [ready, setReady] = useState(false);
   useEffect(() => {
     const host = mount.current;
     if (!host) return;
+    let disposed = false,
+      frameId = 0,
+      model: THREE.Object3D | null = null,
+      retarget: HumanoidRetargeter | null = null;
+    const morphs: THREE.Mesh[] = [];
     const scene = new THREE.Scene();
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
-      alpha: true,
+      alpha: false,
       preserveDrawingBuffer: true,
     });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setClearColor(0xeff4e8, 0);
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.setClearColor(0xeff3ec);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.35;
+    renderer.toneMappingExposure = 1.05;
     host.appendChild(renderer.domElement);
-    latest.current.onCanvasReady?.(renderer.domElement);
-    const camera = new THREE.PerspectiveCamera(31, 1, 0.01, 30);
-    camera.position.set(0.1, 1.42, 2.35);
+    const camera = new THREE.PerspectiveCamera(30, 1, 0.01, 30);
+    camera.position.set(0, 1.43, 1.95);
     const controls = new OrbitControls(camera, renderer.domElement);
-    controls.target.set(0, 1.42, 0);
+    controls.target.set(0, 1.4, 0.02);
     controls.enableDamping = true;
     controls.enablePan = false;
-    controls.minDistance = 1.6;
+    controls.minDistance = 1.4;
     controls.maxDistance = 4;
-    controls.minPolarAngle = 0.5;
     controls.maxPolarAngle = 2;
     controls.update();
-    scene.add(new THREE.HemisphereLight(0xffffff, 0xbdcba9, 3.2));
-    const key = new THREE.DirectionalLight(0xfff5e7, 3.5);
-    key.position.set(-2, 4, 4);
-    key.castShadow = true;
-    key.shadow.mapSize.set(1024, 1024);
-    key.shadow.bias = -0.0005;
-    scene.add(key);
-    const fill = new THREE.DirectionalLight(0xdcecd3, 1.7);
-    fill.position.set(2, 2, -1);
-    scene.add(fill);
-    const skin = new THREE.MeshStandardMaterial({
-      color: 0xe7b99b,
-      roughness: 0.85,
-    });
-    const shirt = new THREE.MeshStandardMaterial({
-      color: 0x638976,
-      roughness: 0.95,
-    });
-    const hair = new THREE.MeshStandardMaterial({
-      color: 0x423a33,
-      roughness: 0.95,
-    });
-    const dark = new THREE.MeshStandardMaterial({
-      color: 0x3e3b32,
-      roughness: 0.8,
-    });
-    const lip = new THREE.MeshStandardMaterial({
-      color: 0x9d6355,
-      roughness: 0.9,
-    });
-    const mesh = (
-      geometry: THREE.BufferGeometry,
-      material: THREE.Material,
-      parent: THREE.Object3D = scene,
-    ) => {
-      const m = new THREE.Mesh(geometry, material);
-      m.castShadow = true;
-      m.receiveShadow = true;
-      parent.add(m);
-      return m;
-    };
-    const sphere = new THREE.SphereGeometry(1, 24, 18);
-    const cylinder = new THREE.CylinderGeometry(1, 1, 1, 20);
-    const limbs = CONNECTIONS.map(([a, b, r, mat]) => ({
-      a,
-      b,
-      r,
-      mesh: mesh(cylinder, mat === "shirt" ? shirt : skin),
-    }));
-    const shoulders = [mesh(sphere, shirt), mesh(sphere, shirt)];
-    const elbows = [mesh(sphere, skin), mesh(sphere, skin)];
-    const torso = mesh(new THREE.CylinderGeometry(0.205, 0.135, 1, 32), shirt);
-    const neck = mesh(cylinder, skin);
-    const collar = mesh(new THREE.TorusGeometry(0.068, 0.013, 8, 32), shirt);
-    collar.rotation.x = Math.PI / 2;
-    const head = new THREE.Group();
-    scene.add(head);
-    const skull = mesh(new THREE.SphereGeometry(0.115, 40, 32), skin, head);
-    skull.scale.set(1, 1.27, 0.91);
-    const hairCap = mesh(
-      new THREE.SphereGeometry(
-        0.117,
-        32,
-        20,
-        0,
-        Math.PI * 2,
-        0,
-        Math.PI * 0.46,
-      ),
-      hair,
-      head,
-    );
-    hairCap.scale.set(1, 1.3, 0.93);
-    hairCap.position.y = 0.006;
-    for (const sign of [-1, 1]) {
-      const ear = mesh(sphere, skin, head);
-      ear.scale.set(0.018, 0.032, 0.018);
-      ear.position.set(sign * 0.112, -0.005, 0);
-      const eye = mesh(sphere, dark, head);
-      eye.scale.set(0.008, 0.011, 0.005);
-      eye.position.set(sign * 0.041, 0.015, 0.099);
+    scene.add(new THREE.HemisphereLight(0xfff7ec, 0xb9c7cb, 2.2));
+    for (const [x, y, z, power, color] of [
+      [-2, 3, 4, 3.5, 0xfff4e5],
+      [2, 2, 1, 2, 0xe1edff],
+      [0, 3, -2, 3, 0xffffff],
+    ]) {
+      const light = new THREE.DirectionalLight(color, power);
+      light.position.set(x, y, z);
+      scene.add(light);
     }
-    const nose = mesh(sphere, skin, head);
-    nose.scale.set(0.015, 0.023, 0.022);
-    nose.position.set(0, -0.006, 0.103);
-    const mouth = mesh(
-      new THREE.TubeGeometry(
-        new THREE.QuadraticBezierCurve3(
-          new THREE.Vector3(-0.029, -0.041, 0.104),
-          new THREE.Vector3(0, -0.055, 0.112),
-          new THREE.Vector3(0.029, -0.041, 0.104),
-        ),
-        16,
-        0.0022,
-        6,
-        false,
-      ),
-      lip,
-      head,
-    );
-    const brows = [-1, 1].map((sign) => {
-      const brow = mesh(
-        new THREE.CapsuleGeometry(0.0025, 0.027, 3, 8),
-        hair,
-        head,
-      );
-      brow.rotation.z = Math.PI / 2;
-      brow.position.set(sign * 0.042, 0.041, 0.102);
-      return brow;
-    });
-    const palms = new Map<string, THREE.Mesh>();
-    const fingers: { a: string; b: string; mesh: THREE.Mesh }[] = [];
-    for (const side of ["left", "right"]) {
-      const palm = mesh(sphere, skin);
-      palms.set(side, palm);
-      for (const finger of FINGERS) {
-        for (let i = 1; i <= 4; i++) {
-          const a = i === 1 ? `${side}_wrist` : `${side}_${finger}_${i - 1}`;
-          const b = `${side}_${finger}_${i}`;
-          fingers.push({ a, b, mesh: mesh(cylinder, skin) });
-          const joint = mesh(sphere, skin);
-          joint.scale.setScalar(0.007);
-          joint.visible = false;
-          fingers.push({ a: b, b, mesh: joint });
-        }
-      }
-    }
-    const ground = mesh(
-      new THREE.CircleGeometry(0.6, 64),
-      new THREE.ShadowMaterial({ color: 0x45622f, opacity: 0.12 }),
-    );
-    ground.rotation.x = -Math.PI / 2;
-    ground.position.y = 0.78;
-    ground.castShadow = false;
     const resize = () => {
-      const w = host.clientWidth,
-        h = host.clientHeight;
-      if (!w || !h) return;
-      renderer.setSize(w, h);
-      camera.aspect = w / h;
+      if (!host.clientWidth || !host.clientHeight) return;
+      renderer.setSize(host.clientWidth, host.clientHeight);
+      camera.aspect = host.clientWidth / host.clientHeight;
       camera.updateProjectionMatrix();
     };
     const observer = new ResizeObserver(resize);
     observer.observe(host);
     resize();
-    const p0 = new THREE.Vector3(),
-      p1 = new THREE.Vector3(),
-      dir = new THREE.Vector3();
-    function placeBone(
-      m: THREE.Mesh,
-      a: number[],
-      b: number[],
-      radius: number,
-    ) {
-      p0.fromArray(a);
-      p1.fromArray(b);
-      dir.subVectors(p1, p0);
-      const length = dir.length();
-      m.visible = length > 0.0001;
-      if (!m.visible) return;
-      m.position.copy(p0).add(p1).multiplyScalar(0.5);
-      m.quaternion.setFromUnitVectors(up, dir.normalize());
-      m.scale.set(radius, length, radius);
-    }
-    let id = 0;
-    function render() {
-      id = requestAnimationFrame(render);
-      const {
-        motion,
-        currentTimeMs,
-        expressiveModulation,
-        emotion,
-        energyFactor,
-      } = latest.current;
-      const joints = interpolateJointPositions(motion, currentTimeMs);
-      for (const item of limbs) {
-        const a = joints[item.a],
-          b = joints[item.b];
-        item.mesh.visible = !!(a && b);
-        if (a && b) placeBone(item.mesh, a, b, item.r);
-      }
-      ["left", "right"].forEach((side, i) => {
-        const shoulder = joints[`${side}_shoulder`],
-          elbow = joints[`${side}_elbow`],
-          wrist = joints[`${side}_wrist`];
-        shoulders[i].visible = !!shoulder;
-        elbows[i].visible = !!elbow;
-        if (shoulder) {
-          shoulders[i].position.fromArray(shoulder);
-          shoulders[i].scale.setScalar(0.062);
-        }
-        if (elbow) {
-          elbows[i].position.fromArray(elbow);
-          elbows[i].scale.setScalar(0.037);
-        }
-        const palm = palms.get(side)!;
-        palm.visible = !!wrist;
-        if (wrist) {
-          palm.position.fromArray(wrist);
-          palm.scale.set(0.037, 0.052, 0.019);
-          const index = joints[`${side}_middle_1`];
-          const ref =
-            index ||
-            (elbow
-              ? [
-                  wrist[0] + (wrist[0] - elbow[0]) * 0.2,
-                  wrist[1] + (wrist[1] - elbow[1]) * 0.2,
-                  wrist[2] + (wrist[2] - elbow[2]) * 0.2,
-                ]
-              : [wrist[0], wrist[1] - 0.05, wrist[2]]);
-          dir.fromArray(ref).sub(palm.position);
-          if (dir.lengthSq() > 0.00001)
-            palm.quaternion.setFromUnitVectors(up, dir.normalize());
+    const disposeModel = (root: THREE.Object3D) => {
+      const materials = new Set<THREE.Material>();
+      const textures = new Set<THREE.Texture>();
+      root.traverse((o) => {
+        if (o instanceof THREE.Mesh) {
+          o.geometry.dispose();
+          for (const m of Array.isArray(o.material)
+            ? o.material
+            : [o.material]) {
+            materials.add(m);
+            for (const v of Object.values(m))
+              if (v instanceof THREE.Texture) textures.add(v);
+          }
         }
       });
-      for (const f of fingers) {
-        const a = joints[f.a],
-          b = joints[f.b];
-        f.mesh.visible = !!(a && b);
-        if (!a || !b) continue;
-        if (f.a === f.b) f.mesh.position.fromArray(a);
-        else placeBone(f.mesh, a, b, 0.006);
+      materials.forEach((m) => m.dispose());
+      textures.forEach((t) => t.dispose());
+    };
+    new GLTFLoader().load(
+      "/api/avatar/model",
+      (gltf) => {
+        if (disposed) {
+          disposeModel(gltf.scene);
+          return;
+        }
+        model = gltf.scene;
+        scene.add(model);
+        model.updateMatrixWorld(true);
+        try {
+          retarget = new HumanoidRetargeter(model);
+        } catch {
+          setStatus(
+            "Le squelette du modèle ne possède pas les articulations requises.",
+          );
+          return;
+        }
+        model.traverse((o) => {
+          if (o instanceof THREE.Mesh) {
+            o.frustumCulled = false;
+            if (o.morphTargetDictionary) morphs.push(o);
+          }
+        });
+        setReady(true);
+        setStatus("");
+        latest.current.onCanvasReady?.(renderer.domElement);
+      },
+      undefined,
+      () => {
+        if (!disposed)
+          setStatus(
+            "Personnage 3D indisponible. Lancez scripts/setup-avatar.py puis rechargez.",
+          );
+      },
+    );
+    function morph(name: string, value: number) {
+      for (const mesh of morphs) {
+        const i = mesh.morphTargetDictionary?.[name];
+        if (i !== undefined && mesh.morphTargetInfluences)
+          mesh.morphTargetInfluences[i] = THREE.MathUtils.clamp(value, 0, 1);
       }
-      const hips = joints.hips,
-        top = joints.neck,
-        nosePoint = joints.head;
-      if (hips && top) {
-        placeBone(torso, hips, top, 1);
-        const length = new THREE.Vector3(...top).distanceTo(
-          new THREE.Vector3(...hips),
-        );
-        torso.scale.set(1, length, 1);
-        collar.position.fromArray(top);
-        placeBone(neck, top, [top[0], top[1] + 0.1, top[2]], 0.053);
+    }
+    function render() {
+      if (disposed) return;
+      frameId = requestAnimationFrame(render);
+      const { motion, currentTimeMs, expressiveModulation, emotion } =
+        latest.current;
+      const joints = interpolateJointPositions(motion, currentTimeMs);
+      // Anatomical neutral stance; old synthetic fixtures use the legacy mirrored X convention.
+      if (!motion) {
+        for (const side of ["left", "right"]) {
+          const sign = side === "left" ? 1 : -1;
+          joints[`${side}_shoulder`] = [sign * 0.18, 1.48, 0];
+          joints[`${side}_elbow`] = [sign * 0.25, 1.2, 0.04];
+          joints[`${side}_wrist`] = [sign * 0.16, 1.02, 0.09];
+        }
       }
-      if (nosePoint) {
-        head.position.fromArray(nosePoint);
-        head.position.y += 0.025;
-      }
-      // Model hypotheses only affect the experimental facial layer. Hand and arm
-      // trajectories remain measured; there is no arbitrary limb scaling.
-      const joy = expressiveModulation ? Number(emotion?.happy || 0) : 0;
-      const sadness = expressiveModulation ? Number(emotion?.sad || 0) : 0;
-      mouth.scale.y = 1 + joy * 0.6 - sadness * 0.4;
-      brows[0].rotation.z =
-        Math.PI / 2 +
-        (expressiveModulation ? Number(emotion?.angry || 0) * 0.25 : 0);
-      brows[1].rotation.z =
-        Math.PI / 2 -
-        (expressiveModulation ? Number(emotion?.angry || 0) * 0.25 : 0);
-      // Facial capture ratios drive mouth opening when actual measurements exist.
+      retarget?.apply(joints);
       const face = motion?.frames.find(
         (f, i) =>
           f.time_ms <= currentTimeMs &&
           (!motion.frames[i + 1] ||
             motion.frames[i + 1].time_ms > currentTimeMs),
       )?.face;
-      if (face && Number.isFinite(face.mouth_open))
-        mouth.scale.y = 1 + Math.min(2, face.mouth_open * 4);
-      // Measured non-manual channels always take priority over audio hypotheses.
-      brows.forEach((brow, index) => {
-        const value = face?.[index === 0 ? "brow_left" : "brow_right"];
-        brow.position.y = 0.041;
-        if (value !== undefined && Number.isFinite(value)) {
-          brow.rotation.z = Math.PI / 2;
-          brow.position.y += Math.max(
-            -0.008,
-            Math.min(0.012, (value - 0.06) * 0.15),
-          );
-        }
-      });
-      key.intensity =
-        3.5 + (expressiveModulation ? (energyFactor || 0) * 0.12 : 0);
+      const joy = expressiveModulation ? Number(emotion?.happy || 0) : 0,
+        sad = expressiveModulation ? Number(emotion?.sad || 0) : 0,
+        angry = expressiveModulation ? Number(emotion?.angry || 0) : 0;
+      morph(
+        "jawOpen",
+        face && Number.isFinite(face.mouth_open) ? face.mouth_open * 2 : 0,
+      );
+      for (const side of ["Left", "Right"]) {
+        const brow = face?.[side === "Left" ? "brow_left" : "brow_right"];
+        morph(
+          `browOuterUp${side}`,
+          brow !== undefined ? (brow - 0.055) * 3 : joy * 0.15,
+        );
+        morph(`browDown${side}`, brow !== undefined ? 0 : angry * 0.2);
+        morph(`mouthSmile${side}`, face ? 0 : joy * 0.2);
+        morph(`mouthFrown${side}`, face ? 0 : sad * 0.15);
+      }
       controls.update();
       renderer.render(scene, camera);
     }
     render();
     return () => {
-      cancelAnimationFrame(id);
+      disposed = true;
+      cancelAnimationFrame(frameId);
       observer.disconnect();
       controls.dispose();
-      const geometries = new Set<THREE.BufferGeometry>(),
-        materials = new Set<THREE.Material>();
-      scene.traverse((obj) => {
-        if (obj instanceof THREE.Mesh) {
-          geometries.add(obj.geometry);
-          for (const mat of Array.isArray(obj.material)
-            ? obj.material
-            : [obj.material])
-            materials.add(mat);
-        }
-      });
-      geometries.forEach((g) => g.dispose());
-      materials.forEach((m) => m.dispose());
+      if (model) disposeModel(model);
       renderer.dispose();
       renderer.domElement.remove();
     };
   }, []);
   return (
-    <div className="avatar-stage">
-      <div ref={mount} aria-label="Avatar 3D interactif" />
+    <div className="avatar-stage" data-avatar-ready={ready}>
+      {status && (
+        <span role="status" className="avatar-loading">
+          {status}
+        </span>
+      )}
+      <div ref={mount} aria-label="Avatar 3D articulé" />
       <span className="avatar-view-note">
-        Glissez pour explorer · Faites défiler pour zoomer
+        Avatar Noa · UPF-GTI / Ready Player Me
       </span>
     </div>
   );

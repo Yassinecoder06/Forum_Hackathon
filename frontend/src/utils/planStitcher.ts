@@ -14,9 +14,43 @@ export function stitchAnimationPlan(
   );
   let position = 0,
     fps = 10;
+  const transition = plan.transition_ms || 0;
+  let previous: MotionFile | null = null;
   for (const segment of plan.segments) {
     const clip = clips.get(segment.motion_id);
     if (!clip) throw new Error(`Mouvement manquant : ${segment.motion_id}`);
+    if (previous && transition) {
+      const a = previous.frames[previous.frames.length - 1],
+        b = clip.frames[0];
+      // Dedicated time for a bridge: never overwrite either source endpoint.
+      for (let t = 1; t < transition; t += 1000 / 30) {
+        const u = t / transition,
+          blend = u * u * u * (10 + u * (-15 + 6 * u));
+        const bridge: MotionFrame = {
+          time_ms: Math.round(position + t),
+          joints: {},
+        };
+        for (const key of Object.keys(a.joints)) {
+          const p = a.joints[key],
+            q = b.joints[key];
+          if (q)
+            bridge.joints[key] = p.map((v, i) => v + (q[i] - v) * blend) as [
+              number,
+              number,
+              number,
+            ];
+        }
+        if (a.face && b.face) {
+          bridge.face = {};
+          for (const key of Object.keys(a.face))
+            if (Number.isFinite(b.face[key]))
+              bridge.face[key] =
+                a.face[key] + (b.face[key] - a.face[key]) * blend;
+        }
+        frames.set(bridge.time_ms, bridge);
+      }
+      position += transition;
+    }
     clip.joints.forEach((j) => joints.add(j));
     fps = Math.max(fps, clip.fps);
     for (const frame of clip.frames)
@@ -25,10 +59,13 @@ export function stitchAnimationPlan(
         time_ms: position + frame.time_ms,
       });
     position += clip.duration_ms;
+    previous = clip;
   }
   const source: MotionFile = {
     attributions,
-    synthetic: [...clips.values()].some(clip => clip.synthetic ?? !clip.attribution),
+    synthetic: [...clips.values()].some(
+      (clip) => clip.synthetic ?? !clip.attribution,
+    ),
     rig_version: "signaculture-v1",
     fps,
     duration_ms: position,

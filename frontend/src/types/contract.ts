@@ -69,6 +69,7 @@ export interface AudioFeatures {
 }
 
 export interface AnimationPlan {
+  transition_ms?: number;
   timing_mode?: "original" | "audio_voiced";
   plan_id: string;
   source_text: string;

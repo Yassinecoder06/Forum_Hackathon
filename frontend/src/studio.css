@@ -1769,3 +1769,5 @@ h1 em {
   border: 0;
   color: var(--ink);
 }
+
+.avatar-loading{position:absolute;z-index:2;top:20px;left:20px;right:20px;font-size:12px;line-height:1.6;color:#385746;background:#f8faf4e8;padding:12px;border-radius:10px}

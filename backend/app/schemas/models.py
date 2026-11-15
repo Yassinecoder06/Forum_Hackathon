@@ -93,6 +93,7 @@ class AudioFeatures(ContractModel):
 
 
 class AnimationPlan(ContractModel):
+    transition_ms: int = Field(default=0,ge=0,le=1000)
     timing_mode: Literal["original", "audio_voiced"] = "original"
     plan_id: str
     source_text: str

@@ -6,6 +6,7 @@ Studio local de recherche pour explorer du texte français, des mouvements LSF c
 
 ```bash
 make setup
+python3 scripts/setup-avatar.py   # personnage local pour revue, voir docs/AVATAR_PROVENANCE.md
 bash scripts/setup-models.sh all   # capture MediaPipe et emotion2vec local, téléchargements explicites
 make dev
 ```
@@ -24,7 +25,7 @@ L’inventaire contient 447 concepts France-LSF avec licences par fichier, créd
 
 - Indexation de concepts avec lemmatisation française spaCy lorsqu’installée, expressions les plus longues et inconnus explicites. Ce lookup ne traduit pas la grammaire LSF.
 - Extraction MediaPipe du corps, des doigts et de quelques mesures faciales. Les occultations restent visibles ; profondeur et retargeting sont approximatifs.
-- Avatar Three.js, séquences de mouvements, timeline, comparaison avec la source et vrai export WebM avec filigrane et attribution.
+- Avatar articulé Three.js : IK des bras, orientation des paumes, os des doigts, longueurs préservées. Liaisons quintiques de 333 ms entre clips, timeline, comparaison avec la source et vrai export WebM avec filigrane et attribution. Le modèle local de revue et ses limites sont décrits dans [la provenance](docs/AVATAR_PROVENANCE.md).
 - Décodage audio/vidéo FFmpeg, estimation F0, RMS et pauses. Synchronisation approximative aux portions voisées, sans alignement mot à mot.
 - Inférence locale emotion2vec, affichée comme hypothèse. Les signaux faciaux capturés priment sur la modulation expressive expérimentale.
 - Catalogue SQLite séparant vidéos lexicales, annotations et paires de recherche ; provenance, licences, splits et évaluations conservés.

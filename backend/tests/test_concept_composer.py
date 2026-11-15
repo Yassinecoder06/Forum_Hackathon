@@ -16,7 +16,8 @@ def test_selected_real_concepts_preserve_order_repetition_and_review_gate(client
     assert response.status_code==200
     plan=response.json()
     assert [s['gloss_id'] for s in plan['segments']]==[identifier,identifier]
-    assert plan['segments'][1]['start_ms']==plan['segments'][0]['duration_ms']
+    assert plan['segments'][1]['start_ms']==plan['segments'][0]['duration_ms']+plan['transition_ms']
+    assert plan['transition_ms']==333
     assert plan['unknowns']==['question non représentée']
     assert plan['linguistic_review']=='pending'
     assert plan['render_allowed_for_publication'] is False

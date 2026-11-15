@@ -135,7 +135,7 @@ export default function App() {
     try {
       const [cap, words, entries] = await Promise.all([
         request<Capabilities>("/capabilities"),
-        request<{ entries: GlossEntry[] }>("/glossary"),
+        request<{ entries: GlossEntry[] }>("/glossary?include_synthetic=true"),
         request<{ entries: LibraryEntry[] }>("/library"),
       ]);
       setCaps(cap);
@@ -470,7 +470,8 @@ export default function App() {
           (motion?.attribution ? [motion.attribution] : [])
         )
           .map((a) => `${a.credit} · ${a.license} · ${a.source_url}`)
-          .join(" / "),
+          .join(" / ") +
+          " · Avatar Noa: UPF-GTI / Ready Player Me · revue locale",
         28,
         943,
         1224,
@@ -633,7 +634,7 @@ export default function App() {
                         <h2>Tout commence par vos mots</h2>
                         <p>Votre texte en français</p>
                       </div>
-                      <span className="small-chip">FR → LSF</span>
+                      <span className="small-chip">FR → Concepts</span>
                     </div>
                     <label className="sr-only" htmlFor="story">
                       Votre texte en français
@@ -656,9 +657,15 @@ export default function App() {
                     <div className="suggestions">
                       <span>Essayez</span>
                       {[
-                        "Bonjour, merci.",
-                        "Bienvenue au musée.",
-                        "Culture et art.",
+                        ...(library.some((e) => e.gloss.concept_fr === "merci")
+                          ? ["Bonjour, merci."]
+                          : ["Bonjour."]),
+                        ...(library.some(
+                          (e) => e.gloss.concept_fr === "demain",
+                        ) &&
+                        library.some((e) => e.gloss.concept_fr === "travailler")
+                          ? ["Demain, travailler."]
+                          : []),
                       ].map((phrase) => (
                         <button
                           key={phrase}
@@ -1270,7 +1277,7 @@ export default function App() {
                     max={duration || 1}
                     step={10}
                     value={time}
-                    disabled={!duration || recording}
+                    disabled={!canvas || !duration || recording}
                     onChange={(e) => {
                       setTime(Number(e.target.value));
                       setPlaying(false);
@@ -1280,7 +1287,7 @@ export default function App() {
                     <button
                       className="play-button"
                       onClick={togglePlay}
-                      disabled={!duration || recording}
+                      disabled={!canvas || !duration || recording}
                       aria-label={
                         playing ? "Mettre en pause" : "Lire l’animation"
                       }
@@ -1311,7 +1318,7 @@ export default function App() {
               </div>
               <button
                 className="export-button"
-                disabled={!duration || recording}
+                disabled={!canvas || !duration || recording}
                 onClick={() => void exportPreview()}
               >
                 {recording ? (

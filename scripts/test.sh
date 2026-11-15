@@ -47,6 +47,7 @@ if [ ! -d "${REPO_ROOT}/frontend" ]; then
     exit 1
 fi
 echo "[TEST] 4/5 - Execution frontend lint et build..."
+npm --prefix "${REPO_ROOT}/frontend" test
 npm --prefix "${REPO_ROOT}/frontend" run lint
 npm --prefix "${REPO_ROOT}/frontend" run build
 

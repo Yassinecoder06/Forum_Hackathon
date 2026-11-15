@@ -79,7 +79,7 @@ def test_longest_and_ambiguous_alias(registry_copy):
     entries[1]['concept_fr'] = 'bon jour'
     entries[1]['aliases'] = ['ambigu']
     path.write_text(json.dumps(entries))
-    r = client.post('/gloss-lookup',json={'text':'Bon jour ambigu Étrange Étrange'}).json()
+    r = client.post('/gloss-lookup',json={'text':'Bon jour ambigu Étrange Étrange','include_synthetic':True}).json()
     assert [g['gloss_id'] for g in r['gloss_sequence']] == [entries[1]['gloss_id']]
     assert r['unknowns'] == ['ambigu','Étrange','Étrange']
 
@@ -143,3 +143,11 @@ def test_real_french_model(monkeypatch):
     assert result['unknowns'] == ['Inconnu']
     response = client.post('/analyze-text', json={'text':'musées'})
     assert response.headers['x-nlp-backend'] == 'spacy-fr-lemmatizer'
+
+
+def test_synthetic_glosses_are_never_default_signs():
+    response=client.post('/compose-animation',json={'text':'musée culture art'}).json()
+    assert response['segments']==[]
+    assert response['unknowns']==['musée','culture','art']
+    assert len(client.get('/glossary').json()['entries'])==1
+    assert len(client.get('/glossary?include_synthetic=true').json()['entries'])>1

@@ -55,9 +55,14 @@ try {
   await page
     .getByRole("button", { name: "Espace local connecté", exact: true })
     .waitFor();
+  await page.locator('[data-avatar-ready="true"]').waitFor({ timeout: 60000 });
+  const vocabulary = await (await api("/concepts/vocabulary")).json();
+  const twoSignText = vocabulary.concepts.some((c) => c.concept === "merci")
+    ? "Bonjour, merci."
+    : "Bonjour, bonjour.";
   await page
     .getByLabel("Votre texte en français", { exact: true })
-    .fill("Bonjour, merci.");
+    .fill(twoSignText);
   const composed = page.waitForResponse(
     (r) =>
       r.url().endsWith("/api/compose-animation") &&
@@ -95,14 +100,11 @@ try {
   );
   console.log("Composition, seeking and real WebM export passed.");
 
-  await page
-    .locator("input[type=file]")
-    .first()
-    .setInputFiles({
-      name: "reference.wav",
-      mimeType: "audio/wav",
-      buffer: wav(),
-    });
+  await page.locator("input[type=file]").first().setInputFiles({
+    name: "reference.wav",
+    mimeType: "audio/wav",
+    buffer: wav(),
+  });
   await page
     .getByText("Hauteur moyenne", { exact: false })
     .waitFor({ timeout: 120000 });
@@ -134,13 +136,11 @@ try {
     ),
   );
   fixture.synthetic = true;
-  await page
-    .locator("input[type=file]")
-    .setInputFiles({
-      name: "test-motion.json",
-      mimeType: "application/json",
-      buffer: Buffer.from(JSON.stringify(fixture)),
-    });
+  await page.locator("input[type=file]").setInputFiles({
+    name: "test-motion.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(fixture)),
+  });
   await page.getByRole("checkbox", { name: /Je suis autorisé/ }).check();
   await page
     .getByRole("button", { name: "Extraire les mouvements", exact: true })
@@ -167,7 +167,7 @@ try {
     await api("/gloss-lookup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text: concept }),
+      body: JSON.stringify({ text: concept, include_synthetic: true }),
     })
   ).json();
   assert.equal(lookup.gloss_sequence[0].motion_id, imported);
