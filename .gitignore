@@ -15,3 +15,7 @@ artifacts/avatar-review/
 artifacts/phrase-review/
 artifacts/collision-review/
 artifacts/cv-review/
+
+# Private phone-transfer setup and generated offline bundles
+/integration/portable/
+/SignaCulture_offline_*
