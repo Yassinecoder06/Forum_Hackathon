@@ -1,0 +1,19 @@
+{
+  "vocabulary_count": 440,
+  "case_count": 24,
+  "purpose": "French semantic lexical concept planning software check ONLY; not LSF translation evaluation",
+  "data_policy": "No LSF training pairs authored or altered",
+  "sources": {
+    "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/library.json": "029c03829601957adc35c04ada17db3e74e08822877db87828d13416ac923e01",
+    "/home/jmal/Projects/Active/Forum_Hackathon/data/glossary.json": "42bf378fe38f3b1ac06bf574aaa2aa8f1500b1ffa912b4265a8591324a977148",
+    "/home/jmal/Projects/Active/Forum_Hackathon/data/motions_manifest.json": "c5b4ef2f0c26e51decb7cda297c8e51385401ec47c1ecde40acc88fca8506df8",
+    "/home/jmal/Projects/Active/Forum_Hackathon/backend/app/services/text_lookup.py": "4501f6e31dd4858fe0aca847a673dd2c799d0b3ac1d1bc56f301513b5ef59089"
+  },
+  "files": {
+    "vocabulary_provenance.json": "c83b3dbc684c071c3aa7551b575465eaaa2051b7e9ae628709f6ce5c064e0548",
+    "benchmark.json": "fa071f96076d829f56d226b9c1ed6cb6264255b298d55bcfc2c212bb6c47710d",
+    "vocabulary.json": "b1d35162934afd62441bacf3624e9dfce2274b25c5faa2a0e8f5a397261fc85d"
+  },
+  "baseline": "Lead .venv/bin/python; exact snapshot of existing lookup_text, GlossEntry objects, real fr_core_news_sm; no alias additions",
+  "evaluation_policy": "One model/prompt/settings lock before inference; no prompt changes or retries of benchmark failures"
+}

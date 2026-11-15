@@ -1,0 +1,12 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.14, pytest-9.2.0, pluggy-1.7.0
+rootdir: /home/jmal/Projects/Active/Forum_Hackathon/.worktrees/wt-codex2
+configfile: pytest.ini
+plugins: anyio-4.16.0
+collected 19 items
+
+training/test_catalog.py ........                                        [ 42%]
+training/test_adaptation.py ....                                         [ 63%]
+training/test_concept_planner.py ...x...                                 [100%]
+
+======================== 18 passed, 1 xfailed in 6.76s =========================
