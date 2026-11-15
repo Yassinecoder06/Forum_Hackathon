@@ -1,8 +1,8 @@
 """Canonical API and registry data models (integration contract v1)."""
 
-from typing import Literal
+from typing import Annotated, Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 class ContractModel(BaseModel):
@@ -29,7 +29,7 @@ class MotionAsset(ContractModel):
     gloss_id: str
     path: str
     rig_version: Literal["signaculture-v1"]
-    fps: float = Field(gt=0)
+    fps: float = Field(gt=0, allow_inf_nan=False)
     duration_ms: int = Field(gt=0)
     license: str
     quality_status: str
@@ -59,17 +59,37 @@ class AnimationSegment(ContractModel):
 class AudioFrame(ContractModel):
     start_ms: int = Field(ge=0)
     end_ms: int = Field(gt=0)
-    pitch_hz: float | None
-    energy: float = Field(ge=0)
+    pitch_hz: Annotated[float, Field(gt=0, allow_inf_nan=False)] | None
+    energy: float = Field(ge=0, allow_inf_nan=False)
     is_pause: bool
 
 
+    @model_validator(mode="after")
+    def validate_interval(self):
+        if self.start_ms >= self.end_ms:
+            raise ValueError("Audio frame start_ms must precede end_ms")
+        return self
+
+
 class AudioFeatures(ContractModel):
+    """Positive-duration audio; empty frames and null unvoiced pitch are valid."""
     duration_ms: int = Field(gt=0)
     frames: list[AudioFrame]
     emotion_hypothesis: None
     model_version: str
     warnings: list[str]
+
+
+    @model_validator(mode="after")
+    def validate_timeline(self):
+        previous_end = 0
+        for frame in self.frames:
+            if frame.start_ms < previous_end:
+                raise ValueError("Audio frames must be ordered and nonoverlapping")
+            if frame.end_ms > self.duration_ms:
+                raise ValueError("Audio frame exceeds audio duration_ms")
+            previous_end = frame.end_ms
+        return self
 
 
 class AnimationPlan(ContractModel):
