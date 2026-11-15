@@ -1,5 +1,6 @@
 """Convert normalized MediaPipe intermediate v2 into player position frames."""
 import argparse
+from copy import deepcopy
 import json
 import math
 from pathlib import Path
@@ -44,6 +45,11 @@ def convert(data):
         frames.append({'time_ms': time, 'joints': joints})
     if not frames:
         raise ValueError('No usable pose frames; cannot create a player asset')
+    # Synthesized boundary holds preserve observed timestamps and total duration.
+    if frames[0]['time_ms'] > 0:
+        frames.insert(0, {'time_ms': 0, 'joints': deepcopy(frames[0]['joints'])})
+    if frames[-1]['time_ms'] < duration:
+        frames.append({'time_ms': duration, 'joints': deepcopy(frames[-1]['joints'])})
     return dict(rig_version='signaculture-v1', fps=fps, duration_ms=duration,
                 joints=list(frames[0]['joints']), frames=frames)
 

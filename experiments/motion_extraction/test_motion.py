@@ -59,3 +59,47 @@ def test_reject_bad_intermediate(kind):
     if kind == 'nan': d['frames'][0]['pose'][0][0] = float('nan')
     if kind == 'old': d['format'] = 'mediapipe-intermediate-v1'
     with pytest.raises(ValueError): convert(d)
+
+
+@pytest.mark.parametrize('times', [(50, 100), (0, 200), (100,)])
+def test_endpoint_holds(times):
+    d = intermediate()
+    d['frames'] = [dict(time_ms=t, pose=normalize(pose())) for t in times]
+    result = convert(d)
+    frames = result['frames']
+    assert frames[0]['time_ms'] == 0
+    assert frames[-1]['time_ms'] == result['duration_ms'] == 200
+    assert all(a['time_ms'] < b['time_ms'] for a, b in zip(frames, frames[1:]))
+    assert frames[0]['joints'] == frames[1]['joints']
+    assert frames[-1]['joints'] == frames[-2]['joints']
+    assert {f['time_ms'] for f in frames} == {0, 200, *times}
+
+
+def test_real_backend_asset_validator(tmp_path):
+    """Opt in via backend path; import actual validator without editing its worktree."""
+    import importlib.util
+    import os
+    import sys
+    import types
+    import json
+    from pathlib import Path
+    backend_app = os.environ.get('SIGNACULTURE_BACKEND_APP')
+    if not backend_app:
+        pytest.skip('Set SIGNACULTURE_BACKEND_APP to backend/app for integration validation')
+    package = types.ModuleType('_motion_backend')
+    package.__path__ = [str(Path(backend_app).resolve())]
+    sys.modules[package.__name__] = package
+    spec = importlib.util.spec_from_file_location('_motion_backend.main', Path(backend_app)/'main.py')
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    d = intermediate()
+    d['frames'][0]['time_ms'] = 50
+    output = convert(d)
+    path = tmp_path/'data/approved_motion_assets/extracted.json'
+    path.parent.mkdir(parents=True)
+    path.write_text(json.dumps(output))
+    metadata = module.MotionAsset(motion_id='EXTRACTED', gloss_id='TEST',
+        path=str(path.relative_to(tmp_path)), rig_version='signaculture-v1',
+        fps=10, duration_ms=200, license='test-only', quality_status='pending',
+        rights_status='pending', animation_review='pending', synthetic=False)
+    assert module.asset(tmp_path, metadata) == path
