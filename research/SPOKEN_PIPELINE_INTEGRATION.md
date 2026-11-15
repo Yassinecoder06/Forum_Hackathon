@@ -22,9 +22,9 @@ Raw Animics image fields PLM33, FLM468 and actual LLM/RLM21 map directly to543st
 
 Exported clips retain native frame rate and source timestamps. For joining different native rates, custom nearest-frame selection repeats actual observations at25fps and records each source-frame index. Actual upstream join_poses retains NumPy masks/confidences; tests verify no newly tracked sample appears. Source frames are shoulder-normalized by upstream code and rendered through its dependency's visualizer. Default upstream smoothing, gap interpolation, duration caps and idle-hand heuristics are bypassed because they can alter observed motion/support. Thus this conservative join can still be abrupt; the lead's3Dseam work is separate.
 
-Different canonical glosses for the same French phrase stop as ambiguous. Matching duplicate canonicals may prefer an explicitly permitted Dicta-Sign local-preview entry over Commons. All selections remain pending LSF review. Unknowns are explicit and stop generation: there is no synthetic fixture, foreign-language lookup or invented fingerspelling fallback.
+Best source priority is applied first: an explicitly permitted Dicta-Sign preview entry overrides lower-priority Commons variants, including ÂGE vs AGE. Different canonical glosses within the winning priority stop as ambiguous. All selections remain pending LSF review. Unknowns are explicit and stop generation: there is no synthetic fixture, foreign-language lookup or invented fingerspelling fallback.
 
-Eight tests pass against real source files and outputs: source/France language gate, exact measured coordinates, absent face/hips masking, raw visibility/missing hands, preview permission/preference/ambiguity, unknown rejection, upstream CSV lookup, exact mask preservation across joining and verified video metadata. Full evidence JSON and test log are committed under integration/spoken_pipeline/evidence/. Actual .pose/MP4/GIF outputs, raw pending-rights data, checkout and environment are ignored.
+Ten tests pass against real source files and outputs: source/France language gate, exact measured coordinates, absent face/hips masking, raw visibility/missing hands, preview permission/preference/ambiguity, unknown rejection, upstream CSV lookup, exact mask preservation across joining and verified video metadata. Full evidence JSON and test log are committed under integration/spoken_pipeline/evidence/. Actual .pose/MP4/GIF outputs, raw pending-rights data, checkout and environment are ignored.
 
 ## Runnable handoff
 
@@ -35,3 +35,5 @@ integration/spoken_pipeline/.venv/bin/python integration/spoken_pipeline/pipelin
 ```
 
 For captured Dicta-Sign entries add `--allow-local-preview` at export and use that lexicon. See integration/spoken_pipeline/README.md for text input, tests and the explicit preview commands. The first video is available locally at `integration/spoken_pipeline/runtime/bonjour-merci/diagnostic.mp4`; the Dicta preview at `runtime/dicta-bonjour-merci/diagnostic.mp4`. These paths coexist with the lead3Dplayer and do not change it.
+
+Manifest integration key: `fingerprint` is a stable SHA256 over canonical JSON for the export's upstream revision, languages, preview gate, source registry hash, records and errors; elapsed time is excluded. `source_library_sha256` identifies the exact read-only registry snapshot. Render JSON carries `lexicon_fingerprint`. The priority/fingerprint follow-up changes no captured poses and does not re-export a moving partial corpus.

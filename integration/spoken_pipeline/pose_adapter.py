@@ -97,6 +97,10 @@ def read_entries(main=DEFAULT_MAIN,allow_local_preview=False):
             entries.append(dict(id=g['gloss_id'],concept=g['concept_fr'],gloss=g['gloss'],aliases=g.get('aliases',[]),source_id=g['source_id'],motion_path=str(path),capture_id=None,license=m['license'],rights_status='cleared',source_url=a.get('source_url'),credit=a.get('credit'),priority=10,local_preview_only=False))
     return entries,blocked,hashlib.sha256(library_bytes).hexdigest()
 
+def manifest_fingerprint(manifest):
+    payload={k:manifest[k] for k in ['upstream_revision','language','spoken_language','allow_local_preview','source_library_sha256','records','blocked_pending_ids','export_errors']}
+    return hashlib.sha256(json.dumps(payload,ensure_ascii=False,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+
 def export_lexicon(out,main=DEFAULT_MAIN,allow_local_preview=False):
     start=time.monotonic();out=Path(out);(out/'poses').mkdir(parents=True,exist_ok=True)
     entries,blocked,library_sha=read_entries(main,allow_local_preview);rows=[];records=[];errors=[]
@@ -115,4 +119,6 @@ def export_lexicon(out,main=DEFAULT_MAIN,allow_local_preview=False):
     with (out/'index.csv').open('w',newline='',encoding='utf-8') as f:
         writer=csv.DictWriter(f,fieldnames=['words','glosses','spoken_language','signed_language','path','start','end','priority']);writer.writeheader();writer.writerows(rows)
     manifest=dict(upstream_revision=UPSTREAM_REV,language='fsl',spoken_language='fr',allow_local_preview=allow_local_preview,redistribution_allowed=False if any(e['local_preview_only'] for e in records) else 'Per-source CC BY attribution terms; no linguistic approval',source_library_sha256=library_sha,records=records,blocked_pending_ids=blocked,export_errors=errors,counts=dict(entries=len(records),csv_rows=len(rows),raw_animics=sum(r['origin']['format']=='raw-animics-image-landmarks' for r in records),retargeted=sum(r['origin']['format']=='stored-retargeted-motion' for r in records)),seconds=time.monotonic()-start)
+    manifest['fingerprint']=manifest_fingerprint(manifest)
+    manifest['fingerprint_algorithm']='sha256canonicalJSON(upstream/languages/preview-gate/source-registry/records/errors), excluding elapsed seconds'
     dump(out/'manifest.json',manifest);return manifest

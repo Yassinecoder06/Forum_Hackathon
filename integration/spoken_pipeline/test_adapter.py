@@ -87,3 +87,24 @@ def test_actual_video_and_local_preview_attribution():
         assert r['translation_validated'] is False
     r=load(BASE/'runtime/dicta-bonjour-merci/result.json');assert r['local_preview_only'] is True
     assert r['sources'][0]['rights_status']=='pending' and r['sources'][0]['source_id']=='DICTASIGN_PORTAL_380'
+
+
+def test_priority_is_applied_before_canonical_ambiguity():
+    from pipeline import select
+    commons=dict(id='commons-age',gloss='ÂGE',priority=10)
+    dicta=dict(id='dicta-age',gloss='AGE',priority=0)
+    selected,ambiguity=select([commons,dicta])
+    assert selected['id']=='dicta-age' and ambiguity==[]
+    # Actual ambiguity among equally preferred source entries still blocks.
+    conflict=dict(id='dicta-other',gloss='AGE_AUTRE',priority=0)
+    selected,ambiguity=select([commons,dicta,conflict])
+    assert selected is None and set(ambiguity)=={'AGE','AGE_AUTRE'}
+
+def test_manifest_fingerprint_is_stable_but_sensitive_to_entry_changes():
+    from pose_adapter import manifest_fingerprint
+    manifest=load(DEFAULT/'manifest.json');expected=manifest_fingerprint(manifest)
+    assert len(expected)==64
+    again=copy.deepcopy(manifest);again['seconds']=123456
+    assert manifest_fingerprint(again)==expected
+    again['records'][0]['gloss']='CHANGED_ONLY_SOFTWARE_TEST'
+    assert manifest_fingerprint(again)!=expected

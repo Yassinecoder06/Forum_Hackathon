@@ -16,6 +16,8 @@ TOKEN=re.compile(r'[^\W_]+',re.UNICODE)
 def tokenize(s):
     return [(m.group(),fold(simplemma.lemmatize(m.group().casefold(),lang='fr'))) for m in TOKEN.finditer(s)]
 def select(records):
+    best_priority=min(r['priority'] for r in records)
+    records=[r for r in records if r['priority']==best_priority]
     canonical={fold(r['gloss']) for r in records}
     if len(canonical)>1:return None,sorted({r['gloss'] for r in records})
     return sorted(records,key=lambda r:(r['priority'],r['id']))[0],[]
@@ -54,7 +56,7 @@ def nearest_resample(pose,fps):
 def run(lexicon,out,text=None,glosses=None,fps=25.,video=True):
     start=time.monotonic();lexicon=Path(lexicon);out=Path(out);out.mkdir(parents=True,exist_ok=True)
     manifest=json.loads((lexicon/'manifest.json').read_text());selected,unknown,ambiguous=resolve(manifest,text,glosses)
-    report=dict(text=text,input_glosses=glosses,spoken_language='fr',signed_language='fsl',language_variant='France LSF, not LSF-CH',candidate=True,translation_validated=False,linguistic_review='pending',unknowns=unknown,ambiguities=ambiguous,glosses=[r['gloss'] for r in selected],selected_ids=[r['id'] for r in selected],sources=[dict(id=r['id'],source_id=r['source_id'],source_url=r['source_url'],license=r['license'],rights_status=r['rights_status']) for r in selected],local_preview_only=any(r['local_preview_only'] for r in selected),upstream_revision=UPSTREAM_REV,lexical_prototype=True,warnings=['Lexical source-order lookup is not linguistic LSF translation','No fingerspelling, synthetic fixture or language fallback','Diagnostic 2D skeleton; not a validated avatar or complete paper reproduction'])
+    report=dict(text=text,input_glosses=glosses,spoken_language='fr',signed_language='fsl',language_variant='France LSF, not LSF-CH',candidate=True,translation_validated=False,linguistic_review='pending',unknowns=unknown,ambiguities=ambiguous,glosses=[r['gloss'] for r in selected],selected_ids=[r['id'] for r in selected],sources=[dict(id=r['id'],source_id=r['source_id'],source_url=r['source_url'],license=r['license'],rights_status=r['rights_status']) for r in selected],local_preview_only=any(r['local_preview_only'] for r in selected),upstream_revision=UPSTREAM_REV,lexical_prototype=True,lexicon_fingerprint=manifest.get('fingerprint',manifest['source_library_sha256']),warnings=['Lexical source-order lookup is not linguistic LSF translation','No fingerspelling, synthetic fixture or language fallback','Diagnostic 2D skeleton; not a validated avatar or complete paper reproduction'])
     if unknown or ambiguous or not selected:
         report.update(status='blocked_unknown_or_ambiguous',seconds=time.monotonic()-start);dump(out/'result.json',report);return report
     lookup=CSVPoseLookup(str(lexicon),backup=None);poses=[];segments=[]

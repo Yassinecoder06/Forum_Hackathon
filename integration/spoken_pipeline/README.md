@@ -20,7 +20,7 @@ integration/spoken_pipeline/.venv/bin/python integration/spoken_pipeline/pipelin
 integration/spoken_pipeline/.venv/bin/python integration/spoken_pipeline/pipeline.py render --lexicon integration/spoken_pipeline/runtime/lexicon-preview --text 'Bonjour merci' --output integration/spoken_pipeline/runtime/dicta-bonjour-merci
 ```
 
-This includes only captured assets already in the lead registry. It does not scrape/download portal data. Dicta-Sign wins over duplicate Commons variants only when canonical glosses agree; different canonicals remain ambiguous. Pending rights stay explicit and preview artifacts must not be redistributed. Default export excludes them and all synthetic fixtures. Language is fr→fsl (France), never ssr/LSF-CH.
+This includes only captured assets already in the lead registry. It does not scrape/download portal data. Best source priority is applied before canonical ambiguity: Dicta-Sign overrides lower-priority Commons variants (including ÂGE vs AGE); different canonicals within the winning priority remain ambiguous. Pending rights stay explicit and preview artifacts must not be redistributed. Default export excludes them and all synthetic fixtures. Language is fr→fsl (France), never ssr/LSF-CH.
 
 Raw Animics PLM/FLM/LLM/RLM arrays are preferred when supplied by a real capture. Original normalized image coordinates and visibility are exported; missing fields stay masked/zero-confidence. PWLM uses a different axis convention; independent world hands are absent and never fabricated. For older captures, actual stored body/finger coordinates are mapped by a documented reversible affine projection; absent face/hips/legs are masked rather than reconstructed from ratios/rig roots. Presence flags are not calibrated detector confidence. Source timestamps remain in the manifest.
 
@@ -33,3 +33,5 @@ PYTHONDONTWRITEBYTECODE=1 integration/spoken_pipeline/.venv/bin/python -m pytest
 ```
 
 Tests use the actual local exports and source measurements. Recorded successful runs and snapshot counts are in evidence/; do not mistake a moving ingestion registry for a completed1046-page corpus. Read research/SPOKEN_PIPELINE_INTEGRATION.md for the measured handoff.
+
+Manifest integration key: `fingerprint` is a stable SHA256 over canonical JSON for the export's upstream revision, languages, preview gate, source registry hash, records and errors; elapsed time is excluded. `source_library_sha256` identifies the exact read-only registry snapshot. Render JSON carries `lexicon_fingerprint`. The priority/fingerprint follow-up changes no captured poses and does not re-export a moving partial corpus.
