@@ -1,8 +1,10 @@
 """Generate TEN interior bridge frames for valid five-pointXYendpoint arrays."""
 import argparse,json,sys
 from pathlib import Path
+import sys
+if __package__ in (None,''): sys.path.insert(0,str(Path(__file__).resolve().parents[2]))
 import numpy as np
-from common import ARTIFACTS,FEATURES,CLAIM,validate_endpoints,interpolate,sha
+from training.transitions.common import ARTIFACTS,FEATURES,CLAIM,validate_endpoints,interpolate,sha
 
 def bridge(obj,method='linear',checkpoint=None):
     endpoints=validate_endpoints(obj);warnings=['PENDING_LINGUISTIC_AND_ANIMATION_REVIEW','TEN_XY_FEATURES_ONLY_NOT_FULL_RIG_MOTION','NO_VALIDATED_INTER_SIGN_COARTICULATION_CLAIM']
@@ -10,7 +12,7 @@ def bridge(obj,method='linear',checkpoint=None):
     if method in ['linear','quintic']:pred=interpolate(endpoints,method)
     elif method=='gan':
         import torch
-        from models import Generator
+        from training.transitions.models import Generator
         torch.set_num_threads(4)
         path=Path(checkpoint) if checkpoint else ARTIFACTS/'transition-intrasign-v1.pt'
         state=torch.load(path,map_location='cpu',weights_only=True)

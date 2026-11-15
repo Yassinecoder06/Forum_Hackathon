@@ -47,7 +47,7 @@ Dans Studio, ouvrir « Préparer et corriger les concepts ». On peut sélection
 
 Ces modèles **ne sont pas des traducteurs utilisables**. Le troisième essai réduit la perte de validation mais produit des répétitions ; son test est une réutilisation d’un test d’ingénierie, pas une confirmation indépendante. Aucun résultat état de l’art n’est revendiqué. Voir [l’investigation](research/ADAPTATION_INVESTIGATION.md), [la carte des données](research/DATASET_CARD.md), [les résultats](research/IMPLEMENTATION_STATUS.md) et [les commandes de reproduction](training/README.md).
 
-Le PDF fourni `research_paper.pdf` a maintenant été lu intégralement. La [comparaison vérifiée](research/PAPER_B_VERIFIED_REVIEW.md) distingue les composants du papier de notre implémentation ; aucun GAN n’est actuellement implémenté. Les anciennes mentions d’un PDF absent décrivent un état antérieur et sont corrigées par cette revue. Dicta-Sign, Rosetta et MEDIAPI sont catalogués avec leurs limites d’accès ; aucun accès institutionnel n’a été simulé.
+Le PDF fourni `research_paper.pdf` a maintenant été lu intégralement. La [comparaison vérifiée](research/PAPER_B_VERIFIED_REVIEW.md) distingue les composants du papier de notre implémentation ; un CGAN à cinq points est maintenant entraîné pour une expérience intra-signe, sans activation comme modèle inter-signes. Les anciennes mentions d’un PDF absent décrivent un état antérieur et sont corrigées par cette revue. Dicta-Sign, Rosetta et MEDIAPI sont catalogués avec leurs limites d’accès ; aucun accès institutionnel n’a été simulé.
 
 ## Vérification
 
@@ -58,8 +58,12 @@ CHROME_PATH=/chemin/vers/chrome npm --prefix e2e test
 .worktrees/wt-codex2/training/.venv-train/bin/python -m pytest training/test_catalog.py training/test_adaptation.py
 ```
 
-65 tests API/schémas/mouvement et 18 tests de recherche passent. Un test strictement marqué xfail conserve le défaut connu de détection du prénom Alice. Le contrôle navigateur couvre composition, recherche temporelle, téléchargement réel, audio, import, persistance, mobile et erreurs réseau. Les [captures et aperçu vidéo](artifacts/README.md) documentent le logiciel exécuté.
+67 tests API/schémas/mouvement et 24 tests de recherche passent, avec des vérifications frontend des transitions et du rig. Un test strictement marqué xfail conserve le défaut connu de détection du prénom Alice. Le contrôle navigateur couvre composition, recherche temporelle, téléchargement réel, audio, import, persistance, mobile et erreurs réseau. Les [captures et aperçu vidéo](artifacts/README.md) documentent le logiciel exécuté.
 
 Les modèles `.models/`, environnements, checkpoints et captures `.runtime/` sont ignorés par Git. Aucun téléchargement automatique n’a lieu lors d’une requête API. Le modèle français optionnel se configure dans [backend/README.md](backend/README.md).
 
 Développement : exactement deux worktrees, racine `main` pour le lead et `.worktrees/wt-codex2` pour `codex2`, GPT-6.1 Sol medium. Voir [l’organisation](docs/team_worktree_organization.md). L’API reste locale : le système de revue n’est pas un service d’authentification. La publication d’une traduction reste bloquée sans validation réelle.
+
+## Réparation après revue du papier
+
+Le [diagnostic](research/FAILURE_ANALYSIS_AND_REPAIR.md) distingue les erreurs du prototype des composants manquants. Les fixtures synthétiques sont exclues du lookup normal ; les clips réels conservent leurs deux extrémités et disposent d’une liaison de 333 ms ; le personnage est articulé avec IK et doigts. Le [CGAN entraîné](research/TRANSITION_REPORT.md) améliore légèrement la reconstruction intra-signe, sans démontrer la coarticulation inter-signes. Les données originales du papier et la validation linguistique restent manquantes.

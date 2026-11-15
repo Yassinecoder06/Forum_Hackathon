@@ -2,11 +2,13 @@
 import argparse,json,random,re,time
 from collections import defaultdict
 from pathlib import Path
+import sys
+if __package__ in (None,''): sys.path.insert(0,str(Path(__file__).resolve().parents[2]))
 import numpy as np
 import torch
 from torch import nn
-from common import ROOT,ARTIFACTS,FEATURES,CLAIM,sha,dump,interpolate,errors
-from models import Generator,Discriminator
+from training.transitions.common import ROOT,ARTIFACTS,FEATURES,CLAIM,sha,dump,interpolate,errors
+from training.transitions.models import Generator,Discriminator
 
 RUN='transition-intrasign-v1'
 def main():

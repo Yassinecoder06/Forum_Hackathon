@@ -34,6 +34,13 @@ type Dataset = {
   limitations?: string[];
 };
 type Research = {
+  transition_experiment?: {
+    counts: Record<string, number>;
+    metrics: Record<
+      string,
+      { normalized: { rmse: number; inner_boundary_rmse: number } }
+    >;
+  } | null;
   concept_experiment?: {
     metrics: Record<
       string,
@@ -112,6 +119,38 @@ export function ResearchPanel() {
   const dataset = status?.datasets[status.datasets.length - 1];
   return (
     <>
+      {status?.transition_experiment && (
+        <div className="card">
+          <h2>CGAN de transition · expérience intra-signe</h2>
+          <p className="research-note">
+            646 fenêtres train, 152 validation, 93 test ; clips séparés avant
+            extraction. Reconstruction de 10 points temporels, sur 5 repères
+            x/y. Ce ne sont pas des transitions annotées entre signes.
+          </p>
+          <div className="experiment-metrics">
+            {[
+              ["linear", "Linéaire"],
+              ["quintic", "Interpolation quintique"],
+              ["gan", "CGAN entraîné"],
+            ].map(([key, label]) => (
+              <div key={key}>
+                <strong>
+                  {status.transition_experiment!.metrics[
+                    key
+                  ].normalized.rmse.toFixed(4)}
+                </strong>
+                <span>RMSE normalisée · {label}</span>
+              </div>
+            ))}
+          </div>
+          <p className="research-note">
+            Gain global faible ; erreur aux bords légèrement moins bonne. Le
+            lecteur conserve les liaisons déterministes. Les données et la
+            normalisation diffèrent de celles du papier ; les scores ne sont pas
+            comparables.
+          </p>
+        </div>
+      )}
       {status?.concept_experiment && (
         <div className="card">
           <h2>Propositions de concepts · essai logiciel</h2>

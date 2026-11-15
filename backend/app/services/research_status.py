@@ -33,6 +33,13 @@ def concept_report():
         return {k:value.get(k) for k in ['kind','metrics','vocabulary_count','invalid_external_ids','device_peak_mib','limitations']}
     except (ValueError,OSError): return None
 
+def transition_report():
+    path=ROOT/'research/runs/transition-intrasign-v1/metrics.json'
+    try:
+        value=json.loads(path.read_text())
+        return {k:value.get(k) for k in ['kind','counts','metrics','training_seconds','paper_score_comparison']}
+    except (ValueError,OSError): return None
+
 def status():
     manifests=[]
     for path in sorted((ROOT/'data/text_to_gloss').glob('v*/dataset_manifest.json')):
@@ -42,7 +49,7 @@ def status():
     try: lexical=len(json.loads(inventory.read_text())['entries'])
     except (ValueError,OSError,KeyError): lexical=0
     return {'lexical_video_references':lexical,'datasets':manifests,'runs':reports(),
-        'corpus':corpus_status(),'concept_experiment':concept_report(),'linguistic_review':'pending','translation_validated':False}
+        'corpus':corpus_status(),'concept_experiment':concept_report(),'transition_experiment':transition_report(),'linguistic_review':'pending','translation_validated':False}
 
 def predict(text,run_id):
     report=next((r for r in reports() if r['run_id']==run_id),None)

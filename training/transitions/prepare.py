@@ -2,8 +2,10 @@
 import hashlib,json,unicodedata,urllib.parse
 from collections import Counter
 from pathlib import Path
+import sys
+if __package__ in (None,''): sys.path.insert(0,str(Path(__file__).resolve().parents[2]))
 import numpy as np
-from common import ROOT,MAIN,ARTIFACTS,JOINTS,FEATURES,CLAIM,sha,dump
+from training.transitions.common import ROOT,MAIN,ARTIFACTS,JOINTS,FEATURES,CLAIM,sha,dump
 SEED=42
 
 def source_key(url):

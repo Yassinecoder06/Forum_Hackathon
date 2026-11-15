@@ -13,3 +13,5 @@ The renderer now uses the public **Noa** demo GLB served by UPF-GTI and listed i
 Reproduce the local setup explicitly with `python3 scripts/setup-avatar.py`. The API never downloads a character during a request. Missing models produce a visible error; there is no silent geometric substitute.
 
 Retargeting uses two-bone arm IK, palm orientation from measured wrist/index/middle/pinky landmarks, and finger bone rotations. It preserves the character's bind bone lengths, starts from bind rotations at every sample, and remains deterministic when seeking. Missing finger measurements fall back to the character's neutral finger posture; that posture is a rendering fallback, not reconstructed signer evidence. Facial ratios drive available blendshapes and take priority over experimental audio expression. This renderer is not linguistic validation.
+
+A simple torso envelope with palm clearance limits mesh penetration caused by monocular depth error. This is an approximate display constraint, not a full collision solver or correction to the original captured coordinates.

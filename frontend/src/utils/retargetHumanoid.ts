@@ -138,7 +138,8 @@ export class HumanoidRetargeter {
       ) {
         const front =
           this.neckOrigin.z +
-          0.15 * Math.sqrt(Math.max(0, 1 - (target.x / 0.3) ** 2));
+          0.18 * Math.sqrt(Math.max(0, 1 - (target.x / 0.3) ** 2)) +
+          0.045;
         target.z = Math.max(target.z, front);
       }
       const l1 = lower.position.length(),

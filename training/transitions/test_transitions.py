@@ -4,8 +4,8 @@ from collections import defaultdict
 from pathlib import Path
 import numpy as np
 import pytest
-from common import ROOT,ARTIFACTS,FEATURES,validate_endpoints,interpolate,errors,sha
-from infer import bridge
+from training.transitions.common import ROOT,ARTIFACTS,FEATURES,validate_endpoints,interpolate,errors,sha
+from training.transitions.infer import bridge
 RUN=ROOT/'research/runs/transition-intrasign-v1'
 def load(p):return json.loads(Path(p).read_text())
 

@@ -29,3 +29,5 @@ PYTHONDONTWRITEBYTECODE=1 training/.venv-train/bin/python -m pytest training/tra
 ```
 
 The local v1checkpoint exists in the codex2worktree; a fresh reproduction writes its own named checkpoint. Weights are deliberately not inGit. For actual cross-sign application joins, use deterministic interpolation pending real transition supervision; the GAN's small within-sign reconstruction improvement does not validate that use. Paper widths/input choices are unspecified, so the residual conditioning, chosen widths and optimizer are documented engineering choices rather than an exact reproduction.
+
+Integration note: package-qualified imports allow these tests to run together with the text-model suites. The lead runtime contains exact copied ignored NPZ caches and the selected checkpoint; recorded experiment hashes and scores remain unchanged. `--method linear` and `--method quintic` require no checkpoint.

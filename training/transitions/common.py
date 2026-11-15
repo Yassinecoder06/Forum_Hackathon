@@ -3,7 +3,7 @@ import hashlib,json,math
 from pathlib import Path
 import numpy as np
 ROOT=Path(__file__).resolve().parents[2]
-MAIN=Path('/home/jmal/Projects/Active/Forum_Hackathon')
+MAIN=ROOT.parents[1] if ROOT.parent.name=='.worktrees' else ROOT
 ARTIFACTS=ROOT/'training/transitions/artifacts'
 JOINTS=['head','left_wrist','right_wrist','left_middle_4','right_middle_4']
 FEATURES=[j+'_'+axis for j in JOINTS for axis in ['x','y']]

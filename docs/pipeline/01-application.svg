@@ -44,14 +44,14 @@
 <text x="1050" y="454" fill="#23684f" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">ANIMATION PLAN</text>
 <text x="1050" y="485" fill="#23684f" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Motion composition</text>
 <text x="1050" y="516" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Resolve captured clips</text>
-<text x="1050" y="539" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Order and stitch frames</text>
+<text x="1050" y="539" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">333 ms quintic bridges</text>
 <text x="1050" y="562" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Plan timestamps +</text>
 <text x="1050" y="585" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">credits</text>
 <rect x="1360" y="430" width="280" height="185" rx="17" fill="#edf3e9" stroke="#23684f" stroke-width="1.4"/>
 <text x="1380" y="454" fill="#23684f" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">PLAYER</text>
 <text x="1380" y="485" fill="#23684f" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">3D avatar + preview</text>
-<text x="1380" y="516" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Three.js procedural avatar</text>
-<text x="1380" y="539" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Body, hands, captured face</text>
+<text x="1380" y="516" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Rigged mesh + arm / hand IK</text>
+<text x="1380" y="539" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Fingers + captured face</text>
 <text x="1380" y="562" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Timeline / seek / speed</text>
 <path d="M290,520 L340,520" fill="none" stroke="#23684f" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#green)"/>
 <path d="M630,520 L700,520" fill="none" stroke="#23684f" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#green)"/>

@@ -1,4 +1,4 @@
-> Current evidence update: the supplied seven-page `research_paper.pdf` has now been read. See [verified comparison](../research/PAPER_B_VERIFIED_REVIEW.md); no GAN is currently implemented.
+> Current evidence update: the supplied seven-page `research_paper.pdf` has now been read. See [verified comparison](../research/PAPER_B_VERIFIED_REVIEW.md); the new CGAN is a research-only intra-sign experiment, not a validated inter-sign model.
 
 # Solution en cours : séparer compréhension française et production LSF
 

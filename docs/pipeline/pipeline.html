@@ -44,14 +44,14 @@
 <text x="1050" y="454" fill="#23684f" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">ANIMATION PLAN</text>
 <text x="1050" y="485" fill="#23684f" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Motion composition</text>
 <text x="1050" y="516" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Resolve captured clips</text>
-<text x="1050" y="539" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Order and stitch frames</text>
+<text x="1050" y="539" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">333 ms quintic bridges</text>
 <text x="1050" y="562" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Plan timestamps +</text>
 <text x="1050" y="585" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">credits</text>
 <rect x="1360" y="430" width="280" height="185" rx="17" fill="#edf3e9" stroke="#23684f" stroke-width="1.4"/>
 <text x="1380" y="454" fill="#23684f" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">PLAYER</text>
 <text x="1380" y="485" fill="#23684f" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">3D avatar + preview</text>
-<text x="1380" y="516" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Three.js procedural avatar</text>
-<text x="1380" y="539" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Body, hands, captured face</text>
+<text x="1380" y="516" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Rigged mesh + arm / hand IK</text>
+<text x="1380" y="539" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Fingers + captured face</text>
 <text x="1380" y="562" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Timeline / seek / speed</text>
 <path d="M290,520 L340,520" fill="none" stroke="#23684f" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#green)"/>
 <path d="M630,520 L700,520" fill="none" stroke="#23684f" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#green)"/>
@@ -195,7 +195,7 @@
 </svg></section><section class="page"><svg xmlns="http://www.w3.org/2000/svg" width="1680" height="1188" viewBox="0 0 1680 1188"><defs><marker id="ink" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#193b34" stroke-width="1.5"/></marker><marker id="muted" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#60746d" stroke-width="1.5"/></marker><marker id="green" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#23684f" stroke-width="1.5"/></marker><marker id="blue" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#336a91" stroke-width="1.5"/></marker><marker id="amber" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#996522" stroke-width="1.5"/></marker><marker id="purple" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L8,5 L0,9" fill="none" stroke="#74578d" stroke-width="1.5"/></marker></defs><rect width="1680" height="1188" fill="#f7f8f3"/>
 <text x="40" y="47" fill="#23684f" font-size="17" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">SIGNACULTURE  /  SYSTEM MAP</text>
 <text x="40" y="99" fill="#193b34" font-size="39" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Models, evaluation and paper coverage</text>
-<text x="40" y="137" fill="#60746d" font-size="20" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">No GAN is implemented in SignaCulture. The supplied paper has now been read; its architecture appears on page 4.</text>
+<text x="40" y="137" fill="#60746d" font-size="20" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">T5/mT5 and the new within-sign CGAN are research-only. The supplied paper is compared on page 4.</text>
 <rect x="40" y="185" width="340" height="180" rx="17" fill="#f2eef7" stroke="#74578d" stroke-width="1.4"/>
 <text x="60" y="209" fill="#74578d" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">SENTENCE RESEARCH DATA</text>
 <text x="60" y="240" fill="#74578d" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">UD / SUD STKAutogramm</text>
@@ -237,7 +237,7 @@
 <text x="900" y="541" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Reports, checkpoints and raw predictions are retained.</text>
 <text x="900" y="564" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Research tab can query the failed T5 / mT5 adapters.</text>
 <text x="900" y="587" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Their generated glosses do not automatically select avatar motions.</text>
-<text x="900" y="610" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">No GAN, adversarial training or GAN discriminator is implemented.</text>
+<text x="900" y="610" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">A five-point CGAN is now trained for within-sign tests only.</text>
 <path d="M1470,365 L1470,410 L420,410 L420,455" fill="none" stroke="#74578d" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#purple)"/>
 <path d="M800,565 L880,565" fill="none" stroke="#74578d" stroke-width="2.4" stroke-linejoin="round" marker-end="url(#purple)"/>
 <rect x="40" y="765" width="500" height="250" rx="17" fill="#edf3f7" stroke="#336a91" stroke-width="1.4"/>
@@ -321,12 +321,12 @@
 <text x="60" y="881" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Related MediaPipe extraction and a real motion library.</text>
 <text x="60" y="904" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Controlled lookup; optional editable Qwen concept drafts.</text>
 <text x="60" y="927" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">3D avatar, video preview export, audio DSP and emotion2vec.</text>
-<text x="60" y="950" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">T5 / mT5 experiments with different data and training settings.</text>
+<text x="60" y="950" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">T5/mT5 and a five-point CGAN experiment; different data from paper.</text>
 <rect x="880" y="795" width="760" height="235" rx="17" fill="#faf2e5" stroke="#996522" stroke-width="1.4"/>
 <text x="900" y="819" fill="#996522" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">NOT A FULL REPRODUCTION</text>
 <text x="900" y="850" fill="#996522" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Paper modules still missing</text>
 <text x="900" y="881" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">No matching T5-base + 319-token reproduction or 47-rule correction.</text>
-<text x="900" y="904" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">No trained conditional GAN or paired transition training set.</text>
+<text x="900" y="904" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">CGAN: within-sign tests only; no validated inter-sign model.</text>
 <text x="900" y="927" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">No Google ASR path and no comparable interpreter evaluation.</text>
 <text x="900" y="950" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Original corpus / code: paper says available upon request.</text>
 <text x="40" y="1071" fill="#60746d" font-size="17" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Paper-reported data: 379 real + 1,000 synthetic transition pairs. These are not our extracted isolated clips.</text>

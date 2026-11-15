@@ -72,7 +72,7 @@ def test_lexical_inventory_never_becomes_pairs():
 
 
 def test_export_authenticity_not_just_relabelled_flags():
-    from experiment import validate_exports
+    from training.experiment import validate_exports
     d=records();validate_exports(DATA,d,'source-annotated-research')
     r=d['train'][0];d['train'][0]={**r,'french_text':'Invented input'}
     with pytest.raises(ValueError,match='differs from source-derived catalog'):

@@ -11,3 +11,9 @@ Les expériences textuelles sont dans `research/runs/` : T5-small CPU et deux mT
 `browser/concepts.png`, `semantic.png` et `concept-review.json` documentent la sélection manuelle, la proposition locale réelle et la fiche de revue non validée.
 
 Vérification actuelle : 65 tests API/schémas/mouvement, 18 tests de recherche, un défaut de détection de prénom conservé en xfail strict, lint et build frontend, tests navigateur contre les vrais services. Aucun résultat état de l’art ni validation par des signants n’est revendiqué.
+
+## Repaired player
+
+`SignaCulture_Repaired_Preview.mp4` and `browser/repaired-preview.webm` are actual recordings of two real captured signs with the new articulated Noa character and dedicated clip transitions. `browser/repaired-studio.png` shows the repaired rendering at a captured signing pose. Avatar provenance and pending publication/redistribution rights are in `docs/AVATAR_PROVENANCE.md`.
+
+Current verification: 67 API/schema/motion tests, 24 research tests, one documented strict xfail for name detection, frontend motion/IK checks, lint/build, seven live API checks and the real browser workflow. The research tab separately shows the trained CGAN's intra-sign experiment; the player does not claim validated learned co-articulation.

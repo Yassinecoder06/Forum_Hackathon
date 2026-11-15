@@ -49,12 +49,12 @@
 <text x="60" y="881" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Related MediaPipe extraction and a real motion library.</text>
 <text x="60" y="904" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Controlled lookup; optional editable Qwen concept drafts.</text>
 <text x="60" y="927" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">3D avatar, video preview export, audio DSP and emotion2vec.</text>
-<text x="60" y="950" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">T5 / mT5 experiments with different data and training settings.</text>
+<text x="60" y="950" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">T5/mT5 and a five-point CGAN experiment; different data from paper.</text>
 <rect x="880" y="795" width="760" height="235" rx="17" fill="#faf2e5" stroke="#996522" stroke-width="1.4"/>
 <text x="900" y="819" fill="#996522" font-size="12" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">NOT A FULL REPRODUCTION</text>
 <text x="900" y="850" fill="#996522" font-size="23" font-weight="700" font-family="Arial,DejaVu Sans,sans-serif">Paper modules still missing</text>
 <text x="900" y="881" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">No matching T5-base + 319-token reproduction or 47-rule correction.</text>
-<text x="900" y="904" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">No trained conditional GAN or paired transition training set.</text>
+<text x="900" y="904" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">CGAN: within-sign tests only; no validated inter-sign model.</text>
 <text x="900" y="927" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">No Google ASR path and no comparable interpreter evaluation.</text>
 <text x="900" y="950" fill="#193b34" font-size="18" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Original corpus / code: paper says available upon request.</text>
 <text x="40" y="1071" fill="#60746d" font-size="17" font-weight="400" font-family="Arial,DejaVu Sans,sans-serif">Paper-reported data: 379 real + 1,000 synthetic transition pairs. These are not our extracted isolated clips.</text>
