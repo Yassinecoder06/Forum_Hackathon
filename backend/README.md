@@ -1,0 +1,5 @@
+Run from repository root: `pip install -r backend/requirements.txt` then `uvicorn backend.app.main:app --host 127.0.0.1 --port 8000 --proxy-headers`.
+Tests: `python -m pytest backend/tests` after installing requirements-dev.txt.
+Configuration: SIGNACULTURE_DATA_ROOT (repository containing data/), SIGNACULTURE_DB_PATH (SQLite outside tracked files), SIGNACULTURE_CORS_ORIGINS (comma separated origins).
+NLP uses deterministic Unicode token matching, longest expressions first. No spaCy model is installed or inferred; lemmas in fallback are lowercase tokens, not linguistic lemmatization. Unknown words retain original spelling and duplicates. This is controlled vocabulary lookup, not validated translation.
+Audio is PCM WAV only, 10 MiB / 60 seconds, RMS and autocorrelation F0; emotion unavailable. Audio does not automatically alter motion timings. Preview serves registered technical fixtures, not validated LSF. No video export. Review records apply to linguistic review only; animation and rights must be approved in the registry separately. Local review API has no authentication and must stay on a trusted local interface.
