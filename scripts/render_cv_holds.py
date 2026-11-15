@@ -11,7 +11,7 @@ OUT.mkdir(parents=True, exist_ok=True)
 report = json.loads((ROOT / '.runtime/cv-corpus-activation/applied.json').read_text())
 results = json.loads((ROOT / '.runtime/cv-v4-all/results.json').read_text())['results']
 by_capture = {a['capture_id']:(r,a) for r in results for a in r.get('aliases',[])}
-page = ['<meta charset="utf-8"><title>Held CV source review</title><style>body{font:16px system-ui;max-width:1100px;margin:auto}img{max-width:49%}article{padding:15px;border-bottom:1px solid #aaa}</style><h1>Held CV regressions</h1><p>Previous extraction remains active. Same source frame: previous raw points on left, candidate on right. Green/cyan = estimated left/right hands. Missing observations are not filled. These images require independent human review; no correctness or approval is inferred.</p>']
+page = ['<meta charset="utf-8"><title>Held CV source review</title><style>body{font:16px system-ui;max-width:1100px;margin:auto}img{max-width:49%}article{padding:15px;border-bottom:1px solid #aaa}</style><h1>Held CV regressions</h1><p>Historical regression review; consult current reconciliation status before deciding which extraction is active. Same source frame: previous raw points on left, candidate on right. Green/cyan = estimated left/right hands. Missing observations are not filled. These images require independent human review; no correctness or approval is inferred.</p>']
 count = images = 0
 for entry in report['entries']:
     if not entry['decision'].startswith('hold_'):
