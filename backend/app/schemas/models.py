@@ -1,6 +1,6 @@
 """Canonical API and registry data models (integration contract v1)."""
 
-from typing import Annotated, Literal
+from typing import Annotated, Literal, Optional
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -54,6 +54,9 @@ class AnimationSegment(ContractModel):
     start_ms: int = Field(ge=0)
     duration_ms: int = Field(gt=0)
     asset_url: str
+    # Part of the source clip to play (its signing core); absent = whole clip.
+    clip_start_ms: Optional[int] = Field(default=None, ge=0)
+    clip_end_ms: Optional[int] = Field(default=None, gt=0)
 
 
 class AudioFrame(ContractModel):

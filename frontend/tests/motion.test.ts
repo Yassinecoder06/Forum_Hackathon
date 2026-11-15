@@ -222,3 +222,35 @@ retarget.apply(fullHand);
 for (const b of bones.filter((b) => /Hand(Index|Middle|Ring|Pinky)[23]$/.test(b.name)))
   assert(b.quaternion.angleTo(new THREE.Quaternion()) <= 1.900001, "Constrain extreme software-test finger curls without stretching bones");
 console.log("Avatar checks passed: brows, immutable spike filtering, gap states, contact preservation and cached seeking.");
+
+// --- Signing-core windows and continuous bridges -------------------------------------------
+{
+const walk = (x0: number, v: number, finger = 0.05): MotionFile => ({
+  rig_version: "signaculture-v1", fps: 10, duration_ms: 400, joints: ["right_wrist"], synthetic: true,
+  frames: [0, 100, 200, 300, 400].map((t) => ({ time_ms: t, joints: {
+    right_wrist: [x0 + v * t, 1.2, 0.3], right_index_1: [x0 + v * t + finger, 1.2, 0.3] } })),
+});
+const core = { transition_ms: 333, timing_mode: "original", segments: [
+  { motion_id: "p", clip_start_ms: 100, clip_end_ms: 300 },
+  { motion_id: "q", clip_start_ms: 100, clip_end_ms: 300 },
+] } as AnimationPlan;
+const v = 0.001; // 1 m/s, in metres per millisecond
+// A's window ends at x=0.3; B's window (from t=100) starts where uniform motion arrives 333 ms later.
+const p = walk(0, v), q = walk(0.3 + 0.333 - 0.1, v);
+const cored = stitchAnimationPlan(core, new Map([["p", p], ["q", q]]));
+assert.equal(cored.duration_ms, 200 + 333 + 200, "Only each clip's window is played");
+assert.deepEqual(cored.frames[0].joints, p.frames[1].joints, "A window starts on its captured frame");
+assert.deepEqual(cored.frames.find((f) => f.time_ms === 200)?.joints, p.frames[3].joints, "A window ends on its captured frame");
+assert.deepEqual(cored.frames.find((f) => f.time_ms === 533)?.joints, q.frames[1].joints, "B window starts on its captured frame");
+const bridge = cored.frames.filter((f) => f.playback_origin === "transition");
+const speeds = bridge.slice(1).map((f, i) => (f.joints.right_wrist[0] - bridge[i].joints.right_wrist[0]) / (f.time_ms - bridge[i].time_ms));
+assert(speeds.every((s) => s > 0.6 * v && s < 1.4 * v), "Arms keep moving through the join instead of stopping at both ends");
+assert(bridge.every((f) => Math.abs(f.joints.right_index_1[0] - f.joints.right_wrist[0] - 0.05) < 1e-9),
+  "Fingers move with their wrist; the hand shape does not trail behind");
+const morph = stitchAnimationPlan(core, new Map([["p", walk(0, 0, 0.02)], ["q", walk(0.2, 0, 0.08)]]));
+const offsets = morph.frames.filter((f) => f.playback_origin === "transition").map((f) => f.joints.right_index_1[0] - f.joints.right_wrist[0]);
+assert(offsets.every((o, i) => o > 0.02 && o < 0.08 && (i === 0 || o >= offsets[i - 1])), "Hand shape morphs monotonically between signs");
+const still = stitchAnimationPlan(core, new Map([["p", walk(0, 0)], ["q", walk(0.2, 0)]]));
+assert(still.frames.every((f) => f.joints.right_wrist[0] >= 0 && f.joints.right_wrist[0] <= 0.2), "No overshoot between resting endpoints");
+console.log("Stitching checks passed: signing-core windows, continuous arm bridges, wrist-relative hand shapes.");
+}
