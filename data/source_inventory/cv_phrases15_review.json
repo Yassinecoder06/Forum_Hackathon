@@ -1,0 +1,1622 @@
+[
+  {
+    "id": 1,
+    "phrase": "Je veux boire de l'eau.",
+    "requested_concepts": [
+      "je",
+      "vouloir",
+      "boire",
+      "eau"
+    ],
+    "missing_or_ambiguous": [],
+    "words": [
+      {
+        "concept": "je",
+        "gloss": "JE",
+        "source_id": "DICTASIGN_PORTAL_529",
+        "source_sha256": "9e84042c64375b05551996fe536b2a8723a377fddbce31c9200c35b8f2c74c06",
+        "frames": 31,
+        "fps": 14.985014985014985,
+        "hands": {
+          "left": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "9e84042c64375b05551996fe536b2a8723a377fddbce31c9200c35b8f2c74c06.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/529.mp4",
+        "accuracy_validated": false
+      },
+      {
+        "concept": "vouloir",
+        "gloss": "VOULOIR",
+        "source_id": "DICTASIGN_PORTAL_986",
+        "source_sha256": "37c4b3d929e26d38824d9de089b9b243586835b87c4df3ad856d5404e7e7c494",
+        "frames": 81,
+        "fps": 25.0,
+        "hands": {
+          "left": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 0.9876543209876543,
+            "longest_missing_ms": 40,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 1
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "37c4b3d929e26d38824d9de089b9b243586835b87c4df3ad856d5404e7e7c494.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/986.mp4",
+        "accuracy_validated": false
+      },
+      {
+        "concept": "boire",
+        "gloss": "BOIRE",
+        "source_id": "DICTASIGN_PORTAL_253",
+        "source_sha256": "57e10c5076840d09142d9b6ce1a5facd40d4f83701b6b97e4453b90fe2f06ff0",
+        "frames": 32,
+        "fps": 14.985014985014985,
+        "hands": {
+          "left": {
+            "coverage": 0.0,
+            "longest_missing_ms": 2136,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 0.4375,
+            "longest_missing_ms": 667,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 1
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "57e10c5076840d09142d9b6ce1a5facd40d4f83701b6b97e4453b90fe2f06ff0.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/253.mp4",
+        "accuracy_validated": false
+      },
+      {
+        "concept": "eau",
+        "gloss": "EAU",
+        "source_id": "DICTASIGN_PORTAL_992",
+        "source_sha256": "965d85f3860f4f9ba04ff203bd3d312bf6f1a9837e1cb0386e3b06ef2bc23262",
+        "frames": 41,
+        "fps": 14.985014985014985,
+        "hands": {
+          "left": {
+            "coverage": 0.8048780487804879,
+            "longest_missing_ms": 134,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 0.975609756097561,
+            "longest_missing_ms": 67,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "965d85f3860f4f9ba04ff203bd3d312bf6f1a9837e1cb0386e3b06ef2bc23262.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/992.mp4",
+        "accuracy_validated": false
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "phrase": "Je veux manger du pain.",
+    "requested_concepts": [
+      "je",
+      "vouloir",
+      "manger",
+      "pain"
+    ],
+    "missing_or_ambiguous": [],
+    "words": [
+      {
+        "concept": "je",
+        "gloss": "JE",
+        "source_id": "DICTASIGN_PORTAL_529",
+        "source_sha256": "9e84042c64375b05551996fe536b2a8723a377fddbce31c9200c35b8f2c74c06",
+        "frames": 31,
+        "fps": 14.985014985014985,
+        "hands": {
+          "left": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "9e84042c64375b05551996fe536b2a8723a377fddbce31c9200c35b8f2c74c06.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/529.mp4",
+        "accuracy_validated": false
+      },
+      {
+        "concept": "vouloir",
+        "gloss": "VOULOIR",
+        "source_id": "DICTASIGN_PORTAL_986",
+        "source_sha256": "37c4b3d929e26d38824d9de089b9b243586835b87c4df3ad856d5404e7e7c494",
+        "frames": 81,
+        "fps": 25.0,
+        "hands": {
+          "left": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 0.9876543209876543,
+            "longest_missing_ms": 40,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 1
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "37c4b3d929e26d38824d9de089b9b243586835b87c4df3ad856d5404e7e7c494.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/986.mp4",
+        "accuracy_validated": false
+      },
+      {
+        "concept": "manger",
+        "gloss": "MANGER",
+        "source_id": "DICTASIGN_PORTAL_266",
+        "source_sha256": "859c4bd6393f547b6cd7b974bc569c618cf4fdd5bf93eb0299ff8e91fbd4df51",
+        "frames": 34,
+        "fps": 14.985014985014985,
+        "hands": {
+          "left": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 1
+          },
+          "right": {
+            "coverage": 0.9411764705882353,
+            "longest_missing_ms": 67,
+            "missing_with_raised_visible_wrist": 2,
+            "roi_review_frames": 1
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "859c4bd6393f547b6cd7b974bc569c618cf4fdd5bf93eb0299ff8e91fbd4df51.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/266.mp4",
+        "accuracy_validated": false
+      },
+      {
+        "concept": "pain",
+        "gloss": "PAIN",
+        "source_id": "DICTASIGN_PORTAL_103",
+        "source_sha256": "5e7700f6b485865c93afb3afe521e89aa8e9b755bd4f9e43bb48311219917228",
+        "frames": 69,
+        "fps": 25.0,
+        "hands": {
+          "left": {
+            "coverage": 0.855072463768116,
+            "longest_missing_ms": 320,
+            "missing_with_raised_visible_wrist": 10,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "review_regression_or_incomparable",
+        "video": "5e7700f6b485865c93afb3afe521e89aa8e9b755bd4f9e43bb48311219917228.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/103.mp4",
+        "accuracy_validated": false
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "phrase": "Mon frère aime la musique.",
+    "requested_concepts": [
+      "mon",
+      "frère",
+      "aimer",
+      "musique"
+    ],
+    "missing_or_ambiguous": [],
+    "words": [
+      {
+        "concept": "mon",
+        "gloss": "MON",
+        "source_id": "DICTASIGN_PORTAL_562",
+        "source_sha256": "7922d188cd0a94a7e5e48ce7e7fe7d1fd1dc455e33ab391227f554c5ab28dfe3",
+        "frames": 30,
+        "fps": 14.985014985014985,
+        "hands": {
+          "left": {
+            "coverage": 0.8666666666666667,
+            "longest_missing_ms": 134,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "7922d188cd0a94a7e5e48ce7e7fe7d1fd1dc455e33ab391227f554c5ab28dfe3.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/562.mp4",
+        "accuracy_validated": false
+      },
+      {
+        "concept": "frère",
+        "gloss": "FRERE",
+        "source_id": "DICTASIGN_PORTAL_108",
+        "source_sha256": "2825031976a77e3f669708b04b4acad07de6e6287f98d4c526922adf22130490",
+        "frames": 28,
+        "fps": 14.985014985014985,
+        "hands": {
+          "left": {
+            "coverage": 0.9642857142857143,
+            "longest_missing_ms": 67,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 0.9285714285714286,
+            "longest_missing_ms": 67,
+            "missing_with_raised_visible_wrist": 2,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "2825031976a77e3f669708b04b4acad07de6e6287f98d4c526922adf22130490.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/108.mp4",
+        "accuracy_validated": false
+      },
+      {
+        "concept": "aimer",
+        "gloss": "AIMER",
+        "source_id": "DICTASIGN_PORTAL_509",
+        "source_sha256": "2d7bdf51b4477eac8b7ddf95f27ffce94460fe2df01007b82e582fe4cec38cde",
+        "frames": 43,
+        "fps": 14.985014985014985,
+        "hands": {
+          "left": {
+            "coverage": 0.0,
+            "longest_missing_ms": 2870,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 0.37209302325581395,
+            "longest_missing_ms": 1068,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "2d7bdf51b4477eac8b7ddf95f27ffce94460fe2df01007b82e582fe4cec38cde.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/509.mp4",
+        "accuracy_validated": false
+      },
+      {
+        "concept": "musique",
+        "gloss": "MUSIQUE",
+        "source_id": "DICTASIGN_PORTAL_560",
+        "source_sha256": "1825638a7a43498236b0c24858c0f0cb9eb618fc35b557f9c5ff9e677ce395d4",
+        "frames": 32,
+        "fps": 14.985014985014985,
+        "hands": {
+          "left": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "1825638a7a43498236b0c24858c0f0cb9eb618fc35b557f9c5ff9e677ce395d4.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/560.mp4",
+        "accuracy_validated": false
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "phrase": "Je vais à l'école demain.",
+    "requested_concepts": [
+      "je",
+      "aller",
+      "école",
+      "demain"
+    ],
+    "missing_or_ambiguous": [],
+    "words": [
+      {
+        "concept": "je",
+        "gloss": "JE",
+        "source_id": "DICTASIGN_PORTAL_529",
+        "source_sha256": "9e84042c64375b05551996fe536b2a8723a377fddbce31c9200c35b8f2c74c06",
+        "frames": 31,
+        "fps": 14.985014985014985,
+        "hands": {
+          "left": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "9e84042c64375b05551996fe536b2a8723a377fddbce31c9200c35b8f2c74c06.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/529.mp4",
+        "accuracy_validated": false
+      },
+      {
+        "concept": "aller",
+        "gloss": "ALLER",
+        "source_id": "DICTASIGN_PORTAL_376",
+        "source_sha256": "c264ef4dca36207caffa170c6094423f69e24885ff550a0d141837b1161c74dd",
+        "frames": 40,
+        "fps": 14.985014985014985,
+        "hands": {
+          "left": {
+            "coverage": 0.6,
+            "longest_missing_ms": 735,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 0.575,
+            "longest_missing_ms": 801,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "c264ef4dca36207caffa170c6094423f69e24885ff550a0d141837b1161c74dd.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/376.mp4",
+        "accuracy_validated": false
+      },
+      {
+        "concept": "école",
+        "gloss": "ECOLE",
+        "source_id": "DICTASIGN_PORTAL_756",
+        "source_sha256": "f7c91dc74b2bf6c9a2669b309cf69bd4929ce69ff46dddac4aba5370312a1ff5",
+        "frames": 63,
+        "fps": 25.0,
+        "hands": {
+          "left": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 0.6190476190476191,
+            "longest_missing_ms": 520,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 1
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "f7c91dc74b2bf6c9a2669b309cf69bd4929ce69ff46dddac4aba5370312a1ff5.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/756.mp4",
+        "accuracy_validated": false
+      },
+      {
+        "concept": "demain",
+        "gloss": "DEMAIN",
+        "source_id": "DICTASIGN_PORTAL_929",
+        "source_sha256": "6670056fb0a9123c6b41c36c3e006fc63e65d8eac8e5a5a81d660b07ec13de6f",
+        "frames": 30,
+        "fps": 14.985014985014985,
+        "hands": {
+          "left": {
+            "coverage": 0.0,
+            "longest_missing_ms": 2002,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 0.6,
+            "longest_missing_ms": 534,
+            "missing_with_raised_visible_wrist": 1,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "6670056fb0a9123c6b41c36c3e006fc63e65d8eac8e5a5a81d660b07ec13de6f.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/929.mp4",
+        "accuracy_validated": false
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "phrase": "Mon ami habite à Paris.",
+    "requested_concepts": [
+      "mon",
+      "ami",
+      "habiter",
+      "Paris"
+    ],
+    "missing_or_ambiguous": [],
+    "words": [
+      {
+        "concept": "mon",
+        "gloss": "MON",
+        "source_id": "DICTASIGN_PORTAL_562",
+        "source_sha256": "7922d188cd0a94a7e5e48ce7e7fe7d1fd1dc455e33ab391227f554c5ab28dfe3",
+        "frames": 30,
+        "fps": 14.985014985014985,
+        "hands": {
+          "left": {
+            "coverage": 0.8666666666666667,
+            "longest_missing_ms": 134,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "7922d188cd0a94a7e5e48ce7e7fe7d1fd1dc455e33ab391227f554c5ab28dfe3.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/562.mp4",
+        "accuracy_validated": false
+      },
+      {
+        "concept": "ami",
+        "gloss": "AMI",
+        "source_id": "DICTASIGN_PORTAL_356",
+        "source_sha256": "fc41c3f2bd85ecea75a405f7a08eee6980e2fc05b905f4463cd18c3e5e3b66ad",
+        "frames": 29,
+        "fps": 14.985014985014985,
+        "hands": {
+          "left": {
+            "coverage": 0.4827586206896552,
+            "longest_missing_ms": 534,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 1
+          },
+          "right": {
+            "coverage": 0.4482758620689655,
+            "longest_missing_ms": 534,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 1
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "fc41c3f2bd85ecea75a405f7a08eee6980e2fc05b905f4463cd18c3e5e3b66ad.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/356.mp4",
+        "accuracy_validated": false
+      },
+      {
+        "concept": "habiter",
+        "gloss": "HABITER",
+        "source_id": "DICTASIGN_PORTAL_260",
+        "source_sha256": "e2e4b67b3eb9d4e9363f8ee51a92f1c3eef34cc8b029b3aeb3bd80b3e6a8396b",
+        "frames": 32,
+        "fps": 14.985014985014985,
+        "hands": {
+          "left": {
+            "coverage": 0.84375,
+            "longest_missing_ms": 200,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "e2e4b67b3eb9d4e9363f8ee51a92f1c3eef34cc8b029b3aeb3bd80b3e6a8396b.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/260.mp4",
+        "accuracy_validated": false
+      },
+      {
+        "concept": "Paris",
+        "gloss": "PARIS",
+        "source_id": "DICTASIGN_PORTAL_632",
+        "source_sha256": "4306fee6263f1b9ad55be51c6c07de8ee87430fe4c879e489c0d1e5c02d0614b",
+        "frames": 98,
+        "fps": 25.0,
+        "hands": {
+          "left": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 1
+          },
+          "right": {
+            "coverage": 0.9795918367346939,
+            "longest_missing_ms": 40,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 1
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "4306fee6263f1b9ad55be51c6c07de8ee87430fe4c879e489c0d1e5c02d0614b.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/632.mp4",
+        "accuracy_validated": false
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "phrase": "Je veux acheter une voiture.",
+    "requested_concepts": [
+      "je",
+      "vouloir",
+      "acheter",
+      "voiture"
+    ],
+    "missing_or_ambiguous": [],
+    "words": [
+      {
+        "concept": "je",
+        "gloss": "JE",
+        "source_id": "DICTASIGN_PORTAL_529",
+        "source_sha256": "9e84042c64375b05551996fe536b2a8723a377fddbce31c9200c35b8f2c74c06",
+        "frames": 31,
+        "fps": 14.985014985014985,
+        "hands": {
+          "left": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "9e84042c64375b05551996fe536b2a8723a377fddbce31c9200c35b8f2c74c06.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/529.mp4",
+        "accuracy_validated": false
+      },
+      {
+        "concept": "vouloir",
+        "gloss": "VOULOIR",
+        "source_id": "DICTASIGN_PORTAL_986",
+        "source_sha256": "37c4b3d929e26d38824d9de089b9b243586835b87c4df3ad856d5404e7e7c494",
+        "frames": 81,
+        "fps": 25.0,
+        "hands": {
+          "left": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 0.9876543209876543,
+            "longest_missing_ms": 40,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 1
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "37c4b3d929e26d38824d9de089b9b243586835b87c4df3ad856d5404e7e7c494.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/986.mp4",
+        "accuracy_validated": false
+      },
+      {
+        "concept": "acheter",
+        "gloss": "ACHETER",
+        "source_id": "DICTASIGN_PORTAL_115",
+        "source_sha256": "dea1d195e530a7ee2aba15918c542ab8cafe8fb16f85766cb448af6d6bbafa0d",
+        "frames": 34,
+        "fps": 14.985014985014985,
+        "hands": {
+          "left": {
+            "coverage": 0.5294117647058824,
+            "longest_missing_ms": 534,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 0.5882352941176471,
+            "longest_missing_ms": 534,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "dea1d195e530a7ee2aba15918c542ab8cafe8fb16f85766cb448af6d6bbafa0d.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/115.mp4",
+        "accuracy_validated": false
+      },
+      {
+        "concept": "voiture",
+        "gloss": "VOITURE",
+        "source_id": "DICTASIGN_PORTAL_125",
+        "source_sha256": "8c127715a2ab945adf0ddf9226c298ca30963d425268ed6c06655cd432f2162d",
+        "frames": 62,
+        "fps": 25.0,
+        "hands": {
+          "left": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "8c127715a2ab945adf0ddf9226c298ca30963d425268ed6c06655cd432f2162d.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/125.mp4",
+        "accuracy_validated": false
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "phrase": "Je lis un livre.",
+    "requested_concepts": [
+      "je",
+      "lire",
+      "livre"
+    ],
+    "missing_or_ambiguous": [],
+    "words": [
+      {
+        "concept": "je",
+        "gloss": "JE",
+        "source_id": "DICTASIGN_PORTAL_529",
+        "source_sha256": "9e84042c64375b05551996fe536b2a8723a377fddbce31c9200c35b8f2c74c06",
+        "frames": 31,
+        "fps": 14.985014985014985,
+        "hands": {
+          "left": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "9e84042c64375b05551996fe536b2a8723a377fddbce31c9200c35b8f2c74c06.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/529.mp4",
+        "accuracy_validated": false
+      },
+      {
+        "concept": "lire",
+        "gloss": "LIRE",
+        "source_id": "DICTASIGN_PORTAL_709",
+        "source_sha256": "8ee08cf87a91eaf11b9a5aaab50e848b788fd76487bd9570ee777a2a55085bfd",
+        "frames": 29,
+        "fps": 14.985014985014985,
+        "hands": {
+          "left": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "8ee08cf87a91eaf11b9a5aaab50e848b788fd76487bd9570ee777a2a55085bfd.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/709.mp4",
+        "accuracy_validated": false
+      },
+      {
+        "concept": "livre",
+        "gloss": "LIVRE",
+        "source_id": "DICTASIGN_PORTAL_96",
+        "source_sha256": "d973947426a336c1d727fa9779e2ee24255f02a3ef4b15e02b018b57f04443d4",
+        "frames": 84,
+        "fps": 25.0,
+        "hands": {
+          "left": {
+            "coverage": 0.9047619047619048,
+            "longest_missing_ms": 120,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 0.9880952380952381,
+            "longest_missing_ms": 40,
+            "missing_with_raised_visible_wrist": 1,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "review_regression_or_incomparable",
+        "video": "d973947426a336c1d727fa9779e2ee24255f02a3ef4b15e02b018b57f04443d4.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/96.mp4",
+        "accuracy_validated": false
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "phrase": "Le chat dort.",
+    "requested_concepts": [
+      "chat",
+      "dormir"
+    ],
+    "missing_or_ambiguous": [],
+    "words": [
+      {
+        "concept": "chat",
+        "gloss": "CHAT",
+        "source_id": "CAPTURE_8069af08c0fc52f8",
+        "source_sha256": "3d29e2f6de144a172cb0965e020a2f3458e613d0b91069b93e6860846ad9cf92",
+        "frames": 41,
+        "fps": 14.0,
+        "hands": {
+          "left": {
+            "coverage": 0.9024390243902439,
+            "longest_missing_ms": 215,
+            "missing_with_raised_visible_wrist": 4,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 0.9512195121951219,
+            "longest_missing_ms": 143,
+            "missing_with_raised_visible_wrist": 1,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "review_no_raw_baseline",
+        "video": "3d29e2f6de144a172cb0965e020a2f3458e613d0b91069b93e6860846ad9cf92.mp4",
+        "source_url": "https://commons.wikimedia.org/wiki/File%3ALL-Q33302_%28fsl%29-Laura_Jauvert-Chat.webm",
+        "accuracy_validated": false
+      },
+      {
+        "concept": "dormir",
+        "gloss": "DORMIR",
+        "source_id": "DICTASIGN_PORTAL_801",
+        "source_sha256": "72af4103276a6755c7d855a111a00925dd9cd895245afde55f96baa4c6301fab",
+        "frames": 25,
+        "fps": 14.985014985014985,
+        "hands": {
+          "left": {
+            "coverage": 0.0,
+            "longest_missing_ms": 1669,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 0.76,
+            "longest_missing_ms": 334,
+            "missing_with_raised_visible_wrist": 1,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "72af4103276a6755c7d855a111a00925dd9cd895245afde55f96baa4c6301fab.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/801.mp4",
+        "accuracy_validated": false
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "phrase": "Je regarde le football.",
+    "requested_concepts": [
+      "je",
+      "regarder",
+      "football"
+    ],
+    "missing_or_ambiguous": [],
+    "words": [
+      {
+        "concept": "je",
+        "gloss": "JE",
+        "source_id": "DICTASIGN_PORTAL_529",
+        "source_sha256": "9e84042c64375b05551996fe536b2a8723a377fddbce31c9200c35b8f2c74c06",
+        "frames": 31,
+        "fps": 14.985014985014985,
+        "hands": {
+          "left": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "9e84042c64375b05551996fe536b2a8723a377fddbce31c9200c35b8f2c74c06.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/529.mp4",
+        "accuracy_validated": false
+      },
+      {
+        "concept": "regarder",
+        "gloss": "REGARDER",
+        "source_id": "DICTASIGN_PORTAL_990",
+        "source_sha256": "524eda5712e5ef1d0227bdd0b24e82ce3195bd13d32714ef6a6266f266b8d88c",
+        "frames": 52,
+        "fps": 25.0,
+        "hands": {
+          "left": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "524eda5712e5ef1d0227bdd0b24e82ce3195bd13d32714ef6a6266f266b8d88c.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/990.mp4",
+        "accuracy_validated": false
+      },
+      {
+        "concept": "football",
+        "gloss": "FOOTBALL",
+        "source_id": "DICTASIGN_PORTAL_341",
+        "source_sha256": "353ebc867b0eb50280970c5df80e4acf43f94c0fe0c64056b73b1228e3410b54",
+        "frames": 39,
+        "fps": 14.985014985014985,
+        "hands": {
+          "left": {
+            "coverage": 0.9487179487179487,
+            "longest_missing_ms": 67,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "353ebc867b0eb50280970c5df80e4acf43f94c0fe0c64056b73b1228e3410b54.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/341.mp4",
+        "accuracy_validated": false
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "phrase": "Je veux apprendre la langue des signes.",
+    "requested_concepts": [
+      "je",
+      "vouloir",
+      "apprendre",
+      "langue",
+      "signe"
+    ],
+    "missing_or_ambiguous": [],
+    "words": [
+      {
+        "concept": "je",
+        "gloss": "JE",
+        "source_id": "DICTASIGN_PORTAL_529",
+        "source_sha256": "9e84042c64375b05551996fe536b2a8723a377fddbce31c9200c35b8f2c74c06",
+        "frames": 31,
+        "fps": 14.985014985014985,
+        "hands": {
+          "left": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "9e84042c64375b05551996fe536b2a8723a377fddbce31c9200c35b8f2c74c06.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/529.mp4",
+        "accuracy_validated": false
+      },
+      {
+        "concept": "vouloir",
+        "gloss": "VOULOIR",
+        "source_id": "DICTASIGN_PORTAL_986",
+        "source_sha256": "37c4b3d929e26d38824d9de089b9b243586835b87c4df3ad856d5404e7e7c494",
+        "frames": 81,
+        "fps": 25.0,
+        "hands": {
+          "left": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 0.9876543209876543,
+            "longest_missing_ms": 40,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 1
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "37c4b3d929e26d38824d9de089b9b243586835b87c4df3ad856d5404e7e7c494.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/986.mp4",
+        "accuracy_validated": false
+      },
+      {
+        "concept": "apprendre",
+        "gloss": "APPRENDRE",
+        "source_id": "DICTASIGN_PORTAL_482",
+        "source_sha256": "f93792a9e76ca4247cc5bb55fbdf39cfcce73ea018ff24033dece49612c99d45",
+        "frames": 43,
+        "fps": 14.985014985014985,
+        "hands": {
+          "left": {
+            "coverage": 0.6046511627906976,
+            "longest_missing_ms": 735,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 0.5813953488372093,
+            "longest_missing_ms": 801,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "f93792a9e76ca4247cc5bb55fbdf39cfcce73ea018ff24033dece49612c99d45.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/482.mp4",
+        "accuracy_validated": false
+      },
+      {
+        "concept": "langue",
+        "gloss": "LANGUE",
+        "source_id": "DICTASIGN_PORTAL_930",
+        "source_sha256": "551c477f338ebdb0ded620213f121b1e9857dbc99d7fb2c1bd3d7acfb72ae80f",
+        "frames": 25,
+        "fps": 14.985014985014985,
+        "hands": {
+          "left": {
+            "coverage": 0.92,
+            "longest_missing_ms": 133,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "551c477f338ebdb0ded620213f121b1e9857dbc99d7fb2c1bd3d7acfb72ae80f.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/930.mp4",
+        "accuracy_validated": false
+      },
+      {
+        "concept": "signe",
+        "gloss": "SIGNE",
+        "source_id": "DICTASIGN_PORTAL_788",
+        "source_sha256": "fd77d287f892c79a29a3d2f7f5598fddaf8f3a6d971756282899d41c819ce84d",
+        "frames": 77,
+        "fps": 25.0,
+        "hands": {
+          "left": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "fd77d287f892c79a29a3d2f7f5598fddaf8f3a6d971756282899d41c819ce84d.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/788.mp4",
+        "accuracy_validated": false
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "phrase": "Je cherche mon téléphone portable.",
+    "requested_concepts": [
+      "je",
+      "chercher",
+      "mon",
+      "téléphone portable"
+    ],
+    "missing_or_ambiguous": [],
+    "words": [
+      {
+        "concept": "je",
+        "gloss": "JE",
+        "source_id": "DICTASIGN_PORTAL_529",
+        "source_sha256": "9e84042c64375b05551996fe536b2a8723a377fddbce31c9200c35b8f2c74c06",
+        "frames": 31,
+        "fps": 14.985014985014985,
+        "hands": {
+          "left": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "9e84042c64375b05551996fe536b2a8723a377fddbce31c9200c35b8f2c74c06.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/529.mp4",
+        "accuracy_validated": false
+      },
+      {
+        "concept": "chercher",
+        "gloss": "CHERCHER",
+        "source_id": "CAPTURE_195ec46a9fc55bdf",
+        "source_sha256": "166ace5e6a37c0800c68410f1bf874ca0d0ac2a4483ab47e62852101b47065b4",
+        "frames": 39,
+        "fps": 14.0,
+        "hands": {
+          "left": {
+            "coverage": 0.9743589743589743,
+            "longest_missing_ms": 71,
+            "missing_with_raised_visible_wrist": 1,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 0.9743589743589743,
+            "longest_missing_ms": 72,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "review_no_raw_baseline",
+        "video": "166ace5e6a37c0800c68410f1bf874ca0d0ac2a4483ab47e62852101b47065b4.mp4",
+        "source_url": "https://commons.wikimedia.org/wiki/File%3ALL-Q33302_%28fsl%29-Laura_Jauvert-Chercher.webm",
+        "accuracy_validated": false
+      },
+      {
+        "concept": "mon",
+        "gloss": "MON",
+        "source_id": "DICTASIGN_PORTAL_562",
+        "source_sha256": "7922d188cd0a94a7e5e48ce7e7fe7d1fd1dc455e33ab391227f554c5ab28dfe3",
+        "frames": 30,
+        "fps": 14.985014985014985,
+        "hands": {
+          "left": {
+            "coverage": 0.8666666666666667,
+            "longest_missing_ms": 134,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "7922d188cd0a94a7e5e48ce7e7fe7d1fd1dc455e33ab391227f554c5ab28dfe3.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/562.mp4",
+        "accuracy_validated": false
+      },
+      {
+        "concept": "téléphone portable",
+        "gloss": "TELEPHONE PORTABLE",
+        "source_id": "DICTASIGN_PORTAL_546",
+        "source_sha256": "5aeaf6c910d58e41e7000968e776f96d9fa83955c83565ba1899c5eef02091ba",
+        "frames": 62,
+        "fps": 25.0,
+        "hands": {
+          "left": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "5aeaf6c910d58e41e7000968e776f96d9fa83955c83565ba1899c5eef02091ba.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/546.mp4",
+        "accuracy_validated": false
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "phrase": "Je vais au cinéma demain.",
+    "requested_concepts": [
+      "je",
+      "aller",
+      "cinéma",
+      "demain"
+    ],
+    "missing_or_ambiguous": [],
+    "words": [
+      {
+        "concept": "je",
+        "gloss": "JE",
+        "source_id": "DICTASIGN_PORTAL_529",
+        "source_sha256": "9e84042c64375b05551996fe536b2a8723a377fddbce31c9200c35b8f2c74c06",
+        "frames": 31,
+        "fps": 14.985014985014985,
+        "hands": {
+          "left": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "9e84042c64375b05551996fe536b2a8723a377fddbce31c9200c35b8f2c74c06.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/529.mp4",
+        "accuracy_validated": false
+      },
+      {
+        "concept": "aller",
+        "gloss": "ALLER",
+        "source_id": "DICTASIGN_PORTAL_376",
+        "source_sha256": "c264ef4dca36207caffa170c6094423f69e24885ff550a0d141837b1161c74dd",
+        "frames": 40,
+        "fps": 14.985014985014985,
+        "hands": {
+          "left": {
+            "coverage": 0.6,
+            "longest_missing_ms": 735,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 0.575,
+            "longest_missing_ms": 801,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "c264ef4dca36207caffa170c6094423f69e24885ff550a0d141837b1161c74dd.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/376.mp4",
+        "accuracy_validated": false
+      },
+      {
+        "concept": "cinéma",
+        "gloss": "CINEMA",
+        "source_id": "DICTASIGN_PORTAL_151",
+        "source_sha256": "b1772fe9a152d328721df26cbd776a5bde5e0af7af672e1c08ab6be8708dd850",
+        "frames": 30,
+        "fps": 14.985014985014985,
+        "hands": {
+          "left": {
+            "coverage": 0.6,
+            "longest_missing_ms": 601,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 0.6333333333333333,
+            "longest_missing_ms": 534,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "b1772fe9a152d328721df26cbd776a5bde5e0af7af672e1c08ab6be8708dd850.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/151.mp4",
+        "accuracy_validated": false
+      },
+      {
+        "concept": "demain",
+        "gloss": "DEMAIN",
+        "source_id": "DICTASIGN_PORTAL_929",
+        "source_sha256": "6670056fb0a9123c6b41c36c3e006fc63e65d8eac8e5a5a81d660b07ec13de6f",
+        "frames": 30,
+        "fps": 14.985014985014985,
+        "hands": {
+          "left": {
+            "coverage": 0.0,
+            "longest_missing_ms": 2002,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 0.6,
+            "longest_missing_ms": 534,
+            "missing_with_raised_visible_wrist": 1,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "6670056fb0a9123c6b41c36c3e006fc63e65d8eac8e5a5a81d660b07ec13de6f.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/929.mp4",
+        "accuracy_validated": false
+      }
+    ]
+  },
+  {
+    "id": 13,
+    "phrase": "Mon père travaille aujourd'hui.",
+    "requested_concepts": [
+      "mon",
+      "père",
+      "travail",
+      "aujourd'hui"
+    ],
+    "missing_or_ambiguous": [],
+    "words": [
+      {
+        "concept": "mon",
+        "gloss": "MON",
+        "source_id": "DICTASIGN_PORTAL_562",
+        "source_sha256": "7922d188cd0a94a7e5e48ce7e7fe7d1fd1dc455e33ab391227f554c5ab28dfe3",
+        "frames": 30,
+        "fps": 14.985014985014985,
+        "hands": {
+          "left": {
+            "coverage": 0.8666666666666667,
+            "longest_missing_ms": 134,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "7922d188cd0a94a7e5e48ce7e7fe7d1fd1dc455e33ab391227f554c5ab28dfe3.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/562.mp4",
+        "accuracy_validated": false
+      },
+      {
+        "concept": "père",
+        "gloss": "PERE",
+        "source_id": "DICTASIGN_PORTAL_317",
+        "source_sha256": "0243510845af149f8b01c40699f41900e698bc26df9b1ae160bdd17093ba363e",
+        "frames": 62,
+        "fps": 25.0,
+        "hands": {
+          "left": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "0243510845af149f8b01c40699f41900e698bc26df9b1ae160bdd17093ba363e.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/317.mp4",
+        "accuracy_validated": false
+      },
+      {
+        "concept": "travail",
+        "gloss": "TRAVAIL",
+        "source_id": "DICTASIGN_PORTAL_1032",
+        "source_sha256": "42fb5ea31a565b6439ca976a48ab3d94836ead2fa58db67e81bfb3131d2f2cc2",
+        "frames": 47,
+        "fps": 25.0,
+        "hands": {
+          "left": {
+            "coverage": 0.6382978723404256,
+            "longest_missing_ms": 400,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 0.7021276595744681,
+            "longest_missing_ms": 280,
+            "missing_with_raised_visible_wrist": 1,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "review_regression_or_incomparable",
+        "video": "42fb5ea31a565b6439ca976a48ab3d94836ead2fa58db67e81bfb3131d2f2cc2.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/1032.mp4",
+        "accuracy_validated": false
+      },
+      {
+        "concept": "aujourd'hui",
+        "gloss": "AUJOURD HUI",
+        "source_id": "DICTASIGN_PORTAL_925",
+        "source_sha256": "76d2509a05543ec95d4aefb71ddeee75e46b14cc763739fad96a1d929b91578e",
+        "frames": 34,
+        "fps": 14.985014985014985,
+        "hands": {
+          "left": {
+            "coverage": 0.38235294117647056,
+            "longest_missing_ms": 868,
+            "missing_with_raised_visible_wrist": 1,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 0.4411764705882353,
+            "longest_missing_ms": 734,
+            "missing_with_raised_visible_wrist": 1,
+            "roi_review_frames": 1
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "76d2509a05543ec95d4aefb71ddeee75e46b14cc763739fad96a1d929b91578e.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/925.mp4",
+        "accuracy_validated": false
+      }
+    ]
+  },
+  {
+    "id": 14,
+    "phrase": "Je veux du café.",
+    "requested_concepts": [
+      "je",
+      "vouloir",
+      "café"
+    ],
+    "missing_or_ambiguous": [],
+    "words": [
+      {
+        "concept": "je",
+        "gloss": "JE",
+        "source_id": "DICTASIGN_PORTAL_529",
+        "source_sha256": "9e84042c64375b05551996fe536b2a8723a377fddbce31c9200c35b8f2c74c06",
+        "frames": 31,
+        "fps": 14.985014985014985,
+        "hands": {
+          "left": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "9e84042c64375b05551996fe536b2a8723a377fddbce31c9200c35b8f2c74c06.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/529.mp4",
+        "accuracy_validated": false
+      },
+      {
+        "concept": "vouloir",
+        "gloss": "VOULOIR",
+        "source_id": "DICTASIGN_PORTAL_986",
+        "source_sha256": "37c4b3d929e26d38824d9de089b9b243586835b87c4df3ad856d5404e7e7c494",
+        "frames": 81,
+        "fps": 25.0,
+        "hands": {
+          "left": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 0.9876543209876543,
+            "longest_missing_ms": 40,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 1
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "37c4b3d929e26d38824d9de089b9b243586835b87c4df3ad856d5404e7e7c494.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/986.mp4",
+        "accuracy_validated": false
+      },
+      {
+        "concept": "café",
+        "gloss": "CAFE",
+        "source_id": "DICTASIGN_PORTAL_163",
+        "source_sha256": "ac7a04a1599950e6b4d890cce194d93a964e2535a37a743d052851aeb1e59c62",
+        "frames": 28,
+        "fps": 14.985014985014985,
+        "hands": {
+          "left": {
+            "coverage": 0.5714285714285714,
+            "longest_missing_ms": 534,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 0.6071428571428571,
+            "longest_missing_ms": 468,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "ac7a04a1599950e6b4d890cce194d93a964e2535a37a743d052851aeb1e59c62.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/163.mp4",
+        "accuracy_validated": false
+      }
+    ]
+  },
+  {
+    "id": 15,
+    "phrase": "Je veux abandonner.",
+    "requested_concepts": [
+      "je",
+      "vouloir",
+      "abandonner"
+    ],
+    "missing_or_ambiguous": [],
+    "words": [
+      {
+        "concept": "je",
+        "gloss": "JE",
+        "source_id": "DICTASIGN_PORTAL_529",
+        "source_sha256": "9e84042c64375b05551996fe536b2a8723a377fddbce31c9200c35b8f2c74c06",
+        "frames": 31,
+        "fps": 14.985014985014985,
+        "hands": {
+          "left": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "9e84042c64375b05551996fe536b2a8723a377fddbce31c9200c35b8f2c74c06.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/529.mp4",
+        "accuracy_validated": false
+      },
+      {
+        "concept": "vouloir",
+        "gloss": "VOULOIR",
+        "source_id": "DICTASIGN_PORTAL_986",
+        "source_sha256": "37c4b3d929e26d38824d9de089b9b243586835b87c4df3ad856d5404e7e7c494",
+        "frames": 81,
+        "fps": 25.0,
+        "hands": {
+          "left": {
+            "coverage": 1.0,
+            "longest_missing_ms": 0,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 0.9876543209876543,
+            "longest_missing_ms": 40,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 1
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "37c4b3d929e26d38824d9de089b9b243586835b87c4df3ad856d5404e7e7c494.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/986.mp4",
+        "accuracy_validated": false
+      },
+      {
+        "concept": "abandonner",
+        "gloss": "ABANDONNER",
+        "source_id": "DICTASIGN_PORTAL_726",
+        "source_sha256": "6cd99bc80a99925c47721f59b5dbdb4ef28aa279703c80e0c85da91b8ccd5843",
+        "frames": 34,
+        "fps": 14.985014985014985,
+        "hands": {
+          "left": {
+            "coverage": 0.5294117647058824,
+            "longest_missing_ms": 534,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 0
+          },
+          "right": {
+            "coverage": 0.5294117647058824,
+            "longest_missing_ms": 534,
+            "missing_with_raised_visible_wrist": 0,
+            "roi_review_frames": 1
+          }
+        },
+        "gate": "no_observation_loss",
+        "video": "6cd99bc80a99925c47721f59b5dbdb4ef28aa279703c80e0c85da91b8ccd5843.mp4",
+        "source_url": "https://www.sign-lang.uni-hamburg.de/dicta-sign/portal/concepts/lsf/726.mp4",
+        "accuracy_validated": false
+      }
+    ]
+  }
+]
