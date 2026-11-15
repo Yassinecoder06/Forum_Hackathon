@@ -2,6 +2,16 @@
 
 Studio local de recherche pour explorer du texte français, des mouvements LSF capturés et un avatar 3D. Le lecteur fonctionne avec des vidéos réelles ; la traduction générale français → LSF n’est pas résolue.
 
+**[Premier prototype en ligne — en cours de développement](https://forum.yassinejemmali.me/)** : cette version n’est pas encore finalisée ; certaines fonctionnalités restent expérimentales.
+
+### Démonstration vidéo
+
+La vidéo ci-dessous montre la vidéo source et le squelette suivi. Cliquez sur l’aperçu pour ouvrir la vidéo MP4 complète.
+
+[![Voir la démonstration vidéo de la vidéo source et du squelette suivi](artifacts/demos/comparaison_video_squelette.gif)](artifacts/demos/comparaison_video_squelette.mp4)
+
+[Ouvrir ou télécharger la vidéo MP4](artifacts/demos/comparaison_video_squelette.mp4).
+
 ## Essayer
 
 ```bash
@@ -14,6 +24,12 @@ make dev
 Ouvrir **http://127.0.0.1:5173**. Dans Studio, essayer « Bonjour ». Bibliothèque permet de sélectionner un mouvement, de comparer sa vidéo source et de télécharger un aperçu WebM. Capturer accepte une vidéo autorisée, un JSON de mouvements ou un export de landmarks Animics. Recherche affiche les expériences terminées et permet d’interroger les checkpoints locaux.
 
 La session actuelle contient **1 447 mouvements réels** : 1 007 captures Dicta-Sign acceptées et les 440 mouvements précédents. **Les 1 025 vidéos LSF publiques du portail Dicta-Sign ont été téléchargées et capturées** ; 18 restent hors lookup pour revue du suivi. Le [pipeline Dicta-Sign → glosses → poses](docs/DICTASIGN_PIPELINE.md) fournit les commandes, les résultats vérifiés et le diagramme. Dans Studio, essayer **Bonjour merci**, puis ouvrir **Exporter la chaîne glosses → poses** pour obtenir un `.pose` standard et une vidéo squelette via le véritable moteur upstream.
+
+## Voir la bibliothèque des mots et signes
+
+Lancer l’application avec `make dev`, ouvrir **http://127.0.0.1:5173**, puis choisir **Bibliothèque** dans le menu de Studio. La recherche filtre les concepts français ; chaque entrée permet de consulter la glose, la source et le mouvement associé.
+
+Pour parcourir les listes sources directement : [catalogue lexical Dicta-Sign — 1 025 références vidéo, dont 1 007 captures admises](data/source_inventory/dictasign_lsf.json) et [inventaire des signes LSF de Wikimedia Commons — 447 entrées](data/source_inventory/commons_lsf.json). Les captures en revue qualité ne sont pas disponibles dans la bibliothèque consultable.
 
 Les vidéos et dérivés restent locaux dans `.runtime/`. Sur un nouveau checkout, seul Bonjour est livré ; pour reconstruire les captures Dicta-Sign :
 
@@ -43,21 +59,6 @@ L’inventaire contient 447 concepts France-LSF avec licences par fichier, créd
 ## Composition assistée et revue
 
 Dans Studio, ouvrir « Préparer et corriger les concepts ». On peut sélectionner les signes réels, les réordonner, prévisualiser la sélection et télécharger une fiche JSON pour une revue linguistique. Ces fiches restent des brouillons, jamais des données expertes automatiquement approuvées. Le modèle de proposition Qwen a été retiré à la demande de l’utilisateur. La sélection reste manuelle, avec recherche dans le dictionnaire français et sens non représenté explicite.
-
-## Résultats mesurés
-
-128 paires de recherche issues d’annotations publiées UD/SUD STKAutogramm : **61 entraînement / 28 validation / 39 test**. Les traductions françaises libres ne forment pas un corpus parallèle validé. Les vidéos lexicales ne deviennent jamais des paires de phrases inventées. Zéro approbation linguistique locale.
-
-| Expérience | Exact match test | WER test | BLEU |
-|---|---:|---:|---:|
-| T5-small LoRA CPU, smoke | 0 % | 207,28 % | 0 |
-| mT5-small LoRA RTX 4060, 8 époques | 0 % | 100 % | 0 |
-| mT5-small, sélection par validation, arrêt à 21 époques | 0 % | 517,96 % | 0,042 |
-| Retrieval sur le corpus élargi | 0 % | 120,87 % | 0,301 |
-
-Ces modèles **ne sont pas des traducteurs utilisables**. Le troisième essai réduit la perte de validation mais produit des répétitions ; son test est une réutilisation d’un test d’ingénierie, pas une confirmation indépendante. Aucun résultat état de l’art n’est revendiqué. Voir [l’investigation](research/ADAPTATION_INVESTIGATION.md), [la carte des données](research/DATASET_CARD.md), [les résultats](research/IMPLEMENTATION_STATUS.md) et [les commandes de reproduction](training/README.md).
-
-Le PDF fourni `research_paper.pdf` a maintenant été lu intégralement. La [comparaison vérifiée](research/PAPER_B_VERIFIED_REVIEW.md) distingue les composants du papier de notre implémentation ; un CGAN à cinq points est maintenant entraîné pour une expérience intra-signe, sans activation comme modèle inter-signes. Les anciennes mentions d’un PDF absent décrivent un état antérieur et sont corrigées par cette revue. Le lexique public Dicta-Sign a depuis été capturé pour aperçu local ; les corpus continus institutionnels restent distincts, sans contournement d’accès.
 
 ## Vérification
 
