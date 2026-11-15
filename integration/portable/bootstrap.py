@@ -40,6 +40,8 @@ def relocate():
             if updated!=text:path.write_text(updated)
         for path in (env/'bin').glob('*'):
             if path.is_file():path.chmod(path.stat().st_mode|0o111)
+    for loader in (ROOT/'runtimes/ffprobe/lib').glob('ld-linux*'):
+        if loader.is_file():loader.chmod(loader.stat().st_mode|0o111)
     for folder in ['runtimes/python311/bin','runtimes/python313/bin','runtimes/ffprobe','portable/bin']:
         for path in (ROOT/folder).glob('*'):
             if path.is_file():path.chmod(path.stat().st_mode|0o111)

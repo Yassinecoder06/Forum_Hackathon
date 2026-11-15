@@ -138,6 +138,9 @@ def archive(stage,output,wait_pose=False):
     result={'zip':str(output),'bytes':output.stat().st_size,'sha256':digest(output),'files':len(paths),'uncompressed_bytes':total}
     output.with_suffix('.sha256').write_text(result['sha256']+'  '+output.name+'\n')
     output.with_suffix('.json').write_text(json.dumps(result,indent=2))
+    copy_file(ROOT/'integration/portable/restore.py',output.parent/'BOOTSTRAP.py')
+    copy_file(stage/'agent_prompt.md',output.parent/'agent_prompt.md')
+    copy_file(stage/'START_HERE.txt',output.parent/'START_HERE.txt')
     print('ARCHIVE_READY',json.dumps(result),flush=True)
 
 
