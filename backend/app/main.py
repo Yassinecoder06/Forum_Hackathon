@@ -3,7 +3,6 @@ import io
 import json
 import os
 from pathlib import Path
-import re
 import sqlite3
 import uuid
 import wave
@@ -16,6 +15,8 @@ from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 from typing import Literal
 from .schemas import GlossEntry, MotionAsset, TranslationDraft, AnimationPlan, AudioFeatures, ReviewRecord
+
+from .services.text_lookup import lookup_text, mode
 
 ROOT = Path(__file__).resolve().parents[2]
 app = FastAPI(title='SignaCulture experimental API')
@@ -38,7 +39,7 @@ class ReviewRequest(BaseModel):
 @app.middleware('http')
 async def identify_fallback(request, call_next):
     response = await call_next(request)
-    response.headers['X-NLP-Backend'] = 'unicode-regex-fallback-no-lemmatizer'
+    response.headers['X-NLP-Backend'] = mode()
     return response
 
 def registry():
@@ -73,7 +74,7 @@ def asset(root, m):
             for v in f['joints'].values():
                 if len(v) != 3 or not all(np.isfinite(v)):
                     raise ValueError('Invalid coordinates')
-    except (ValueError, KeyError, AssertionError, TypeError):
+    except (ValueError, KeyError, TypeError, OSError, IndexError, AttributeError):
         raise HTTPException(503, 'Invalid motion file')
     return p
 
@@ -84,9 +85,6 @@ def db():
     c.execute('CREATE TABLE IF NOT EXISTS plans (id TEXT PRIMARY KEY, body TEXT)')
     c.execute('CREATE TABLE IF NOT EXISTS reviews (plan_id TEXT, body TEXT)')
     return c
-
-TOKEN = re.compile(r"[^\W_]+", re.UNICODE)
-def words(s): return TOKEN.findall(s.casefold().replace('’', "'"))
 
 @app.get('/health')
 def health(): return {'status': 'ok'}
@@ -118,26 +116,7 @@ def lookup(body: TextRequest):
     if not isinstance(text, str) or not text.strip() or len(text) > 10000:
         raise HTTPException(422, 'text must contain 1–10000 characters')
     _, entries, _ = registry()
-    tokens = TOKEN.findall(text)
-    normalized = words(text)
-    candidates = []
-    for g in entries:
-        for phrase in [g.concept_fr, *g.aliases]:
-            w = words(phrase)
-            if w: candidates.append((w, g))
-    candidates.sort(key=lambda x: -len(x[0]))
-    sequence, unknowns, i = [], [], 0
-    while i < len(tokens):
-        matches = [(w, g) for w, g in candidates if normalized[i:i+len(w)] == w]
-        if matches:
-            size = len(matches[0][0])
-            best = {g.gloss_id: g for w, g in matches if len(w) == size}
-            if len(best) == 1:
-                sequence.append(next(iter(best.values())))
-                i += size
-                continue
-        unknowns.append(tokens[i]); i += 1
-    return dict(source_text=text, tokens=tokens, lemmas=normalized, gloss_sequence=sequence, unknowns=unknowns, linguistic_review='pending', translation_validated=False)
+    return lookup_text(text, entries)
 
 @app.post('/compose-animation', response_model=AnimationPlan)
 def compose(body: TextRequest):
