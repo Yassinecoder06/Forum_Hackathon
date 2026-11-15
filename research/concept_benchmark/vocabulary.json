@@ -1,0 +1,1762 @@
+[
+  {
+    "id": "LSF_CAPTURE_002491ef02e55d74",
+    "concept": "snowboard"
+  },
+  {
+    "id": "LSF_CAPTURE_00432d29eb435712",
+    "concept": "attention"
+  },
+  {
+    "id": "LSF_CAPTURE_00532012a1535415",
+    "concept": "salle"
+  },
+  {
+    "id": "LSF_CAPTURE_012a6a8454745aa6",
+    "concept": "aix"
+  },
+  {
+    "id": "LSF_CAPTURE_013b5b7f4be651ce",
+    "concept": "paramètre"
+  },
+  {
+    "id": "LSF_CAPTURE_01996cb9a5295971",
+    "concept": "centre ville"
+  },
+  {
+    "id": "LSF_CAPTURE_01a85cab6e375e9b",
+    "concept": "psychologue"
+  },
+  {
+    "id": "LSF_CAPTURE_024af3ff4583531c",
+    "concept": "dialoguer"
+  },
+  {
+    "id": "LSF_CAPTURE_044f2d11e4ee5225",
+    "concept": "week-end"
+  },
+  {
+    "id": "LSF_CAPTURE_04621cdad0b859e8",
+    "concept": "marcher"
+  },
+  {
+    "id": "LSF_CAPTURE_05702474bf295fc7",
+    "concept": "concentrer"
+  },
+  {
+    "id": "LSF_CAPTURE_0571c065fe265a3f",
+    "concept": "chercher les ennuis"
+  },
+  {
+    "id": "LSF_CAPTURE_05836d988bef5cba",
+    "concept": "vitrolle"
+  },
+  {
+    "id": "LSF_CAPTURE_05aa4b9c388a589b",
+    "concept": "ami·e·s"
+  },
+  {
+    "id": "LSF_CAPTURE_060032b2a29350c7",
+    "concept": "soleil"
+  },
+  {
+    "id": "LSF_CAPTURE_06b0372b27fd5395",
+    "concept": "école"
+  },
+  {
+    "id": "LSF_CAPTURE_07042424c4f55305",
+    "concept": "mettre à la porte"
+  },
+  {
+    "id": "LSF_CAPTURE_07a90077c6a85e4b",
+    "concept": "présenter, montrer"
+  },
+  {
+    "id": "LSF_CAPTURE_084014a7d29b5c88",
+    "concept": "bien"
+  },
+  {
+    "id": "LSF_CAPTURE_0960a2c05f6e518a",
+    "concept": "camion"
+  },
+  {
+    "id": "LSF_CAPTURE_09ca80bbd38d5629",
+    "concept": "tennis"
+  },
+  {
+    "id": "LSF_CAPTURE_0a8928859bf95d0e",
+    "concept": "bretagne"
+  },
+  {
+    "id": "LSF_CAPTURE_0b13c5f1424d5337",
+    "concept": "comprendre"
+  },
+  {
+    "id": "LSF_CAPTURE_0b21946dc3a65a56",
+    "concept": "vieu"
+  },
+  {
+    "id": "LSF_CAPTURE_0b8edea957165aa7",
+    "concept": "grand-mère"
+  },
+  {
+    "id": "LSF_CAPTURE_0c597f0b9d34516b",
+    "concept": "roux"
+  },
+  {
+    "id": "LSF_CAPTURE_0d6af637d2465d69",
+    "concept": "qui ?"
+  },
+  {
+    "id": "LSF_CAPTURE_0d77bca304ce51d6",
+    "concept": "vacances"
+  },
+  {
+    "id": "LSF_CAPTURE_0d7e64dd617e5a99",
+    "concept": "aller"
+  },
+  {
+    "id": "LSF_CAPTURE_0eb5ab80dbba59b9",
+    "concept": "montgolfière"
+  },
+  {
+    "id": "LSF_CAPTURE_0f6da1ab275d5572",
+    "concept": "commencer"
+  },
+  {
+    "id": "LSF_CAPTURE_1007e1976ad85a01",
+    "concept": "souvent"
+  },
+  {
+    "id": "LSF_CAPTURE_10e08413a9ef529d",
+    "concept": "soigner"
+  },
+  {
+    "id": "LSF_CAPTURE_111c94fa37435365",
+    "concept": "conférence pour les sourds"
+  },
+  {
+    "id": "LSF_CAPTURE_1123cc5118725ba0",
+    "concept": "retard"
+  },
+  {
+    "id": "LSF_CAPTURE_112b458fa88b5439",
+    "concept": "campagne"
+  },
+  {
+    "id": "LSF_CAPTURE_11614f04d93e5267",
+    "concept": "voler"
+  },
+  {
+    "id": "LSF_CAPTURE_122861d1a2f45b31",
+    "concept": "gâteau"
+  },
+  {
+    "id": "LSF_CAPTURE_129ee9dee3485c34",
+    "concept": "oie"
+  },
+  {
+    "id": "LSF_CAPTURE_147831ca82d55235",
+    "concept": "courir"
+  },
+  {
+    "id": "LSF_CAPTURE_14c20cdbe486532b",
+    "concept": "comment"
+  },
+  {
+    "id": "LSF_CAPTURE_155e80788e6e5611",
+    "concept": "terrible"
+  },
+  {
+    "id": "LSF_CAPTURE_15c54478275652e3",
+    "concept": "sympathique"
+  },
+  {
+    "id": "LSF_CAPTURE_163738885d1b51f4",
+    "concept": "chapeau"
+  },
+  {
+    "id": "LSF_CAPTURE_171212516a845c16",
+    "concept": "foncé"
+  },
+  {
+    "id": "LSF_CAPTURE_173dded712125e61",
+    "concept": "mer"
+  },
+  {
+    "id": "LSF_CAPTURE_184367a23f515b8c",
+    "concept": "méchant"
+  },
+  {
+    "id": "LSF_CAPTURE_18f89ab1e98b59d1",
+    "concept": "nager"
+  },
+  {
+    "id": "LSF_CAPTURE_194aff005b0354f5",
+    "concept": "rendez-vous"
+  },
+  {
+    "id": "LSF_CAPTURE_195ec46a9fc55bdf",
+    "concept": "chercher"
+  },
+  {
+    "id": "LSF_CAPTURE_197c907390885ad9",
+    "concept": "petits-enfants"
+  },
+  {
+    "id": "LSF_CAPTURE_19a07fce89bb5653",
+    "concept": "casser"
+  },
+  {
+    "id": "LSF_CAPTURE_19c6564bab3850d7",
+    "concept": "éducateur"
+  },
+  {
+    "id": "LSF_CAPTURE_1a88fe8688d9549c",
+    "concept": "saisons (de l'année)"
+  },
+  {
+    "id": "LSF_CAPTURE_1ab8d6763f9e5678",
+    "concept": "détail"
+  },
+  {
+    "id": "LSF_CAPTURE_1c4c4f53ce905bd0",
+    "concept": "patin à roulettes"
+  },
+  {
+    "id": "LSF_CAPTURE_1e699ee9d1155a8a",
+    "concept": "tortue de mer"
+  },
+  {
+    "id": "LSF_CAPTURE_1f2f16abd008587c",
+    "concept": "amour"
+  },
+  {
+    "id": "LSF_CAPTURE_1f4a40ea08d5587a",
+    "concept": "pullover"
+  },
+  {
+    "id": "LSF_CAPTURE_1fb48763cd675196",
+    "concept": "adorer"
+  },
+  {
+    "id": "LSF_CAPTURE_20b9972999d751e4",
+    "concept": "oumanie (?)"
+  },
+  {
+    "id": "LSF_CAPTURE_20fac29b6f3f5d07",
+    "concept": "nombreux"
+  },
+  {
+    "id": "LSF_CAPTURE_210d3b930199588f",
+    "concept": "super"
+  },
+  {
+    "id": "LSF_CAPTURE_21883cb532a15139",
+    "concept": "vert"
+  },
+  {
+    "id": "LSF_CAPTURE_227e609952465e0b",
+    "concept": "montagne"
+  },
+  {
+    "id": "LSF_CAPTURE_2284babaa782579b",
+    "concept": "serré"
+  },
+  {
+    "id": "LSF_CAPTURE_22c0f9c00a2c5a0b",
+    "concept": "entendant"
+  },
+  {
+    "id": "LSF_CAPTURE_23417deb29f35d64",
+    "concept": "se taire"
+  },
+  {
+    "id": "LSF_CAPTURE_234ec4ead37f525d",
+    "concept": "fêter"
+  },
+  {
+    "id": "LSF_CAPTURE_239015f7220a5041",
+    "concept": "cours"
+  },
+  {
+    "id": "LSF_CAPTURE_23a9c6bb4b495ae1",
+    "concept": "papier"
+  },
+  {
+    "id": "LSF_CAPTURE_23c0efc87b875b14",
+    "concept": "soeur"
+  },
+  {
+    "id": "LSF_CAPTURE_23d386975d765cad",
+    "concept": "mauvais"
+  },
+  {
+    "id": "LSF_CAPTURE_23ddf8c070c25789",
+    "concept": "adolescent"
+  },
+  {
+    "id": "LSF_CAPTURE_23f12a2e4b7e594f",
+    "concept": "roller"
+  },
+  {
+    "id": "LSF_CAPTURE_25e2f84539b05fa0",
+    "concept": "oncle"
+  },
+  {
+    "id": "LSF_CAPTURE_2664aab269155d4d",
+    "concept": "froid"
+  },
+  {
+    "id": "LSF_CAPTURE_26aeddf943a25243",
+    "concept": "tôt"
+  },
+  {
+    "id": "LSF_CAPTURE_26cc22f663de5bbd",
+    "concept": "chaise"
+  },
+  {
+    "id": "LSF_CAPTURE_26d2490481d953c1",
+    "concept": "palme"
+  },
+  {
+    "id": "LSF_CAPTURE_2732faaac6525b90",
+    "concept": "argenté"
+  },
+  {
+    "id": "LSF_CAPTURE_2749d174005c5f56",
+    "concept": "film"
+  },
+  {
+    "id": "LSF_CAPTURE_27bf4ef5f60e55c5",
+    "concept": "élève"
+  },
+  {
+    "id": "LSF_CAPTURE_298076683b8b5ece",
+    "concept": "président de la république"
+  },
+  {
+    "id": "LSF_CAPTURE_29e12f925d2654ff",
+    "concept": "portable"
+  },
+  {
+    "id": "LSF_CAPTURE_2a188b65f30a5c72",
+    "concept": "où ?"
+  },
+  {
+    "id": "LSF_CAPTURE_2a6eb51d7ca15ddf",
+    "concept": "abandonner"
+  },
+  {
+    "id": "LSF_CAPTURE_2a831266a689533a",
+    "concept": "vocabulaire"
+  },
+  {
+    "id": "LSF_CAPTURE_2ab651251bb056e2",
+    "concept": "fils"
+  },
+  {
+    "id": "LSF_CAPTURE_2c71e565e8c15e82",
+    "concept": "poule"
+  },
+  {
+    "id": "LSF_CAPTURE_2cf4a43af7d45ebf",
+    "concept": "chocolatine (pain au chocolat)"
+  },
+  {
+    "id": "LSF_CAPTURE_2dc7638f15825a8f",
+    "concept": "comment dire ?"
+  },
+  {
+    "id": "LSF_CAPTURE_2de9a40ec7f7599e",
+    "concept": "personne"
+  },
+  {
+    "id": "LSF_CAPTURE_2e87d74d2f775ea5",
+    "concept": "boiter"
+  },
+  {
+    "id": "LSF_CAPTURE_30cdc436c71b5a47",
+    "concept": "se rappeler"
+  },
+  {
+    "id": "LSF_CAPTURE_319ea404257f52ab",
+    "concept": "je suis d'accord"
+  },
+  {
+    "id": "LSF_CAPTURE_31fc35cfa2045e6e",
+    "concept": "téléphone"
+  },
+  {
+    "id": "LSF_CAPTURE_32a564c4a53d5e88",
+    "concept": "tout le monde"
+  },
+  {
+    "id": "LSF_CAPTURE_3360b47452bb59b6",
+    "concept": "communiquer"
+  },
+  {
+    "id": "LSF_CAPTURE_341da2feb1345845",
+    "concept": "doré"
+  },
+  {
+    "id": "LSF_CAPTURE_34535fdc988051d7",
+    "concept": "autoroute"
+  },
+  {
+    "id": "LSF_CAPTURE_353e8a9376e55525",
+    "concept": "divorcer"
+  },
+  {
+    "id": "LSF_CAPTURE_357122e2cfc9598e",
+    "concept": "patin à glace"
+  },
+  {
+    "id": "LSF_CAPTURE_36a0b24f7146537f",
+    "concept": "noir"
+  },
+  {
+    "id": "LSF_CAPTURE_37126d50cb8358fd",
+    "concept": "sortie"
+  },
+  {
+    "id": "LSF_CAPTURE_372ef613c58c57d8",
+    "concept": "maîtresse"
+  },
+  {
+    "id": "LSF_CAPTURE_39266e740c135e0d",
+    "concept": "mouton"
+  },
+  {
+    "id": "LSF_CAPTURE_39c822221f0454c1",
+    "concept": "saucisson"
+  },
+  {
+    "id": "LSF_CAPTURE_3b03bd813b185a7a",
+    "concept": "planche à voile"
+  },
+  {
+    "id": "LSF_CAPTURE_3c4327f099bb52d8",
+    "concept": "prêter"
+  },
+  {
+    "id": "LSF_CAPTURE_3c9697fd53515c89",
+    "concept": "paella"
+  },
+  {
+    "id": "LSF_CAPTURE_3cacf8123381566b",
+    "concept": "enfant"
+  },
+  {
+    "id": "LSF_CAPTURE_3d8cdab273d55947",
+    "concept": "escargot"
+  },
+  {
+    "id": "LSF_CAPTURE_3e44dede91ab593a",
+    "concept": "refuser"
+  },
+  {
+    "id": "LSF_CAPTURE_3e6397c977ab573d",
+    "concept": "sourd"
+  },
+  {
+    "id": "LSF_CAPTURE_3e63bc1260905e65",
+    "concept": "poubelle"
+  },
+  {
+    "id": "LSF_CAPTURE_3f80f3a4560a5a83",
+    "concept": "tomber"
+  },
+  {
+    "id": "LSF_CAPTURE_401b780f37645206",
+    "concept": "formation"
+  },
+  {
+    "id": "LSF_CAPTURE_4199b58effa65feb",
+    "concept": "partir"
+  },
+  {
+    "id": "LSF_CAPTURE_4212e538a8c052c0",
+    "concept": "sous-marin"
+  },
+  {
+    "id": "LSF_CAPTURE_43152df3f46059c4",
+    "concept": "diplôme"
+  },
+  {
+    "id": "LSF_CAPTURE_43a621bbbe2d5a30",
+    "concept": "oui"
+  },
+  {
+    "id": "LSF_CAPTURE_4489130dc81e5520",
+    "concept": "tableau"
+  },
+  {
+    "id": "LSF_CAPTURE_44e14c416b47527a",
+    "concept": "se réveiller"
+  },
+  {
+    "id": "LSF_CAPTURE_453b4a1d128b5e53",
+    "concept": "chocolat"
+  },
+  {
+    "id": "LSF_CAPTURE_462df8f6b00a5c0f",
+    "concept": "approcher"
+  },
+  {
+    "id": "LSF_CAPTURE_465746b6982f5859",
+    "concept": "verre de terre"
+  },
+  {
+    "id": "LSF_CAPTURE_46632c85f0e551cf",
+    "concept": "fier"
+  },
+  {
+    "id": "LSF_CAPTURE_46c57c1aaad4546a",
+    "concept": "dormir"
+  },
+  {
+    "id": "LSF_CAPTURE_4804b167aaa55f43",
+    "concept": "poisson"
+  },
+  {
+    "id": "LSF_CAPTURE_483940ae1950548e",
+    "concept": "payer"
+  },
+  {
+    "id": "LSF_CAPTURE_486c6f29b5a45364",
+    "concept": "stagiaire"
+  },
+  {
+    "id": "LSF_CAPTURE_487c4faafca054e1",
+    "concept": "glisser"
+  },
+  {
+    "id": "LSF_CAPTURE_4aa76010aaab5a78",
+    "concept": "clown"
+  },
+  {
+    "id": "LSF_CAPTURE_4c01ed4ec74253e6",
+    "concept": "pont"
+  },
+  {
+    "id": "LSF_CAPTURE_4c07eb07a9bc5360",
+    "concept": "répondre"
+  },
+  {
+    "id": "LSF_CAPTURE_4c55aebd99fc557f",
+    "concept": "pain"
+  },
+  {
+    "id": "LSF_CAPTURE_4c88fe1b75c553cf",
+    "concept": "bonne soirée"
+  },
+  {
+    "id": "LSF_CAPTURE_4c95ee4c371c597c",
+    "concept": "chaud"
+  },
+  {
+    "id": "LSF_CAPTURE_4d0b8403bf745751",
+    "concept": "concombre"
+  },
+  {
+    "id": "LSF_CAPTURE_4db45f0febd75d87",
+    "concept": "veau"
+  },
+  {
+    "id": "LSF_CAPTURE_4eaefde2b49c5eca",
+    "concept": "bébé"
+  },
+  {
+    "id": "LSF_CAPTURE_4eb127f60a2d56c0",
+    "concept": "quoi ?"
+  },
+  {
+    "id": "LSF_CAPTURE_4ec5cb0e9ab451e0",
+    "concept": "canard"
+  },
+  {
+    "id": "LSF_CAPTURE_50205110a42d5251",
+    "concept": "crayon"
+  },
+  {
+    "id": "LSF_CAPTURE_50a40df8b5935d08",
+    "concept": "carotte"
+  },
+  {
+    "id": "LSF_CAPTURE_5145058fe7565855",
+    "concept": "pourquoi ?"
+  },
+  {
+    "id": "LSF_CAPTURE_536265e5ac585f5b",
+    "concept": "taille (mesure)"
+  },
+  {
+    "id": "LSF_CAPTURE_53714a92898c5d7d",
+    "concept": "rencontrer"
+  },
+  {
+    "id": "LSF_CAPTURE_541dec4d43ed53d5",
+    "concept": "réveur"
+  },
+  {
+    "id": "LSF_CAPTURE_544579742c9b5c82",
+    "concept": "concours"
+  },
+  {
+    "id": "LSF_CAPTURE_544c90a43ef75218",
+    "concept": "promenade"
+  },
+  {
+    "id": "LSF_CAPTURE_552876aa85c7533e",
+    "concept": "blanc"
+  },
+  {
+    "id": "LSF_CAPTURE_55dd5124eed85bbf",
+    "concept": "aller chercher"
+  },
+  {
+    "id": "LSF_CAPTURE_596736343030522a",
+    "concept": "moquer"
+  },
+  {
+    "id": "LSF_CAPTURE_5e97ea4fbb95589d",
+    "concept": "nous"
+  },
+  {
+    "id": "LSF_CAPTURE_5f2a96501e105e1c",
+    "concept": "encore"
+  },
+  {
+    "id": "LSF_CAPTURE_5fe81576b76d5b3b",
+    "concept": "participer"
+  },
+  {
+    "id": "LSF_CAPTURE_6029ae8befcb53f2",
+    "concept": "réviser"
+  },
+  {
+    "id": "LSF_CAPTURE_604c54fd4e9854d5",
+    "concept": "j'ai"
+  },
+  {
+    "id": "LSF_CAPTURE_60e39870501055dc",
+    "concept": "bracelet"
+  },
+  {
+    "id": "LSF_CAPTURE_62ec2fa8ea0c5d9d",
+    "concept": "sauf"
+  },
+  {
+    "id": "LSF_CAPTURE_63488f290af05a4e",
+    "concept": "nouvelle"
+  },
+  {
+    "id": "LSF_CAPTURE_63dcc84f34c35182",
+    "concept": "de rien"
+  },
+  {
+    "id": "LSF_CAPTURE_6479ebd3e35f5710",
+    "concept": "son, sa, ses, leurs"
+  },
+  {
+    "id": "LSF_CAPTURE_647f379e8eb5564f",
+    "concept": "montre (accessoire)"
+  },
+  {
+    "id": "LSF_CAPTURE_64ed7f821ae951f7",
+    "concept": "taureau"
+  },
+  {
+    "id": "LSF_CAPTURE_667da840770e5269",
+    "concept": "conférence pour les entendants"
+  },
+  {
+    "id": "LSF_CAPTURE_66a9793b94c55e10",
+    "concept": "avec"
+  },
+  {
+    "id": "LSF_CAPTURE_66e43622d01a59e4",
+    "concept": "derrière"
+  },
+  {
+    "id": "LSF_CAPTURE_67c4a40e9de55779",
+    "concept": "messe"
+  },
+  {
+    "id": "LSF_CAPTURE_68bb7ae53e1350a6",
+    "concept": "frère"
+  },
+  {
+    "id": "LSF_CAPTURE_68e5d03961185cc2",
+    "concept": "au revoir"
+  },
+  {
+    "id": "LSF_CAPTURE_68fcc8ec065753a2",
+    "concept": "mettre"
+  },
+  {
+    "id": "LSF_CAPTURE_69614f76fe185cc9",
+    "concept": "dire"
+  },
+  {
+    "id": "LSF_CAPTURE_6a14a64fd7d551ea",
+    "concept": "aubagne"
+  },
+  {
+    "id": "LSF_CAPTURE_6a6c3e43f6aa53e1",
+    "concept": "espérer"
+  },
+  {
+    "id": "LSF_CAPTURE_6a73c8c56aa8567b",
+    "concept": "banane"
+  },
+  {
+    "id": "LSF_CAPTURE_6bcbb5188528540d",
+    "concept": "route nationale"
+  },
+  {
+    "id": "LSF_CAPTURE_6bd7c21067bf572b",
+    "concept": "dessert"
+  },
+  {
+    "id": "LSF_CAPTURE_6c06cda232d45565",
+    "concept": "moto"
+  },
+  {
+    "id": "LSF_CAPTURE_6c753eb4c7b75795",
+    "concept": "compris"
+  },
+  {
+    "id": "LSF_CAPTURE_6df0e4b4a3e854ae",
+    "concept": "quand ?"
+  },
+  {
+    "id": "LSF_CAPTURE_6e16cb5a113a5eb2",
+    "concept": "bon appétit"
+  },
+  {
+    "id": "LSF_CAPTURE_6e9087cc8cc25b73",
+    "concept": "couscous"
+  },
+  {
+    "id": "LSF_CAPTURE_6f101aaf00b65c35",
+    "concept": "oublier"
+  },
+  {
+    "id": "LSF_CAPTURE_6f91daa9a6c8566c",
+    "concept": "étonner"
+  },
+  {
+    "id": "LSF_CAPTURE_6fb18b57dc72500e",
+    "concept": "corps"
+  },
+  {
+    "id": "LSF_CAPTURE_6ff61b8e2a7a53c5",
+    "concept": "village"
+  },
+  {
+    "id": "LSF_CAPTURE_703f7b395ebe54cf",
+    "concept": "café"
+  },
+  {
+    "id": "LSF_CAPTURE_70befcbf64ae538b",
+    "concept": "cinéma"
+  },
+  {
+    "id": "LSF_CAPTURE_719d80d18d755542",
+    "concept": "polonais (langue)"
+  },
+  {
+    "id": "LSF_CAPTURE_72a08df87e4e5268",
+    "concept": "monsieur"
+  },
+  {
+    "id": "LSF_CAPTURE_72a143c7de3a5897",
+    "concept": "girafe"
+  },
+  {
+    "id": "LSF_CAPTURE_72be39c7ab88518a",
+    "concept": "bonsoir"
+  },
+  {
+    "id": "LSF_CAPTURE_749eae263b885a57",
+    "concept": "cirque"
+  },
+  {
+    "id": "LSF_CAPTURE_74c405b972a15ff2",
+    "concept": "enseigner, apprendre"
+  },
+  {
+    "id": "LSF_CAPTURE_75c132db60425a5a",
+    "concept": "sens (direction)"
+  },
+  {
+    "id": "LSF_CAPTURE_76713a62fc3858e9",
+    "concept": "médecin"
+  },
+  {
+    "id": "LSF_CAPTURE_7879fdd2eda45292",
+    "concept": "rivière"
+  },
+  {
+    "id": "LSF_CAPTURE_78b24357c1e25915",
+    "concept": "silence"
+  },
+  {
+    "id": "LSF_CAPTURE_79de85f2d5bf5296",
+    "concept": "stage"
+  },
+  {
+    "id": "LSF_CAPTURE_7ad4f85b68c15b51",
+    "concept": "bon"
+  },
+  {
+    "id": "LSF_CAPTURE_7ca2d3ca351c53c0",
+    "concept": "aujourd'hui"
+  },
+  {
+    "id": "LSF_CAPTURE_7cf2910d50785b15",
+    "concept": "gap"
+  },
+  {
+    "id": "LSF_CAPTURE_7d97e7ae9208516b",
+    "concept": "midi"
+  },
+  {
+    "id": "LSF_CAPTURE_7dbf6409488a5ec8",
+    "concept": "orange"
+  },
+  {
+    "id": "LSF_CAPTURE_7e8800209e7456f6",
+    "concept": "attendre"
+  },
+  {
+    "id": "LSF_CAPTURE_7eb4d6f53d155cc0",
+    "concept": "rire"
+  },
+  {
+    "id": "LSF_CAPTURE_7ec1004920225743",
+    "concept": "boeuf"
+  },
+  {
+    "id": "LSF_CAPTURE_7f2937cd1ffc551f",
+    "concept": "se moquer"
+  },
+  {
+    "id": "LSF_CAPTURE_7f51d2192c975cd5",
+    "concept": "offrir"
+  },
+  {
+    "id": "LSF_CAPTURE_7f642b013e8e5378",
+    "concept": "pas grave"
+  },
+  {
+    "id": "LSF_CAPTURE_7fe3d02e75f2555a",
+    "concept": "se lever"
+  },
+  {
+    "id": "LSF_CAPTURE_7ff8497c4b715b69",
+    "concept": "phrase"
+  },
+  {
+    "id": "LSF_CAPTURE_8069af08c0fc52f8",
+    "concept": "chat"
+  },
+  {
+    "id": "LSF_CAPTURE_8166bce267a157b9",
+    "concept": "prénom"
+  },
+  {
+    "id": "LSF_CAPTURE_81fc40a3882354fd",
+    "concept": "car"
+  },
+  {
+    "id": "LSF_CAPTURE_824ac8c0f04f5f88",
+    "concept": "bleu"
+  },
+  {
+    "id": "LSF_CAPTURE_830f843356e953eb",
+    "concept": "champignon"
+  },
+  {
+    "id": "LSF_CAPTURE_83165ab1efbc5bad",
+    "concept": "bureau"
+  },
+  {
+    "id": "LSF_CAPTURE_83544c012bdc5f20",
+    "concept": "couleur"
+  },
+  {
+    "id": "LSF_CAPTURE_844157fcd24b5cd9",
+    "concept": "plonger"
+  },
+  {
+    "id": "LSF_CAPTURE_84c49b51bfc35880",
+    "concept": "objet"
+  },
+  {
+    "id": "LSF_CAPTURE_84fa678d2ce952eb",
+    "concept": "bleu marine"
+  },
+  {
+    "id": "LSF_CAPTURE_864bff4b883a516e",
+    "concept": "maintenant"
+  },
+  {
+    "id": "LSF_CAPTURE_87b143e6c398573b",
+    "concept": "riz"
+  },
+  {
+    "id": "LSF_CAPTURE_87d43490c8fa5f77",
+    "concept": "rouge"
+  },
+  {
+    "id": "LSF_CAPTURE_886cec0c9c1350ec",
+    "concept": "première"
+  },
+  {
+    "id": "LSF_CAPTURE_8904879fd1315a46",
+    "concept": "demain"
+  },
+  {
+    "id": "LSF_CAPTURE_89ac499419825331",
+    "concept": "fromage"
+  },
+  {
+    "id": "LSF_CAPTURE_8a2ac3d6603a5905",
+    "concept": "clair"
+  },
+  {
+    "id": "LSF_CAPTURE_8aae35e835d75371",
+    "concept": "porte"
+  },
+  {
+    "id": "LSF_CAPTURE_8c623740b0bc54ff",
+    "concept": "pronom"
+  },
+  {
+    "id": "LSF_CAPTURE_8cad31a3cc6d5253",
+    "concept": "email"
+  },
+  {
+    "id": "LSF_CAPTURE_8d9a985927385039",
+    "concept": "après-midi"
+  },
+  {
+    "id": "LSF_CAPTURE_8e44c595ce1e55c0",
+    "concept": "acheter"
+  },
+  {
+    "id": "LSF_CAPTURE_8ea122ae0359530a",
+    "concept": "foot"
+  },
+  {
+    "id": "LSF_CAPTURE_8ea79000eaf957e9",
+    "concept": "frite"
+  },
+  {
+    "id": "LSF_CAPTURE_8fbd347b67fd5bdf",
+    "concept": "pleurer"
+  },
+  {
+    "id": "LSF_CAPTURE_8fd8690fc7fe55c7",
+    "concept": "sac à main"
+  },
+  {
+    "id": "LSF_CAPTURE_8fee834c57ad5ef8",
+    "concept": "prêt"
+  },
+  {
+    "id": "LSF_CAPTURE_9029b83caaea58ba",
+    "concept": "pâte"
+  },
+  {
+    "id": "LSF_CAPTURE_90a1f3bcc38650f8",
+    "concept": "canapé"
+  },
+  {
+    "id": "LSF_CAPTURE_914f9c3197f05844",
+    "concept": "apercevoir"
+  },
+  {
+    "id": "LSF_CAPTURE_919913d0dbfd561a",
+    "concept": "… ou …"
+  },
+  {
+    "id": "LSF_CAPTURE_91fa9ae7bc525cac",
+    "concept": "coca"
+  },
+  {
+    "id": "LSF_CAPTURE_92a955e0c02e5585",
+    "concept": "marseille"
+  },
+  {
+    "id": "LSF_CAPTURE_92cdf628c03e59b7",
+    "concept": "pomme"
+  },
+  {
+    "id": "LSF_CAPTURE_949d9cd93ade59e6",
+    "concept": "demander"
+  },
+  {
+    "id": "LSF_CAPTURE_94a7693839305014",
+    "concept": "pompier"
+  },
+  {
+    "id": "LSF_CAPTURE_94ba629f03895f76",
+    "concept": "configuration"
+  },
+  {
+    "id": "LSF_CAPTURE_95578c78becf5b21",
+    "concept": "triste"
+  },
+  {
+    "id": "LSF_CAPTURE_955c9148dfdb5ad3",
+    "concept": "croissant"
+  },
+  {
+    "id": "LSF_CAPTURE_95815ff0f0ff5594",
+    "concept": "visuel"
+  },
+  {
+    "id": "LSF_CAPTURE_95aad23b93e7529d",
+    "concept": "souris"
+  },
+  {
+    "id": "LSF_CAPTURE_95b762479de75e1a",
+    "concept": "signaire"
+  },
+  {
+    "id": "LSF_CAPTURE_95cd93174270565c",
+    "concept": "vendre"
+  },
+  {
+    "id": "LSF_CAPTURE_964738fcec1c5241",
+    "concept": "matin"
+  },
+  {
+    "id": "LSF_CAPTURE_9729cb35f1fe5fd4",
+    "concept": "hypnose"
+  },
+  {
+    "id": "LSF_CAPTURE_97ae840d04035db5",
+    "concept": "nièce"
+  },
+  {
+    "id": "LSF_CAPTURE_97bc08d79fca5109",
+    "concept": "dernière"
+  },
+  {
+    "id": "LSF_CAPTURE_9839dda5f6ce50c3",
+    "concept": "eau"
+  },
+  {
+    "id": "LSF_CAPTURE_99466062145a5292",
+    "concept": "chance"
+  },
+  {
+    "id": "LSF_CAPTURE_9a503d152f445814",
+    "concept": "banque"
+  },
+  {
+    "id": "LSF_CAPTURE_9a9432771cd65a67",
+    "concept": "travailler"
+  },
+  {
+    "id": "LSF_CAPTURE_9b2e7f2932bf5608",
+    "concept": "pomme de terre"
+  },
+  {
+    "id": "LSF_CAPTURE_9b55b453bc705cc1",
+    "concept": "pour rien"
+  },
+  {
+    "id": "LSF_CAPTURE_9bd05d79b4805c20",
+    "concept": "dommage"
+  },
+  {
+    "id": "LSF_CAPTURE_9be22a37f56a510b",
+    "concept": "livre"
+  },
+  {
+    "id": "LSF_CAPTURE_9c18c0aea1f050f4",
+    "concept": "à bientôt"
+  },
+  {
+    "id": "LSF_CAPTURE_9cdc841da9a45a62",
+    "concept": "vent"
+  },
+  {
+    "id": "LSF_CAPTURE_9d1b3e86f3285ede",
+    "concept": "beacoup"
+  },
+  {
+    "id": "LSF_CAPTURE_9d64b0e0ba0957a7",
+    "concept": "critiquer"
+  },
+  {
+    "id": "LSF_CAPTURE_9d87e66b850d562a",
+    "concept": "donner, rendre"
+  },
+  {
+    "id": "LSF_CAPTURE_9de5f45b3a8e58e2",
+    "concept": "sans interruption"
+  },
+  {
+    "id": "LSF_CAPTURE_9de65f9c824a5086",
+    "concept": "arbre"
+  },
+  {
+    "id": "LSF_CAPTURE_9e34f24e2c665147",
+    "concept": "à tout à l'heure"
+  },
+  {
+    "id": "LSF_CAPTURE_9e47bb97a0dc5a9b",
+    "concept": "proposer"
+  },
+  {
+    "id": "LSF_CAPTURE_9ea3a6f443fc5b01",
+    "concept": "fermé"
+  },
+  {
+    "id": "LSF_CAPTURE_9fada3c6db2b5d7f",
+    "concept": "forme"
+  },
+  {
+    "id": "LSF_CAPTURE_a0181d970620556a",
+    "concept": "bowling"
+  },
+  {
+    "id": "LSF_CAPTURE_a086603d1fb356ac",
+    "concept": "petit"
+  },
+  {
+    "id": "LSF_CAPTURE_a0980ca20fb05f01",
+    "concept": "directeur"
+  },
+  {
+    "id": "LSF_CAPTURE_a120b01d95305664",
+    "concept": "marignane"
+  },
+  {
+    "id": "LSF_CAPTURE_a14cc1d45d32539e",
+    "concept": "préférer"
+  },
+  {
+    "id": "LSF_CAPTURE_a201bac44c0d5d12",
+    "concept": "plusieurs"
+  },
+  {
+    "id": "LSF_CAPTURE_a2a07771e297554b",
+    "concept": "je ne crois pas"
+  },
+  {
+    "id": "LSF_CAPTURE_a2fe4dd71ad5580e",
+    "concept": "abeille"
+  },
+  {
+    "id": "LSF_CAPTURE_a306e591b927560c",
+    "concept": "bus"
+  },
+  {
+    "id": "LSF_CAPTURE_a328b8442be45f47",
+    "concept": "vache"
+  },
+  {
+    "id": "LSF_CAPTURE_a392434aeb685152",
+    "concept": "oeuf"
+  },
+  {
+    "id": "LSF_CAPTURE_a3ca33ba046e5c1e",
+    "concept": "essayer"
+  },
+  {
+    "id": "LSF_CAPTURE_a4153e2fc0e159f2",
+    "concept": "pourquoi"
+  },
+  {
+    "id": "LSF_CAPTURE_a4eaea9988e85219",
+    "concept": "chien"
+  },
+  {
+    "id": "LSF_CAPTURE_a51fc2022349540c",
+    "concept": "conseiller"
+  },
+  {
+    "id": "LSF_CAPTURE_a52cbee0a691540a",
+    "concept": "bonne journée"
+  },
+  {
+    "id": "LSF_CAPTURE_a52f8f4b8fc95698",
+    "concept": "prendre"
+  },
+  {
+    "id": "LSF_CAPTURE_a551ce5e414350da",
+    "concept": "ami·e"
+  },
+  {
+    "id": "LSF_CAPTURE_a5bac66e7bfc5012",
+    "concept": "pleuvoir"
+  },
+  {
+    "id": "LSF_CAPTURE_a5c641753cc0502a",
+    "concept": "certificat"
+  },
+  {
+    "id": "LSF_CAPTURE_a72516db8e215d0e",
+    "concept": "tous les quinze jours"
+  },
+  {
+    "id": "LSF_CAPTURE_a8383bb6eca1510a",
+    "concept": "au bord de…"
+  },
+  {
+    "id": "LSF_CAPTURE_aa21837848755b1b",
+    "concept": "bientôt"
+  },
+  {
+    "id": "LSF_CAPTURE_aa2b3be147745786",
+    "concept": "fille (la)"
+  },
+  {
+    "id": "LSF_CAPTURE_ab5fb08fe0a65e6d",
+    "concept": "raconter"
+  },
+  {
+    "id": "LSF_CAPTURE_abe815030e265c9f",
+    "concept": "fleur"
+  },
+  {
+    "id": "LSF_CAPTURE_ac10ba3ff9605b65",
+    "concept": "violet"
+  },
+  {
+    "id": "LSF_CAPTURE_ac2f2c08454252b1",
+    "concept": "collège"
+  },
+  {
+    "id": "LSF_CAPTURE_ac94230025275f28",
+    "concept": "non-signé"
+  },
+  {
+    "id": "LSF_CAPTURE_ad223b38d7f95562",
+    "concept": "il y a du vent"
+  },
+  {
+    "id": "LSF_CAPTURE_ada1f399a42d5810",
+    "concept": "cousin"
+  },
+  {
+    "id": "LSF_CAPTURE_adbf260111aa53d9",
+    "concept": "garçon"
+  },
+  {
+    "id": "LSF_CAPTURE_ae91ae5c82d65805",
+    "concept": "rose"
+  },
+  {
+    "id": "LSF_CAPTURE_aec00daf75b35949",
+    "concept": "pour"
+  },
+  {
+    "id": "LSF_CAPTURE_af704210473e575d",
+    "concept": "tgv"
+  },
+  {
+    "id": "LSF_CAPTURE_af71011b0010596f",
+    "concept": "devoir"
+  },
+  {
+    "id": "LSF_CAPTURE_afa69e6101375782",
+    "concept": "rat"
+  },
+  {
+    "id": "LSF_CAPTURE_afaabac3f94c516a",
+    "concept": "pareil"
+  },
+  {
+    "id": "LSF_CAPTURE_aff2814ba26f59ac",
+    "concept": "rouler"
+  },
+  {
+    "id": "LSF_CAPTURE_b0bab6e54e6c5401",
+    "concept": "écrire"
+  },
+  {
+    "id": "LSF_CAPTURE_b12fce67a7d4546d",
+    "concept": "arrêter"
+  },
+  {
+    "id": "LSF_CAPTURE_b16c487942935f00",
+    "concept": "femme de ménage"
+  },
+  {
+    "id": "LSF_CAPTURE_b1e57276e232543d",
+    "concept": "vêtement"
+  },
+  {
+    "id": "LSF_CAPTURE_b2231931d8495548",
+    "concept": "français (langue)"
+  },
+  {
+    "id": "LSF_CAPTURE_b2244e5fe1d2543c",
+    "concept": "été"
+  },
+  {
+    "id": "LSF_CAPTURE_b32aa04edb665f83",
+    "concept": "restaurant"
+  },
+  {
+    "id": "LSF_CAPTURE_b39d0229e3865b52",
+    "concept": "content"
+  },
+  {
+    "id": "LSF_CAPTURE_b3d9b59ac5675a33",
+    "concept": "cassette"
+  },
+  {
+    "id": "LSF_CAPTURE_b40d48bf932d5a2a",
+    "concept": "cerf"
+  },
+  {
+    "id": "LSF_CAPTURE_b4cab6ac014c5d06",
+    "concept": "tortue de terre"
+  },
+  {
+    "id": "LSF_CAPTURE_b5925b8629d35139",
+    "concept": "ski"
+  },
+  {
+    "id": "LSF_CAPTURE_b67ba54656c65e60",
+    "concept": "appeler"
+  },
+  {
+    "id": "LSF_CAPTURE_b6b5da9291a556d0",
+    "concept": "dossier"
+  },
+  {
+    "id": "LSF_CAPTURE_b75739e5061452e6",
+    "concept": "marron"
+  },
+  {
+    "id": "LSF_CAPTURE_b781a89141b45f50",
+    "concept": "ours"
+  },
+  {
+    "id": "LSF_CAPTURE_b81939cf3a4a5713",
+    "concept": "différent"
+  },
+  {
+    "id": "LSF_CAPTURE_b82821220cc15ffb",
+    "concept": "sourire"
+  },
+  {
+    "id": "LSF_CAPTURE_b8bab7901a6d58ac",
+    "concept": "plage"
+  },
+  {
+    "id": "LSF_CAPTURE_baa5c40959455799",
+    "concept": "ensemble"
+  },
+  {
+    "id": "LSF_CAPTURE_bb03052781955f5d",
+    "concept": "accompagner"
+  },
+  {
+    "id": "LSF_CAPTURE_bbf7f9f9e8955f00",
+    "concept": "parent"
+  },
+  {
+    "id": "LSF_CAPTURE_bcc9d6dd31d55bce",
+    "concept": "soir"
+  },
+  {
+    "id": "LSF_CAPTURE_bd6e08c52e005538",
+    "concept": "seul·e"
+  },
+  {
+    "id": "LSF_CAPTURE_bd86410866ea5188",
+    "concept": "préféré·e"
+  },
+  {
+    "id": "LSF_CAPTURE_bdfaee9c1bda5126",
+    "concept": "toute la nuit"
+  },
+  {
+    "id": "LSF_CAPTURE_bfe9c29141bd50aa",
+    "concept": "fatigué"
+  },
+  {
+    "id": "LSF_CAPTURE_c0a05462ffcf5062",
+    "concept": "verbe directionnel"
+  },
+  {
+    "id": "LSF_CAPTURE_c0caf33a630b5dc3",
+    "concept": "apprendre"
+  },
+  {
+    "id": "LSF_CAPTURE_c0ddd6d5a4f35ab4",
+    "concept": "téléphoner"
+  },
+  {
+    "id": "LSF_CAPTURE_c133c94d73d45422",
+    "concept": "non"
+  },
+  {
+    "id": "LSF_CAPTURE_c248b53f1db75dfa",
+    "concept": "pas content"
+  },
+  {
+    "id": "LSF_CAPTURE_c2b68c8985db580d",
+    "concept": "regarder"
+  },
+  {
+    "id": "LSF_CAPTURE_c3a192b89e8b5a23",
+    "concept": "croiser"
+  },
+  {
+    "id": "LSF_CAPTURE_c4f1dabc7a1e599d",
+    "concept": "anniversaire"
+  },
+  {
+    "id": "LSF_CAPTURE_c5983ec947b757b4",
+    "concept": "avion"
+  },
+  {
+    "id": "LSF_CAPTURE_c5c0f42a241c5ade",
+    "concept": "finir"
+  },
+  {
+    "id": "LSF_CAPTURE_c65619093cd353e2",
+    "concept": "danser"
+  },
+  {
+    "id": "LSF_CAPTURE_c66e6c9533d0592e",
+    "concept": "filet"
+  },
+  {
+    "id": "LSF_CAPTURE_c745d87f60365185",
+    "concept": "à genoux"
+  },
+  {
+    "id": "LSF_CAPTURE_c853e6dd752850c8",
+    "concept": "ping-pong"
+  },
+  {
+    "id": "LSF_CAPTURE_c8670aeada405582",
+    "concept": "rembourser"
+  },
+  {
+    "id": "LSF_CAPTURE_c8c703d5d3cb5a32",
+    "concept": "s'il vous plait"
+  },
+  {
+    "id": "LSF_CAPTURE_c98f4db6b8ad59a7",
+    "concept": "billard"
+  },
+  {
+    "id": "LSF_CAPTURE_ca7f59091fd25a07",
+    "concept": "télévision"
+  },
+  {
+    "id": "LSF_CAPTURE_cb3325e0236a5160",
+    "concept": "ma, mes"
+  },
+  {
+    "id": "LSF_CAPTURE_cb908c0966bf5b31",
+    "concept": "sucre"
+  },
+  {
+    "id": "LSF_CAPTURE_cc49952c4b295440",
+    "concept": "thé"
+  },
+  {
+    "id": "LSF_CAPTURE_cc9263e29d4c535f",
+    "concept": "planète"
+  },
+  {
+    "id": "LSF_CAPTURE_cde0c0f1b46f55a9",
+    "concept": "piscine"
+  },
+  {
+    "id": "LSF_CAPTURE_ce3fa441394859c6",
+    "concept": "fille"
+  },
+  {
+    "id": "LSF_CAPTURE_cfca142d0f8d5d68",
+    "concept": "fenêtre"
+  },
+  {
+    "id": "LSF_CAPTURE_d04d4659ad6951c1",
+    "concept": "boire"
+  },
+  {
+    "id": "LSF_CAPTURE_d0727cd98b2a5fed",
+    "concept": "tout"
+  },
+  {
+    "id": "LSF_CAPTURE_d1f1c3e327cd5a81",
+    "concept": "venir"
+  },
+  {
+    "id": "LSF_CAPTURE_d30dffc1643b57dd",
+    "concept": "pique-nique"
+  },
+  {
+    "id": "LSF_CAPTURE_d360641cbc4953d0",
+    "concept": "ballon"
+  },
+  {
+    "id": "LSF_CAPTURE_d3638bc7f5f75264",
+    "concept": "famille"
+  },
+  {
+    "id": "LSF_CAPTURE_d3da2db3bc225a18",
+    "concept": "faxer"
+  },
+  {
+    "id": "LSF_CAPTURE_d4c21c55c8335f6e",
+    "concept": "grand-parent"
+  },
+  {
+    "id": "LSF_CAPTURE_d64bb816e1a352af",
+    "concept": "moi"
+  },
+  {
+    "id": "LSF_CAPTURE_d70046dfb0e25253",
+    "concept": "soucoupe volante"
+  },
+  {
+    "id": "LSF_CAPTURE_d73252c672345373",
+    "concept": "combien"
+  },
+  {
+    "id": "LSF_CAPTURE_d7e17fa87adf5cce",
+    "concept": "ville"
+  },
+  {
+    "id": "LSF_CAPTURE_d869d537c8bf56bc",
+    "concept": "blond"
+  },
+  {
+    "id": "LSF_CAPTURE_d99ebf3ef54b529c",
+    "concept": "usine"
+  },
+  {
+    "id": "LSF_CAPTURE_da0bf6af32bc555e",
+    "concept": "être contre"
+  },
+  {
+    "id": "LSF_CAPTURE_da50ed751b1f51fd",
+    "concept": "gare"
+  },
+  {
+    "id": "LSF_CAPTURE_dc6816be2f265c15",
+    "concept": "protéger"
+  },
+  {
+    "id": "LSF_CAPTURE_de19e27271ba5598",
+    "concept": "ça va"
+  },
+  {
+    "id": "LSF_CAPTURE_df392a149e8e533b",
+    "concept": "devant"
+  },
+  {
+    "id": "LSF_CAPTURE_df530ccc7bc553a2",
+    "concept": "printemps"
+  },
+  {
+    "id": "LSF_CAPTURE_e04cefb912065518",
+    "concept": "discuter"
+  },
+  {
+    "id": "LSF_CAPTURE_e0b2d4ee2b115993",
+    "concept": "formateur"
+  },
+  {
+    "id": "LSF_CAPTURE_e0c3d102f37e54f3",
+    "concept": "châtain"
+  },
+  {
+    "id": "LSF_CAPTURE_e0c8ae77063a569f",
+    "concept": "suivre"
+  },
+  {
+    "id": "LSF_CAPTURE_e13376a37ba95b4e",
+    "concept": "ouvert"
+  },
+  {
+    "id": "LSF_CAPTURE_e388b470ef0251a5",
+    "concept": "zoo"
+  },
+  {
+    "id": "LSF_CAPTURE_e47500427d52572e",
+    "concept": "gentil"
+  },
+  {
+    "id": "LSF_CAPTURE_e534bad2bcb15858",
+    "concept": "tard"
+  },
+  {
+    "id": "LSF_CAPTURE_e589ec17a0b45660",
+    "concept": "emplacement"
+  },
+  {
+    "id": "LSF_CAPTURE_e5b82da3ac195eb1",
+    "concept": "toi"
+  },
+  {
+    "id": "LSF_CAPTURE_e70e69a5736d526f",
+    "concept": "capter des mots"
+  },
+  {
+    "id": "LSF_CAPTURE_e7ff7d4efb15525a",
+    "concept": "train"
+  },
+  {
+    "id": "LSF_CAPTURE_e826eccb72805959",
+    "concept": "terre"
+  },
+  {
+    "id": "LSF_CAPTURE_e86b422ff6965a9c",
+    "concept": "tartine"
+  },
+  {
+    "id": "LSF_CAPTURE_e888fa988c385522",
+    "concept": "cuisine"
+  },
+  {
+    "id": "LSF_CAPTURE_e8b801df53f7574c",
+    "concept": "chemin"
+  },
+  {
+    "id": "LSF_CAPTURE_e99b0f0a22d15ffc",
+    "concept": "mot"
+  },
+  {
+    "id": "LSF_CAPTURE_e9b080d2c34550e4",
+    "concept": "orientation"
+  },
+  {
+    "id": "LSF_CAPTURE_eb236c564cf954df",
+    "concept": "parlé"
+  },
+  {
+    "id": "LSF_CAPTURE_ecd6b2b17a43589c",
+    "concept": "mouvement"
+  },
+  {
+    "id": "LSF_CAPTURE_ef428fca0dd95f40",
+    "concept": "tante"
+  },
+  {
+    "id": "LSF_CAPTURE_f094646c2e8f5821",
+    "concept": "à peu près"
+  },
+  {
+    "id": "LSF_CAPTURE_f0a6f2ae65285fc3",
+    "concept": "rester"
+  },
+  {
+    "id": "LSF_CAPTURE_f0aed5a017f153d0",
+    "concept": "entrée"
+  },
+  {
+    "id": "LSF_CAPTURE_f137c7cb71235783",
+    "concept": "neveu"
+  },
+  {
+    "id": "LSF_CAPTURE_f43c25ce9ea154db",
+    "concept": "fête"
+  },
+  {
+    "id": "LSF_CAPTURE_f470c7c103ac5e35",
+    "concept": "laid"
+  },
+  {
+    "id": "LSF_CAPTURE_f54fe9a7d4215e88",
+    "concept": "non merci"
+  },
+  {
+    "id": "LSF_CAPTURE_f5a21a1ebef6566b",
+    "concept": "lit"
+  },
+  {
+    "id": "LSF_CAPTURE_f8e864b9a23e53ce",
+    "concept": "femme"
+  },
+  {
+    "id": "LSF_CAPTURE_f8ff8b294a865006",
+    "concept": "grand-père"
+  },
+  {
+    "id": "LSF_CAPTURE_f91d3e15ffaa56ce",
+    "concept": "tremblement de terre"
+  },
+  {
+    "id": "LSF_CAPTURE_f99a323c25c95698",
+    "concept": "peur"
+  },
+  {
+    "id": "LSF_CAPTURE_fa5404c3aaca5629",
+    "concept": "merci"
+  },
+  {
+    "id": "LSF_CAPTURE_fadf7f6d86bf539e",
+    "concept": "amant"
+  },
+  {
+    "id": "LSF_CAPTURE_fb5d8e09d0905763",
+    "concept": "pardon"
+  },
+  {
+    "id": "LSF_CAPTURE_fbc88cb486a15a07",
+    "concept": "important"
+  },
+  {
+    "id": "LSF_CAPTURE_fca1fedc876658e6",
+    "concept": "se promener"
+  },
+  {
+    "id": "LSF_CAPTURE_fcfe74b437a45864",
+    "concept": "paris"
+  },
+  {
+    "id": "LSF_CAPTURE_fd1f5c68e6765c5a",
+    "concept": "sandwich"
+  },
+  {
+    "id": "LSF_CAPTURE_fd5ff9e198275578",
+    "concept": "après"
+  },
+  {
+    "id": "LSF_CAPTURE_fe5b3f4d5fd652be",
+    "concept": "papa"
+  },
+  {
+    "id": "LSF_CAPTURE_fe686c38546d5f6c",
+    "concept": "fruit"
+  },
+  {
+    "id": "LSF_CAPTURE_fe90b74615c75090",
+    "concept": "envoyer"
+  },
+  {
+    "id": "LSF_CAPTURE_fef61c3daeb458fe",
+    "concept": "or"
+  },
+  {
+    "id": "LSF_CAPTURE_ff376b4d9e8e58a7",
+    "concept": "je n'ai pas le temps"
+  },
+  {
+    "id": "LSF_CAPTURE_ffe417bd70f95908",
+    "concept": "patron"
+  },
+  {
+    "id": "LSF_CONCEPT_001",
+    "concept": "bonjour"
+  }
+]

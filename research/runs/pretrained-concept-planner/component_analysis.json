@@ -1,0 +1,221 @@
+{
+  "scope": "POSTHOC DESCRIPTIVE scoring of already-locked outputs only; zero model calls, no benchmark retry",
+  "concept_only": {
+    "case_count": 16,
+    "definition": "Cases with neither critical meanings nor expected unknown content; compare raw validated model indexes before advisory NER merging",
+    "raw_model_ordered_exact": 0.6875,
+    "raw_model_hits": 11,
+    "existing_literal_ordered_exact": 0.375,
+    "existing_literal_hits": 6
+  },
+  "guard_checks": {
+    "true_positive_codes": 6,
+    "false_positive_codes": 11,
+    "false_negative_codes": 0,
+    "precision": 0.35294117647058826,
+    "recall": 1.0,
+    "false_positives": [
+      {
+        "case_id": "exact_bonjour",
+        "unexpected_codes": [
+          "NAMED_ENTITY_UNSUPPORTED"
+        ]
+      },
+      {
+        "case_id": "exact_merci",
+        "unexpected_codes": [
+          "NAMED_ENTITY_UNSUPPORTED"
+        ]
+      },
+      {
+        "case_id": "exact_chien",
+        "unexpected_codes": [
+          "NAMED_ENTITY_UNSUPPORTED"
+        ]
+      },
+      {
+        "case_id": "feminine_state",
+        "unexpected_codes": [
+          "NAMED_ENTITY_UNSUPPORTED"
+        ]
+      },
+      {
+        "case_id": "syn_docteur",
+        "unexpected_codes": [
+          "NAMED_ENTITY_UNSUPPORTED"
+        ]
+      },
+      {
+        "case_id": "syn_bouquin",
+        "unexpected_codes": [
+          "NAMED_ENTITY_UNSUPPORTED"
+        ]
+      },
+      {
+        "case_id": "syn_epuise",
+        "unexpected_codes": [
+          "NAMED_ENTITY_UNSUPPORTED"
+        ]
+      },
+      {
+        "case_id": "syn_bosser",
+        "unexpected_codes": [
+          "NAMED_ENTITY_UNSUPPORTED"
+        ]
+      },
+      {
+        "case_id": "syn_rigoler",
+        "unexpected_codes": [
+          "NAMED_ENTITY_UNSUPPORTED"
+        ]
+      },
+      {
+        "case_id": "syn_heureux",
+        "unexpected_codes": [
+          "NAMED_ENTITY_UNSUPPORTED"
+        ]
+      },
+      {
+        "case_id": "unknown_only",
+        "unexpected_codes": [
+          "NAMED_ENTITY_UNSUPPORTED"
+        ]
+      }
+    ],
+    "independent_alice_unit": "FAILED in frozen code; remains strict xfail in separately repaired runtime"
+  },
+  "failures": [
+    {
+      "case_id": "exact_bonjour",
+      "expected": [
+        "bonjour"
+      ],
+      "observed": [],
+      "unsupported": [
+        "Noms propres / référents : Bonjour"
+      ]
+    },
+    {
+      "case_id": "exact_merci",
+      "expected": [
+        "merci"
+      ],
+      "observed": [],
+      "unsupported": [
+        "Noms propres / référents : Merci"
+      ]
+    },
+    {
+      "case_id": "exact_chien",
+      "expected": [
+        "chien"
+      ],
+      "observed": [],
+      "unsupported": [
+        "Noms propres / référents : Chien"
+      ]
+    },
+    {
+      "case_id": "syn_docteur",
+      "expected": [
+        "médecin"
+      ],
+      "observed": [],
+      "unsupported": [
+        "Noms propres / référents : Docteur",
+        "Docteur"
+      ]
+    },
+    {
+      "case_id": "syn_epuise",
+      "expected": [
+        "fatigué"
+      ],
+      "observed": [],
+      "unsupported": [
+        "Noms propres / référents : Épuisé",
+        "Épuisé"
+      ]
+    },
+    {
+      "case_id": "syn_heureux",
+      "expected": [
+        "content"
+      ],
+      "observed": [],
+      "unsupported": [
+        "Noms propres / référents : Heureux",
+        "Heureux"
+      ]
+    },
+    {
+      "case_id": "multi_synonym",
+      "expected": [
+        "médecin",
+        "livre"
+      ],
+      "observed": [
+        "livre"
+      ],
+      "unsupported": [
+        "docteur",
+        "bouquin"
+      ]
+    },
+    {
+      "case_id": "multi_states",
+      "expected": [
+        "fatigué",
+        "triste"
+      ],
+      "observed": [
+        "triste"
+      ],
+      "unsupported": [
+        "Épuisé"
+      ]
+    },
+    {
+      "case_id": "question_ou",
+      "expected": [
+        "médecin"
+      ],
+      "observed": [
+        "où ?",
+        "médecin"
+      ],
+      "unsupported": [
+        "Interrogation : Où est le médecin ?",
+        "est",
+        "le"
+      ]
+    },
+    {
+      "case_id": "named_person_place",
+      "expected": [
+        "adorer"
+      ],
+      "observed": [
+        "adorer",
+        "sandwich"
+      ],
+      "unsupported": [
+        "Noms propres / référents : Marie, Paris",
+        "Marie"
+      ]
+    },
+    {
+      "case_id": "mixed_unknown",
+      "expected": [
+        "café"
+      ],
+      "observed": [
+        "poule"
+      ],
+      "unsupported": [
+        "café",
+        "cryptomonnaie"
+      ]
+    }
+  ]
+}

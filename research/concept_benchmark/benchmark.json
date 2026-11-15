@@ -1,0 +1,337 @@
+{
+  "kind": "AUTHORED_SOFTWARE_EXPECTATIONS_NOT_LSF_GROUND_TRUTH_NOT_TRAINING",
+  "cases": [
+    {
+      "case_id": "exact_bonjour",
+      "category": "exact",
+      "text": "Bonjour.",
+      "expected_concepts": [
+        "bonjour"
+      ],
+      "expected_concept_ids": [
+        "LSF_CONCEPT_001"
+      ],
+      "required_warning_codes": [],
+      "required_unsupported_terms": []
+    },
+    {
+      "case_id": "exact_merci",
+      "category": "exact",
+      "text": "Merci.",
+      "expected_concepts": [
+        "merci"
+      ],
+      "expected_concept_ids": [
+        "LSF_CAPTURE_fa5404c3aaca5629"
+      ],
+      "required_warning_codes": [],
+      "required_unsupported_terms": []
+    },
+    {
+      "case_id": "exact_chien",
+      "category": "exact",
+      "text": "Chien.",
+      "expected_concepts": [
+        "chien"
+      ],
+      "expected_concept_ids": [
+        "LSF_CAPTURE_a4eaea9988e85219"
+      ],
+      "required_warning_codes": [],
+      "required_unsupported_terms": []
+    },
+    {
+      "case_id": "exact_pair",
+      "category": "multi_exact",
+      "text": "Du pain et du café.",
+      "expected_concepts": [
+        "pain",
+        "café"
+      ],
+      "expected_concept_ids": [
+        "LSF_CAPTURE_4c55aebd99fc557f",
+        "LSF_CAPTURE_703f7b395ebe54cf"
+      ],
+      "required_warning_codes": [],
+      "required_unsupported_terms": []
+    },
+    {
+      "case_id": "plural_chiens",
+      "category": "lemma",
+      "text": "Chiens.",
+      "expected_concepts": [
+        "chien"
+      ],
+      "expected_concept_ids": [
+        "LSF_CAPTURE_a4eaea9988e85219"
+      ],
+      "required_warning_codes": [],
+      "required_unsupported_terms": []
+    },
+    {
+      "case_id": "plural_enfants",
+      "category": "lemma",
+      "text": "Enfants.",
+      "expected_concepts": [
+        "enfant"
+      ],
+      "expected_concept_ids": [
+        "LSF_CAPTURE_3cacf8123381566b"
+      ],
+      "required_warning_codes": [],
+      "required_unsupported_terms": []
+    },
+    {
+      "case_id": "feminine_state",
+      "category": "lemma",
+      "text": "Fatiguée.",
+      "expected_concepts": [
+        "fatigué"
+      ],
+      "expected_concept_ids": [
+        "LSF_CAPTURE_bfe9c29141bd50aa"
+      ],
+      "required_warning_codes": [],
+      "required_unsupported_terms": []
+    },
+    {
+      "case_id": "syn_docteur",
+      "category": "synonym",
+      "text": "Docteur.",
+      "expected_concepts": [
+        "médecin"
+      ],
+      "expected_concept_ids": [
+        "LSF_CAPTURE_76713a62fc3858e9"
+      ],
+      "required_warning_codes": [],
+      "required_unsupported_terms": []
+    },
+    {
+      "case_id": "syn_bouquin",
+      "category": "synonym",
+      "text": "Bouquin.",
+      "expected_concepts": [
+        "livre"
+      ],
+      "expected_concept_ids": [
+        "LSF_CAPTURE_9be22a37f56a510b"
+      ],
+      "required_warning_codes": [],
+      "required_unsupported_terms": []
+    },
+    {
+      "case_id": "syn_epuise",
+      "category": "synonym",
+      "text": "Épuisé.",
+      "expected_concepts": [
+        "fatigué"
+      ],
+      "expected_concept_ids": [
+        "LSF_CAPTURE_bfe9c29141bd50aa"
+      ],
+      "required_warning_codes": [],
+      "required_unsupported_terms": []
+    },
+    {
+      "case_id": "syn_bosser",
+      "category": "synonym",
+      "text": "Bosser.",
+      "expected_concepts": [
+        "travailler"
+      ],
+      "expected_concept_ids": [
+        "LSF_CAPTURE_9a9432771cd65a67"
+      ],
+      "required_warning_codes": [],
+      "required_unsupported_terms": []
+    },
+    {
+      "case_id": "syn_rigoler",
+      "category": "synonym",
+      "text": "Rigoler.",
+      "expected_concepts": [
+        "rire"
+      ],
+      "expected_concept_ids": [
+        "LSF_CAPTURE_7eb4d6f53d155cc0"
+      ],
+      "required_warning_codes": [],
+      "required_unsupported_terms": []
+    },
+    {
+      "case_id": "syn_heureux",
+      "category": "synonym",
+      "text": "Heureux.",
+      "expected_concepts": [
+        "content"
+      ],
+      "expected_concept_ids": [
+        "LSF_CAPTURE_b39d0229e3865b52"
+      ],
+      "required_warning_codes": [],
+      "required_unsupported_terms": []
+    },
+    {
+      "case_id": "multi_synonym",
+      "category": "multi_semantic",
+      "text": "Un docteur et un bouquin.",
+      "expected_concepts": [
+        "médecin",
+        "livre"
+      ],
+      "expected_concept_ids": [
+        "LSF_CAPTURE_76713a62fc3858e9",
+        "LSF_CAPTURE_9be22a37f56a510b"
+      ],
+      "required_warning_codes": [],
+      "required_unsupported_terms": []
+    },
+    {
+      "case_id": "multi_states",
+      "category": "multi_semantic",
+      "text": "Épuisé et triste.",
+      "expected_concepts": [
+        "fatigué",
+        "triste"
+      ],
+      "expected_concept_ids": [
+        "LSF_CAPTURE_bfe9c29141bd50aa",
+        "LSF_CAPTURE_95578c78becf5b21"
+      ],
+      "required_warning_codes": [],
+      "required_unsupported_terms": []
+    },
+    {
+      "case_id": "multi_action",
+      "category": "multi_semantic",
+      "text": "Le chat boit de l'eau.",
+      "expected_concepts": [
+        "chat",
+        "boire",
+        "eau"
+      ],
+      "expected_concept_ids": [
+        "LSF_CAPTURE_8069af08c0fc52f8",
+        "LSF_CAPTURE_d04d4659ad6951c1",
+        "LSF_CAPTURE_9839dda5f6ce50c3"
+      ],
+      "required_warning_codes": [],
+      "required_unsupported_terms": []
+    },
+    {
+      "case_id": "negation_ne_pas",
+      "category": "negation",
+      "text": "Ne bois pas de café.",
+      "expected_concepts": [
+        "boire",
+        "café"
+      ],
+      "expected_concept_ids": [
+        "LSF_CAPTURE_d04d4659ad6951c1",
+        "LSF_CAPTURE_703f7b395ebe54cf"
+      ],
+      "required_warning_codes": [
+        "NEGATION_UNSUPPORTED"
+      ],
+      "required_unsupported_terms": []
+    },
+    {
+      "case_id": "negation_jamais",
+      "category": "negation",
+      "text": "Jamais de café.",
+      "expected_concepts": [
+        "café"
+      ],
+      "expected_concept_ids": [
+        "LSF_CAPTURE_703f7b395ebe54cf"
+      ],
+      "required_warning_codes": [
+        "NEGATION_UNSUPPORTED"
+      ],
+      "required_unsupported_terms": []
+    },
+    {
+      "case_id": "question_ou",
+      "category": "question",
+      "text": "Où est le médecin ?",
+      "expected_concepts": [
+        "médecin"
+      ],
+      "expected_concept_ids": [
+        "LSF_CAPTURE_76713a62fc3858e9"
+      ],
+      "required_warning_codes": [
+        "QUESTION_UNSUPPORTED"
+      ],
+      "required_unsupported_terms": []
+    },
+    {
+      "case_id": "number_three",
+      "category": "number",
+      "text": "Trois chats.",
+      "expected_concepts": [
+        "chat"
+      ],
+      "expected_concept_ids": [
+        "LSF_CAPTURE_8069af08c0fc52f8"
+      ],
+      "required_warning_codes": [
+        "NUMBER_UNSUPPORTED"
+      ],
+      "required_unsupported_terms": []
+    },
+    {
+      "case_id": "named_person_place",
+      "category": "named_entity",
+      "text": "Marie adore Paris.",
+      "expected_concepts": [
+        "adorer"
+      ],
+      "expected_concept_ids": [
+        "LSF_CAPTURE_1fb48763cd675196"
+      ],
+      "required_warning_codes": [
+        "NAMED_ENTITY_UNSUPPORTED"
+      ],
+      "required_unsupported_terms": []
+    },
+    {
+      "case_id": "unknown_only",
+      "category": "unknown",
+      "text": "Photosynthèse.",
+      "expected_concepts": [],
+      "expected_concept_ids": [],
+      "required_warning_codes": [],
+      "required_unsupported_terms": [
+        "photosynthèse"
+      ]
+    },
+    {
+      "case_id": "mixed_unknown",
+      "category": "unknown",
+      "text": "Du café et de la cryptomonnaie.",
+      "expected_concepts": [
+        "café"
+      ],
+      "expected_concept_ids": [
+        "LSF_CAPTURE_703f7b395ebe54cf"
+      ],
+      "required_warning_codes": [],
+      "required_unsupported_terms": [
+        "cryptomonnaie"
+      ]
+    },
+    {
+      "case_id": "unknown_named",
+      "category": "named_entity",
+      "text": "Nora.",
+      "expected_concepts": [],
+      "expected_concept_ids": [],
+      "required_warning_codes": [
+        "NAMED_ENTITY_UNSUPPORTED"
+      ],
+      "required_unsupported_terms": []
+    }
+  ]
+}

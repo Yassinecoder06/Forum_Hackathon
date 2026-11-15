@@ -1,0 +1,802 @@
+{
+  "results": [
+    {
+      "case_id": "exact_bonjour",
+      "raw": {
+        "concept_ids": [
+          "LSF_CONCEPT_001"
+        ],
+        "unsupported": [],
+        "warnings": [],
+        "latency_seconds": 0.9340005139965797
+      },
+      "shared_guards": {
+        "concept_ids": [],
+        "unsupported": [
+          "Noms propres / référents : Bonjour"
+        ],
+        "warnings": [
+          "NAMED_ENTITY_UNSUPPORTED"
+        ],
+        "latency_seconds": 0.9340005139965797
+      },
+      "tokens": [
+        "Bonjour"
+      ],
+      "lemmas": [
+        "bonjour"
+      ]
+    },
+    {
+      "case_id": "exact_merci",
+      "raw": {
+        "concept_ids": [
+          "LSF_CAPTURE_fa5404c3aaca5629"
+        ],
+        "unsupported": [],
+        "warnings": [],
+        "latency_seconds": 0.004249013996741269
+      },
+      "shared_guards": {
+        "concept_ids": [],
+        "unsupported": [
+          "Noms propres / référents : Merci"
+        ],
+        "warnings": [
+          "NAMED_ENTITY_UNSUPPORTED"
+        ],
+        "latency_seconds": 0.004249013996741269
+      },
+      "tokens": [
+        "Merci"
+      ],
+      "lemmas": [
+        "merci"
+      ]
+    },
+    {
+      "case_id": "exact_chien",
+      "raw": {
+        "concept_ids": [
+          "LSF_CAPTURE_a4eaea9988e85219"
+        ],
+        "unsupported": [],
+        "warnings": [],
+        "latency_seconds": 0.003189903996826615
+      },
+      "shared_guards": {
+        "concept_ids": [],
+        "unsupported": [
+          "Noms propres / référents : Chien"
+        ],
+        "warnings": [
+          "NAMED_ENTITY_UNSUPPORTED"
+        ],
+        "latency_seconds": 0.003189903996826615
+      },
+      "tokens": [
+        "Chien"
+      ],
+      "lemmas": [
+        "chien"
+      ]
+    },
+    {
+      "case_id": "exact_pair",
+      "raw": {
+        "concept_ids": [
+          "LSF_CAPTURE_4c55aebd99fc557f",
+          "LSF_CAPTURE_703f7b395ebe54cf"
+        ],
+        "unsupported": [
+          "Du",
+          "et",
+          "du"
+        ],
+        "warnings": [],
+        "latency_seconds": 0.002940031001344323
+      },
+      "shared_guards": {
+        "concept_ids": [
+          "LSF_CAPTURE_4c55aebd99fc557f",
+          "LSF_CAPTURE_703f7b395ebe54cf"
+        ],
+        "unsupported": [
+          "Du",
+          "et",
+          "du"
+        ],
+        "warnings": [],
+        "latency_seconds": 0.002940031001344323
+      },
+      "tokens": [
+        "Du",
+        "pain",
+        "et",
+        "du",
+        "café"
+      ],
+      "lemmas": [
+        "de",
+        "pain",
+        "et",
+        "de",
+        "café"
+      ]
+    },
+    {
+      "case_id": "plural_chiens",
+      "raw": {
+        "concept_ids": [
+          "LSF_CAPTURE_a4eaea9988e85219"
+        ],
+        "unsupported": [],
+        "warnings": [],
+        "latency_seconds": 0.003072166000492871
+      },
+      "shared_guards": {
+        "concept_ids": [
+          "LSF_CAPTURE_a4eaea9988e85219"
+        ],
+        "unsupported": [],
+        "warnings": [],
+        "latency_seconds": 0.003072166000492871
+      },
+      "tokens": [
+        "Chiens"
+      ],
+      "lemmas": [
+        "chien"
+      ]
+    },
+    {
+      "case_id": "plural_enfants",
+      "raw": {
+        "concept_ids": [
+          "LSF_CAPTURE_3cacf8123381566b"
+        ],
+        "unsupported": [],
+        "warnings": [],
+        "latency_seconds": 0.0031199840013869107
+      },
+      "shared_guards": {
+        "concept_ids": [
+          "LSF_CAPTURE_3cacf8123381566b"
+        ],
+        "unsupported": [],
+        "warnings": [],
+        "latency_seconds": 0.0031199840013869107
+      },
+      "tokens": [
+        "Enfants"
+      ],
+      "lemmas": [
+        "enfant"
+      ]
+    },
+    {
+      "case_id": "feminine_state",
+      "raw": {
+        "concept_ids": [],
+        "unsupported": [
+          "Fatiguée"
+        ],
+        "warnings": [],
+        "latency_seconds": 0.0026957709997077473
+      },
+      "shared_guards": {
+        "concept_ids": [],
+        "unsupported": [
+          "Noms propres / référents : Fatiguée",
+          "Fatiguée"
+        ],
+        "warnings": [
+          "NAMED_ENTITY_UNSUPPORTED"
+        ],
+        "latency_seconds": 0.0026957709997077473
+      },
+      "tokens": [
+        "Fatiguée"
+      ],
+      "lemmas": [
+        "fatiguée"
+      ]
+    },
+    {
+      "case_id": "syn_docteur",
+      "raw": {
+        "concept_ids": [],
+        "unsupported": [
+          "Docteur"
+        ],
+        "warnings": [],
+        "latency_seconds": 0.002692759000638034
+      },
+      "shared_guards": {
+        "concept_ids": [],
+        "unsupported": [
+          "Noms propres / référents : Docteur",
+          "Docteur"
+        ],
+        "warnings": [
+          "NAMED_ENTITY_UNSUPPORTED"
+        ],
+        "latency_seconds": 0.002692759000638034
+      },
+      "tokens": [
+        "Docteur"
+      ],
+      "lemmas": [
+        "docteur"
+      ]
+    },
+    {
+      "case_id": "syn_bouquin",
+      "raw": {
+        "concept_ids": [],
+        "unsupported": [
+          "Bouquin"
+        ],
+        "warnings": [],
+        "latency_seconds": 0.0023638049970031716
+      },
+      "shared_guards": {
+        "concept_ids": [],
+        "unsupported": [
+          "Noms propres / référents : Bouquin",
+          "Bouquin"
+        ],
+        "warnings": [
+          "NAMED_ENTITY_UNSUPPORTED"
+        ],
+        "latency_seconds": 0.0023638049970031716
+      },
+      "tokens": [
+        "Bouquin"
+      ],
+      "lemmas": [
+        "bouquin"
+      ]
+    },
+    {
+      "case_id": "syn_epuise",
+      "raw": {
+        "concept_ids": [],
+        "unsupported": [
+          "Épuisé"
+        ],
+        "warnings": [],
+        "latency_seconds": 0.002516226995794568
+      },
+      "shared_guards": {
+        "concept_ids": [],
+        "unsupported": [
+          "Noms propres / référents : Épuisé",
+          "Épuisé"
+        ],
+        "warnings": [
+          "NAMED_ENTITY_UNSUPPORTED"
+        ],
+        "latency_seconds": 0.002516226995794568
+      },
+      "tokens": [
+        "Épuisé"
+      ],
+      "lemmas": [
+        "épuiser"
+      ]
+    },
+    {
+      "case_id": "syn_bosser",
+      "raw": {
+        "concept_ids": [],
+        "unsupported": [
+          "Bosser"
+        ],
+        "warnings": [],
+        "latency_seconds": 0.002372205002757255
+      },
+      "shared_guards": {
+        "concept_ids": [],
+        "unsupported": [
+          "Noms propres / référents : Bosser",
+          "Bosser"
+        ],
+        "warnings": [
+          "NAMED_ENTITY_UNSUPPORTED"
+        ],
+        "latency_seconds": 0.002372205002757255
+      },
+      "tokens": [
+        "Bosser"
+      ],
+      "lemmas": [
+        "bosser"
+      ]
+    },
+    {
+      "case_id": "syn_rigoler",
+      "raw": {
+        "concept_ids": [],
+        "unsupported": [
+          "Rigoler"
+        ],
+        "warnings": [],
+        "latency_seconds": 0.0022520310012623668
+      },
+      "shared_guards": {
+        "concept_ids": [],
+        "unsupported": [
+          "Noms propres / référents : Rigoler",
+          "Rigoler"
+        ],
+        "warnings": [
+          "NAMED_ENTITY_UNSUPPORTED"
+        ],
+        "latency_seconds": 0.0022520310012623668
+      },
+      "tokens": [
+        "Rigoler"
+      ],
+      "lemmas": [
+        "rigoler"
+      ]
+    },
+    {
+      "case_id": "syn_heureux",
+      "raw": {
+        "concept_ids": [],
+        "unsupported": [
+          "Heureux"
+        ],
+        "warnings": [],
+        "latency_seconds": 0.002260143999592401
+      },
+      "shared_guards": {
+        "concept_ids": [],
+        "unsupported": [
+          "Noms propres / référents : Heureux",
+          "Heureux"
+        ],
+        "warnings": [
+          "NAMED_ENTITY_UNSUPPORTED"
+        ],
+        "latency_seconds": 0.002260143999592401
+      },
+      "tokens": [
+        "Heureux"
+      ],
+      "lemmas": [
+        "heureux"
+      ]
+    },
+    {
+      "case_id": "multi_synonym",
+      "raw": {
+        "concept_ids": [],
+        "unsupported": [
+          "Un",
+          "docteur",
+          "et",
+          "un",
+          "bouquin"
+        ],
+        "warnings": [],
+        "latency_seconds": 0.0038546380019397475
+      },
+      "shared_guards": {
+        "concept_ids": [],
+        "unsupported": [
+          "Un",
+          "docteur",
+          "et",
+          "un",
+          "bouquin"
+        ],
+        "warnings": [],
+        "latency_seconds": 0.0038546380019397475
+      },
+      "tokens": [
+        "Un",
+        "docteur",
+        "et",
+        "un",
+        "bouquin"
+      ],
+      "lemmas": [
+        "un",
+        "docteur",
+        "et",
+        "un",
+        "bouquin"
+      ]
+    },
+    {
+      "case_id": "multi_states",
+      "raw": {
+        "concept_ids": [
+          "LSF_CAPTURE_95578c78becf5b21"
+        ],
+        "unsupported": [
+          "Épuisé",
+          "et"
+        ],
+        "warnings": [],
+        "latency_seconds": 0.003860992001136765
+      },
+      "shared_guards": {
+        "concept_ids": [
+          "LSF_CAPTURE_95578c78becf5b21"
+        ],
+        "unsupported": [
+          "Épuisé",
+          "et"
+        ],
+        "warnings": [],
+        "latency_seconds": 0.003860992001136765
+      },
+      "tokens": [
+        "Épuisé",
+        "et",
+        "triste"
+      ],
+      "lemmas": [
+        "épuisé",
+        "et",
+        "triste"
+      ]
+    },
+    {
+      "case_id": "multi_action",
+      "raw": {
+        "concept_ids": [
+          "LSF_CAPTURE_8069af08c0fc52f8",
+          "LSF_CAPTURE_9839dda5f6ce50c3"
+        ],
+        "unsupported": [
+          "Le",
+          "boit",
+          "de",
+          "l"
+        ],
+        "warnings": [],
+        "latency_seconds": 0.003541989004588686
+      },
+      "shared_guards": {
+        "concept_ids": [
+          "LSF_CAPTURE_8069af08c0fc52f8",
+          "LSF_CAPTURE_9839dda5f6ce50c3"
+        ],
+        "unsupported": [
+          "Le",
+          "boit",
+          "de",
+          "l"
+        ],
+        "warnings": [],
+        "latency_seconds": 0.003541989004588686
+      },
+      "tokens": [
+        "Le",
+        "chat",
+        "boit",
+        "de",
+        "l",
+        "eau"
+      ],
+      "lemmas": [
+        "le",
+        "chat",
+        "boit",
+        "de",
+        "l",
+        "eau"
+      ]
+    },
+    {
+      "case_id": "negation_ne_pas",
+      "raw": {
+        "concept_ids": [
+          "LSF_CAPTURE_d04d4659ad6951c1",
+          "LSF_CAPTURE_703f7b395ebe54cf"
+        ],
+        "unsupported": [
+          "Ne",
+          "pas",
+          "de"
+        ],
+        "warnings": [],
+        "latency_seconds": 0.00310600900411373
+      },
+      "shared_guards": {
+        "concept_ids": [
+          "LSF_CAPTURE_d04d4659ad6951c1",
+          "LSF_CAPTURE_703f7b395ebe54cf"
+        ],
+        "unsupported": [
+          "Négation / portée négative : Ne bois pas de café.",
+          "Ne",
+          "pas",
+          "de"
+        ],
+        "warnings": [
+          "NEGATION_UNSUPPORTED"
+        ],
+        "latency_seconds": 0.00310600900411373
+      },
+      "tokens": [
+        "Ne",
+        "bois",
+        "pas",
+        "de",
+        "café"
+      ],
+      "lemmas": [
+        "ne",
+        "boire",
+        "pas",
+        "de",
+        "café"
+      ]
+    },
+    {
+      "case_id": "negation_jamais",
+      "raw": {
+        "concept_ids": [
+          "LSF_CAPTURE_703f7b395ebe54cf"
+        ],
+        "unsupported": [
+          "Jamais",
+          "de"
+        ],
+        "warnings": [],
+        "latency_seconds": 0.0044976170029258355
+      },
+      "shared_guards": {
+        "concept_ids": [
+          "LSF_CAPTURE_703f7b395ebe54cf"
+        ],
+        "unsupported": [
+          "Négation / portée négative : Jamais de café.",
+          "Jamais",
+          "de"
+        ],
+        "warnings": [
+          "NEGATION_UNSUPPORTED"
+        ],
+        "latency_seconds": 0.0044976170029258355
+      },
+      "tokens": [
+        "Jamais",
+        "de",
+        "café"
+      ],
+      "lemmas": [
+        "jamais",
+        "de",
+        "café"
+      ]
+    },
+    {
+      "case_id": "question_ou",
+      "raw": {
+        "concept_ids": [
+          "LSF_CAPTURE_2a188b65f30a5c72",
+          "LSF_CAPTURE_b2244e5fe1d2543c",
+          "LSF_CAPTURE_76713a62fc3858e9"
+        ],
+        "unsupported": [
+          "le"
+        ],
+        "warnings": [],
+        "latency_seconds": 0.0031511959969066083
+      },
+      "shared_guards": {
+        "concept_ids": [
+          "LSF_CAPTURE_2a188b65f30a5c72",
+          "LSF_CAPTURE_b2244e5fe1d2543c",
+          "LSF_CAPTURE_76713a62fc3858e9"
+        ],
+        "unsupported": [
+          "Interrogation : Où est le médecin ?",
+          "le"
+        ],
+        "warnings": [
+          "QUESTION_UNSUPPORTED"
+        ],
+        "latency_seconds": 0.0031511959969066083
+      },
+      "tokens": [
+        "Où",
+        "est",
+        "le",
+        "médecin"
+      ],
+      "lemmas": [
+        "où",
+        "être",
+        "le",
+        "médecin"
+      ]
+    },
+    {
+      "case_id": "number_three",
+      "raw": {
+        "concept_ids": [
+          "LSF_CAPTURE_8069af08c0fc52f8"
+        ],
+        "unsupported": [
+          "Trois"
+        ],
+        "warnings": [],
+        "latency_seconds": 0.0031169969952316023
+      },
+      "shared_guards": {
+        "concept_ids": [
+          "LSF_CAPTURE_8069af08c0fc52f8"
+        ],
+        "unsupported": [
+          "Nombres / quantités exactes : Trois",
+          "Trois"
+        ],
+        "warnings": [
+          "NUMBER_UNSUPPORTED"
+        ],
+        "latency_seconds": 0.0031169969952316023
+      },
+      "tokens": [
+        "Trois",
+        "chats"
+      ],
+      "lemmas": [
+        "trois",
+        "chat"
+      ]
+    },
+    {
+      "case_id": "named_person_place",
+      "raw": {
+        "concept_ids": [
+          "LSF_CAPTURE_1fb48763cd675196",
+          "LSF_CAPTURE_fcfe74b437a45864"
+        ],
+        "unsupported": [
+          "Marie"
+        ],
+        "warnings": [],
+        "latency_seconds": 0.003419533997657709
+      },
+      "shared_guards": {
+        "concept_ids": [
+          "LSF_CAPTURE_1fb48763cd675196"
+        ],
+        "unsupported": [
+          "Noms propres / référents : Marie, Paris",
+          "Marie"
+        ],
+        "warnings": [
+          "NAMED_ENTITY_UNSUPPORTED"
+        ],
+        "latency_seconds": 0.003419533997657709
+      },
+      "tokens": [
+        "Marie",
+        "adore",
+        "Paris"
+      ],
+      "lemmas": [
+        "marie",
+        "adorer",
+        "paris"
+      ]
+    },
+    {
+      "case_id": "unknown_only",
+      "raw": {
+        "concept_ids": [],
+        "unsupported": [
+          "Photosynthèse"
+        ],
+        "warnings": [],
+        "latency_seconds": 0.0024963799951365218
+      },
+      "shared_guards": {
+        "concept_ids": [],
+        "unsupported": [
+          "Noms propres / référents : Photosynthèse",
+          "Photosynthèse"
+        ],
+        "warnings": [
+          "NAMED_ENTITY_UNSUPPORTED"
+        ],
+        "latency_seconds": 0.0024963799951365218
+      },
+      "tokens": [
+        "Photosynthèse"
+      ],
+      "lemmas": [
+        "photosynthèse"
+      ]
+    },
+    {
+      "case_id": "mixed_unknown",
+      "raw": {
+        "concept_ids": [
+          "LSF_CAPTURE_703f7b395ebe54cf"
+        ],
+        "unsupported": [
+          "Du",
+          "et",
+          "de",
+          "la",
+          "cryptomonnaie"
+        ],
+        "warnings": [],
+        "latency_seconds": 0.004025515998364426
+      },
+      "shared_guards": {
+        "concept_ids": [
+          "LSF_CAPTURE_703f7b395ebe54cf"
+        ],
+        "unsupported": [
+          "Du",
+          "et",
+          "de",
+          "la",
+          "cryptomonnaie"
+        ],
+        "warnings": [],
+        "latency_seconds": 0.004025515998364426
+      },
+      "tokens": [
+        "Du",
+        "café",
+        "et",
+        "de",
+        "la",
+        "cryptomonnaie"
+      ],
+      "lemmas": [
+        "de",
+        "café",
+        "et",
+        "de",
+        "le",
+        "cryptomonnaie"
+      ]
+    },
+    {
+      "case_id": "unknown_named",
+      "raw": {
+        "concept_ids": [],
+        "unsupported": [
+          "Nora"
+        ],
+        "warnings": [],
+        "latency_seconds": 0.003060948998609092
+      },
+      "shared_guards": {
+        "concept_ids": [],
+        "unsupported": [
+          "Noms propres / référents : Nora",
+          "Nora"
+        ],
+        "warnings": [
+          "NAMED_ENTITY_UNSUPPORTED"
+        ],
+        "latency_seconds": 0.003060948998609092
+      },
+      "tokens": [
+        "Nora"
+      ],
+      "lemmas": [
+        "nora"
+      ]
+    }
+  ],
+  "mode": "spacy-fr-lemmatizer",
+  "spacy_version": "3.8.18",
+  "fr_model_version": "3.8.0",
+  "model_load_seconds": 2.4235361149985692,
+  "python": "/home/jmal/Projects/Active/Forum_Hackathon/.venv/bin/python"
+}

@@ -1,0 +1,24 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.14, pytest-9.2.0, pluggy-1.7.0
+rootdir: /home/jmal/Projects/Active/Forum_Hackathon/.worktrees/wt-codex2
+configfile: pytest.ini
+plugins: anyio-4.16.0
+collected 5 items
+
+training/test_concept_planner.py ...F.                                   [100%]
+
+=================================== FAILURES ===================================
+_________________ test_guard_keeps_critical_meanings_explicit __________________
+
+    def test_guard_keeps_critical_meanings_explicit():
+        r=linguistic_guards("Alice ne possède pas cinq fleurs ?")
+>       assert {'NEGATION_UNSUPPORTED','QUESTION_UNSUPPORTED','NUMBER_UNSUPPORTED','NAMED_ENTITY_UNSUPPORTED'}<=set(r['warnings'])
+E       AssertionError: assert {'NAMED_ENTIT..._UNSUPPORTED'} <= {'NEGATION_UN..._UNSUPPORTED'}
+E         
+E         Extra items in the left set:
+E         'NAMED_ENTITY_UNSUPPORTED'
+
+training/test_concept_planner.py:18: AssertionError
+=========================== short test summary info ============================
+FAILED training/test_concept_planner.py::test_guard_keeps_critical_meanings_explicit
+========================= 1 failed, 4 passed in 3.50s ==========================
