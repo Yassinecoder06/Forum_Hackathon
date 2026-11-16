@@ -25,6 +25,14 @@ function windowed(clip: MotionFile, segment: AnimationPlanSegment): { frames: Mo
   return { frames: frames.map((f) => ({ ...f, time_ms: f.time_ms - origin })), duration: frames[frames.length - 1].time_ms - origin };
 }
 
+/** Library playback uses the cached core, while the original file and source video stay intact. */
+export function libraryPreview(clip: MotionFile): MotionFile {
+  const bounds = clip.playback_window;
+  if (!bounds) return clip;
+  const part = windowed(clip, {clip_start_ms:bounds.start_ms,clip_end_ms:bounds.end_ms} as AnimationPlanSegment);
+  return {...clip,duration_ms:part.duration,frames:part.frames};
+}
+
 const sub = (a: Vec, b: Vec): Vec => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
 const len = (a: Vec) => Math.hypot(a[0], a[1], a[2]);
 const quintic = (u: number) => u * u * u * (10 + u * (-15 + 6 * u));

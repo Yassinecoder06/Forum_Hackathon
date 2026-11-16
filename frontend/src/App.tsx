@@ -25,7 +25,7 @@ import { LexicalPipelinePanel } from "./components/LexicalPipelinePanel";
 import { ConceptComposer } from "./components/ConceptComposer";
 import { ResearchPanel } from "./components/ResearchPanel";
 import { AvatarCanvas } from "./components/AvatarPlayer/AvatarCanvas";
-import { stitchAnimationPlan } from "./utils/planStitcher";
+import { stitchAnimationPlan, libraryPreview } from "./utils/planStitcher";
 import type {
   AnimationPlan,
   AudioFeatures,
@@ -412,7 +412,7 @@ export default function App() {
       );
       const filename = meta.path.split("/").pop();
       const clip = await request<MotionFile>(`/assets/${filename}`);
-      setMotion({ ...clip, synthetic: meta.synthetic ?? clip.synthetic });
+      setMotion(libraryPreview({ ...clip, synthetic: meta.synthetic ?? clip.synthetic }));
       const entry = library.find((e) => e.motion.motion_id === id);
       setReferenceUrl(
         entry?.capture_id

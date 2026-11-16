@@ -6,6 +6,7 @@ import { chromium } from "playwright";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { execFileSync } from "node:child_process";
 
 const APP = process.env.APP_URL || "http://127.0.0.1:8080";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -41,15 +42,11 @@ for (const text of PHRASES) {
 }
 
 const stats = await (await fetch(`${APP}/api/capabilities`)).json();
-await writeFile(path.join(site, "data/examples.json"), JSON.stringify({
-  generated: new Date().toISOString(), library_count: stats.library_count,
-  dictasign: { videos: stats.dictasign?.total, imported: stats.dictasign?.imported, review: stats.dictasign?.quality_review_needed },
-  examples,
-}, null, 2));
+
 
 const browser = await chromium.launch({ headless: true,
   ...(process.env.CHROME_PATH ? { executablePath: process.env.CHROME_PATH } : {}),
-  args: ["--enable-unsafe-swiftshader", "--autoplay-policy=no-user-gesture-required"] });
+  args: ["--no-sandbox","--enable-unsafe-swiftshader", "--autoplay-policy=no-user-gesture-required"] });
 try {
   for (const ex of examples) {
     const page = await browser.newPage({ acceptDownloads: true, viewport: { width: 1500, height: 1000 } });
@@ -66,9 +63,21 @@ try {
     const download = page.waitForEvent("download", { timeout: 120000 });
     await exportButton.click();
     await (await download).saveAs(path.join(site, ex.video));
+    const videoPath = path.join(site, ex.video);
+    ex.video_mp4 = ex.video.replace(/\.webm$/, ".mp4");
+    ex.poster = ex.video.replace(/\.webm$/, ".jpg");
+    execFileSync("ffmpeg", ["-y", "-i", videoPath, "-an", "-r", "30", "-c:v", "libx264", "-pix_fmt", "yuv420p", "-movflags", "+faststart", path.join(site, ex.video_mp4)], {stdio:"ignore"});
+    execFileSync("ffmpeg", ["-y", "-ss", String(ex.duration_ms / 3000), "-i", videoPath, "-frames:v", "1", path.join(site, ex.poster)], {stdio:"ignore"});
     console.log(`Recorded ${ex.video} (${ex.signs.map((s) => s.gloss).join(" ")})`);
     await page.close();
   }
 } finally {
   await browser.close();
 }
+
+// Publish metadata only after every genuine recording/transcode succeeds.
+await writeFile(path.join(site, "data/examples.json"), JSON.stringify({
+  generated: new Date().toISOString(), library_count: stats.library_count,
+  dictasign: { videos: stats.dictasign?.total, imported: stats.dictasign?.imported, review: stats.dictasign?.quality_review_needed },
+  examples,
+}, null, 2));

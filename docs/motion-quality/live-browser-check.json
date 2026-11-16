@@ -1,0 +1,59 @@
+{
+  "videos": [
+    {
+      "src": "https://forum.yassinejemmali.me/media/je-visite-paris-avec-ma-famille.mp4",
+      "poster": "https://forum.yassinejemmali.me/media/je-visite-paris-avec-ma-famille.jpg",
+      "width": 1280,
+      "height": 960,
+      "readyState": 4,
+      "time": 1.6634,
+      "error": null
+    },
+    {
+      "src": "https://forum.yassinejemmali.me/media/je-veux-boire-de-l-eau.mp4",
+      "poster": "https://forum.yassinejemmali.me/media/je-veux-boire-de-l-eau.jpg",
+      "width": 1280,
+      "height": 960,
+      "readyState": 4,
+      "time": 0.7978,
+      "error": null
+    },
+    {
+      "src": "https://forum.yassinejemmali.me/media/je-visite-paris-avec-ma-famille.mp4",
+      "poster": "https://forum.yassinejemmali.me/media/je-visite-paris-avec-ma-famille.jpg",
+      "width": 1280,
+      "height": 960,
+      "readyState": 4,
+      "time": 0.7993,
+      "error": null
+    },
+    {
+      "src": "https://forum.yassinejemmali.me/media/bonjour-comment-ca-va.mp4",
+      "poster": "https://forum.yassinejemmali.me/media/bonjour-comment-ca-va.jpg",
+      "width": 1280,
+      "height": 960,
+      "readyState": 4,
+      "time": 0.7885,
+      "error": null
+    },
+    {
+      "src": "https://forum.yassinejemmali.me/media/le-musee-est-ferme-demain.mp4",
+      "poster": "https://forum.yassinejemmali.me/media/le-musee-est-ferme-demain.jpg",
+      "width": 1280,
+      "height": 960,
+      "readyState": 4,
+      "time": 1.6428,
+      "error": null
+    },
+    {
+      "src": "https://forum.yassinejemmali.me/media/je-veux-apprendre-la-langue-des-signes.mp4",
+      "poster": "https://forum.yassinejemmali.me/media/je-veux-apprendre-la-langue-des-signes.jpg",
+      "width": 1280,
+      "height": 960,
+      "readyState": 4,
+      "time": 0.785,
+      "error": null
+    }
+  ],
+  "errors": []
+}

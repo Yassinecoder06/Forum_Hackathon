@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import * as THREE from "three";
-import { stitchAnimationPlan } from "../src/utils/planStitcher";
+import { stitchAnimationPlan, libraryPreview } from "../src/utils/planStitcher";
 import { HumanoidRetargeter } from "../src/utils/retargetHumanoid";
-import { browWeights, faceCalibration, sampleFace, stabilizeRotations } from "../src/utils/avatarPlayback";
+import { browWeights, faceCalibration, sampleFace, stabilizeRotations, hasHand } from "../src/utils/avatarPlayback";
 import { handContact, segmentDistance } from "../src/utils/handContact";
 import type { AnimationPlan, MotionFile } from "../src/types/contract";
 const makeClip = (x: number): MotionFile => ({
@@ -254,3 +254,11 @@ const still = stitchAnimationPlan(core, new Map([["p", walk(0, 0)], ["q", walk(0
 assert(still.frames.every((f) => f.joints.right_wrist[0] >= 0 && f.joints.right_wrist[0] <= 0.2), "No overshoot between resting endpoints");
 console.log("Stitching checks passed: signing-core windows, continuous arm bridges, wrist-relative hand shapes.");
 }
+
+// Reversible quality metadata: software contracts, not LSF ground truth.
+const rejectedHand = {time_ms:40,joints:fullHand,hand_tracking:{left:{observed:true,source:"actual detector"}},playback_quality:{left_hand_rejected:true}};
+assert(!hasHand(rejectedHand,"left"),"Rejected tracking is interpolated only for playback");
+assert(hasHand({...rejectedHand,playback_quality:undefined},"left"),"Keep the original observation available");
+const libraryClip={...a,playback_window:{start_ms:0,end_ms:100}};
+const libraryRaw=JSON.stringify(libraryClip);libraryPreview(libraryClip);
+assert.equal(JSON.stringify(libraryClip),libraryRaw,"Preview windows never mutate original source data");

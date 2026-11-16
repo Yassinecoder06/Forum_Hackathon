@@ -7,7 +7,7 @@ const fmt = { format: (n) => new Intl.NumberFormat("fr-FR").format(n).replace(/\
 const framed = (video) => el("div", { className: "frame" }, video);
 const inView = new IntersectionObserver((entries) => {
   for (const { target, isIntersecting } of entries) {
-    if (isIntersecting) target.play().catch(() => {}); else target.pause();
+    if (isIntersecting && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) target.play().catch(() => { target.controls = true; }); else target.pause();
   }
 }, { threshold: 0.4 });
 const el = (tag, props = {}, children = []) => {
@@ -15,6 +15,23 @@ const el = (tag, props = {}, children = []) => {
   for (const child of [].concat(children)) node.append(child);
   return node;
 };
+
+function previewMedia(video, ex) {
+  video.controls = true;
+  video.muted = true;
+  video.loop = true;
+  video.playsInline = true;
+  video.poster = ex.poster || ex.video.replace(/\.webm$/, ".jpg");
+  const choices = ex.video_mp4 ? [[ex.video_mp4,"video/mp4"],[ex.video,"video/webm"]] : [[ex.video,"video/webm"]];
+  video.removeAttribute("src");
+  video.replaceChildren(...choices.map(([src,type]) => el("source",{src,type})));
+  video.addEventListener("error", () => {
+    const parent = video.closest(".example-media") || video.parentElement;
+    if (!parent?.querySelector(".preview-error")) parent?.append(el("p",{className:"preview-error",textContent:"Aperçu indisponible sur ce navigateur. Ouvrez le Studio pour jouer les signes."}));
+  });
+  video.load();
+  return video;
+}
 
 const DIAGRAMS = [
   ["01-overview", "Vue d'ensemble", "Une phrase en français devient une suite de signes réels, joués par l'avatar."],
@@ -49,9 +66,8 @@ function renderExample(ex) {
       el("button", { className: "chip", type: "button", textContent: s.gloss, title: `Voir la vidéo source de ${s.gloss}`, onclick: () => showSource(s) }),
       el("span", { className: "dur", textContent: `${(s.duration_ms / 1000).toFixed(1).replace(".", ",")} s` }),
     ]));
-  const missing = ex.unknowns.length ? `Non signés : ${ex.unknowns.join(", ")}` : "Tous les mots sont signés";
-  const video = el("video", { src: ex.video, muted: true, loop: true, playsInline: true, preload: "metadata",
-    title: "Cliquer pour mettre en pause ou reprendre", onclick: () => (video.paused ? video.play() : video.pause()) });
+  const missing = ex.unknowns.length ? `Non signés : ${ex.unknowns.join(", ")}` : "Concepts du dictionnaire représentés";
+  const video = previewMedia(el("video", {preload:"metadata",title:"Aperçu des mouvements capturés"}), ex);
   inView.observe(video);
   return el("article", { className: "example" }, [
     el("div", { className: "example-media" }, framed(video)),
@@ -85,7 +101,7 @@ async function main() {
   renderTabs();
   const data = await fetch("data/examples.json").then((r) => r.json());
   const featured = data.examples.find((e) => e.slug === "je-visite-paris-avec-ma-famille") || data.examples[0];
-  document.getElementById("hero-video").src = featured.video;
+  previewMedia(document.getElementById("hero-video"), featured);
   document.getElementById("hero-text").textContent = `« ${featured.text} »`;
   document.getElementById("hero-glosses").replaceChildren(...featured.signs.map((s) => el("span", { className: "chip", textContent: s.gloss })));
   document.getElementById("gallery").replaceChildren(...data.examples.map(renderExample));

@@ -272,7 +272,7 @@ def compose_draft(draft, audio=None):
     from .services.animation_timing import segment_timing
     transition_ms=333 if len(selected)>1 else 0
     # Play each sign's active core so bridges join signing hands, not two rest poses.
-    if len(selected)>1:
+    if selected:
         from .services.sign_core import clip_windows
         root,_,_=registry()
         windows=clip_windows([asset(root,m) for m in selected])
