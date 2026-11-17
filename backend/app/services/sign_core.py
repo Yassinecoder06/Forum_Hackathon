@@ -15,8 +15,8 @@ CORE_SHARE = 0.4   # the core starts/ends once a wrist covers 40 % of the sign's
                    # from rest; signers' idle drift is 3-8 cm, sign sizes range from ~10 to ~50 cm
 PAD_FRAMES = 0     # the approach from / release to rest is replaced by the bridge
 MIN_CORE_MS = 300  # very short cores are widened around their peak, never back to the whole clip
-LEAD_IN_MS = 400   # sentence start: keep part of the first sign's approach from rest
-LEAD_OUT_MS = 600  # sentence end: keep part of the last sign's return to rest
+LEAD_IN_MS = 120   # sentence start: keep part of the first sign's approach from rest
+LEAD_OUT_MS = 180  # sentence end: keep part of the last sign's return to rest
 # Every window boundary is snapped to a captured frame time, so playback never resamples there.
 
 

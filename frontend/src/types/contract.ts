@@ -88,6 +88,7 @@ export interface AnimationPlan {
 }
 
 export interface MotionFrame {
+  playback_quality?: Record<string, boolean | string>;
   playback_origin?: "source" | "transition" | "audio_sample";
   time_ms: number;
   joints: Record<string, [number, number, number]>;
@@ -104,6 +105,7 @@ export interface MotionAttribution {
 }
 
 export interface MotionFile {
+  playback_window?: { start_ms: number; end_ms: number; method?: string };
   face_calibration?: { brow_left: number; brow_right: number };
   synthetic?: boolean;
   attribution?: MotionAttribution;

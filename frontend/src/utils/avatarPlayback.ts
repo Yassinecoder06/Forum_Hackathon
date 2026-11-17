@@ -131,6 +131,6 @@ export function faceCalibration(motion: MotionFile) {
 }
 
 export function hasHand(frame: MotionFrame, side: string) {
-  return frame.hand_tracking?.[side]?.observed !== false && ["index", "middle", "ring", "pinky", "thumb"].every((finger) =>
+  return frame.playback_quality?.[`${side}_hand_rejected`] !== true && frame.hand_tracking?.[side]?.observed !== false && ["index", "middle", "ring", "pinky", "thumb"].every((finger) =>
     [1, 2, 3, 4].every((i) => frame.joints[`${side}_${finger}_${i}`]?.every(Number.isFinite)));
 }

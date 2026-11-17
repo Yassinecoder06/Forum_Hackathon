@@ -135,3 +135,6 @@ dialog .close { float: right; border: 0; background: var(--sand); width: 34px; h
   .stats dt { font-size: 24px; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .button { transition: none; } }
+
+.preview-error { margin:0; padding:12px 18px; color:#fff0d6; background:#422516; font:14px/1.4 system-ui; }
+video { -webkit-tap-highlight-color:transparent; }

@@ -1,0 +1,15 @@
+[Unit]
+Description=Dedicated Cloudflare tunnel for SignaCulture
+After=network-online.target signaculture-forum.service
+Wants=signaculture-forum.service
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/cloudflared --no-autoupdate tunnel --config %h/.config/signaculture-forum/tunnel.yml run
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+UMask=0077
+
+[Install]
+WantedBy=default.target
