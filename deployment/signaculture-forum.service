@@ -1,0 +1,16 @@
+[Unit]
+Description=SignaCulture authenticated research preview
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/Projects/Forum_Hackathon
+EnvironmentFile=%h/.config/signaculture-forum/app.env
+ExecStart=%h/Projects/Forum_Hackathon/.venv-deploy/bin/python -m uvicorn deployment.server:create_app --factory --host 127.0.0.1 --port 8320 --proxy-headers --forwarded-allow-ips=127.0.0.1
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+UMask=0077
+
+[Install]
+WantedBy=default.target
