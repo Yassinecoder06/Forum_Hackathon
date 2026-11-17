@@ -29,7 +29,7 @@ def test_json_capture_lookup_and_persistence(isolated):
     assert response.status_code==202
     job=response.json();assert job['status']=='ready'
     assert client.get(f"/captures/{job['job_id']}/motion").json()['synthetic'] is True
-    record=client.post(f"/captures/{job['job_id']}/register",json={'concept':'bonjour','aliases':['salutation'],'source':'automated fixture test','license':'CC0-1.0'})
+    record=client.post(f"/captures/{job['job_id']}/register",json={'sign_language':'fsl','concept':'bonjour','aliases':['salutation'],'source':'automated fixture test','license':'CC0-1.0'})
     assert record.status_code==200
     entry=record.json();assert entry['motion']['synthetic'] is True
     lookup=client.post('/gloss-lookup',json={'text':'bonjour salutation','include_synthetic':True}).json()
@@ -80,3 +80,35 @@ def test_active_cv_landmarks_match_registered_capture(isolated,monkeypatch):
     monkeypatch.setattr(capture_library,'library',lambda:[{'capture_id':job,'raw_animics_path':str(candidate)}])
     result=isolated.get('/captures/'+job+'/landmarks')
     assert result.status_code==200 and result.content==b'current raw capture'
+
+
+def test_capture_requires_explicit_france_language(isolated):
+    data=technical_motion()
+    job=isolated.post('/captures',data={'rights_confirmed':'true'},files={'file':('fixture.json',json.dumps(data))}).json()
+    url=f"/captures/{job['job_id']}/register"
+    body={'concept':'languagefixture','aliases':[],'source':'technical fixture','license':'CC0-1.0'}
+    for language in [None,'sfb','ssr','und','LSF','FSL']:
+        request=dict(body)
+        if language is not None:request['sign_language']=language
+        assert isolated.post(url,json=request).status_code==422
+    assert not capture_library.library()
+    assert isolated.get(f"/captures/{job['job_id']}/motion").status_code==200
+    request={**body,'sign_language':'fsl'}
+    entry=isolated.post(url,json=request).json()
+    assert entry['sign_language']=='fsl' and entry['language_status']=='declared_by_uploader_pending_review'
+    assert entry['gloss']['review_status']=='pending'
+
+
+@pytest.mark.parametrize('language',['sfb','ssr','und',None])
+def test_registry_excludes_conflicting_language_metadata(isolated,language):
+    data=technical_motion()
+    job=isolated.post('/captures',data={'rights_confirmed':'true'},files={'file':('fixture.json',json.dumps(data))}).json()
+    body={'sign_language':'fsl','concept':'foreignfixture','aliases':[],'source':'technical fixture','license':'CC0-1.0'}
+    response=isolated.post(f"/captures/{job['job_id']}/register",json=body)
+    assert response.status_code==200
+    entries=capture_library.library()
+    if language is None:entries[0].pop('sign_language')
+    else:entries[0]['sign_language']=language
+    capture_library.write_json(capture_library.storage()/'library.json',entries)
+    result=isolated.post('/gloss-lookup',json={'text':'foreignfixture','include_synthetic':True}).json()
+    assert result['gloss_sequence']==[]

@@ -42,7 +42,7 @@ def status():
     try: lexical=len(json.loads(inventory.read_text())['entries'])
     except (ValueError,OSError,KeyError): lexical=0
     return {'lexical_video_references':lexical,'datasets':manifests,'runs':reports(),
-        'corpus':corpus_status(),'transition_experiment':transition_report(),'linguistic_review':'pending','translation_validated':False}
+        'recent_experiments':recent_experiments(),'corpus':corpus_status(),'transition_experiment':transition_report(),'linguistic_review':'pending','translation_validated':False}
 
 def predict(text,run_id):
     report=next((r for r in reports() if r['run_id']==run_id),None)
@@ -56,3 +56,44 @@ def predict(text,run_id):
         if result.returncode: raise RuntimeError('Le modèle n’a pas pu produire de prédiction. Consultez les logs de l’expérience.')
         return json.loads(result.stdout.strip().splitlines()[-1])
     finally: PREDICTION_LOCK.release()
+
+
+def recent_experiments():
+    """Read-only research ledger summaries; never register these adapters for inference."""
+    import hashlib
+    import math
+    import os
+    import sqlite3
+    from contextlib import closing
+    path=Path(os.getenv('SIGNACULTURE_RESEARCH_CATALOG',str(ROOT/'data/catalog/catalog.sqlite')))
+    if not path.is_file():return {'available':False,'entries':[],'reason':'catalog_absent'}
+    try:
+        with closing(sqlite3.connect(path.resolve().as_uri()+'?mode=ro',uri=True)) as db:
+            rows=db.execute('SELECT m.run_id,m.model_base,m.hyperparameters_json,m.metrics_json,i.sign_language,i.representation,i.result_sha256,i.report_path FROM model_runs m JOIN research_experiment_index i ON m.run_id=i.run_id ORDER BY m.run_id').fetchall()
+    except sqlite3.DatabaseError:return {'available':False,'entries':[],'reason':'index_unavailable'}
+    entries=[]
+    for run,model,config_raw,metrics_raw,language,representation,digest,report in rows:
+        if language not in ('fsl','sfb'):continue
+        entry={'run_id':run,'model_base':model,'sign_language':language,'representation':representation,'evidence_status':'unavailable','inference_ready':False,'linguistic_review':'pending','evaluation_scope':'development; inspected during model selection','metrics':None}
+        report=Path(report).resolve()
+        if not any(report.is_relative_to(parent) for parent in (ROOT/'.runtime',ROOT/'reports/private')):
+            entry['evidence_status']='outside_allowed_roots';entries.append(entry);continue
+        try:
+            if report.stat().st_size>1024*1024:raise ValueError('Oversized report')
+            if hashlib.sha256(report.read_bytes()).hexdigest()!=digest:
+                entry['evidence_status']='changed';entries.append(entry);continue
+            config=json.loads(config_raw);raw=json.loads(metrics_raw);proof=json.loads(report.read_bytes())
+            if proof.get('status')!='complete' or raw!=proof.get('validation',proof.get('metrics',proof)):
+                entry['evidence_status']='metrics_mismatch';entries.append(entry);continue
+            expected='sfb' if config.get('language')=='LSFB' or config.get('task')=='French machine-translated input to full LSFB graph; feasibility' else 'fsl' if config.get('language')=='fsl' else None
+            if expected!=language:
+                entry['evidence_status']='language_mismatch';entries.append(entry);continue
+            def number(value):return float(value) if type(value) in (int,float) and math.isfinite(value) else None
+            graph=representation=='temporal_graph'
+            metrics={'examples':number(raw.get('examples')),'exact':number(raw.get('graph_exact' if graph else 'exact')),'wer':None if graph else number(raw.get('operation_wer',raw.get('wer'))),'triple_f1':number(raw.get('triple_micro_f1')) if graph else None,'valid_graphs':number(raw.get('valid_graphs')) if graph else None}
+            multi=raw.get('by_length',{}).get('multiple_signs',{})
+            metrics['multi_sign_examples']=number(multi.get('examples'));metrics['multi_sign_exact']=number(multi.get('exact'))
+            entry.update(evidence_status='verified',metrics=metrics,train_examples=number(config.get('train')),input_provenance='DeepL-translated French' if graph else 'French free translation paired with source annotations',limitations=['No qualified local signer approval','Results across tasks/splits are not directly comparable','Not enabled for signing or avatar inference'])
+        except (OSError,ValueError,TypeError,AttributeError):entry['evidence_status']='unreadable'
+        entries.append(entry)
+    return {'available':True,'entries':entries,'translation_validated':False}

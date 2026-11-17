@@ -1,0 +1,13 @@
+[Unit]
+Description=SignaCulture standalone webcam studio
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/Projects/Active/Forum_Hackathon/webcam
+ExecStart=/usr/bin/npm run preview
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target

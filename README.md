@@ -14,6 +14,8 @@ La vidéo ci-dessous montre la vidéo source et le squelette suivi. Cliquez sur 
 
 ## Essayer
 
+**Docker** : suivez le [guide Docker](deployment/DOCKER.md) pour lancer le Studio et l’API avec `docker compose up --build --detach --wait`, puis ouvrez **http://127.0.0.1:8088/studio/**.
+
 ```bash
 make setup
 python3 scripts/setup-avatar.py   # personnage local pour revue, voir docs/AVATAR_PROVENANCE.md
@@ -22,6 +24,8 @@ make dev
 ```
 
 Ouvrir **http://127.0.0.1:5173**. Dans Studio, essayer « Bonjour ». Bibliothèque permet de sélectionner un mouvement, de comparer sa vidéo source et de télécharger un aperçu WebM. Capturer accepte une vidéo autorisée, un JSON de mouvements ou un export de landmarks Animics. Recherche affiche les expériences terminées et permet d’interroger les checkpoints locaux.
+
+Pour ajouter la transcription française locale, téléchargez le modèle public dans Colab puis transférez-le au PC comme décrit dans [ASR_MODEL_SETUP.md](reports/ASR_MODEL_SETUP.md). Dans Studio, importer un audio/une vidéo affiche le texte reconnu comme brouillon ; le texte saisi ne change qu’après avoir choisi « Utiliser comme brouillon français ».
 
 La session actuelle contient **1 447 mouvements réels** : 1 007 captures Dicta-Sign acceptées et les 440 mouvements précédents. **Les 1 025 vidéos LSF publiques du portail Dicta-Sign ont été téléchargées et capturées** ; 18 restent hors lookup pour revue du suivi. Le [pipeline Dicta-Sign → glosses → poses](docs/DICTASIGN_PIPELINE.md) fournit les commandes, les résultats vérifiés et le diagramme. Dans Studio, essayer **Bonjour merci**, puis ouvrir **Exporter la chaîne glosses → poses** pour obtenir un `.pose` standard et une vidéo squelette via le véritable moteur upstream.
 
@@ -53,6 +57,7 @@ L’inventaire contient 447 concepts France-LSF avec licences par fichier, créd
 - Extraction MediaPipe du corps, des doigts et de quelques mesures faciales. Les occultations restent visibles ; profondeur et retargeting sont approximatifs.
 - Avatar articulé Three.js : IK des bras, orientation des paumes, os des doigts, longueurs préservées. Liaisons quintiques de 333 ms entre clips, timeline, comparaison avec la source et vrai export WebM avec filigrane et attribution. Le modèle local de revue et ses limites sont décrits dans [la provenance](docs/AVATAR_PROVENANCE.md).
 - Décodage audio/vidéo FFmpeg, estimation F0, RMS et pauses. Synchronisation approximative aux portions voisées, sans alignement mot à mot.
+- Transcription française locale faster-whisper, proposée comme brouillon éditable avant la composition de la séquence.
 - Inférence locale emotion2vec, affichée comme hypothèse. Les signaux faciaux capturés priment sur la modulation expressive expérimentale.
 - Catalogue SQLite séparant vidéos lexicales, annotations et paires de recherche ; provenance, licences, splits et évaluations conservés.
 
@@ -70,7 +75,7 @@ CHROME_PATH=/chemin/vers/chrome npm --prefix e2e run test:dictasign
 .worktrees/wt-codex2/training/.venv-train/bin/python -m pytest training/test_catalog.py training/test_adaptation.py
 ```
 
-76 tests API/schémas/mouvement et 24 tests de recherche passent, avec des vérifications frontend des transitions et du rig. Les [améliorations mesurées de l’avatar](docs/AVATAR_PLAYBACK.md) stabilisent les doigts, corrigent l’échelle des sourcils et limitent certaines collisions ; les cas résiduels sont documentés. Un test strictement marqué xfail conserve le défaut connu de détection du prénom Alice. Le contrôle navigateur couvre composition, recherche temporelle, téléchargement réel, audio, import, persistance, mobile et erreurs réseau. Les [captures et aperçu vidéo](artifacts/README.md) documentent le logiciel exécuté.
+La vérification locale du 17 novembre 2026 : `make test` passe 25 tests de schéma, 76 tests API/backend (un ignoré), 15 tests de capture de mouvement, les checks frontend, ESLint et le build production. Le smoke Playwright complet passe également, y compris la chaîne parole française → brouillon modifiable → mouvement avatar et export WebM. Un avertissement de dépréciation Starlette et un avertissement Vite sur la taille du chunk restent visibles. Les [améliorations mesurées de l’avatar](docs/AVATAR_PLAYBACK.md) stabilisent les doigts, corrigent l’échelle des sourcils et limitent certaines collisions ; les cas résiduels sont documentés. Le test xfail conserve le défaut connu de détection du prénom Alice. Les [captures et aperçu vidéo](artifacts/README.md) documentent le logiciel exécuté.
 
 Les modèles `.models/`, environnements, checkpoints et captures `.runtime/` sont ignorés par Git. Aucun téléchargement automatique n’a lieu lors d’une requête API. Le modèle français optionnel se configure dans [backend/README.md](backend/README.md).
 

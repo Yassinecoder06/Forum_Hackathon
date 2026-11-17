@@ -9,10 +9,10 @@ import { browWeights, faceCalibration, sampleFace } from "../../utils/avatarPlay
 import { IdleLife } from "../../utils/idleLife";
 import { createCafeBackdrop } from "../../utils/stageBackdrop";
 type Props = {
+  avatarCredit?: string;
   motion: MotionFile | null;
   currentTimeMs: number;
   expressiveModulation?: boolean;
-  energyFactor?: number;
   showSkeletonDebug?: boolean;
   emotion?: Record<string, number | string> | null;
   onCanvasReady?: (canvas: HTMLCanvasElement) => void;
@@ -143,11 +143,15 @@ export function AvatarCanvas(props: Props) {
     function render() {
       if (disposed) return;
       frameId = requestAnimationFrame(render);
-      const { motion, currentTimeMs, expressiveModulation, emotion } =
-        latest.current;
-      const joints = interpolateJointPositions(motion, currentTimeMs);
+      const {
+        motion,
+        currentTimeMs,
+        expressiveModulation,
+        emotion,
+      } = latest.current;
       // Anatomical neutral stance; old synthetic fixtures use the legacy mirrored X convention.
       if (!motion) {
+        const joints = interpolateJointPositions(null, currentTimeMs);
         for (const side of ["left", "right"]) {
           const sign = side === "left" ? 1 : -1;
           joints[`${side}_shoulder`] = [sign * 0.18, 1.48, 0];
@@ -155,6 +159,7 @@ export function AvatarCanvas(props: Props) {
           // Hands resting loosely together without the fingers interpenetrating.
           joints[`${side}_wrist`] = [sign * 0.17, 1.02, 0.1];
         }
+        retarget?.apply(joints);
       }
       if (motion && host) {
         const tracking = retarget?.applyMotion(motion, currentTimeMs);
@@ -167,7 +172,7 @@ export function AvatarCanvas(props: Props) {
           const uncertain = tracking && Object.values(tracking).some((s) => s === "held" || s === "untracked");
           note.textContent = uncertain ? "Suivi des mains incomplet · pose estimée à vérifier" : "";
         }
-      } else retarget?.apply(joints);
+      }
       // Display-only life layer on top of the reset-every-frame retargeted pose.
       const life = idle?.update(performance.now() / 1000, Boolean(motion));
       morph("eyeBlinkLeft", life?.blink ?? 0);
@@ -184,9 +189,10 @@ export function AvatarCanvas(props: Props) {
       const face = sampleFace(motion, currentTimeMs);
       const calibration = motion ? faceCalibration(motion) : undefined;
       const browLimit = .18 + .47 * THREE.MathUtils.clamp(face?.brow_reference_blend ?? (calibration ? 1 : 0), 0, 1);
-      const joy = expressiveModulation ? Number(emotion?.happy || 0) : 0,
-        sad = expressiveModulation ? Number(emotion?.sad || 0) : 0,
-        angry = expressiveModulation ? Number(emotion?.angry || 0) : 0;
+      const useEmotionMorphs = expressiveModulation && !motion;
+      const joy = useEmotionMorphs ? Number(emotion?.happy || 0) : 0,
+        sad = useEmotionMorphs ? Number(emotion?.sad || 0) : 0,
+        angry = useEmotionMorphs ? Number(emotion?.angry || 0) : 0;
       morph(
         "jawOpen",
         face && Number.isFinite(face.mouth_open) ? face.mouth_open * 2 : 0,
@@ -231,7 +237,7 @@ export function AvatarCanvas(props: Props) {
         <span className="hand-tracking-note" aria-live="off" />
       </div>
       <span className="avatar-view-note">
-        Avatar Eva · UPF-GTI / Ready Player Me
+        {props.avatarCredit ?? "Avatar"} · UPF-GTI / Ready Player Me
       </span>
     </div>
   );

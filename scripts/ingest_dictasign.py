@@ -68,6 +68,8 @@ def inventory_item(entry,cache):
     return [{**entry,**item,'page_sha256':hashlib.sha256(raw).hexdigest(),'source':'Dicta-Sign public lexical portal','language':'fsl','rights_status':'pending','licence':'Not specified per portal asset; local research preview; redistribution pending'} for item in parse_lsf(raw.decode('utf-8'),entry['page_url'])]
 
 def extract_entry(entry,register=True):
+    if entry.get('language') != 'fsl':
+        raise ValueError('Only explicitly identified France-LSF (fsl) entries can be ingested')
     job=str(uuid.uuid5(uuid.NAMESPACE_URL,entry['video_url']));folder=store.storage()/'captures'/job;folder.mkdir(parents=True,exist_ok=True)
     path=folder/'source.mp4';motion_path=folder/'motion.json';raw_path=folder/'animics-landmarks.json.gz'
     raw=read_or_fetch(path,entry['video_url']);checksum=hashlib.sha256(raw).hexdigest()
@@ -84,7 +86,7 @@ def extract_entry(entry,register=True):
     if q['pose_coverage']<.8 or max(q['left_hand_coverage'],q['right_hand_coverage'])<.35:
         return {**result,'status':'quality_review_needed'}
     if register:
-        registered=store.register(job,entry['concept_fr'],entry['labels'],entry['page_url'],entry['licence'])
+        registered=store.register(job,entry['concept_fr'],entry['labels'],entry['page_url'],entry['licence'],sign_language='fsl')
         with store.library_lock():
             rows=store.library()
             for row in rows:

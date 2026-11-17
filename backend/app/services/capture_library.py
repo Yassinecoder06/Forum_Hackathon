@@ -52,9 +52,12 @@ def runtime_python(kind):
 
 def capabilities():
     entries=library()
+    audio_python=runtime_python('audio')
     return {'capture':runtime_python('motion').is_file(),
-        'emotion':runtime_python('audio').is_file() and (ROOT/'.models/emotion2vec-seed/model.pt').is_file(),
+        'emotion':audio_python.is_file() and (ROOT/'.models/emotion2vec-seed/model.pt').is_file(),
+        'transcription':audio_python.is_file() and all((ROOT/'.models/faster-whisper-small'/name).is_file() for name in ('config.json','model.bin','tokenizer.json','vocabulary.txt')),
         'motion_model':'MediaPipe Holistic','emotion_model':'emotion2vec+ seed',
+        'transcription_model':'Systran/faster-whisper-small',
         'library_count':len(entries),'cv_corrected_count':sum(bool(r.get('cv_generation')) for r in entries),
         'corpus':corpus_status(),'dictasign':dictasign_status()}
 
@@ -79,17 +82,24 @@ def process_job(job,source):
     folder=source.parent
     job['status']='processing';write_json(folder/'status.json',job)
     try:
-        result=subprocess.run([str(runtime_python('motion')),str(ROOT/'backend/app/workers/capture.py'),str(source),str(folder/'motion.json'),str(folder/'progress.json')],capture_output=True,text=True,timeout=240,cwd=ROOT)
+        raw_pending = folder / 'animics-landmarks.pending'
+        result=subprocess.run([
+            str(runtime_python('motion')), str(ROOT/'backend/app/workers/capture.py'),
+            str(source), str(folder/'motion.json'), str(folder/'progress.json'),
+            '--raw-animics', str(raw_pending),
+        ],capture_output=True,text=True,timeout=240,cwd=ROOT)
         if result.returncode:
             error=folder/'motion.error'
             raise ValueError(error.read_text() if error.exists() else 'Extraction impossible. Vérifiez le runtime MediaPipe et le format vidéo.')
         motion=json.loads((folder/'motion.json').read_text())
-        job.update(status='ready',progress=100,duration_ms=motion['duration_ms'],quality=motion['quality'],warnings=motion['warnings'])
+        raw_pending.replace(folder / 'animics-landmarks.json.gz')
+        job.update(status='ready',progress=100,duration_ms=motion['duration_ms'],quality=motion['quality'],warnings=motion['warnings'],landmarks_available=True)
     except subprocess.TimeoutExpired:
         job.update(status='failed',error='Délai d’extraction dépassé (4 minutes). Réduisez la durée ou la résolution du clip.')
     except Exception as exc:
         job.update(status='failed',error=str(exc))
     finally:
+        (folder / 'animics-landmarks.pending').unlink(missing_ok=True)
         write_json(folder/'status.json',job)
         with LOCK: ACTIVE.discard(job['job_id'])
 
@@ -112,7 +122,8 @@ def get_job(job_id):
             except (ValueError,OSError): pass
     return job
 
-def register(job_id,concept,aliases,source,license_name):
+def register(job_id,concept,aliases,source,license_name,sign_language=None):
+    if sign_language != "fsl": raise ValueError("La bibliothèque du studio accepte uniquement la LSF de France (fsl). La capture reste disponible pour prévisualisation.")
     folder=job_folder(job_id)
     if get_job(job_id)['status']!='ready': raise ValueError('Terminez l’extraction avant d’enregistrer le signe.')
     motion=json.loads((folder/'motion.json').read_text())
@@ -126,7 +137,7 @@ def register(job_id,concept,aliases,source,license_name):
         'rig_version':'signaculture-v1','fps':motion['fps'],'duration_ms':motion['duration_ms'],
         'license':license_name,'quality_status':'captured_pending_review','rights_status':'pending',
         'animation_review':'pending','synthetic':bool(motion.get('synthetic',False))}
-    entry={'gloss':gloss,'motion':asset,'source':source,'capture_id':job_id,'quality':motion['quality']}
+    entry={'gloss':gloss,'motion':asset,'source':source,'capture_id':job_id,'quality':motion['quality'], 'sign_language':sign_language,'language_status':'declared_by_uploader_pending_review'}
     with library_lock():
         entries=[x for x in library() if x['motion']['motion_id']!=identifier]
         entries.append(entry);write_json(storage()/'library.json',entries)

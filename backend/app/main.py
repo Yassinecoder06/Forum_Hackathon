@@ -1,9 +1,11 @@
 """Local experimental lookup API; no translation or emotion model claims."""
+import gzip
 import json
 import os
 from pathlib import Path
 import sqlite3
 import uuid
+import zlib
 from datetime import datetime, timezone
 
 import numpy as np
@@ -48,7 +50,8 @@ def registry():
     try:
         gloss = [GlossEntry.model_validate(x) for x in json.loads((root/'data/glossary.json').read_text())]
         motions = [MotionAsset.model_validate(x) for x in json.loads((root/'data/motions_manifest.json').read_text())]
-        imported = capture_library.library()
+        # Legacy records require source-verified migration; absence is not evidence of fsl.
+        imported = [row for row in capture_library.library() if row.get('sign_language') == 'fsl']
         gloss.extend(GlossEntry.model_validate(x['gloss']) for x in imported)
         motions.extend(MotionAsset.model_validate(x['motion']) for x in imported)
         if len({x.motion_id for x in motions}) != len(motions) or len({x.gloss_id for x in gloss}) != len(gloss):
@@ -97,7 +100,8 @@ def health(): return {'status': 'ok'}
 
 @app.get('/capabilities')
 def capabilities():
-    return {**capture_library.capabilities(), 'nlp': mode()}
+    name, path = local_avatar()
+    return {**capture_library.capabilities(), 'nlp': mode(), 'avatar': name if path else None}
 
 @app.get('/library')
 def captured_library():
@@ -124,7 +128,9 @@ def delete_library_entry(motion_id: str):
 async def capture(file: UploadFile = File(...), rights_confirmed: bool = Form(...)):
     if not rights_confirmed:
         raise HTTPException(422, 'Confirmez que vous avez le droit de traiter cette vidéo.')
-    is_json=(file.filename or '').lower().endswith('.json')
+    filename = (file.filename or '').lower()
+    compressed_json = filename.endswith('.json.gz')
+    is_json = compressed_json or filename.endswith('.json')
     if not is_json and not capture_library.capabilities()['capture']:
         raise HTTPException(503, 'Runtime de capture absent. Lancez bash scripts/setup-models.sh motion.')
     with capture_library.LOCK:
@@ -147,8 +153,17 @@ async def capture(file: UploadFile = File(...), rights_confirmed: bool = Form(..
     if is_json:
         from .services.landmark_import import convert_animics
         try:
-            imported=convert_animics(json.loads(source.read_text()))
-        except (ValueError,KeyError,TypeError,UnicodeDecodeError) as exc:
+            if compressed_json:
+                limit = 64 * 1024 * 1024
+                with gzip.open(source, 'rb') as stream:
+                    content = stream.read(limit + 1)
+                if len(content) > limit:
+                    source.unlink(missing_ok=True)
+                    raise HTTPException(413, 'Export JSON limité à 64 Mio après décompression.')
+            else:
+                content = source.read_bytes()
+            imported=convert_animics(json.loads(content))
+        except (ValueError,KeyError,TypeError,OSError,EOFError,zlib.error) as exc:
             source.unlink(missing_ok=True)
             raise HTTPException(422,f'Export JSON invalide : {exc}')
         quality=imported.get('quality',{'pose_coverage':1,'left_hand_coverage':0,'right_hand_coverage':0,'face_coverage':0,'sampled_frames':len(imported['frames'])})
@@ -189,6 +204,7 @@ def bonjour_source():
     return FileResponse(ROOT/'data/public_examples/bonjour.webm',media_type='video/webm')
 
 class RegisterCapture(BaseModel):
+    sign_language: Literal['fsl']
     concept: str = Field(min_length=1,max_length=100)
     aliases: list[str] = Field(default_factory=list,max_length=30)
     source: str = Field(min_length=1,max_length=500)
@@ -198,7 +214,7 @@ class RegisterCapture(BaseModel):
 def register_capture(job_id: str, body: RegisterCapture):
     if not body.concept.strip() or not body.source.strip() or not body.license.strip():
         raise HTTPException(422, 'Le concept, la source et les droits sont obligatoires.')
-    try: return capture_library.register(job_id,body.concept,body.aliases,body.source,body.license)
+    try: return capture_library.register(job_id,body.concept,body.aliases,body.source,body.license,body.sign_language)
     except FileNotFoundError: raise HTTPException(404, 'Capture inconnue')
     except ValueError as exc: raise HTTPException(409,str(exc))
 
@@ -317,14 +333,14 @@ def render(request: PlanRequest):
     return {'plan': p, 'assets': assets, 'video_exported': False}
 
 @app.post('/analyze-audio', response_model=AudioFeatures)
-async def audio(file: UploadFile = File(...), include_emotion: bool = Query(False)):
+async def audio(file: UploadFile = File(...), include_emotion: bool = Query(False), include_transcription: bool = Query(False)):
     from starlette.concurrency import run_in_threadpool
     from .services.audio_analysis import analyse
     raw = await file.read(10*1024*1024+1)
     if len(raw)>10*1024*1024: raise HTTPException(413,'Audio limité à 10 Mo.')
     if not raw: raise HTTPException(422,'Le fichier est vide.')
     try:
-        return await run_in_threadpool(analyse,raw,file.filename or 'voice.wav',include_emotion)
+        return await run_in_threadpool(analyse,raw,file.filename or 'voice.wav',include_emotion,include_transcription)
     except ValueError as exc: raise HTTPException(422,str(exc))
     except subprocess.TimeoutExpired: raise HTTPException(504,'Le traitement audio a dépassé le délai autorisé.')
     except FileNotFoundError: raise HTTPException(503,'FFmpeg est nécessaire pour décoder les médias.')
@@ -372,13 +388,26 @@ def compose_concepts(body: ConceptSequenceRequest):
     return compose_draft({'source_text':body.text,'gloss_sequence':[allowed[i] for i in body.concept_ids],
         'unknowns':body.unsupported},body.audio_features)
 
+def local_avatar():
+    configured = os.getenv('SIGNACULTURE_AVATAR')
+    names = (configured,) if configured else ('ReadyEva', 'Noa')
+    folder = Path(os.environ['SIGNACULTURE_AVATAR_DIR']) if os.getenv('SIGNACULTURE_AVATAR_DIR') else capture_library.storage() / 'avatar-candidates'
+    for name in names:
+        if name in ('ReadyEva', 'Noa'):
+            path = folder / f'{name}.glb'
+            if path.is_file():
+                return name, path
+    return configured, None
+
+
 @app.get('/avatar/model')
 def avatar_model():
-    # Explicit choice among checksum-pinned local candidates; no silent fallback.
-    name=os.getenv('SIGNACULTURE_AVATAR','ReadyEva')
-    if name not in ('ReadyEva','Noa'): raise HTTPException(503,f'Avatar inconnu : {name}')
-    path=capture_library.storage()/f'avatar-candidates/{name}.glb'
-    if not path.is_file(): raise HTTPException(503,f'Le modèle 3D local {name} est absent. Exécutez scripts/setup-avatar.py.')
+    name, path = local_avatar()
+    if path is None:
+        if name and name not in ('ReadyEva', 'Noa'):
+            raise HTTPException(503, f'Avatar inconnu : {name}')
+        detail = f'Le modèle 3D local {name} est absent.' if name else 'Aucun personnage 3D local trouvé.'
+        raise HTTPException(503, f'{detail} Exécutez scripts/setup-avatar.py.')
     # Revalidate on every load (ETag) so switching avatars is never masked by cache.
     return FileResponse(path,media_type='model/gltf-binary',headers={'Cache-Control':'no-cache'})
 

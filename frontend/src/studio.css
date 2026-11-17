@@ -491,6 +491,23 @@ h1 em {
   font-weight: 500;
   color: #8d553f;
 }
+.audio-transcript {
+  border-top: 1px solid #edf0e7;
+  margin-top: 18px;
+  padding-top: 16px;
+}
+.audio-transcript p {
+  margin: 10px 0 6px;
+  color: #58664f;
+  font-size: 13px;
+  line-height: 1.65;
+}
+.audio-transcript small {
+  display: block;
+  margin-bottom: 12px;
+  color: #9ba78e;
+  font-size: 10px;
+}
 .emotion-results {
   border-top: 1px solid #f1ede6;
   margin-top: 18px;

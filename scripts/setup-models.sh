@@ -12,6 +12,10 @@ case "${1:-all}" in
     uv venv --python 3.11 --allow-existing .venv-audio
     uv pip install --python .venv-audio/bin/python torch torchaudio --index-url https://download.pytorch.org/whl/cpu
     uv pip install --python .venv-audio/bin/python funasr librosa soundfile 'numpy<2' einops
+    uv pip install --python .venv-audio/bin/python -r backend/requirements-audio-asr.txt
     hf download emotion2vec/emotion2vec_plus_seed --revision 7be9a30d52bdc793cc24e6f7d25358d6648927c1 config.yaml configuration.json tokens.txt model.pt --local-dir .models/emotion2vec-seed --max-workers 1
+    if [[ ! -f .models/faster-whisper-small/model.bin ]]; then
+      echo "French ASR model missing. Follow reports/ASR_MODEL_SETUP.md to transfer the pinned public model from Colab."
+    fi
     ;;
 esac

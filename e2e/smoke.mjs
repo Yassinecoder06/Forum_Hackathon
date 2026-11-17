@@ -22,7 +22,7 @@ const errors = [];
 page.on("pageerror", (e) => errors.push(e.message));
 let imported = null;
 const api = async (path, options) => {
-  const r = await fetch(`${base}/api${path}`, options);
+  const r = await fetch(new URL(`/api${path}`, base), options);
   return r;
 };
 function wav() {
@@ -125,6 +125,51 @@ try {
   );
   console.log("Real WAV analysis and pause-aware timing passed.");
 
+  const capabilities = await (await api("/capabilities")).json();
+  if (process.env.E2E_REQUIRE_ASR === "1") {
+    assert.equal(capabilities.transcription, true, "Expected local ASR models and runtime");
+  }
+  if (capabilities.transcription) {
+    const transcription = page.waitForResponse(
+      (r) =>
+        r.url().includes("/api/analyze-audio") &&
+        r.url().includes("include_transcription=true") &&
+        r.request().method() === "POST",
+    );
+    await page.locator("input[type=file]").first().setInputFiles({
+      name: "bonjour.webm",
+      mimeType: "video/webm",
+      buffer: await readFile(
+        new URL("../data/public_examples/bonjour.webm", import.meta.url),
+      ),
+    });
+    const transcriptionResult = await (await transcription).json();
+    assert.equal(transcriptionResult.transcription.text, "Bonjour.");
+    await page.locator(".audio-transcript").getByText("Bonjour.", { exact: true }).waitFor();
+    const frenchText = page.getByLabel("Votre texte en français", {
+      exact: true,
+    });
+    assert.equal(await frenchText.inputValue(), twoSignText);
+    await page
+      .getByRole("button", { name: "Utiliser comme brouillon français", exact: true })
+      .click();
+    assert.equal(await frenchText.inputValue(), "Bonjour.");
+    const speechPlanResponse = page.waitForResponse(
+      (r) =>
+        r.url().endsWith("/api/compose-animation") &&
+        r.request().method() === "POST",
+    );
+    await page
+      .getByRole("button", { name: "Créer l’animation", exact: true })
+      .click();
+    const speechPlan = await (await speechPlanResponse).json();
+    assert.equal(speechPlan.source_text, "Bonjour.");
+    assert(speechPlan.segments.length > 0);
+    console.log("Local French ASR, draft correction and avatar motion handoff passed.");
+  } else {
+    console.log("Local French ASR check skipped: model runtime unavailable.");
+  }
+
   await page.getByRole("button", { name: "Capturer", exact: true }).click();
   const fixture = JSON.parse(
     await readFile(
@@ -148,6 +193,7 @@ try {
   await page.getByText("Extraction terminée", { exact: true }).waitFor();
   const concept = `TestPipeline${Date.now()}`;
   await page.getByLabel("Concept français", { exact: true }).fill(concept);
+  await page.getByLabel("Langue des signes de la capture", { exact: true }).selectOption("fsl");
   await page
     .getByLabel("Source de l’enregistrement", { exact: true })
     .fill("Automated original fixture; not a signer recording");

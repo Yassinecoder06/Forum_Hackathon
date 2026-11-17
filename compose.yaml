@@ -1,0 +1,40 @@
+services:
+  studio:
+    build:
+      context: .
+      target: ${SIGNACULTURE_DOCKER_TARGET:-full}
+    init: true
+    user: "${SIGNACULTURE_DOCKER_UID:-1000}:${SIGNACULTURE_DOCKER_GID:-1000}"
+    ports:
+      - "127.0.0.1:${SIGNACULTURE_DOCKER_PORT:-8088}:8080"
+    environment:
+      SIGNACULTURE_STORAGE: ${SIGNACULTURE_DOCKER_STORAGE:-/app/.runtime}
+      SIGNACULTURE_DB_PATH: ${SIGNACULTURE_DOCKER_STORAGE:-/app/.runtime}/plans.sqlite3
+      SIGNACULTURE_AVATAR_DIR: /avatars
+      SIGNACULTURE_AVATAR: ${SIGNACULTURE_AVATAR:-}
+    volumes:
+      - type: bind
+        source: ${SIGNACULTURE_DOCKER_STATE:-./.runtime/docker-state}
+        target: ${SIGNACULTURE_DOCKER_STORAGE:-/app/.runtime}
+      - type: bind
+        source: ${SIGNACULTURE_DOCKER_MODELS:-./.models}
+        target: /app/.models
+        read_only: true
+      - type: bind
+        source: ${SIGNACULTURE_DOCKER_AVATARS:-./.runtime/avatar-candidates}
+        target: /avatars
+        read_only: true
+
+  webcam:
+    profiles: [webcam]
+    build:
+      context: .
+      target: webcam
+    init: true
+    ports:
+      - "127.0.0.1:${SIGNACULTURE_DOCKER_WEBCAM_PORT:-5188}:5180"
+    volumes:
+      - type: bind
+        source: ${SIGNACULTURE_DOCKER_WEBCAM_MODELS:-./webcam/public/models}
+        target: /web/models
+        read_only: true

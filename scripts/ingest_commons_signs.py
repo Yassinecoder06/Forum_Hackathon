@@ -118,6 +118,10 @@ def prepare_author_mirrors(entries):
     return entries
 
 def ingest(entry):
+    if entry.get('language_variant') != 'LSF_FR':
+        raise ValueError('Only explicitly identified France-LSF (LSF_FR) entries can be ingested')
+    if entry.get('eligible_for_motion') is not True:
+        raise ValueError('Source entry is not eligible for motion ingestion')
     job_id=str(uuid.uuid5(uuid.NAMESPACE_URL,entry['source_url']))
     folder=store.storage()/'captures'/job_id;folder.mkdir(parents=True,exist_ok=True)
     path=folder/'source.mp4';motion_path=folder/'motion.json'
@@ -143,7 +147,7 @@ def ingest(entry):
     motion['attribution']['changes']='MediaPipe landmarks, approximate depth and procedural avatar retargeting'
     store.write_json(motion_path,motion)
     store.write_json(folder/'status.json',{'job_id':job_id,'status':'ready','progress':100,'filename':entry['title'],'duration_ms':motion['duration_ms'],'quality':quality})
-    registered=store.register(job_id,entry['concept_fr'],[],entry['credit']+' · '+entry['source_url'],entry['license'])
+    registered=store.register(job_id,entry['concept_fr'],[],entry['credit']+' · '+entry['source_url'],entry['license'],sign_language='fsl')
     with store.library_lock():
         entries=store.library()
         for item in entries:
