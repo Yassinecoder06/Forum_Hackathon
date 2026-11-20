@@ -1,7 +1,13 @@
-# Standalone webcam capture
+# Webcam capture
 
-Open **http://127.0.0.1:5180/** and select **Activer la caméra**. This is a
-separate app; the dashboard and its API are unchanged.
+In the Studio, select **Capturer → Capturer avec la webcam**, then choose
+**Utiliser dans le Studio** to load the take into the capture form. When
+your browser records video, the form holds the video for the server-side
+capture pipeline. It is uploaded only when you confirm permission and
+submit the form. Browsers without a video recording can pass landmark JSON.
+For local
+development, keep the webcam dev server running alongside the Studio. You can
+also open **http://127.0.0.1:5180/webcam/** directly.
 
 - Live body, fingers and face overlays, anatomical hand indicators and 52 face
   blendshape coefficients. These coefficients are measurements, not emotion labels.
@@ -17,7 +23,8 @@ separate app; the dashboard and its API are unchanged.
   SignaCulture importer, whose older Animics adapter assumes seconds.
 
 Camera permission is requested on activation. No microphone is requested.
-Frames are processed in a browser worker, never uploaded or automatically saved.
+Camera frames are processed in a browser worker. The Studio sends the derived
+motion to its API after you confirm permission and submit the capture form.
 Models and WASM are served locally after explicit setup. Closing/reloading the
 page discards the take unless downloaded. Webcam access requires localhost or HTTPS.
 

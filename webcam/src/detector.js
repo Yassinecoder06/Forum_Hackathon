@@ -7,10 +7,10 @@ const zoomCanvas=new OffscreenCanvas(256,256),zoomContext=zoomCanvas.getContext(
 function crop(image,box){zoomContext.drawImage(image,box.x,box.y,box.size,box.size,0,0,256,256);return zoomCanvas;}
 function close(){for(const m of [pose,hands,face])m?.close();pose=hands=face=null;}
 async function init(delegate){
-  const vision=await FilesetResolver.forVisionTasks('/vendor/mediapipe');
-  pose=await PoseLandmarker.createFromOptions(vision,{baseOptions:{modelAssetPath:'/models/pose.task',delegate},runningMode:'VIDEO',numPoses:1,minPoseDetectionConfidence:.5,minPosePresenceConfidence:.5,minTrackingConfidence:.5});
-  hands=await HandLandmarker.createFromOptions(vision,{baseOptions:{modelAssetPath:'/models/hands.task',delegate},runningMode:'IMAGE',numHands:2,minHandDetectionConfidence:.4,minHandPresenceConfidence:.4,minTrackingConfidence:.4});
-  face=await FaceLandmarker.createFromOptions(vision,{baseOptions:{modelAssetPath:'/models/face.task',delegate},runningMode:'IMAGE',numFaces:1,minFaceDetectionConfidence:.1,minFacePresenceConfidence:.4,outputFaceBlendshapes:true,outputFacialTransformationMatrixes:true});
+  const vision=await FilesetResolver.forVisionTasks(new URL('./mediapipe', self.location.href).href);
+  pose=await PoseLandmarker.createFromOptions(vision,{baseOptions:{modelAssetPath:new URL('../models/pose.task', self.location.href).href,delegate},runningMode:'VIDEO',numPoses:1,minPoseDetectionConfidence:.5,minPosePresenceConfidence:.5,minTrackingConfidence:.5});
+  hands=await HandLandmarker.createFromOptions(vision,{baseOptions:{modelAssetPath:new URL('../models/hands.task', self.location.href).href,delegate},runningMode:'IMAGE',numHands:2,minHandDetectionConfidence:.4,minHandPresenceConfidence:.4,minTrackingConfidence:.4});
+  face=await FaceLandmarker.createFromOptions(vision,{baseOptions:{modelAssetPath:new URL('../models/face.task', self.location.href).href,delegate},runningMode:'IMAGE',numFaces:1,minFaceDetectionConfidence:.1,minFacePresenceConfidence:.4,outputFaceBlendshapes:true,outputFacialTransformationMatrixes:true});
 }
 self.onmessage=async({data})=>{
   if(data.type==='init'){

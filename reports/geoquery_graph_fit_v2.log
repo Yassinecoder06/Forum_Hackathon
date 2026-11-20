@@ -1,0 +1,49 @@
+`torch_dtype` is deprecated! Use `dtype` instead!
+train 0 11.875
+train 10 3.921875
+train 20 3.203125
+train 30 2.34375
+train 40 2.0
+{"step": 50, "train_examples": 8, "exact_graphs": 0, "valid_graphs": 0, "cap_hits": 8, "seconds": 47.646058082580566}
+train 50 1.375
+train 60 1.1484375
+train 70 0.9921875
+train 80 1.0703125
+train 90 0.88671875
+{"step": 100, "train_examples": 8, "exact_graphs": 0, "valid_graphs": 0, "cap_hits": 8, "seconds": 95.15194272994995}
+train 100 0.85546875
+train 110 0.5390625
+train 120 0.52734375
+train 130 0.640625
+train 140 0.6796875
+{"step": 150, "train_examples": 8, "exact_graphs": 0, "valid_graphs": 0, "cap_hits": 7, "seconds": 142.2997703552246}
+train 150 0.421875
+train 160 0.34765625
+train 170 0.380859375
+train 180 0.29296875
+train 190 0.279296875
+{"step": 200, "train_examples": 8, "exact_graphs": 0, "valid_graphs": 0, "cap_hits": 2, "seconds": 187.99276161193848}
+train 200 0.298828125
+train 210 0.390625
+train 220 0.232421875
+train 230 0.173828125
+train 240 0.2578125
+{"step": 250, "train_examples": 8, "exact_graphs": 0, "valid_graphs": 1, "cap_hits": 1, "seconds": 231.4800820350647}
+train 250 0.287109375
+train 260 0.1904296875
+train 270 0.2412109375
+train 280 0.158203125
+train 290 0.126953125
+{"step": 300, "train_examples": 8, "exact_graphs": 2, "valid_graphs": 6, "cap_hits": 0, "seconds": 273.86740159988403}
+train 300 0.11376953125
+train 310 0.1171875
+train 320 0.11328125
+train 330 0.08740234375
+train 340 0.0693359375
+{"step": 350, "train_examples": 8, "exact_graphs": 5, "valid_graphs": 7, "cap_hits": 0, "seconds": 321.8457942008972}
+train 350 0.07763671875
+train 360 0.091796875
+train 370 0.03369140625
+train 380 0.054931640625
+train 390 0.050048828125
+{"step": 400, "train_examples": 8, "exact_graphs": 8, "valid_graphs": 8, "cap_hits": 0, "seconds": 370.9068179130554}

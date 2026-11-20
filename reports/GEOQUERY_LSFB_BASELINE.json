@@ -1,0 +1,200 @@
+{
+  "source": {
+    "commit": "879731568a5cd93177d11bf742740b187176c99a",
+    "files": {
+      "README.md": "0485c26a60222f9dfdb239296e588b62137e3f85a6fc44904cccac83697bca33",
+      "LICENSE": "f909030ff27a1f813f5242d3eec410b8a691a3e528eabd450765890818dbc5f9",
+      "json-files/geoquery-lsfb-250.jsonl": "a59f35639b76cf8c4f232a026dbbc60187fb90fae358710906aa7408beb651d4",
+      "json-files/geoquery-lsfb-4500.jsonl": "0819d4d81012886829ed0b1f369e2acaa42d8d651719d71376745bf0613a2263"
+    },
+    "source": "https://gitlab.unamur.be/beehaif/GeoQuery-LSFB"
+  },
+  "counts": {
+    "train": 203,
+    "val": 47
+  },
+  "sign_language": "LSFB",
+  "source_french": "DeepL translation from original English per sourceREADME",
+  "signed_originals": "human native signer recording and HamNoSys transcription per source",
+  "local_review": "pending",
+  "augmentation_used": false,
+  "split": "template-type disjoint; verified zero entity-normalizedFunQLstructure overlap",
+  "single_signer": "no signer-independent claim",
+  "train_hamnosys_types": 255,
+  "validation_articulation_occurrences": 564,
+  "validation_unseen_hamnosys_occurrences": 48,
+  "conflicting_french_groups": [
+    {
+      "split": "train",
+      "conflicting_input_groups": 14
+    },
+    {
+      "split": "val",
+      "conflicting_input_groups": 3
+    }
+  ],
+  "graphs_checked": 250,
+  "invalid_graphs": [
+    {
+      "split": "train",
+      "id": "34",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "train",
+      "id": "41",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "train",
+      "id": "48",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "train",
+      "id": "291",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "train",
+      "id": "346",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "train",
+      "id": "401",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "train",
+      "id": "464",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "train",
+      "id": "465",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "train",
+      "id": "466",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "train",
+      "id": "467",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "train",
+      "id": "469",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "train",
+      "id": "470",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "train",
+      "id": "471",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "train",
+      "id": "479",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "train",
+      "id": "489",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "train",
+      "id": "683",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "train",
+      "id": "780",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "val",
+      "id": "78",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "val",
+      "id": "85",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "val",
+      "id": "94",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "val",
+      "id": "474",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "val",
+      "id": "499",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "val",
+      "id": "513",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "val",
+      "id": "526",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "val",
+      "id": "531",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "val",
+      "id": "541",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "val",
+      "id": "550",
+      "error": "Dangling temporal relation"
+    }
+  ],
+  "graphs_validated": 223,
+  "metrics": {
+    "char_tfidf": {
+      "examples": 47,
+      "serialized_graph_exact": 0.0,
+      "triple_set_exact": 0.0,
+      "triple_micro_f1": 0.22498962224989622,
+      "articulation_micro_f1": 0.36663611365719523,
+      "invalid_reference_graphs": 10,
+      "invalid_prediction_graphs": 3,
+      "all_graphs_structurally_valid": false,
+      "interpretation": "lexical/graph overlap only; not signing comprehension"
+    },
+    "word_tfidf": {
+      "examples": 47,
+      "serialized_graph_exact": 0.0,
+      "triple_set_exact": 0.0,
+      "triple_micro_f1": 0.22673709874034945,
+      "articulation_micro_f1": 0.3534715960324617,
+      "invalid_reference_graphs": 10,
+      "invalid_prediction_graphs": 2,
+      "all_graphs_structurally_valid": false,
+      "interpretation": "lexical/graph overlap only; not signing comprehension"
+    }
+  },
+  "production_ready": false
+}

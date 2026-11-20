@@ -7,3 +7,4 @@ CREATE TABLE pair_annotations(pair_id TEXT REFERENCES pairs,segment_id TEXT REFE
 CREATE TABLE pairs(pair_id TEXT PRIMARY KEY,source_id TEXT REFERENCES sources,french_text TEXT,raw_gloss_sequence TEXT,split_group TEXT,split TEXT,linguistic_review TEXT CHECK(linguistic_review IN ('PENDING_LOCAL_REVIEW','APPROVED')),record_json TEXT NOT NULL);
 CREATE TABLE reviews(review_id TEXT PRIMARY KEY,pair_id TEXT REFERENCES pairs,reviewer_role TEXT,decision TEXT,timestamp TEXT,notes TEXT);
 CREATE TABLE sources(source_id TEXT PRIMARY KEY,url TEXT,revision TEXT,license_id TEXT,terms_url TEXT,access TEXT,notes TEXT);
+CREATE TABLE research_experiment_index(run_id TEXT PRIMARY KEY REFERENCES model_runs(run_id),sign_language TEXT NOT NULL CHECK(sign_language IN ('fsl','sfb')),representation TEXT NOT NULL,result_sha256 TEXT NOT NULL,report_path TEXT NOT NULL,qualified_review INTEGER NOT NULL CHECK(qualified_review=0));

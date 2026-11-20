@@ -1,0 +1,31 @@
+{
+  "method": "casefolded exact canonical gloss label; plain bracketed UD FORM only",
+  "registry_real_motions": 1447,
+  "splits": {
+    "train": {
+      "examples": 39,
+      "other_form_occurrences": 47,
+      "plain_form_occurrences": 168,
+      "exact_label_available": 70,
+      "exact_label_rights_cleared": 37,
+      "exact_label_rights_and_review_approved": 0,
+      "examples_all_plain_forms_available": 2
+    },
+    "val": {
+      "examples": 28,
+      "other_form_occurrences": 44,
+      "plain_form_occurrences": 150,
+      "exact_label_available": 74,
+      "exact_label_rights_cleared": 49,
+      "exact_label_rights_and_review_approved": 0,
+      "examples_all_plain_forms_available": 6
+    }
+  },
+  "candidate_motion_files_checked": 110,
+  "candidate_motion_files_valid": 110,
+  "inventory_followup": {
+    "labels_without_valid_motion": 126,
+    "labels_without_rights_cleared_motion": 161,
+    "unavailable_labels_with_inventory_candidate": 2
+  }
+}

@@ -1,0 +1,29 @@
+You are using the default legacy behaviour of the <class 'transformers.models.t5.tokenization_t5.T5Tokenizer'>. This is expected, and simply means that the `legacy` (previous) behavior will be used so nothing changes for you. If you want to use the new behaviour, set `legacy=False`. This should only be set if you understand what it means, and thoroughly read the reason why this was added as explained in https://github.com/huggingface/transformers/pull/24565
+`torch_dtype` is deprecated! Use `dtype` instead!
+/home/jmal/Projects/Active/Forum_Hackathon/.runtime/t5-local-venv/lib/python3.11/site-packages/peft/tuners/tuners_utils.py:1225: UserWarning: Model has `tie_word_embeddings=True` and a tied layer is part of the adapter, but `ensure_weight_tying` is not set to True. This can lead to complications, for example when merging the adapter or converting your model to formats other than safetensors. Check the discussion here: https://github.com/huggingface/peft/issues/2777
+  warnings.warn(msg)
+{"epoch": 1, "step": 5, "train_loss": 4.768028846153846, "validation_loss": 3.9510729613733906, "seconds": 8.224646091461182}
+/home/jmal/Projects/Active/Forum_Hackathon/.runtime/t5-local-venv/lib/python3.11/site-packages/peft/utils/save_and_load.py:309: UserWarning: Setting `save_embedding_layers` to `True` as the embedding layer has been resized during finetuning.
+  warnings.warn(
+{"epoch": 2, "step": 10, "train_loss": 4.616185897435898, "validation_loss": 3.741469957081545, "seconds": 15.244400262832642}
+{"epoch": 3, "step": 15, "train_loss": 4.253605769230769, "validation_loss": 3.549047746781116, "seconds": 22.40235996246338}
+{"epoch": 4, "step": 20, "train_loss": 3.9232772435897436, "validation_loss": 3.3723578326180257, "seconds": 32.24505877494812}
+{"epoch": 5, "step": 25, "train_loss": 3.634014423076923, "validation_loss": 3.231464592274678, "seconds": 39.31033492088318}
+{"epoch": 6, "step": 30, "train_loss": 3.405048076923077, "validation_loss": 3.1112728004291847, "seconds": 46.4498348236084}
+{"epoch": 7, "step": 35, "train_loss": 3.191907051282051, "validation_loss": 3.0062768240343347, "seconds": 53.4950008392334}
+{"epoch": 8, "step": 40, "train_loss": 2.9821714743589745, "validation_loss": 2.9303715128755363, "seconds": 60.58986711502075}
+{"epoch": 9, "step": 45, "train_loss": 2.820813301282051, "validation_loss": 2.8799356223175967, "seconds": 67.78844571113586}
+{"epoch": 10, "step": 50, "train_loss": 2.704326923076923, "validation_loss": 2.8348041845493563, "seconds": 74.89849543571472}
+{"epoch": 11, "step": 55, "train_loss": 2.540264423076923, "validation_loss": 2.7844755901287552, "seconds": 81.93420815467834}
+{"epoch": 12, "step": 60, "train_loss": 2.4522235576923075, "validation_loss": 2.7257980150214594, "seconds": 89.04181146621704}
+{"epoch": 13, "step": 65, "train_loss": 2.2919671474358974, "validation_loss": 2.6816121244635194, "seconds": 95.94873404502869}
+{"epoch": 14, "step": 70, "train_loss": 2.2353766025641026, "validation_loss": 2.652065450643777, "seconds": 103.38081049919128}
+{"epoch": 15, "step": 75, "train_loss": 2.07822516025641, "validation_loss": 2.6246177575107295, "seconds": 110.19354271888733}
+{"epoch": 16, "step": 80, "train_loss": 1.9948417467948718, "validation_loss": 2.6149342811158798, "seconds": 117.09769892692566}
+{"epoch": 17, "step": 85, "train_loss": 1.8852664262820513, "validation_loss": 2.622478540772532, "seconds": 123.93369555473328}
+{"epoch": 18, "step": 90, "train_loss": 1.8465544871794872, "validation_loss": 2.631799892703863, "seconds": 130.4070963859558}
+{"epoch": 19, "step": 95, "train_loss": 1.7035506810897436, "validation_loss": 2.6310018776824036, "seconds": 136.89404439926147}
+{"epoch": 20, "step": 100, "train_loss": 1.6667167467948718, "validation_loss": 2.6652226394849787, "seconds": 143.45294332504272}
+{"epoch": 21, "step": 105, "train_loss": 1.601913060897436, "validation_loss": 2.659421942060086, "seconds": 149.97080540657043}
+{"epoch": 22, "step": 110, "train_loss": 1.5270182291666667, "validation_loss": 2.6784133583690988, "seconds": 156.4986538887024}
+{"status": "complete", "best": {"epoch": 16, "step": 80, "train_loss": 1.9948417467948718, "validation_loss": 2.6149342811158798, "seconds": 117.09769892692566}, "examples": 28, "exact": 0.0, "wer": 2.350515463917526, "bleu": 0.24804850601308215, "chrf": 14.442430000390324, "unknown_prediction_rate": 0.9415730337078652, "cap_hits": 0, "seconds": 182.4455497264862, "peak_cuda_mb": 942.25732421875, "qualified_review": false}

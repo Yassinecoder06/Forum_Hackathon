@@ -1,0 +1,91 @@
+{
+  "status": "complete",
+  "sign_language": "sfb",
+  "task": "narrow lexical projection",
+  "runs": [
+    {
+      "seed": 84,
+      "epoch": 11,
+      "exact": 0.5217391304347826,
+      "operation_wer": 0.4666666666666667,
+      "multi_sign": {
+        "examples": 6,
+        "exact": 0.0,
+        "wer": 0.6923076923076923
+      },
+      "cap_hits": 0,
+      "seconds": 366.7567450330098,
+      "result_sha256": "93f2af3f5c4652237995b734b525453d99a3a0f3ea7d54cc282e34b0b67a2e39"
+    },
+    {
+      "seed": 85,
+      "epoch": 12,
+      "exact": 0.43478260869565216,
+      "operation_wer": 0.5333333333333333,
+      "multi_sign": {
+        "examples": 6,
+        "exact": 0.0,
+        "wer": 0.6923076923076923
+      },
+      "cap_hits": 0,
+      "seconds": 332.072302306,
+      "result_sha256": "9f73e25e4c36cb51623ad03b866bcfef359173e8b3944621fbf6f707fe78fa96"
+    },
+    {
+      "seed": 86,
+      "epoch": 20,
+      "exact": 0.4782608695652174,
+      "operation_wer": 0.5,
+      "multi_sign": {
+        "examples": 6,
+        "exact": 0.0,
+        "wer": 0.6923076923076923
+      },
+      "cap_hits": 0,
+      "seconds": 327.58892839500004,
+      "result_sha256": "2b6c9c998c31f7b2f6aa58351824dc9c051d119e4396e402a20d5bc6567ba865"
+    }
+  ],
+  "aggregate": {
+    "exact": {
+      "mean": 0.4782608695652174,
+      "sample_sd": 0.043478260869565216,
+      "minimum": 0.43478260869565216,
+      "maximum": 0.5217391304347826
+    },
+    "operation_wer": {
+      "mean": 0.5,
+      "sample_sd": 0.033333333333333326,
+      "minimum": 0.4666666666666667,
+      "maximum": 0.5333333333333333
+    }
+  },
+  "retrieval": {
+    "examples": 23,
+    "exact": 0.30434782608695654,
+    "operation_wer": 0.6333333333333333,
+    "raw_token_wer": 0.6333333333333333,
+    "invalid": 0.0,
+    "by_length": {
+      "one_sign": {
+        "examples": 17,
+        "exact": 0.4117647058823529,
+        "wer": 0.6470588235294118
+      },
+      "multiple_signs": {
+        "examples": 6,
+        "exact": 0.0,
+        "wer": 0.6153846153846154
+      }
+    }
+  },
+  "seeds_lower_wer_than_retrieval": 3,
+  "independent_test": false,
+  "qualified_review": false,
+  "limitations": [
+    "Repeatedly inspected 23-example development set, including only six multi-sign cases.",
+    "Each seed selects its lowest development WER; summaries are development diagnostics.",
+    "Seed replicates share examples and are not independent data samples.",
+    "Lexical targets omit nonmanual grammar and are pending linguistic review."
+  ]
+}

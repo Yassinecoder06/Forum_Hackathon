@@ -1,0 +1,98 @@
+{
+  "lsfb-controlled-t5-v2": {
+    "status": "complete",
+    "best": null,
+    "final": {
+      "step": 1200,
+      "seconds": 145.4161983569993,
+      "train": {
+        "examples": 361,
+        "exact": 0.3988919667590028,
+        "invalid": 0.0,
+        "wer": 0.6091644204851752,
+        "unsupported": 0.08033240997229917,
+        "cap_hits": 0
+      },
+      "val": {
+        "examples": 51,
+        "exact": 0.35294117647058826,
+        "invalid": 0.0,
+        "wer": 0.7894736842105263,
+        "unsupported": 0.11764705882352941,
+        "cap_hits": 0
+      },
+      "novel_val": {
+        "examples": 39,
+        "exact": 0.20512820512820512,
+        "invalid": 0.0,
+        "wer": 0.8795180722891566,
+        "unsupported": 0.15384615384615385
+      }
+    },
+    "linguistically_validated": false
+  },
+  "lsfb-controlled-clean-v1": {
+    "status": "complete",
+    "best": null,
+    "final": {
+      "step": 1200,
+      "seconds": 162.58580527499907,
+      "train": {
+        "examples": 307,
+        "exact": 0.34527687296416937,
+        "invalid": 0.009771986970684038,
+        "wer": 0.7417417417417418,
+        "unsupported": 0.09120521172638436,
+        "cap_hits": 2
+      },
+      "val": {
+        "examples": 51,
+        "exact": 0.21568627450980393,
+        "invalid": 0.0,
+        "wer": 1.3263157894736841,
+        "unsupported": 0.11764705882352941,
+        "cap_hits": 0
+      },
+      "novel_val": {
+        "examples": 39,
+        "exact": 0.07692307692307693,
+        "invalid": 0.0,
+        "wer": 1.4698795180722892,
+        "unsupported": 0.15384615384615385
+      }
+    },
+    "linguistically_validated": false
+  },
+  "lsfb-controlled-alllinear-v1": {
+    "status": "complete",
+    "best": null,
+    "final": {
+      "step": 1200,
+      "seconds": 216.9826206280013,
+      "train": {
+        "examples": 307,
+        "exact": 0.6807817589576547,
+        "invalid": 0.0,
+        "wer": 0.25825825825825827,
+        "unsupported": 0.009771986970684038,
+        "cap_hits": 0
+      },
+      "val": {
+        "examples": 51,
+        "exact": 0.2549019607843137,
+        "invalid": 0.0,
+        "wer": 1.0421052631578946,
+        "unsupported": 0.0392156862745098,
+        "cap_hits": 0
+      },
+      "novel_val": {
+        "examples": 39,
+        "exact": 0.10256410256410256,
+        "invalid": 0.0,
+        "wer": 1.1566265060240963,
+        "unsupported": 0.05128205128205128
+      }
+    },
+    "linguistically_validated": false
+  }
+}

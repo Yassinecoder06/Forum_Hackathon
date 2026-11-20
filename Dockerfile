@@ -1,3 +1,5 @@
+ARG SIGNACULTURE_AUDIO_DEPS_IMAGE=audio-deps
+
 FROM node:22-bookworm-slim AS frontend
 WORKDIR /build
 COPY frontend/package*.json ./
@@ -45,15 +47,21 @@ COPY data/glossary.json data/motions_manifest.json ./data/
 COPY data/approved_motion_assets/ ./data/approved_motion_assets/
 COPY data/public_examples/ ./data/public_examples/
 COPY --from=frontend /build/dist/ ./frontend/dist/
+COPY --from=webcam-build /build/dist/ ./webcam/dist/
 RUN mkdir -p /app/.runtime /app/.models /avatars
 EXPOSE 8080
 HEALTHCHECK --interval=15s --timeout=3s --start-period=10s \
   CMD ["python", "-c", "from urllib.request import urlopen; assert urlopen('http://127.0.0.1:8080/healthz', timeout=2).status == 200"]
 CMD ["python", "-m", "uvicorn", "deployment.server:create_app", "--factory", "--host", "0.0.0.0", "--port", "8080"]
 
-FROM runtime AS full
-ENV SIGNACULTURE_AUDIO_PYTHON=/opt/audio/bin/python
+FROM python:3.11-slim-bookworm AS audio-deps
 COPY deployment/requirements-docker-audio.txt /tmp/audio.txt
 RUN python -m venv /opt/audio \
-    && /opt/audio/bin/pip install torch==2.7.1+cpu torchaudio==2.7.1+cpu --index-url https://download.pytorch.org/whl/cpu \
-    && /opt/audio/bin/pip install -r /tmp/audio.txt
+    && /opt/audio/bin/pip install --no-cache-dir torch==2.7.1+cpu torchaudio==2.7.1+cpu --index-url https://download.pytorch.org/whl/cpu \
+    && /opt/audio/bin/pip install --no-cache-dir -r /tmp/audio.txt
+
+FROM ${SIGNACULTURE_AUDIO_DEPS_IMAGE} AS audio-source
+
+FROM runtime AS full
+ENV SIGNACULTURE_AUDIO_PYTHON=/opt/audio/bin/python
+COPY --from=audio-source /opt/audio /opt/audio

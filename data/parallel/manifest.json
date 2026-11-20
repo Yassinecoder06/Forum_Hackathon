@@ -1,0 +1,16 @@
+{
+  "source_sha256": "6eb75a3483fb99d8237b247b452495f61722a51ecf53b91bbe6756df5a6da57d",
+  "language": "fsl",
+  "local_reviewed_pairs": 0,
+  "mode": "published_annotated_feasibility_not_verified_translation",
+  "counts": {
+    "train": 39,
+    "val": 28,
+    "test": 39
+  },
+  "files": {
+    "train": "412f014c2d6b3714054591f9f724ad2dafda61f7e41db8bb6747dad1f7eaf31e",
+    "val": "465a77cb13c14f5db4a2b657e3cd8a668c3da0cafaadae4b2f372d3692632846",
+    "test": "d99b6413b7ea77a2649ccd9a28c646dc9b2aa1573796350406a6423e7787d549"
+  }
+}

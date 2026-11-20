@@ -22,6 +22,17 @@ test('occluded hands remain sparse in native motion export',()=>{
   assert.ok(m.frames[0].joints.left_index_4);assert.equal(m.frames[1].joints.left_index_4,undefined);
   assert.equal(m.quality.left_hand_coverage,.5);assert.equal(m.source_time_offset_ms,100);
 });
+test('shoulder scale rejects outliers and expires across tracking gaps',()=>{
+  const frames=[fixture(0),fixture(40),fixture(80),fixture(120),fixture(500)];
+  frames[2].pose[11].x=.90;
+  frames[3].pose[11].x=.90;
+  frames[3].pose[11].visibility=.2;
+  frames[4].pose[11].x=.90;
+  const lengths=exportMotion(frames).frames.map(({joints})=>
+    Math.hypot(...joints.left_index_4.map((v,i)=>v-joints.left_wrist[i])));
+  for(const length of lengths.slice(1,4))assert.ok(Math.abs(length-lengths[0])<1e-12);
+  assert.ok(lengths[4]<lengths[0]*.6);
+});
 test('missing pose frames preserve actual gaps and are reported in coverage',()=>{
   const a=fixture(20),gap={...fixture(100),pose:null},b=fixture(240);
   const m=exportMotion([a,gap,b]);assert.equal(m.duration_ms,220);assert.equal(m.quality.pose_coverage,2/3);

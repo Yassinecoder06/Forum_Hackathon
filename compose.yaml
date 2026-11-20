@@ -3,6 +3,8 @@ services:
     build:
       context: .
       target: ${SIGNACULTURE_DOCKER_TARGET:-full}
+      args:
+        SIGNACULTURE_AUDIO_DEPS_IMAGE: ${SIGNACULTURE_AUDIO_DEPS_IMAGE:-audio-deps}
     init: true
     user: "${SIGNACULTURE_DOCKER_UID:-1000}:${SIGNACULTURE_DOCKER_GID:-1000}"
     ports:
@@ -10,9 +12,18 @@ services:
     environment:
       SIGNACULTURE_STORAGE: ${SIGNACULTURE_DOCKER_STORAGE:-/app/.runtime}
       SIGNACULTURE_DB_PATH: ${SIGNACULTURE_DOCKER_STORAGE:-/app/.runtime}/plans.sqlite3
+      SIGNACULTURE_INFERENCE_SOCKET: /inference/motion.sock
       SIGNACULTURE_AVATAR_DIR: /avatars
       SIGNACULTURE_AVATAR: ${SIGNACULTURE_AVATAR:-}
     volumes:
+      - type: bind
+        source: ./.runtime/motion-inference
+        target: /inference
+        read_only: true
+      - type: bind
+        source: ${SIGNACULTURE_DOCKER_WEBCAM_MODELS:-./webcam/public/models}
+        target: /app/webcam/dist/models
+        read_only: true
       - type: bind
         source: ${SIGNACULTURE_DOCKER_STATE:-./.runtime/docker-state}
         target: ${SIGNACULTURE_DOCKER_STORAGE:-/app/.runtime}

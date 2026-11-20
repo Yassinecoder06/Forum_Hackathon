@@ -20,6 +20,8 @@ from threading import Lock
 import uuid
 
 ROOT=Path(__file__).resolve().parents[3]
+from . import motion_inference
+
 POOL=ThreadPoolExecutor(max_workers=1,thread_name_prefix='capture')
 LOCK=Lock()
 ACTIVE=set()
@@ -56,7 +58,7 @@ def capabilities():
     return {'capture':runtime_python('motion').is_file(),
         'emotion':audio_python.is_file() and (ROOT/'.models/emotion2vec-seed/model.pt').is_file(),
         'transcription':audio_python.is_file() and all((ROOT/'.models/faster-whisper-small'/name).is_file() for name in ('config.json','model.bin','tokenizer.json','vocabulary.txt')),
-        'motion_model':'MediaPipe Holistic','emotion_model':'emotion2vec+ seed',
+        'motion_model':'Sapiens 0.3B + HaMeR' if motion_inference.available() else 'MediaPipe Holistic','emotion_model':'emotion2vec+ seed',
         'transcription_model':'Systran/faster-whisper-small',
         'library_count':len(entries),'cv_corrected_count':sum(bool(r.get('cv_generation')) for r in entries),
         'corpus':corpus_status(),'dictasign':dictasign_status()}
@@ -92,6 +94,12 @@ def process_job(job,source):
             error=folder/'motion.error'
             raise ValueError(error.read_text() if error.exists() else 'Extraction impossible. Vérifiez le runtime MediaPipe et le format vidéo.')
         motion=json.loads((folder/'motion.json').read_text())
+        if motion_inference.available():
+            try:
+                motion = motion_inference.infer(f"/capture/{job['job_id']}", motion, timeout=600)
+            except (RuntimeError, OSError, ValueError):
+                motion["warnings"].append("Sapiens + HaMeR indisponible pour cette capture. Résultat MediaPipe utilisé.")
+            write_json(folder / 'motion.json', motion)
         raw_pending.replace(folder / 'animics-landmarks.json.gz')
         job.update(status='ready',progress=100,duration_ms=motion['duration_ms'],quality=motion['quality'],warnings=motion['warnings'],landmarks_available=True)
     except subprocess.TimeoutExpired:

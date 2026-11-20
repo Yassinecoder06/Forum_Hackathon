@@ -1,0 +1,99 @@
+{
+  "val": {
+    "examples": 47,
+    "recordings": 2,
+    "model_across_cue_coordinate_std": 0.15686340630054474,
+    "methods": {
+      "model": {
+        "joint": 0.6377649909638344,
+        "wrist": 0.8864712245920872,
+        "hand": 1.094949204870995,
+        "velocity": 0.14550391124918105,
+        "acceleration": 0.19726466546033292,
+        "dtw": 0.6199323698612196,
+        "duration_mae_seconds": 1.3774051835350956,
+        "frame_count_mae_at_24fps": 33.0,
+        "invalid_coordinate_fraction": 0.0,
+        "mean_displacement": 0.020927655213373773,
+        "static": 0.0
+      },
+      "phase_template": {
+        "joint": 0.5045063501089212,
+        "wrist": 0.7760816201318043,
+        "hand": 1.0558208386874415,
+        "velocity": 0.16569449786118245,
+        "acceleration": 0.22998754237973396,
+        "dtw": 0.48737402148606374,
+        "duration_mae_seconds": 1.2890070921985817,
+        "frame_count_mae_at_24fps": 30.914893617021278,
+        "invalid_coordinate_fraction": 0.0,
+        "mean_displacement": 0.0671726714714871,
+        "static": 0.0
+      },
+      "mismatched_caption": {
+        "joint": 0.6400912194810016,
+        "wrist": 0.8987485645933354,
+        "hand": 1.0984889801512374,
+        "velocity": 0.14555842564144034,
+        "acceleration": 0.19734181273490825,
+        "dtw": 0.6208464287753616,
+        "duration_mae_seconds": 1.394456220856795,
+        "frame_count_mae_at_24fps": 33.46808510638298,
+        "invalid_coordinate_fraction": 0.0,
+        "mean_displacement": 0.020927655213373773,
+        "static": 0.0
+      }
+    }
+  },
+  "test": {
+    "examples": 19,
+    "recordings": 2,
+    "model_across_cue_coordinate_std": 0.16790664196014404,
+    "methods": {
+      "model": {
+        "joint": 0.5424226098938992,
+        "wrist": 0.7073711109788794,
+        "hand": 0.8397266864776611,
+        "velocity": 0.15201107853729473,
+        "acceleration": 0.22718779605470205,
+        "dtw": 0.5425422708748987,
+        "duration_mae_seconds": 2.4677406779506748,
+        "frame_count_mae_at_24fps": 59.21052631578947,
+        "invalid_coordinate_fraction": 0.0,
+        "mean_displacement": 0.020969421455734653,
+        "static": 0.0
+      },
+      "phase_template": {
+        "joint": 0.3644826384393749,
+        "wrist": 0.5270761151032684,
+        "hand": 0.7579354501801296,
+        "velocity": 0.1712699064407017,
+        "acceleration": 0.2566175167419991,
+        "dtw": 0.36031120243127296,
+        "duration_mae_seconds": 2.078842940685046,
+        "frame_count_mae_at_24fps": 49.89473684210526,
+        "invalid_coordinate_fraction": 0.0,
+        "mean_displacement": 0.06717267147148712,
+        "static": 0.0
+      },
+      "mismatched_caption": {
+        "joint": 0.5333437025547028,
+        "wrist": 0.712301470731434,
+        "hand": 0.806613962901266,
+        "velocity": 0.15198912373498866,
+        "acceleration": 0.22717118459312538,
+        "dtw": 0.5337986346138152,
+        "duration_mae_seconds": 2.221745574683473,
+        "frame_count_mae_at_24fps": 53.21052631578947,
+        "invalid_coordinate_fraction": 0.0,
+        "mean_displacement": 0.020969421455734653,
+        "static": 0.0
+      }
+    }
+  },
+  "demo": {
+    "caption": "Flash info !",
+    "observed_seconds": 1.9583333333333333,
+    "generated_seconds": 2.317007541656494
+  }
+}

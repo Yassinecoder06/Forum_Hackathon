@@ -46,12 +46,12 @@ function faceMeasurements(points,width,height){
   return {mouth_open:gap(13,14),brow_left:gap(105,159),brow_right:gap(334,386)};
 }
 
-export function frameToMotion(frame){
+export function frameToMotion(frame, stableShoulder){
   const p=frame.pose;if(!p?.[24])return null;
   const width=frame.width,height=frame.height;
   const shoulder=Math.hypot((p[11].x-p[12].x)*width,(p[11].y-p[12].y)*height);
-  if(shoulder<3)return null;
-  const scale=.4/shoulder,world=frame.poseWorld;
+  if(!Number.isFinite(shoulder)||shoulder<3)return null;
+  const scale=.4/(stableShoulder??shoulder),world=frame.poseWorld;
   const origin=world?.[24]?['x','y','z'].map(a=>(world[23][a]+world[24][a])/2):['x','y','z'].map(a=>(p[23][a]+p[24][a])/2);
   const body=i=>world?.[24]?[world[i].x-origin[0],1-(world[i].y-origin[1]),-(world[i].z-origin[2])]:[(p[i].x-origin[0])*width*scale,1-(p[i].y-origin[1])*height*scale,-(p[i].z-origin[2])*width*scale];
   const joints=Object.fromEntries(Object.entries(BODY).map(([name,i])=>[name,body(i)]));
@@ -71,14 +71,30 @@ export function frameToMotion(frame){
 
 export function exportMotion(raw){
   const frames=[];
-  for(const f of raw){const m=frameToMotion(f);if(m&&(!frames.length||m.time_ms>frames.at(-1).time_ms))frames.push(m);}
+  let shoulders=[];
+  for(const frame of raw){
+    shoulders=shoulders.filter(sample=>frame.time_ms-sample.time<=300);
+    const left=frame.pose?.[11], right=frame.pose?.[12];
+    if((left?.visibility??0)>=.5&&(right?.visibility??0)>=.5){
+      const span=Math.hypot((left.x-right.x)*frame.width,(left.y-right.y)*frame.height);
+      if(Number.isFinite(span)&&span>=3){
+        shoulders.push({time:frame.time_ms,span});
+        if(shoulders.length>7)shoulders.shift();
+      }
+    }
+    const spans=shoulders.map(sample=>sample.span).sort((a,b)=>a-b);
+    const middle=Math.floor(spans.length/2);
+    const stable=spans.length?(spans[middle]+spans[Math.floor((spans.length-1)/2)])/2:undefined;
+    const motion=frameToMotion(frame,stable);
+    if(motion&&(!frames.length||motion.time_ms>frames.at(-1).time_ms))frames.push(motion);
+  }
   if(frames.length<2)throw Error('Enregistrez au moins deux images avec le buste détecté.');
   const first=frames[0].time_ms;frames.forEach(f=>f.time_ms-=first);
   const duration=frames.at(-1).time_ms;if(duration<=0)throw Error('Enregistrement trop court.');
   const count=raw.length;
   return {rig_version:'signaculture-v1',fps:(frames.length-1)*1000/duration,duration_ms:duration,
     joints:[...Object.keys(BODY),'hips','neck'],tracked_joints:[...new Set(frames.flatMap(f=>Object.keys(f.joints)))],frames,synthetic:false,
-    capture_method:'browser-mediapipe-tasks-0.10.32-webcam-v1',face_feature_method:'eye-normal-projection-legacy-scale-v1',
+    capture_method:'browser-mediapipe-tasks-0.10.32-webcam-v2',face_feature_method:'eye-normal-projection-legacy-scale-v1',
     quality:{sampled_frames:count,pose_frames:frames.length,pose_coverage:frames.length/count,left_hand_coverage:raw.filter(f=>f.hands.left).length/count,right_hand_coverage:raw.filter(f=>f.hands.right).length/count,face_coverage:raw.filter(f=>f.face).length/count},
     source_time_offset_ms:first,warnings:['Profondeur monoculaire approximative. Les mains absentes restent absentes.','Début et fin limités aux images corporelles observées ; les lacunes internes sont conservées.']};
 }

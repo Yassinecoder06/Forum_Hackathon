@@ -1,0 +1,274 @@
+{
+  "records": [
+    {
+      "sign_language": "fsl",
+      "video_id": "5E7GtcKwDQM",
+      "split": "val",
+      "frames": 2927,
+      "recording_duration_s": 121.95833333333333,
+      "subtitle_languages": [
+        "fr"
+      ],
+      "subtitle_segments": 34,
+      "transcription_source": "released VTT; manual/automatic unknown",
+      "caption_json_present": false,
+      "record_language_validation": "pose video_id joined to both metadata language tables; no embedded language field",
+      "windows": 189,
+      "quality": {
+        "valid_fraction": 0.7192064186880766,
+        "parts": {
+          "body": 0.664313100254337,
+          "left_hand": 0.6665365155286577,
+          "right_hand": 0.7723981974067385,
+          "face": 0.7335758355272413
+        },
+        "discontinuities": 0,
+        "suspected_hand_swap_frames": [],
+        "jump_landmarks": 8610,
+        "normalization_scale_pixels": 0.2579183876514435,
+        "coordinate_system": "shoulder-centered 2D XY, recording-median shoulder scale",
+        "fps": 24.0,
+        "clinical_or_linguistic_validity": false
+      },
+      "body_score_semantics": "index availability, not probabilistic confidence",
+      "gloss_annotations": false
+    },
+    {
+      "sign_language": "fsl",
+      "video_id": "CpTUAAwPC9k",
+      "split": "test",
+      "frames": 1377,
+      "recording_duration_s": 57.375,
+      "subtitle_languages": [
+        "fr"
+      ],
+      "subtitle_segments": 7,
+      "transcription_source": "released VTT; manual/automatic unknown",
+      "caption_json_present": false,
+      "record_language_validation": "pose video_id joined to both metadata language tables; no embedded language field",
+      "windows": 101,
+      "quality": {
+        "valid_fraction": 0.6944728122730573,
+        "parts": {
+          "body": 0.6715081094166061,
+          "left_hand": 0.7366600961372203,
+          "right_hand": 0.8011204481792717,
+          "face": 0.6545879789824427
+        },
+        "discontinuities": 0,
+        "suspected_hand_swap_frames": [],
+        "jump_landmarks": 1266,
+        "normalization_scale_pixels": 0.22703661024570465,
+        "coordinate_system": "shoulder-centered 2D XY, recording-median shoulder scale",
+        "fps": 24.0,
+        "clinical_or_linguistic_validity": false
+      },
+      "body_score_semantics": "index availability, not probabilistic confidence",
+      "gloss_annotations": false
+    },
+    {
+      "sign_language": "fsl",
+      "video_id": "NVNBYW2oKwA",
+      "split": "val",
+      "frames": 1572,
+      "recording_duration_s": 65.5,
+      "subtitle_languages": [
+        "fr"
+      ],
+      "subtitle_segments": 19,
+      "transcription_source": "released VTT; manual/automatic unknown",
+      "caption_json_present": false,
+      "record_language_validation": "pose video_id joined to both metadata language tables; no embedded language field",
+      "windows": 35,
+      "quality": {
+        "valid_fraction": 0.48029977735368956,
+        "parts": {
+          "body": 0.538238620299689,
+          "left_hand": 0.4629225736095965,
+          "right_hand": 0.49027626317702655,
+          "face": 0.4672485406376291
+        },
+        "discontinuities": 0,
+        "suspected_hand_swap_frames": [
+          452,
+          542,
+          1303
+        ],
+        "jump_landmarks": 5728,
+        "normalization_scale_pixels": 0.22161075472831726,
+        "coordinate_system": "shoulder-centered 2D XY, recording-median shoulder scale",
+        "fps": 24.0,
+        "clinical_or_linguistic_validity": false
+      },
+      "body_score_semantics": "index availability, not probabilistic confidence",
+      "gloss_annotations": false
+    },
+    {
+      "sign_language": "fsl",
+      "video_id": "RkcVPf-vUy0",
+      "split": "train",
+      "frames": 868,
+      "recording_duration_s": 36.166666666666664,
+      "subtitle_languages": [
+        "fr"
+      ],
+      "subtitle_segments": 3,
+      "transcription_source": "released VTT; manual/automatic unknown",
+      "caption_json_present": false,
+      "record_language_validation": "pose video_id joined to both metadata language tables; no embedded language field",
+      "windows": 53,
+      "quality": {
+        "valid_fraction": 0.4804957517281106,
+        "parts": {
+          "body": 0.43862007168458783,
+          "left_hand": 0.48650427913100724,
+          "right_hand": 0.5126179504059688,
+          "face": 0.4798048251558688
+        },
+        "discontinuities": 0,
+        "suspected_hand_swap_frames": [],
+        "jump_landmarks": 1289,
+        "normalization_scale_pixels": 0.2517505884170532,
+        "coordinate_system": "shoulder-centered 2D XY, recording-median shoulder scale",
+        "fps": 24.0,
+        "clinical_or_linguistic_validity": false
+      },
+      "body_score_semantics": "index availability, not probabilistic confidence",
+      "gloss_annotations": false
+    },
+    {
+      "sign_language": "fsl",
+      "video_id": "S__4L14HOkw",
+      "split": "train",
+      "frames": 1285,
+      "recording_duration_s": 53.541666666666664,
+      "subtitle_languages": [
+        "fr"
+      ],
+      "subtitle_segments": 8,
+      "transcription_source": "released VTT; manual/automatic unknown",
+      "caption_json_present": false,
+      "record_language_validation": "pose video_id joined to both metadata language tables; no embedded language field",
+      "windows": 46,
+      "quality": {
+        "valid_fraction": 0.41950389105058367,
+        "parts": {
+          "body": 0.40462602680501514,
+          "left_hand": 0.39725773577913653,
+          "right_hand": 0.46370205669816567,
+          "face": 0.4166628519111925
+        },
+        "discontinuities": 0,
+        "suspected_hand_swap_frames": [],
+        "jump_landmarks": 2129,
+        "normalization_scale_pixels": 0.2684195041656494,
+        "coordinate_system": "shoulder-centered 2D XY, recording-median shoulder scale",
+        "fps": 24.0,
+        "clinical_or_linguistic_validity": false
+      },
+      "body_score_semantics": "index availability, not probabilistic confidence",
+      "gloss_annotations": false
+    },
+    {
+      "sign_language": "fsl",
+      "video_id": "WQErptFw21c",
+      "split": "test",
+      "frames": 1216,
+      "recording_duration_s": 50.666666666666664,
+      "subtitle_languages": [
+        "fr"
+      ],
+      "subtitle_segments": 12,
+      "transcription_source": "released VTT; manual/automatic unknown",
+      "caption_json_present": false,
+      "record_language_validation": "pose video_id joined to both metadata language tables; no embedded language field",
+      "windows": 97,
+      "quality": {
+        "valid_fraction": 0.6249678762335527,
+        "parts": {
+          "body": 0.5827850877192983,
+          "left_hand": 0.6398417919799498,
+          "right_hand": 0.7170661027568922,
+          "face": 0.6030983939628483
+        },
+        "discontinuities": 0,
+        "suspected_hand_swap_frames": [],
+        "jump_landmarks": 918,
+        "normalization_scale_pixels": 0.21973100304603577,
+        "coordinate_system": "shoulder-centered 2D XY, recording-median shoulder scale",
+        "fps": 24.0,
+        "clinical_or_linguistic_validity": false
+      },
+      "body_score_semantics": "index availability, not probabilistic confidence",
+      "gloss_annotations": false
+    },
+    {
+      "sign_language": "fsl",
+      "video_id": "WbhiW2FMl-g",
+      "split": "train",
+      "frames": 1087,
+      "recording_duration_s": 45.291666666666664,
+      "subtitle_languages": [
+        "fr"
+      ],
+      "subtitle_segments": 12,
+      "transcription_source": "released VTT; manual/automatic unknown",
+      "caption_json_present": false,
+      "record_language_validation": "pose video_id joined to both metadata language tables; no embedded language field",
+      "windows": 26,
+      "quality": {
+        "valid_fraction": 0.5430298413063478,
+        "parts": {
+          "body": 0.5683328222426659,
+          "left_hand": 0.5787444692688483,
+          "right_hand": 0.6588250755684059,
+          "face": 0.4895421830185616
+        },
+        "discontinuities": 0,
+        "suspected_hand_swap_frames": [],
+        "jump_landmarks": 1249,
+        "normalization_scale_pixels": 0.26001104712486267,
+        "coordinate_system": "shoulder-centered 2D XY, recording-median shoulder scale",
+        "fps": 24.0,
+        "clinical_or_linguistic_validity": false
+      },
+      "body_score_semantics": "index availability, not probabilistic confidence",
+      "gloss_annotations": false
+    }
+  ],
+  "experiment": {
+    "sign_language": "fsl",
+    "fps": 24,
+    "groups": {
+      "train": [
+        "RkcVPf-vUy0",
+        "S__4L14HOkw",
+        "WbhiW2FMl-g"
+      ],
+      "val": [
+        "5E7GtcKwDQM",
+        "NVNBYW2oKwA"
+      ],
+      "test": [
+        "CpTUAAwPC9k",
+        "WQErptFw21c"
+      ]
+    },
+    "counts": {
+      "train": 125,
+      "val": 224,
+      "test": 198
+    },
+    "sha256": {
+      "train": "e63fa43060e0d07f9ad87a8a39b7d2906fd6811cdba92870e7f4b4666c813dd0",
+      "val": "1409e4107e6d66b9fe32241b4e15d2cc28f563a03bf763e1a51a62bbec2eef74",
+      "test": "b2a9b590e85c5c9c3cdc2a4d0823fef4048e49172024d6fa9dabe9c86d4be2e4"
+    },
+    "limitations": [
+      "body availability substituted explicitly; no body confidence available",
+      "2D coordinates; unknown signer identity",
+      "only seven convenience-selected records; official source-video splits retained",
+      "missing embedded signing-language labels; metadata joins checked"
+    ]
+  }
+}

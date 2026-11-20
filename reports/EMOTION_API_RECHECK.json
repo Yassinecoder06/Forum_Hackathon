@@ -1,0 +1,8 @@
+{
+  "real_sample": "data/public_examples/bonjour.webm",
+  "emotion_score_count": 9,
+  "model": "fft-autocorrelation-rms-v2 + emotion2vec_plus_seed",
+  "silent_control_ms": 50,
+  "silent_emotion": null,
+  "evaluation_scope": "one real utterance and one silent control; no accuracy estimate"
+}

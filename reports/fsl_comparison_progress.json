@@ -1,0 +1,45 @@
+{
+  "fsl-mt5-small-comparison-v1": {
+    "status": "complete",
+    "best": {
+      "epoch": 40,
+      "step": 200,
+      "train_loss": 3.644230769230769,
+      "validation_loss": 3.5671284791252487,
+      "seconds": 204.2050907611847
+    },
+    "examples": 28,
+    "exact": 0.0,
+    "wer": 5.948453608247423,
+    "bleu": 0.0,
+    "chrf": 4.907014881651814,
+    "unknown_prediction_rate": 0.6,
+    "cap_hits": 28,
+    "seconds": 260.36155223846436,
+    "peak_cuda_mb": 743.7900390625,
+    "qualified_review": false
+  },
+  "fsl-t5-base-comparison-v3": {
+    "status": "complete",
+    "best": {
+      "epoch": 16,
+      "step": 80,
+      "train_loss": 1.9948417467948718,
+      "validation_loss": 2.6149342811158798,
+      "seconds": 117.09769892692566
+    },
+    "examples": 28,
+    "exact": 0.0,
+    "wer": 2.350515463917526,
+    "bleu": 0.24804850601308215,
+    "chrf": 14.442430000390324,
+    "unknown_prediction_rate": 0.9415730337078652,
+    "cap_hits": 0,
+    "seconds": 182.4455497264862,
+    "peak_cuda_mb": 942.25732421875,
+    "qualified_review": false
+  },
+  "fsl-mt5-base-comparison-v1": {
+    "status": "not_started"
+  }
+}

@@ -1,0 +1,403 @@
+{
+  "real_shard": 2,
+  "dataset_revision": "64b0c112f59d3710367fb736ef1808f37ff15e28",
+  "extraction": {
+    "candidates": 300,
+    "recordings": 21,
+    "signers": [
+      "S001",
+      "S022",
+      "S036",
+      "S041",
+      "S062",
+      "S065"
+    ],
+    "archive_sha256": "73c701e337621d658eac90aa785c942c08f36945d5c452414891e801cf6d6c17",
+    "alignment": "weak temporal overlap; simultaneous signs flattened",
+    "license": "CC-BY-NC-SA-4.0"
+  },
+  "after_token_limit": {
+    "retained": 252,
+    "overlength": 48
+  },
+  "split": {
+    "grouping": "signer_id",
+    "weak_supervision": true,
+    "evaluation_scope": "internal held-out subset of official training shard, not official benchmark",
+    "splits": {
+      "test": {
+        "examples": 129,
+        "groups": [
+          "S041"
+        ],
+        "sha256": "eace1286aac4ca8f1ae4b4fc8e49a303ad86b45d133b917f23a261b5ad4fa144"
+      },
+      "val": {
+        "examples": 12,
+        "groups": [
+          "S022"
+        ],
+        "sha256": "b6aa61a566eaf8063c453df81fe934dd36903d72efc018482a9087debd0a49ec"
+      },
+      "train": {
+        "examples": 111,
+        "groups": [
+          "S001",
+          "S036",
+          "S062",
+          "S065"
+        ],
+        "sha256": "4b04f8b72ac335e66bda4dd2def36a688bb54622ded2e7297db44606653dca5a"
+      }
+    }
+  },
+  "software_tests": {
+    "unit_tests_passed": 5,
+    "tiny_random_t5_training_steps": 2,
+    "actual_trainer_checkpoint_final_model_metrics_verified": true
+  },
+  "colab_training_run": true,
+  "drive_accessed": true,
+  "colab_smoke": {
+    "accelerator": "Tesla T4 15360 MiB",
+    "steps": 30,
+    "validation_losses": [
+      18.074222564697266,
+      16.163122177124023
+    ],
+    "train_seconds": 61.2708,
+    "metrics": {
+      "model": {
+        "exact_match": 0.0,
+        "wer": 1.0
+      },
+      "train_only_retrieval": {
+        "exact_match": 0.0,
+        "wer": 1.143598615916955
+      },
+      "examples": 129,
+      "official_benchmark": false,
+      "linguistic_validation": false
+    },
+    "weights_saved_on_vm": true,
+    "drive_saved": false,
+    "drive_status": "browser consent pending",
+    "local_model_archive": ".runtime/colab-results/smoke-30/model-backup.tar"
+  },
+  "colab_poc": {
+    "accelerator": "Tesla T4",
+    "steps": 100,
+    "validation_losses": [
+      14.98585033416748,
+      13.306395530700684
+    ],
+    "train_seconds": 122.6772,
+    "metrics": {
+      "model": {
+        "exact_match": 0.0,
+        "wer": 1.0354671280276817
+      },
+      "train_only_retrieval": {
+        "exact_match": 0.0,
+        "wer": 1.143598615916955
+      },
+      "examples": 129,
+      "official_benchmark": false,
+      "linguistic_validation": false
+    },
+    "weights_saved_on_vm": true,
+    "drive_saved": true,
+    "drive_status": "mounted; copied and source SHA256 verified",
+    "precision": {
+      "fp16": false,
+      "bf16": true,
+      "note": "PyTorch 2.14.1 capability detection on T4; BF16 may be emulated"
+    },
+    "prediction_diversity": {
+      "held_out": 129,
+      "unique_predictions": 11,
+      "empty_predictions": 0
+    },
+    "local_backup": {
+      "local_model": ".runtime/colab-results/poc-100/final/model.safetensors",
+      "model_bytes": 1200729512,
+      "model_sha256": "458916b749e0581a940f3dfcde8bfdae9f896a0904e1b8434c212d54e07d0e7c",
+      "archive_complete": true,
+      "tensor_count": 190,
+      "metrics": {
+        "model": {
+          "exact_match": 0.0,
+          "wer": 1.0354671280276817
+        },
+        "train_only_retrieval": {
+          "exact_match": 0.0,
+          "wer": 1.143598615916955
+        },
+        "examples": 129,
+        "official_benchmark": false,
+        "linguistic_validation": false
+      },
+      "drive_saved": false,
+      "drive_status": "Google browser consent pending"
+    },
+    "drive_model": "/content/drive/MyDrive/SignaCulture/mt5-lsfb-poc/mt5-small-steps-100/final/model.safetensors"
+  },
+  "colab_t5_base": {
+    "status": "complete",
+    "base": "google-t5/t5-base",
+    "revision": "a9723ea7f1b39c1eae772870f3b547bf6ef7e6c1",
+    "steps": 300,
+    "max_tokens": 128,
+    "eval_every": 50,
+    "same_frozen_splits_as_mt5": true,
+    "drive_run": "/content/drive/MyDrive/SignaCulture/mt5-lsfb-poc/t5-base-steps-300",
+    "comparison_scope": "Exploratory, different step budgets, reused internal test; not official benchmark",
+    "drive_verification": {
+      "drive_model": "/content/drive/MyDrive/SignaCulture/mt5-lsfb-poc/t5-base-steps-300/final/model.safetensors",
+      "sha256": "7dd21a748f079fa5d3a920a2482fe8cb61f2c0fb20fcc6234b0f40263c9453e4",
+      "bytes": 891644712,
+      "best_checkpoint": "/content/drive/MyDrive/SignaCulture/mt5-lsfb-poc/t5-base-steps-300/checkpoints/checkpoint-300",
+      "best_validation_loss": 2.831693649291992,
+      "training_steps": 300,
+      "matches_validation_selected_checkpoint": true
+    },
+    "metrics": {
+      "model": {
+        "exact_match": 0.0,
+        "wer": 2.903114186851211
+      },
+      "train_only_retrieval": {
+        "exact_match": 0.0,
+        "wer": 1.143598615916955
+      },
+      "examples": 129,
+      "official_benchmark": false,
+      "linguistic_validation": false,
+      "decoding": {
+        "batch_size": 8,
+        "num_beams": 4,
+        "max_new_tokens": 128,
+        "precision": "float32",
+        "seconds": 59.18283300600001
+      }
+    },
+    "drive_saved": true,
+    "validation_history": [
+      {
+        "eval_loss": 3.640777349472046,
+        "eval_runtime": 0.6972,
+        "eval_samples_per_second": 17.211,
+        "eval_steps_per_second": 17.211,
+        "epoch": 1.7927927927927927,
+        "step": 50
+      },
+      {
+        "eval_loss": 3.134614944458008,
+        "eval_runtime": 0.5654,
+        "eval_samples_per_second": 21.223,
+        "eval_steps_per_second": 21.223,
+        "epoch": 3.5765765765765765,
+        "step": 100
+      },
+      {
+        "eval_loss": 2.972771406173706,
+        "eval_runtime": 0.5817,
+        "eval_samples_per_second": 20.629,
+        "eval_steps_per_second": 20.629,
+        "epoch": 5.36036036036036,
+        "step": 150
+      },
+      {
+        "eval_loss": 2.873305559158325,
+        "eval_runtime": 0.6262,
+        "eval_samples_per_second": 19.164,
+        "eval_steps_per_second": 19.164,
+        "epoch": 7.1441441441441444,
+        "step": 200
+      },
+      {
+        "eval_loss": 2.844944953918457,
+        "eval_runtime": 0.5578,
+        "eval_samples_per_second": 21.515,
+        "eval_steps_per_second": 21.515,
+        "epoch": 8.936936936936936,
+        "step": 250
+      },
+      {
+        "eval_loss": 2.831693649291992,
+        "eval_runtime": 0.5814,
+        "eval_samples_per_second": 20.638,
+        "eval_steps_per_second": 20.638,
+        "epoch": 10.72072072072072,
+        "step": 300
+      }
+    ]
+  },
+  "colab_flan_t5_base": {
+    "status": "complete",
+    "model": "google/flan-t5-base",
+    "revision": "7bcac572ce56db69c1ea7c8af255c5d7c9672fc2",
+    "steps": 300,
+    "max_tokens": 128,
+    "eval_every": 50,
+    "same_frozen_splits_as_t5_base": true,
+    "drive_run": "/content/drive/MyDrive/SignaCulture/mt5-lsfb-poc/flan-t5-base-steps-300",
+    "metrics": {
+      "model": {
+        "exact_match": 0.0,
+        "wer": 2.6271626297577853
+      },
+      "train_only_retrieval": {
+        "exact_match": 0.0,
+        "wer": 1.143598615916955
+      },
+      "examples": 129,
+      "official_benchmark": false,
+      "linguistic_validation": false
+    },
+    "drive_saved": true,
+    "drive_verification": {
+      "drive_model": "/content/drive/MyDrive/SignaCulture/mt5-lsfb-poc/flan-t5-base-steps-300/final/model.safetensors",
+      "sha256": "9c90d935c353d5728ab69e0abd8fcbc2b4dac3c455ce88cc5462705a5b868987",
+      "bytes": 990345064,
+      "best_checkpoint": "/content/drive/MyDrive/SignaCulture/mt5-lsfb-poc/flan-t5-base-steps-300/checkpoints/checkpoint-300",
+      "best_validation_loss": 2.8587512969970703,
+      "training_steps": 300,
+      "matches_validation_selected_checkpoint": true
+    },
+    "validation_history": [
+      {
+        "eval_loss": 3.395500898361206,
+        "eval_runtime": 0.6657,
+        "eval_samples_per_second": 18.027,
+        "eval_steps_per_second": 18.027,
+        "epoch": 1.7927927927927927,
+        "step": 50
+      },
+      {
+        "eval_loss": 3.038870096206665,
+        "eval_runtime": 0.6572,
+        "eval_samples_per_second": 18.261,
+        "eval_steps_per_second": 18.261,
+        "epoch": 3.5765765765765765,
+        "step": 100
+      },
+      {
+        "eval_loss": 2.954829454421997,
+        "eval_runtime": 0.6322,
+        "eval_samples_per_second": 18.981,
+        "eval_steps_per_second": 18.981,
+        "epoch": 5.36036036036036,
+        "step": 150
+      },
+      {
+        "eval_loss": 2.86907958984375,
+        "eval_runtime": 0.6436,
+        "eval_samples_per_second": 18.644,
+        "eval_steps_per_second": 18.644,
+        "epoch": 7.1441441441441444,
+        "step": 200
+      },
+      {
+        "eval_loss": 2.8615686893463135,
+        "eval_runtime": 0.6654,
+        "eval_samples_per_second": 18.035,
+        "eval_steps_per_second": 18.035,
+        "epoch": 8.936936936936936,
+        "step": 250
+      },
+      {
+        "eval_loss": 2.8587512969970703,
+        "eval_runtime": 0.6323,
+        "eval_samples_per_second": 18.98,
+        "eval_steps_per_second": 18.98,
+        "epoch": 10.72072072072072,
+        "step": 300
+      }
+    ],
+    "training_summary": [
+      {
+        "train_runtime": 406.7511,
+        "train_samples_per_second": 2.95,
+        "train_steps_per_second": 0.738,
+        "total_flos": 54316504599552.0,
+        "train_loss": 3.2149177714188895,
+        "epoch": 10.72072072072072,
+        "step": 300
+      }
+    ]
+  },
+  "comparison_integrity": {
+    "identical_129_french_reference_pairs": true,
+    "identical_train_only_retrieval_baseline": true,
+    "same_training_validation_test_groups": true,
+    "budget_note": "mT5 100 steps; T5 and FLAN 300 steps",
+    "test_note": "Reused internal exploratory test; not independent confirmation",
+    "generation_diagnostics": [
+      {
+        "run": "poc-100",
+        "metrics": {
+          "model": {
+            "exact_match": 0.0,
+            "wer": 1.0354671280276817
+          },
+          "train_only_retrieval": {
+            "exact_match": 0.0,
+            "wer": 1.143598615916955
+          },
+          "examples": 129,
+          "official_benchmark": false,
+          "linguistic_validation": false
+        },
+        "reference_tokens": 1156,
+        "predicted_tokens": 201,
+        "unique_predictions": 11
+      },
+      {
+        "run": "t5-base-300",
+        "metrics": {
+          "model": {
+            "exact_match": 0.0,
+            "wer": 2.903114186851211
+          },
+          "train_only_retrieval": {
+            "exact_match": 0.0,
+            "wer": 1.143598615916955
+          },
+          "examples": 129,
+          "official_benchmark": false,
+          "linguistic_validation": false,
+          "decoding": {
+            "batch_size": 8,
+            "num_beams": 4,
+            "max_new_tokens": 128,
+            "precision": "float32",
+            "seconds": 59.18283300600001
+          }
+        },
+        "reference_tokens": 1156,
+        "predicted_tokens": 3357,
+        "unique_predictions": 102
+      },
+      {
+        "run": "flan-t5-base-300",
+        "metrics": {
+          "model": {
+            "exact_match": 0.0,
+            "wer": 2.6271626297577853
+          },
+          "train_only_retrieval": {
+            "exact_match": 0.0,
+            "wer": 1.143598615916955
+          },
+          "examples": 129,
+          "official_benchmark": false,
+          "linguistic_validation": false
+        },
+        "reference_tokens": 1156,
+        "predicted_tokens": 3005,
+        "unique_predictions": 90
+      }
+    ]
+  }
+}

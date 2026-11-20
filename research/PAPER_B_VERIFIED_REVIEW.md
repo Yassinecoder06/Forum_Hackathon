@@ -1,4 +1,8 @@
+> The paper interpretation remains applicable; the implementation table is a historical snapshot. See [current status](../IMPLEMENTATION_STATUS.md) for later T5-base/GAN experiments, the expanded library and verified audio/export integration.
+
 # Verified review of the supplied T5–GAN paper
+
+> Subsequent Colab trials now include T5-base and FLAN-T5-base. The table below records the earlier implementation snapshot. The [new paper/data/scoring audit](COLAB_ZERO_EXACT_DIAGNOSIS.md) documents why those trials still do not reproduce the paper and why all exact-match scores were zero.
 
 The lead read all seven pages of the actual local `research_paper.pdf` on 15 November 2026 and inspected the methodology and results figures. Its SHA-256 is `e2ecf423d5bc65c283f0c84bbe60f9b4bf799e309e791561344b191c4e498d36`; it is identical to `/home/jmal/Downloads/research_paper.pdf`. Earlier statements that the paper was unavailable are superseded by this review. The paper supplied by the user remains unchanged.
 

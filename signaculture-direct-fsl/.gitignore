@@ -1,0 +1,4 @@
+__pycache__/
+checkpoints/
+outputs/
+data/manifests/fsl_only.csv

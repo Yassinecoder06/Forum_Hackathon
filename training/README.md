@@ -46,3 +46,21 @@ training/.venv-train/bin/python training/experiment.py --data data/text_to_gloss
 ```
 
 `diagnose_adaptation.py` audits only train and runs its four-example optimization diagnostic; it reads neither validation nor test. It writes to a new diagnostic output directory and intentionally refuses overwrite. New protocol tests are in `training/test_adaptation.py`; run them together with test_catalog.py. Parameter count is saved before selected-adapter freeze; train/val only are parsed during training, followed by a selection-complete record and one final test pass. Existing run artifacts and data hashes are checked against the locked plan. No decoding change was made after final metrics were seen.
+
+## Colab + Google Drive: Belgian LSFB mini experiment
+
+The self-contained [Colab notebook](colab/SignaCulture_mT5_LSFB_Drive.ipynb) trains `google/mt5-small` on real, weakly aligned LSFB-CONT annotations and saves resumable checkpoints, final model/tokenizer and results to Drive. Use [the instructions and plan corrections](colab/README.md). This is a separate Belgian LSFB research experiment, not a France-LSF motion-model update.
+
+The [T5-base companion](colab/SignaCulture_T5_Base_LSFB_Drive.ipynb) uses the same frozen Drive splits for a separate 300-step comparison.
+
+## Current LSFB-CONT task preparation
+
+The [context-conditioned lexical planning pipeline](lsfb_cont/README.md) prepares
+the complete local train/validation annotations with source-video review,
+conversation quarantine, explicit fingerspelling, existing T5 subwords and
+provenance-bound review imports. Its [preparation result](../research/LSFB_CONT_PREPARATION_RESULT.md)
+records the generated data and checks. These candidate pairs are exploratory
+until linguistically reviewed; the earlier Colab experiments above remain
+historical baselines.
+
+Narrow Belgian LSFB seed reliability experiment: [frozen protocol](../reports/LSFB_SEED_REPLICATION_PLAN.md). The seed is configurable with `--seed`; the original default is 84. Runs use existing local data and model weights. Development results remain diagnostic, with no qualified linguistic approval or official-test claim. Additional dataset leads and empty-target safeguards: [supervision audit](../reports/ADDITIONAL_SUPERVISION_AUDIT.md).

@@ -1,0 +1,57 @@
+{
+  "training_samples": 21,
+  "phase_samples": 32,
+  "results": {
+    "val": {
+      "samples": 47,
+      "recordings": 2,
+      "counts": {
+        "all_valid_reference": 151158,
+        "all_scored": 151104,
+        "template_all_error_sum": 76562.73695805293,
+        "caption_retrieval_all_error_sum": 89434.98856473519,
+        "hands_valid_reference": 51155,
+        "hands_scored": 51155,
+        "template_hands_error_sum": 54552.28136489802,
+        "caption_retrieval_hands_error_sum": 63953.412129311284,
+        "caption_no_training_overlap": 9
+      },
+      "mean_normalized_2d_error": {
+        "template": {
+          "all": 0.5066890152348907,
+          "hands": 1.0664115211591834
+        },
+        "caption_retrieval": {
+          "all": 0.5918770420686097,
+          "hands": 1.250188879470458
+        }
+      }
+    },
+    "test": {
+      "samples": 19,
+      "recordings": 2,
+      "counts": {
+        "caption_no_training_overlap": 2,
+        "all_valid_reference": 63533,
+        "all_scored": 63505,
+        "template_all_error_sum": 23164.430270429657,
+        "caption_retrieval_all_error_sum": 31121.615438035584,
+        "hands_valid_reference": 22334,
+        "hands_scored": 22334,
+        "template_hands_error_sum": 17011.509471339297,
+        "caption_retrieval_hands_error_sum": 23442.941401556327
+      },
+      "mean_normalized_2d_error": {
+        "template": {
+          "all": 0.36476545579764835,
+          "hands": 0.7616866423990014
+        },
+        "caption_retrieval": {
+          "all": 0.4900655922846325,
+          "hands": 1.0496526104395238
+        }
+      }
+    }
+  },
+  "manifest_sha256": "f40ee62761ce0031b554b065cea631cce58ae2916c3e8032aa6acbed29f327f2"
+}

@@ -1,0 +1,34 @@
+{
+  "language": "LSFB",
+  "codebook_fit": "train only",
+  "input_source": "DeepL French",
+  "target": "full author graph, not flat gloss",
+  "counts": {
+    "train": {
+      "examples": 186,
+      "max_target_tokens": 536,
+      "mean_target_tokens": 244.11827956989248,
+      "above_1024": 0,
+      "unknown_subtokens": 0,
+      "tokenizer_roundtrip_failures": 0,
+      "codec_roundtrip_failures": 0
+    },
+    "val": {
+      "examples": 37,
+      "max_target_tokens": 1196,
+      "mean_target_tokens": 331.4594594594595,
+      "above_1024": 1,
+      "unknown_subtokens": 0,
+      "tokenizer_roundtrip_failures": 0,
+      "codec_roundtrip_failures": 0
+    }
+  },
+  "tokenizer": "T5-base existing local",
+  "dictionary_entries": 241,
+  "no_local_linguistic_approval": true,
+  "files": {
+    "train.jsonl": "45e88ffb8cc98c1261b6b4b8f34508532cef449acea118f7f5f804077e40bb51",
+    "val.jsonl": "80639bef10d28c554268fba2ca94904dbbbdfba01eebde959c08e59a49edd618",
+    "hns_dictionary.json": "0f0ef6cdd6180bc9bd9898ecc8b8f94870b843f076c7d1706208aac157a664b8"
+  }
+}

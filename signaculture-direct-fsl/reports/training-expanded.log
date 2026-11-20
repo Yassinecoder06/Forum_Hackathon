@@ -1,0 +1,13 @@
+Tesla T4 (15527116800, 15637086208)
+parameters 549857 splits {'train': 102, 'val': 47, 'test': 19}
+real two-cue overfit 3.463454246520996 0.4704776406288147
+{"step": 10, "loss": 0.9492528438568115, "validation": 1.107144832611084, "gpu_peak_bytes": 334985216}
+{"step": 20, "loss": 1.1131038665771484, "validation": 0.9515374302864075, "gpu_peak_bytes": 334985216}
+{"step": 30, "loss": 0.7161334156990051, "validation": 0.9297541975975037, "gpu_peak_bytes": 334985216}
+{"step": 40, "loss": 0.8686622977256775, "validation": 0.9080621600151062, "gpu_peak_bytes": 334985216}
+{"step": 50, "loss": 0.7922168970108032, "validation": 0.9020704627037048, "gpu_peak_bytes": 334985216}
+{"step": 60, "loss": 0.6649295091629028, "validation": 0.8929561972618103, "gpu_peak_bytes": 334985216}
+{"step": 70, "loss": 0.48618462681770325, "validation": 0.9234167337417603, "gpu_peak_bytes": 334985216}
+{"step": 80, "loss": 0.5312584638595581, "validation": 0.9503411650657654, "gpu_peak_bytes": 334985216}
+{"step": 90, "loss": 0.4698115289211273, "validation": 0.9294846653938293, "gpu_peak_bytes": 334985216}
+{"step": 100, "loss": 0.7185671329498291, "validation": 0.9566970467567444, "gpu_peak_bytes": 334985216}

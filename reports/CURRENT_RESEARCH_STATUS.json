@@ -1,0 +1,350 @@
+{
+  "observed_at_utc": "2026-11-17T22:41:27.289101+00:00",
+  "objective_complete": false,
+  "scientific_gates": {
+    "qualified_linguistic_reviews_present": false,
+    "france_lsf_parallel_pairs_locally_reviewed": false,
+    "france_lsf_comparison_has_any_development_exact": false,
+    "belgian_seed_study_has_any_multisign_exact": false,
+    "validated_2d_to_3d_lifting_available": false,
+    "fluent_signer_comprehension_evaluation_available": false
+  },
+  "france_lsf": {
+    "manifest_counts": {
+      "train": 39,
+      "val": 28,
+      "test": 39
+    },
+    "local_reviewed_pairs": 0,
+    "completed_model_results": {
+      "mt5-small": {
+        "examples": 28,
+        "exact": 0.0,
+        "wer": 5.948453608247423,
+        "bleu": 0.0,
+        "chrf": 4.907014881651814,
+        "cap_hits": 28,
+        "peak_cuda_mb": 743.7900390625
+      },
+      "t5-base": {
+        "examples": 28,
+        "exact": 0.0,
+        "wer": 2.350515463917526,
+        "bleu": 0.24804850601308215,
+        "chrf": 14.442430000390324,
+        "cap_hits": 0,
+        "peak_cuda_mb": 942.25732421875
+      }
+    }
+  },
+  "video_landmark_roundtrip": {
+    "source_sha256": "f4f0830c5eec685b41096426cc2f3af188c20ab20e434e6daf526713d9821f60",
+    "motion_frames": 62,
+    "landmark_frames": 61,
+    "quality": {
+      "sampled_frames": 61,
+      "pose_frames": 61,
+      "pose_coverage": 1.0,
+      "left_hand_coverage": 1.0,
+      "right_hand_coverage": 0.525,
+      "face_coverage": 1.0,
+      "missing_frames": 0,
+      "hand_wrist_disagreement_frames": {
+        "left": 0,
+        "right": 0
+      }
+    },
+    "animics_import_ready": true,
+    "decoded_landmarks_sha256": "c1ecbdde5db347601d398982bc15bc0857c7bd91208debf2ba2c72b12c0fa052",
+    "converter_roundtrip": {
+      "identical_timing_and_face_frames": 62,
+      "fps": 25.0,
+      "duration_ms": 2440,
+      "observed_hand_flags_match": true,
+      "quality": {
+        "sampled_frames": 61,
+        "pose_coverage": 1.0,
+        "left_hand_coverage": 1.0,
+        "right_hand_coverage": 0.525,
+        "face_coverage": 1.0
+      },
+      "joint_coordinates_compared": 7314,
+      "maximum_absolute_coordinate_difference": 0.0
+    }
+  },
+  "motion_coverage": {
+    "method": "casefolded exact canonical gloss label; plain bracketed UD FORM only",
+    "registry_real_motions": 1447,
+    "splits": {
+      "train": {
+        "examples": 39,
+        "other_form_occurrences": 47,
+        "plain_form_occurrences": 168,
+        "exact_label_available": 70,
+        "exact_label_rights_cleared": 37,
+        "exact_label_rights_and_review_approved": 0,
+        "examples_all_plain_forms_available": 2
+      },
+      "val": {
+        "examples": 28,
+        "other_form_occurrences": 44,
+        "plain_form_occurrences": 150,
+        "exact_label_available": 74,
+        "exact_label_rights_cleared": 49,
+        "exact_label_rights_and_review_approved": 0,
+        "examples_all_plain_forms_available": 6
+      }
+    },
+    "candidate_motion_files_checked": 110,
+    "candidate_motion_files_valid": 110,
+    "inventory_followup": {
+      "labels_without_valid_motion": 126,
+      "labels_without_rights_cleared_motion": 161,
+      "unavailable_labels_with_inventory_candidate": 2
+    }
+  },
+  "motion_inbetweening": {
+    "counts": {
+      "train": 125,
+      "val": 224,
+      "test": 198
+    },
+    "metrics": {
+      "linear": {
+        "mpjpe_2d": 0.19520415365695953,
+        "wrist_error": 0.1832769215106964,
+        "fingertip_error": 0.3429886996746063,
+        "hand_joint_error": 0.32166653871536255,
+        "invalid_fraction": 0.16884173452854156,
+        "velocity_error": 1.0240689516067505,
+        "acceleration_error": 28.387283325195312,
+        "jerk_error": 1219.981201171875,
+        "boundary_velocity_error": 1.973685622215271,
+        "projected_bone_error": 0.07330121845006943
+      },
+      "hermite": {
+        "mpjpe_2d": 0.2671803832054138,
+        "wrist_error": 0.15193554759025574,
+        "fingertip_error": 0.37206342816352844,
+        "hand_joint_error": 0.35664036870002747,
+        "invalid_fraction": 0.16884173452854156,
+        "velocity_error": 1.3498504161834717,
+        "acceleration_error": 31.613277435302734,
+        "jerk_error": 1183.9942626953125,
+        "boundary_velocity_error": 2.3621866703033447,
+        "projected_bone_error": 0.1630173921585083
+      },
+      "visible_endpoints": {
+        "mpjpe_2d": 0.13781672716140747,
+        "wrist_error": 0.1832769364118576,
+        "fingertip_error": 0.33378469944000244,
+        "hand_joint_error": 0.3066021502017975,
+        "invalid_fraction": 0.16884173452854156,
+        "velocity_error": 0.8779128193855286,
+        "acceleration_error": 27.758827209472656,
+        "jerk_error": 1192.560546875,
+        "boundary_velocity_error": 1.7798341512680054,
+        "projected_bone_error": 0.05087369307875633
+      },
+      "reconstruction": {
+        "mpjpe_2d": 0.1378069967031479,
+        "wrist_error": 0.18327851593494415,
+        "fingertip_error": 0.33371731638908386,
+        "hand_joint_error": 0.30655571818351746,
+        "invalid_fraction": 0.16884173452854156,
+        "velocity_error": 0.8781227469444275,
+        "acceleration_error": 27.766490936279297,
+        "jerk_error": 1192.9588623046875,
+        "boundary_velocity_error": 1.7808685302734375,
+        "projected_bone_error": 0.05088242143392563
+      },
+      "adversarial": {
+        "mpjpe_2d": 0.13780348002910614,
+        "wrist_error": 0.1832861453294754,
+        "fingertip_error": 0.33371445536613464,
+        "hand_joint_error": 0.3065550923347473,
+        "invalid_fraction": 0.16884173452854156,
+        "velocity_error": 0.8781194686889648,
+        "acceleration_error": 27.766098022460938,
+        "jerk_error": 1192.9434814453125,
+        "boundary_velocity_error": 1.780859112739563,
+        "projected_bone_error": 0.050877995789051056
+      },
+      "full": {
+        "mpjpe_2d": 0.13781076669692993,
+        "wrist_error": 0.18328174948692322,
+        "fingertip_error": 0.3337075710296631,
+        "hand_joint_error": 0.30656394362449646,
+        "invalid_fraction": 0.16884173452854156,
+        "velocity_error": 0.8781020641326904,
+        "acceleration_error": 27.766223907470703,
+        "jerk_error": 1192.966796875,
+        "boundary_velocity_error": 1.7808367013931274,
+        "projected_bone_error": 0.050819069147109985
+      }
+    }
+  },
+  "weak_caption_pose": {
+    "training_samples": 21,
+    "phase_samples": 32,
+    "results": {
+      "val": {
+        "samples": 47,
+        "recordings": 2,
+        "counts": {
+          "all_valid_reference": 151158,
+          "all_scored": 151104,
+          "template_all_error_sum": 76562.73695805293,
+          "caption_retrieval_all_error_sum": 89434.98856473519,
+          "hands_valid_reference": 51155,
+          "hands_scored": 51155,
+          "template_hands_error_sum": 54552.28136489802,
+          "caption_retrieval_hands_error_sum": 63953.412129311284,
+          "caption_no_training_overlap": 9
+        },
+        "mean_normalized_2d_error": {
+          "template": {
+            "all": 0.5066890152348907,
+            "hands": 1.0664115211591834
+          },
+          "caption_retrieval": {
+            "all": 0.5918770420686097,
+            "hands": 1.250188879470458
+          }
+        }
+      },
+      "test": {
+        "samples": 19,
+        "recordings": 2,
+        "counts": {
+          "caption_no_training_overlap": 2,
+          "all_valid_reference": 63533,
+          "all_scored": 63505,
+          "template_all_error_sum": 23164.430270429657,
+          "caption_retrieval_all_error_sum": 31121.615438035584,
+          "hands_valid_reference": 22334,
+          "hands_scored": 22334,
+          "template_hands_error_sum": 17011.509471339297,
+          "caption_retrieval_hands_error_sum": 23442.941401556327
+        },
+        "mean_normalized_2d_error": {
+          "template": {
+            "all": 0.36476545579764835,
+            "hands": 0.7616866423990014
+          },
+          "caption_retrieval": {
+            "all": 0.4900655922846325,
+            "hands": 1.0496526104395238
+          }
+        }
+      }
+    },
+    "manifest_sha256": "f40ee62761ce0031b554b065cea631cce58ae2916c3e8032aa6acbed29f327f2"
+  },
+  "belgian_lsfb": {
+    "seed_count": 3,
+    "development_examples": 23,
+    "mean_operation_wer": 0.5,
+    "independent_test": false
+  },
+  "speech": {
+    "asr_model": "Systran/faster-whisper-small",
+    "asr_revision": "536b0662742c02347bc0e980a01041f333bce120",
+    "asr_license": "MIT",
+    "local_model_files_verified": true,
+    "model_file_checks": {
+      "config.json": true,
+      "model.bin": true,
+      "tokenizer.json": true,
+      "vocabulary.txt": true,
+      "README.md": true
+    },
+    "smoke": {
+      "status_code": 200,
+      "transcript": "Bonjour.",
+      "device": "cuda",
+      "evaluation_scope": "one short execution smoke sample; no gold transcript review or accuracy benchmark",
+      "accuracy_benchmark": false
+    }
+  },
+  "catalog_review_records": 0,
+  "library_explicit_fsl_records": 1446,
+  "migration_snapshot_matches_current_library": true,
+  "unusable_mt5_base_partial_bytes": 1747976192,
+  "evidence": {
+    "data/parallel/manifest.json": {
+      "sha256": "14abd6c539c35a75d0c99566e758f065a65b3bf1eddd4953dd2b307a8df331cd",
+      "bytes": 532
+    },
+    "reports/private/fsl-mt5-small-comparison-v1/RESULT.json": {
+      "sha256": "e5367393ca7fe98648de49a056d537c8ce587e88ae336602cea1ad16ac9eeebd",
+      "bytes": 444
+    },
+    "reports/private/fsl-t5-base-comparison-v3/RESULT.json": {
+      "sha256": "7b34f66c637b94a5551870775b15d5d760f49a4c43975905e538947c771e7613",
+      "bytes": 476
+    },
+    "reports/private/fsl-motion-v1/RESULTS.json": {
+      "sha256": "9624aad3414b46a9bde9e11046b5f0dafc6377e39e65cde31db82535a57cbc66",
+      "bytes": 3773
+    },
+    "reports/LSFB_SEED_REPLICATION_RESULT.json": {
+      "sha256": "847c7b860bd510eab4bced3551112f7b3d0922801c3607bf090456c56f3367e5",
+      "bytes": 2503
+    },
+    "reports/LSFB_SOURCE_ALIGNMENT_AUDIT.json": {
+      "sha256": "f331300c82e3a6fce9f825e45853e17a3c2944559651a5707a1293e9c1bd9a9e",
+      "bytes": 1044
+    },
+    "reports/EMOTION2VEC_WEIGHT_AUDIT.json": {
+      "sha256": "90d710032163d6988f1e6ba9bf0b66ac796f1f5e663ee0df9fa2564572d32386",
+      "bytes": 2838
+    },
+    "reports/CAPTURE_LANGUAGE_MIGRATION.json": {
+      "sha256": "4e74a0370f18da0af9a3237020240aaf2f0d0de6860090b88d11d82a9423bb4a",
+      "bytes": 422
+    },
+    "reports/CAPTURE_LANGUAGE_ASSET_RECHECK.json": {
+      "sha256": "909f5af7d5ef200f3d110cf99f235177418bd9c9caff53e17aa94c401516a58a",
+      "bytes": 143
+    },
+    "configs/asr_model.json": {
+      "sha256": "bd8c45602140de8e6eb4df69ce3365dde605068977a8a7af89381d9bb2221c6e",
+      "bytes": 904
+    },
+    "reports/ASR_SMOKE_RESULT.json": {
+      "sha256": "5b59999a184fe7ca11eb32cb03f0336dba57621d34b46906e84a5a1c19c055d2",
+      "bytes": 1004
+    },
+    "reports/VIDEO_API_LANDMARK_RECHECK.json": {
+      "sha256": "675b259ac94037849940568f48bcd77bb73e7ed0322af825d86ee9297210e059",
+      "bytes": 982
+    },
+    "reports/STUDIO_PLAYBACK_RECHECK.md": {
+      "sha256": "0548cc9e7eba6e38569cbe9e78b3ea11c329a035124252eb35807afd5af4a172",
+      "bytes": 1861
+    },
+    "reports/FSL_TRAINING_REVIEW_PACKET.md": {
+      "sha256": "c2afcf3372eba9cf583f02330f46d474fb51d5af45c62ed2f9b9e2e95d287290",
+      "bytes": 4520
+    },
+    "reports/FSL_MOTION_INVENTORY_FOLLOWUP.json": {
+      "sha256": "f816ff92cdc4037a8ba1fac5ebc0b85a691ac69dfefff738624a69276aadc85b",
+      "bytes": 967
+    },
+    "reports/FSL_VISIBLE_ENDPOINTS_LEARNED.json": {
+      "sha256": "e322bab4926b0d63382fecf3480abad2fff54fd871c10b2cc6f2adc39c2d3988",
+      "bytes": 5572
+    },
+    "reports/FSL_CAPTION_POSE_BASELINE.json": {
+      "sha256": "fefb5a8e567f9ec8de1b4868b9b0f525ae4a7a3f39654db666c2104fae169f09",
+      "bytes": 1712
+    },
+    "reports/LSFB_FREQUENT_CONTEXT_RESULT.md": {
+      "sha256": "f2039c8b87255c1bb03c37aeed37e2edcc9472dc390c4edc98100a4d843fa91e",
+      "bytes": 5376
+    }
+  },
+  "interpretation": "Artifact integrity and measured failures are verified; absence of human validation cannot be supplied by software tests.",
+  "next_required_external_input": "Qualified France-LSF/Belgian LSFB review of source alignment and representation, or a newly accessible appropriately licensed verified parallel corpus."
+}

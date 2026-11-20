@@ -1,0 +1,87 @@
+{
+  "task": "2D masked motion completion on existing validation and test windows",
+  "splits": {
+    "val": {
+      "windows": 224,
+      "sha256": "1409e4107e6d66b9fe32241b4e15d2cc28f563a03bf763e1a51a62bbec2eef74",
+      "joint_windows_missing_nominal_endpoint": 0.2700543999671936,
+      "linear": {
+        "mpjpe_2d": 0.24793259799480438,
+        "wrist_error": 0.25423702597618103,
+        "fingertip_error": 0.4514094293117523,
+        "hand_joint_error": 0.415535569190979,
+        "invalid_fraction": 0.162689208984375,
+        "velocity_error": 1.2956689596176147,
+        "acceleration_error": 34.65110397338867,
+        "jerk_error": 1439.9373779296875,
+        "boundary_velocity_error": 2.446880340576172,
+        "projected_bone_error": 0.09436142444610596
+      },
+      "visible_endpoints": {
+        "mpjpe_2d": 0.1769450157880783,
+        "wrist_error": 0.2457515150308609,
+        "fingertip_error": 0.4363350570201874,
+        "hand_joint_error": 0.3915340006351471,
+        "invalid_fraction": 0.162689208984375,
+        "velocity_error": 1.1367865800857544,
+        "acceleration_error": 34.03147888183594,
+        "jerk_error": 1412.9776611328125,
+        "boundary_velocity_error": 2.248765707015991,
+        "projected_bone_error": 0.06657242029905319
+      },
+      "wrist_relative": {
+        "mpjpe_2d": 0.17861361801624298,
+        "wrist_error": 0.2457515150308609,
+        "fingertip_error": 0.4452406167984009,
+        "hand_joint_error": 0.39626577496528625,
+        "invalid_fraction": 0.162689208984375,
+        "velocity_error": 1.1569890975952148,
+        "acceleration_error": 35.15474319458008,
+        "jerk_error": 1463.615234375,
+        "boundary_velocity_error": 2.4090070724487305,
+        "projected_bone_error": 0.057499732822179794
+      }
+    },
+    "test": {
+      "windows": 198,
+      "sha256": "b2a9b590e85c5c9c3cdc2a4d0823fef4048e49172024d6fa9dabe9c86d4be2e4",
+      "joint_windows_missing_nominal_endpoint": 0.26448073983192444,
+      "linear": {
+        "mpjpe_2d": 0.19520415365695953,
+        "wrist_error": 0.1832769215106964,
+        "fingertip_error": 0.3429886996746063,
+        "hand_joint_error": 0.32166650891304016,
+        "invalid_fraction": 0.16884173452854156,
+        "velocity_error": 1.0240689516067505,
+        "acceleration_error": 28.387279510498047,
+        "jerk_error": 1219.981201171875,
+        "boundary_velocity_error": 1.973685622215271,
+        "projected_bone_error": 0.07330121845006943
+      },
+      "visible_endpoints": {
+        "mpjpe_2d": 0.13781671226024628,
+        "wrist_error": 0.1832769215106964,
+        "fingertip_error": 0.33378466963768005,
+        "hand_joint_error": 0.3066021502017975,
+        "invalid_fraction": 0.16884173452854156,
+        "velocity_error": 0.877912700176239,
+        "acceleration_error": 27.75882911682129,
+        "jerk_error": 1192.560546875,
+        "boundary_velocity_error": 1.7798340320587158,
+        "projected_bone_error": 0.05087369307875633
+      },
+      "wrist_relative": {
+        "mpjpe_2d": 0.14558002352714539,
+        "wrist_error": 0.1832769215106964,
+        "fingertip_error": 0.3636559844017029,
+        "hand_joint_error": 0.32807865738868713,
+        "invalid_fraction": 0.16884173452854156,
+        "velocity_error": 0.92141193151474,
+        "acceleration_error": 29.9208927154541,
+        "jerk_error": 1301.498779296875,
+        "boundary_velocity_error": 2.0844695568084717,
+        "projected_bone_error": 0.04296279326081276
+      }
+    }
+  }
+}

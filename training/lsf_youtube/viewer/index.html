@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Relecture LSF · Diffusions</title>
+<style>
+:root{color-scheme:dark;--bg:#111719;--panel:#192326;--edge:#344449;--text:#f1f5f4;--muted:#adc0be;--active:#83e3d0;font:16px system-ui,sans-serif;background:var(--bg);color:var(--text)}
+*{box-sizing:border-box}body{margin:0 auto;max-width:1500px;padding:28px clamp(14px,3vw,40px)}
+h1{font-size:clamp(1.7rem,4vw,2.8rem);letter-spacing:-.045em;margin:0 0 18px}
+form,.controls,.legend{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px}
+form{margin-bottom:18px}.layout{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(18rem,1fr);gap:20px;align-items:start}
+.viewer,aside{background:var(--panel);border:1px solid var(--edge);border-radius:14px;overflow:hidden}
+.stage{background:#090e0f;position:relative}video{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:contain}.stage.canvas-ready video{opacity:0}
+canvas{position:relative;z-index:1;width:100%;display:block;aspect-ratio:16/9;max-height:63vh;object-fit:contain;pointer-events:none}
+.controls,.legend,.subtitle,aside{padding:12px}.controls{border-bottom:1px solid var(--edge)}
+#seek{min-width:120px;flex:1;accent-color:var(--active)}#clock{min-width:5rem;font-variant-numeric:tabular-nums;color:var(--active)}
+.subtitle{min-height:4.8rem;font-size:1.1rem;line-height:1.5;background:#202d30;margin:0;overflow-wrap:anywhere}
+.legend{font-size:.88rem;color:var(--muted)}
+h2{font-size:1rem;margin:0 0 12px}aside input[type=search]{width:100%;margin:10px 0}
+#list{padding:0;margin:12px 0 0;list-style:none;max-height:60vh;overflow:auto}
+#list button{width:100%;padding:9px 10px;margin:0 0 6px;text-align:left;line-height:1.35;background:#202c30}
+#list button[aria-current=true]{background:#22433f;border-color:var(--active)}
+#list span{display:block;color:var(--muted);font-size:.8rem;margin-bottom:3px;font-variant-numeric:tabular-nums}
+button,select,input[type=search]{color:inherit;background:#233236;padding:7px 10px;border:1px solid var(--edge);border-radius:6px;font:inherit}
+button,select{cursor:pointer}button:disabled{cursor:default;opacity:.55}:focus-visible{outline:2px solid var(--active);outline-offset:2px}
+#status,small{color:var(--muted)}#status{margin:12px 0}
+@media(max-width:760px){.layout{grid-template-columns:1fr}#list{max-height:45vh}}
+</style>
+</head>
+<body>
+<h1>Relecture LSF</h1>
+<form><label for="broadcast">Diffusion</label><select id="broadcast"></select><small id="summary"></small></form>
+<div class="layout">
+<section class="viewer" aria-label="Vidéo et pose">
+<div class="stage"><video id="video" playsinline muted preload="metadata"></video><canvas id="overlay" aria-label="Vidéo et points de l’interprète"></canvas></div>
+<div class="controls">
+<button type="button" id="play" disabled>Lire le segment</button>
+<button type="button" id="next" disabled>Segment suivant</button>
+<label><input type="checkbox" id="loop"> Boucle</label>
+<label for="speed">Vitesse</label><select id="speed"><option value="1">1×</option><option value="0.5">½×</option><option value="0.25">¼×</option></select>
+<input id="seek" type="range" min="0" max="1" step="0.02" value="0" disabled aria-label="Position dans le segment">
+<output id="clock">00:00</output>
+</div>
+<p id="subtitle" class="subtitle">Sélectionnez un segment.</p>
+<div class="legend">
+<label><input type="checkbox" id="landmarks" checked> Points MediaPipe</label>
+<label><input type="checkbox" id="crop" checked> Interprète seul</label>
+<small id="coverage"></small>
+</div>
+</section>
+<aside aria-label="Sous-titres">
+<h2>Sous-titres français</h2>
+<label for="query">Rechercher dans la diffusion</label><input type="search" id="query">
+<label><input type="checkbox" id="candidates" checked> Segments avec suivi exploitable</label>
+<ul id="list"></ul>
+</aside>
+</div>
+<p id="status" role="status"></p>
+<small>Les sous-titres automatiques et les gestes partagent le temps de la vidéo. Le décalage de l’interprétation reste à vérifier.</small>
+<script type="module" src="/viewer.js"></script>
+</body>
+</html>

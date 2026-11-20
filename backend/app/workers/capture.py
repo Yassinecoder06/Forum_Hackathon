@@ -1,11 +1,13 @@
 """CPU video capture worker. Runs in .venv-motion, independently of the API runtime."""
 import argparse
+from collections import deque
 import gzip
 from copy import deepcopy
 import json
 import math
 from pathlib import Path
 from types import SimpleNamespace
+from statistics import median
 import cv2
 import mediapipe as mp
 import numpy as np
@@ -21,13 +23,30 @@ BODY = {'head': 0, 'left_shoulder': 11, 'right_shoulder': 12,
 FINGERS = {'thumb': [1, 2, 3, 4], 'index': [5, 6, 7, 8],
            'middle': [9, 10, 11, 12], 'ring': [13, 14, 15, 16], 'pinky': [17, 18, 19, 20]}
 
-def pose_frame(result, width, height):
+class ShoulderScale:
+    """Stabilize pixel-to-rig scale using recent visible shoulder measurements."""
+
+    def __init__(self):
+        self.samples = deque(maxlen=7)
+
+    def update(self, time_ms, landmarks, width, height):
+        while self.samples and time_ms - self.samples[0][0] > 300:
+            self.samples.popleft()
+        if landmarks is not None:
+            left, right = (landmarks.landmark[i] for i in (11, 12))
+            span = math.hypot((left.x-right.x)*width, (left.y-right.y)*height)
+            if min(left.visibility, right.visibility) >= .5 and math.isfinite(span) and span >= 3:
+                self.samples.append((time_ms, span))
+        return median(span for _, span in self.samples) if self.samples else None
+
+
+def pose_frame(result, width, height, stable_shoulder_px=None):
     image = result.pose_landmarks.landmark
     world = result.pose_world_landmarks.landmark if result.pose_world_landmarks else None
     shoulder_px = math.hypot((image[11].x-image[12].x)*width, (image[11].y-image[12].y)*height)
     if shoulder_px < 3:
         raise ValueError('Épaules non détectées')
-    pixel_scale = .4 / shoulder_px
+    pixel_scale = .4 / (stable_shoulder_px or shoulder_px)
     if world:
         origin = np.mean([[world[i].x,world[i].y,world[i].z] for i in (23,24)], axis=0)
         def body(i):
@@ -69,15 +88,17 @@ def pose_frame(result, width, height):
 def extract(source, target, progress, raw_target=None):
     cap = cv2.VideoCapture(str(source))
     fps = float(cap.get(cv2.CAP_PROP_FPS))
-    count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-    if not cap.isOpened() or not math.isfinite(fps) or not 1<=fps<=240 or count<=0:
+    reported_count = cap.get(cv2.CAP_PROP_FRAME_COUNT)
+    count = int(reported_count) if math.isfinite(reported_count) and reported_count > 0 else 0
+    if not cap.isOpened() or not math.isfinite(fps) or not 1<=fps<=240:
         raise ValueError('Cette vidéo ne peut pas être décodée.')
-    if count/fps > 60:
+    if count and count/fps > 60:
         raise ValueError('Le clip doit durer au maximum 60 secondes.')
     stride = max(1,math.ceil(fps/30))
     frames, missing, left, right, faces, processed = [],0,0,0,0,0
     raw_frames=[]
     previous_hands={}
+    scale_tracker = ShoulderScale()
     hand_disagreements={'left':0,'right':0}
     def raw_points(landmarks,world=False):
         if landmarks is None:return None
@@ -97,6 +118,10 @@ def extract(source, target, progress, raw_target=None):
             while True:
                 ok, image = cap.read()
                 if not ok: break
+                # MediaRecorder WebM streams often omit container duration and
+                # frame count. Enforce the limit while decoding those streams.
+                if (index + 1) / fps > 60:
+                    raise ValueError('Le clip doit durer au maximum 60 secondes.')
                 if index % stride:
                     index+=1
                     continue
@@ -104,6 +129,10 @@ def extract(source, target, progress, raw_target=None):
                     image=cv2.resize(image,None,fx=960/max(image.shape[:2]),fy=960/max(image.shape[:2]))
                 rgb=cv2.cvtColor(image,cv2.COLOR_BGR2RGB)
                 result=model.process(rgb)
+                time_ms = round(index * 1000 / fps)
+                stable_shoulder_px = scale_tracker.update(
+                    time_ms, result.pose_landmarks, image.shape[1], image.shape[0]
+                )
                 hand_sources={side:'holistic' if getattr(result,f'{side}_hand_landmarks') else 'missing' for side in ('left','right')}
                 if result.pose_landmarks and (not result.left_hand_landmarks or not result.right_hand_landmarks):
                     detected=hand_model.process(rgb)
@@ -165,14 +194,14 @@ def extract(source, target, progress, raw_target=None):
                 processed+=1
                 if result.pose_landmarks:
                     try:
-                        joints,hands,face=pose_frame(result,image.shape[1],image.shape[0])
+                        joints,hands,face=pose_frame(result,image.shape[1],image.shape[0],stable_shoulder_px)
                         frames.append({'time_ms':round(index*1000/fps),'joints':joints,'face':face,
                             'hand_tracking':hand_diagnostics})
                         left+=int(hands['left']);right+=int(hands['right']);faces+=int(face is not None)
                     except ValueError: missing+=1
                 else: missing+=1
                 index+=1
-                if processed%5==0: report(min(95,round(index/count*95)))
+                if processed%5==0: report(min(95,round(index/(count or 60*fps)*95)))
     finally: cap.release()
     if not frames:
         raise ValueError('Aucune personne détectée. Utilisez un plan fixe, de face, avec le buste et les mains visibles.')
@@ -190,7 +219,7 @@ def extract(source, target, progress, raw_target=None):
         'face_coverage':round(faces/processed,3),'missing_frames':missing,'hand_wrist_disagreement_frames':hand_disagreements}
     motion={'rig_version':'signaculture-v1','fps':fps/stride,'duration_ms':duration,
         'joints':list(BODY)+['hips','neck'],'tracked_joints':joint_names,'frames':frames,
-        'quality':quality,'synthetic':False,'capture_method':'mediapipe-holistic-hands-fallback-0.10.21-roi-v4',
+        'quality':quality,'synthetic':False,'capture_method':'mediapipe-holistic-hands-fallback-0.10.21-roi-v5',
         'face_feature_method':'eye-normal-projection-legacy-scale-v1',
         'warnings':['Profondeur monoculaire approximative. Les occultations nécessitent une revue.']}
     target.write_text(json.dumps(motion,allow_nan=False))

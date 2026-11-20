@@ -1,0 +1,10 @@
+npm notice run signaculture-frontend@1.0.0 dev
+npm notice run vite --port 15177 --strictPort
+
+  VITE v6.4.6  ready in 118 ms
+
+  ➜  Local:   http://127.0.0.1:15177/
+4:26:17 PM [vite] (client) hmr update /src/components/RecentExperiments.tsx
+5:14:39 PM [vite] (client) hmr update /src/components/AvatarPlayer/AvatarCanvas.tsx
+5:33:32 PM [vite] (client) hmr update /src/App.tsx
+5:33:53 PM [vite] (client) hmr update /src/studio.css

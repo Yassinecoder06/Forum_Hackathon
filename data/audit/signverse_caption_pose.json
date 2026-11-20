@@ -1,0 +1,13 @@
+{
+  "candidate_counts": {
+    "cues": 95,
+    "insufficient_body_or_hand_coverage": 8
+  },
+  "retained_by_original_split": {
+    "test": 19,
+    "train": 21,
+    "val": 47
+  },
+  "recordings": 7,
+  "gold_glosses": 0
+}

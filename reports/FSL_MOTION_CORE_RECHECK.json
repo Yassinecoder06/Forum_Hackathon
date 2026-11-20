@@ -1,0 +1,24 @@
+{
+  "apporter": {
+    "motion_sha256": "ea67d7dab4249b3dd17c5bbdc43d9ca178aa0ba8741bab7cac241159b4dedad7",
+    "heuristic_interval_ms": [
+      1214,
+      2143
+    ],
+    "frames": 14,
+    "left_observed": 8,
+    "right_observed": 11,
+    "both_observed": 6
+  },
+  "couper": {
+    "motion_sha256": "eeb83ff8387323c729bb92cb575c677d2e8e59af17bcaeb0dafc82c5ba6f6e20",
+    "heuristic_interval_ms": [
+      2640,
+      4040
+    ],
+    "frames": 36,
+    "left_observed": 29,
+    "right_observed": 36,
+    "both_observed": 29
+  }
+}

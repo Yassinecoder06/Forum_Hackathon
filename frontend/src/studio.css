@@ -1858,3 +1858,10 @@ h1 em {
   color: #573323;
   text-decoration: underline;
 }
+
+.webcam-frame {
+  width: 100%;
+  height: min(75vh, 50rem);
+  border: 0;
+  border-radius: 12px;
+}

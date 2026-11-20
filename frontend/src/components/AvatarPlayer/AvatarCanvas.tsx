@@ -10,8 +10,12 @@ import { IdleLife } from "../../utils/idleLife";
 import { createCafeBackdrop } from "../../utils/stageBackdrop";
 type Props = {
   avatarCredit?: string;
+  fitNarrowViewport?: boolean;
+  renderOnChange?: boolean;
   motion: MotionFile | null;
   currentTimeMs: number;
+  headRotation?: number[];
+  faceBlendshapes?: Record<string, number>;
   expressiveModulation?: boolean;
   showSkeletonDebug?: boolean;
   emotion?: Record<string, number | string> | null;
@@ -32,14 +36,28 @@ export function AvatarCanvas(props: Props) {
       retarget: HumanoidRetargeter | null = null,
       idle: IdleLife | null = null;
     const morphs: THREE.Mesh[] = [];
+    let head: THREE.Bone | undefined;
+    let bindHead: THREE.Quaternion | undefined;
+    let redraw = true;
+    let lastMotion: MotionFile | null = null;
+    let lastTime = -1;
+    let lastFace: Props["faceBlendshapes"];
+    let lastHead: Props["headRotation"];
     const scene = new THREE.Scene();
     const backdrop = createCafeBackdrop();
     scene.background = backdrop;
-    const renderer = new THREE.WebGLRenderer({
-      antialias: true,
-      alpha: false,
-      preserveDrawingBuffer: true,
-    });
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        alpha: false,
+        preserveDrawingBuffer: true,
+      });
+    } catch {
+      backdrop.dispose();
+      setStatus("WebGL est indisponible dans ce navigateur.");
+      return;
+    }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setClearColor(0x6b4232);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -73,7 +91,14 @@ export function AvatarCanvas(props: Props) {
       if (!host.clientWidth || !host.clientHeight) return;
       renderer.setSize(host.clientWidth, host.clientHeight);
       camera.aspect = host.clientWidth / host.clientHeight;
+      if (latest.current.fitNarrowViewport) {
+        const halfFov = THREE.MathUtils.degToRad(15);
+        camera.fov = THREE.MathUtils.radToDeg(
+          2 * Math.atan(Math.tan(halfFov) * Math.max(1, 1.2 / camera.aspect)),
+        );
+      }
       camera.updateProjectionMatrix();
+      redraw = true;
     };
     const observer = new ResizeObserver(resize);
     observer.observe(host);
@@ -116,12 +141,17 @@ export function AvatarCanvas(props: Props) {
         }
         idle = new IdleLife(model);
         model.traverse((o) => {
+          if (o instanceof THREE.Bone && o.name === "Head") {
+            head = o;
+            bindHead = o.quaternion.clone();
+          }
           if (o instanceof THREE.Mesh) {
             o.frustumCulled = false;
             if (o.morphTargetDictionary) morphs.push(o);
           }
         });
         setReady(true);
+        redraw = true;
         setStatus("");
         latest.current.onCanvasReady?.(renderer.domElement);
       },
@@ -147,8 +177,18 @@ export function AvatarCanvas(props: Props) {
         motion,
         currentTimeMs,
         expressiveModulation,
+        faceBlendshapes,
+        headRotation,
         emotion,
+        renderOnChange,
       } = latest.current;
+      const cameraMoved = controls.update();
+      if (renderOnChange && !redraw && !cameraMoved && lastMotion === motion && lastTime === currentTimeMs && lastFace === faceBlendshapes && lastHead === headRotation) return;
+      redraw = false;
+      lastMotion = motion;
+      lastTime = currentTimeMs;
+      lastFace = faceBlendshapes;
+      lastHead = headRotation;
       // Anatomical neutral stance; old synthetic fixtures use the legacy mirrored X convention.
       if (!motion) {
         const joints = interpolateJointPositions(null, currentTimeMs);
@@ -174,7 +214,7 @@ export function AvatarCanvas(props: Props) {
         }
       }
       // Display-only life layer on top of the reset-every-frame retargeted pose.
-      const life = idle?.update(performance.now() / 1000, Boolean(motion));
+      const life = renderOnChange ? undefined : idle?.update(performance.now() / 1000, Boolean(motion));
       morph("eyeBlinkLeft", life?.blink ?? 0);
       morph("eyeBlinkRight", life?.blink ?? 0);
       const gx = life?.gaze.x ?? 0, gy = life?.gaze.y ?? 0;
@@ -211,7 +251,24 @@ export function AvatarCanvas(props: Props) {
         morph(`mouthFrown${side}`, face ? 0 : sad * 0.15);
       }
       morph("browInnerUp", face ? (browWeights(face.brow_left, face.brow_left_neutral ?? calibration?.brow_left, browLimit).up + browWeights(face.brow_right, face.brow_right_neutral ?? calibration?.brow_right, browLimit).up) * .2 : 0);
-      controls.update();
+      if (faceBlendshapes) {
+        for (const name of [
+          "jawOpen", "eyeBlinkLeft", "eyeBlinkRight", "browInnerUp",
+          "browOuterUpLeft", "browOuterUpRight", "browDownLeft", "browDownRight",
+          "mouthSmileLeft", "mouthSmileRight", "mouthFrownLeft", "mouthFrownRight",
+        ]) {
+          const weight = faceBlendshapes[name];
+          if (Number.isFinite(weight)) morph(name, THREE.MathUtils.clamp(weight, 0, 1));
+        }
+      }
+      if (head?.parent && bindHead && headRotation?.length === 9 && headRotation.every(Number.isFinite)) {
+        const [xx, xy, xz, yx, yy, yz, zx, zy, zz] = headRotation;
+        const rotation = new THREE.Matrix4().set(xx, xy, xz, 0, yx, yy, yz, 0, zx, zy, zz, 0, 0, 0, 0, 1);
+        const parent = head.parent.getWorldQuaternion(new THREE.Quaternion());
+        const delta = parent.clone().invert().multiply(new THREE.Quaternion().setFromRotationMatrix(rotation)).multiply(parent);
+        head.quaternion.copy(bindHead).premultiply(delta);
+        head.updateWorldMatrix(false, true);
+      }
       renderer.render(scene, camera);
     }
     render();

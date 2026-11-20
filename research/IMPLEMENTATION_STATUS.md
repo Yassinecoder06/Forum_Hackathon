@@ -1,3 +1,5 @@
+> Historical milestone snapshot. For the complete current project status and subsequent experiments, see [current implementation status](../IMPLEMENTATION_STATUS.md). “Completed” below describes that historical milestone, not the full active goal.
+
 > Current evidence update: the lead has now read the supplied seven-page `research_paper.pdf`. Earlier PDF-unavailable / not-read notes below are historical. See [verified review](PAPER_B_VERIFIED_REVIEW.md).
 
 # Implementation status — completed 2026-11-15

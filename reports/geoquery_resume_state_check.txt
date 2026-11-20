@@ -1,0 +1,1 @@
+weights_only CPU load passed; epoch4;188steps; model+optimizer+Python/Torch/CUDA RNG present. Full resumed-training equivalence has not been tested.

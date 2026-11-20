@@ -13,6 +13,10 @@ export default defineConfig(({ command }) => ({
     port: 5173,
     host: "127.0.0.1",
     proxy: {
+      "/webcam": {
+        target: env.SIGNACULTURE_WEBCAM_TARGET || "http://127.0.0.1:5180",
+        changeOrigin: true,
+      },
       "/api": {
         target: apiTarget,
         changeOrigin: true,

@@ -1,0 +1,1796 @@
+{
+  "scope": "All frozen train/validation rows and seven thin source shards; official test predictions diagnostic only. No training or filtering performed.",
+  "frozen_hashes_match": {
+    "train.jsonl": true,
+    "vocabulary.json": true,
+    "val.jsonl": true
+  },
+  "source_shards": [
+    {
+      "shard": 1,
+      "role": "validation",
+      "recordings": 63,
+      "translations": 732,
+      "events": 23660,
+      "recordings_with_translations": 32,
+      "recordings_without_translations": 31,
+      "translations_without_selected_events": 13,
+      "translations_with_boundary_dropped_events": 52,
+      "intersecting_event_assignments": 10336,
+      "selected_event_assignments": 10278
+    },
+    {
+      "shard": 2,
+      "role": "train",
+      "recordings": 63,
+      "translations": 581,
+      "events": 22417,
+      "recordings_with_translations": 21,
+      "recordings_without_translations": 42,
+      "translations_without_selected_events": 5,
+      "translations_with_boundary_dropped_events": 52,
+      "intersecting_event_assignments": 7250,
+      "selected_event_assignments": 7192
+    },
+    {
+      "shard": 3,
+      "role": "train",
+      "recordings": 63,
+      "translations": 722,
+      "events": 20723,
+      "recordings_with_translations": 33,
+      "recordings_without_translations": 30,
+      "translations_without_selected_events": 7,
+      "translations_with_boundary_dropped_events": 59,
+      "intersecting_event_assignments": 10385,
+      "selected_event_assignments": 10326
+    },
+    {
+      "shard": 4,
+      "role": "train",
+      "recordings": 63,
+      "translations": 583,
+      "events": 19920,
+      "recordings_with_translations": 30,
+      "recordings_without_translations": 33,
+      "translations_without_selected_events": 11,
+      "translations_with_boundary_dropped_events": 20,
+      "intersecting_event_assignments": 8730,
+      "selected_event_assignments": 8710
+    },
+    {
+      "shard": 5,
+      "role": "train",
+      "recordings": 63,
+      "translations": 842,
+      "events": 21167,
+      "recordings_with_translations": 36,
+      "recordings_without_translations": 27,
+      "translations_without_selected_events": 7,
+      "translations_with_boundary_dropped_events": 29,
+      "intersecting_event_assignments": 11531,
+      "selected_event_assignments": 11498
+    },
+    {
+      "shard": 6,
+      "role": "train",
+      "recordings": 63,
+      "translations": 1004,
+      "events": 22245,
+      "recordings_with_translations": 37,
+      "recordings_without_translations": 26,
+      "translations_without_selected_events": 112,
+      "translations_with_boundary_dropped_events": 96,
+      "intersecting_event_assignments": 13740,
+      "selected_event_assignments": 13636
+    },
+    {
+      "shard": 7,
+      "role": "train",
+      "recordings": 62,
+      "translations": 899,
+      "events": 21359,
+      "recordings_with_translations": 33,
+      "recordings_without_translations": 29,
+      "translations_without_selected_events": 2,
+      "translations_with_boundary_dropped_events": 70,
+      "intersecting_event_assignments": 12289,
+      "selected_event_assignments": 12211
+    }
+  ],
+  "source_integrity_checks": {
+    "nonpositive_event_duration": 0,
+    "empty_event_gloss": 102,
+    "event_frame_ms_disagreement_over_40ms_at_50fps": 0
+  },
+  "derived_integrity_checks": {
+    "rows_without_exact_source_translation": 0,
+    "signer_id_mismatch": 0,
+    "events_absent_from_source": 0,
+    "canonical_target_mismatch": 0
+  },
+  "splits": {
+    "train": {
+      "pairs": 4396,
+      "recordings": 188,
+      "signers": 45,
+      "target_tokens": 63323,
+      "target_types": 4103,
+      "singleton_types": 1507,
+      "types_occurring_at_most_5_times": 2748,
+      "target_length": {
+        "n": 4396,
+        "mean": 14.404686078252958,
+        "median": 9.0,
+        "p95": 43,
+        "max": 222
+      },
+      "french_word_count": {
+        "n": 4396,
+        "mean": 22.914240218380346,
+        "median": 15.0,
+        "p95": 64,
+        "max": 406
+      },
+      "duration_seconds": {
+        "n": 4396,
+        "mean": 7.05787534121929,
+        "median": 4.5925,
+        "p95": 20.341,
+        "max": 119.698
+      },
+      "event_types": {
+        "lexical": 50165,
+        "pointing": 8162,
+        "buoy": 297,
+        "palm-up": 1783,
+        "depictive": 2916
+      },
+      "review_flags": {
+        "nonlexical_context_in_target": 3145,
+        "ellipsis_in_french": 622,
+        "simultaneous_events_serialized": 1430,
+        "consecutive_repeated_target_units": 1349,
+        "selected_event_crosses_translation_boundary": 2235,
+        "fingerspelling_marker_removed_from_target": 311,
+        "target_over_twice_french_word_count": 20
+      },
+      "events_assigned_to_multiple_translations": 0,
+      "texts_with_multiple_targets": 22,
+      "normalization_units_merging_multiple_raw_labels": 1203,
+      "top_targets": [
+        [
+          "pointing:pt:pro1",
+          2455
+        ],
+        [
+          "depictive:ds",
+          1970
+        ],
+        [
+          "palm-up:palm-up",
+          1669
+        ],
+        [
+          "lexical:ls",
+          1436
+        ],
+        [
+          "lexical:aussi",
+          1390
+        ],
+        [
+          "pointing:pt:det",
+          1238
+        ],
+        [
+          "lexical:gsign",
+          885
+        ],
+        [
+          "lexical:oui",
+          753
+        ],
+        [
+          "pointing:pt:pro3",
+          716
+        ],
+        [
+          "lexical:sourd",
+          675
+        ],
+        [
+          "pointing:pt:pro2",
+          649
+        ],
+        [
+          "lexical:avoir",
+          590
+        ],
+        [
+          "lexical:quoi",
+          588
+        ],
+        [
+          "lexical:mais",
+          572
+        ],
+        [
+          "lexical:regarder",
+          504
+        ],
+        [
+          "lexical:plus.p",
+          501
+        ],
+        [
+          "lexical:c-est",
+          448
+        ],
+        [
+          "lexical:non",
+          441
+        ],
+        [
+          "pointing:pt:loc",
+          409
+        ],
+        [
+          "lexical:falloir",
+          401
+        ]
+      ],
+      "fingerspelling_examples": [
+        {
+          "id": "CLSFBI0103A_S001_B:348343:364366",
+          "french": "Quand je sortais à Ans, je croisais parfois dans la rue des camarades sourds de mon ancienne école. Donc j’ai commencé à sortir de plus en plus. Je ressentais le besoin de communiquer à nouveau en langue des signes. Ça me faisait beaucoup de bien ! J’allais régulièrement chez des amis, nous formions un groupe.",
+          "events": [
+            {
+              "start_ms": 353736,
+              "end_ms": 353996,
+              "gloss": "fs:ans",
+              "start_frame": 17686,
+              "end_frame": 17700,
+              "lemma": "ans",
+              "sign_type": "lexical",
+              "specifier": "fs",
+              "variation": null
+            }
+          ]
+        },
+        {
+          "id": "CLSFBI0115A_S001_B:335355:342530",
+          "french": "C’était pareil pour moi. Je devais marcher de Ans jusqu’à la place Saint-Lambert à Liège ! Tu imagines le nombre de kilomètres ?",
+          "events": [
+            {
+              "start_ms": 338644,
+              "end_ms": 339194,
+              "gloss": "fs:ans",
+              "start_frame": 16932,
+              "end_frame": 16960,
+              "lemma": "ans",
+              "sign_type": "lexical",
+              "specifier": "fs",
+              "variation": null
+            }
+          ]
+        },
+        {
+          "id": "CLSFBI0120A_S001_B:1920:4610",
+          "french": "CPAS, tu connais ?",
+          "events": [
+            {
+              "start_ms": 2364,
+              "end_ms": 3935,
+              "gloss": "fs:cpas",
+              "start_frame": 118,
+              "end_frame": 197,
+              "lemma": "cpas",
+              "sign_type": "lexical",
+              "specifier": "fs",
+              "variation": null
+            }
+          ]
+        },
+        {
+          "id": "CLSFBI0120A_S001_B:4900:6120",
+          "french": "CPAS ?",
+          "events": [
+            {
+              "start_ms": 4891,
+              "end_ms": 6116,
+              "gloss": "fs:cpas",
+              "start_frame": 244,
+              "end_frame": 306,
+              "lemma": "cpas",
+              "sign_type": "lexical",
+              "specifier": "fs",
+              "variation": null
+            }
+          ]
+        },
+        {
+          "id": "CLSFBI0120A_S001_B:18062:20942",
+          "french": "Ensuite, le FOREM ?",
+          "events": [
+            {
+              "start_ms": 18579,
+              "end_ms": 19717,
+              "gloss": "fs:lfm(forem)",
+              "start_frame": 928,
+              "end_frame": 986,
+              "lemma": "lfm",
+              "sign_type": "lexical",
+              "specifier": "fs",
+              "variation": "(forem)"
+            },
+            {
+              "start_ms": 20205,
+              "end_ms": 20933,
+              "gloss": "fs:fs(forem)",
+              "start_frame": 1010,
+              "end_frame": 1047,
+              "lemma": "fs",
+              "sign_type": "lexical",
+              "specifier": "fs",
+              "variation": "(forem)"
+            }
+          ]
+        },
+        {
+          "id": "CLSFBI0120A_S001_B:22291:23111",
+          "french": "Ça te dit quelque chose, le FOREM ?",
+          "events": [
+            {
+              "start_ms": 22770,
+              "end_ms": 23100,
+              "gloss": "fs:(fm)forem",
+              "start_frame": 1138,
+              "end_frame": 1155,
+              "lemma": "(fm)forem",
+              "sign_type": "lexical",
+              "specifier": "fs",
+              "variation": null
+            }
+          ]
+        },
+        {
+          "id": "CLSFBI0120A_S001_B:27125:34145",
+          "french": "Ensuite, l’AWIPH ?",
+          "events": [
+            {
+              "start_ms": 28398,
+              "end_ms": 30226,
+              "gloss": "fs:awa(awiph)",
+              "start_frame": 1419,
+              "end_frame": 1512,
+              "lemma": "awa",
+              "sign_type": "lexical",
+              "specifier": "fs",
+              "variation": "(awiph)"
+            },
+            {
+              "start_ms": 30304,
+              "end_ms": 34149,
+              "gloss": "fs:wawpih(awiph)",
+              "start_frame": 1515,
+              "end_frame": 1708,
+              "lemma": "wawpih",
+              "sign_type": "lexical",
+              "specifier": "fs",
+              "variation": "(awiph)"
+            }
+          ]
+        },
+        {
+          "id": "CLSFBI0120A_S001_B:77331:77461",
+          "french": "Oui, VISA.",
+          "events": [
+            {
+              "start_ms": 77331,
+              "end_ms": 77461,
+              "gloss": "fs:v",
+              "start_frame": 3866,
+              "end_frame": 3874,
+              "lemma": "v",
+              "sign_type": "lexical",
+              "specifier": "fs",
+              "variation": null
+            }
+          ]
+        }
+      ]
+    },
+    "val": {
+      "pairs": 714,
+      "recordings": 32,
+      "signers": 6,
+      "target_tokens": 10133,
+      "target_types": 1654,
+      "singleton_types": 707,
+      "types_occurring_at_most_5_times": 1315,
+      "target_length": {
+        "n": 714,
+        "mean": 14.19187675070028,
+        "median": 9.0,
+        "p95": 40,
+        "max": 220
+      },
+      "french_word_count": {
+        "n": 714,
+        "mean": 25.123249299719888,
+        "median": 17.0,
+        "p95": 67,
+        "max": 446
+      },
+      "duration_seconds": {
+        "n": 714,
+        "mean": 7.661175070028011,
+        "median": 4.9795,
+        "p95": 19.83,
+        "max": 120.479
+      },
+      "event_types": {
+        "pointing": 1746,
+        "lexical": 7661,
+        "palm-up": 191,
+        "depictive": 485,
+        "buoy": 50
+      },
+      "review_flags": {
+        "nonlexical_context_in_target": 545,
+        "consecutive_repeated_target_units": 235,
+        "simultaneous_events_serialized": 264,
+        "selected_event_crosses_translation_boundary": 352,
+        "fingerspelling_marker_removed_from_target": 31,
+        "ellipsis_in_french": 87,
+        "target_over_twice_french_word_count": 2
+      },
+      "events_assigned_to_multiple_translations": 0,
+      "texts_with_multiple_targets": 4,
+      "normalization_units_merging_multiple_raw_labels": 387,
+      "top_targets": [
+        [
+          "pointing:pt:pro1",
+          438
+        ],
+        [
+          "depictive:ds",
+          402
+        ],
+        [
+          "pointing:pt:det",
+          286
+        ],
+        [
+          "lexical:aussi",
+          183
+        ],
+        [
+          "palm-up:palm-up",
+          175
+        ],
+        [
+          "lexical:gsign",
+          161
+        ],
+        [
+          "lexical:ls",
+          160
+        ],
+        [
+          "pointing:pt:pro2",
+          155
+        ],
+        [
+          "pointing:pt:pro3",
+          130
+        ],
+        [
+          "pointing:pt:loc",
+          122
+        ],
+        [
+          "lexical:mais",
+          101
+        ],
+        [
+          "lexical:non",
+          99
+        ],
+        [
+          "lexical:oui",
+          99
+        ],
+        [
+          "lexical:c-est",
+          95
+        ],
+        [
+          "lexical:dire",
+          81
+        ],
+        [
+          "lexical:avoir",
+          77
+        ],
+        [
+          "lexical:quoi",
+          76
+        ],
+        [
+          "lexical:pourquoi",
+          72
+        ],
+        [
+          "lexical:sourd",
+          72
+        ],
+        [
+          "pointing:pt:pro1(ba)",
+          69
+        ]
+      ],
+      "fingerspelling_examples": [
+        {
+          "id": "CLSFBI0103A_S002_B:220925:227796",
+          "french": "Elle habitait Verviers, à Heusy plus précisément. Et moi, je venais de Verviers même.",
+          "events": [
+            {
+              "start_ms": 223009,
+              "end_ms": 225892,
+              "gloss": "fs:housy",
+              "start_frame": 11150,
+              "end_frame": 11295,
+              "lemma": "housy",
+              "sign_type": "lexical",
+              "specifier": "fs",
+              "variation": null
+            }
+          ]
+        },
+        {
+          "id": "CLSFBI0104A_S002_B:207810:224540",
+          "french": "Oh non, ça ne m’a pas plu de voir ça ! J’ai vu deux couples de parents avec leurs bébés qui avaient tous les deux une cicatrice en forme de « L » derrière l’oreille ! Est-ce que tu crois que ça va fonctionner ?!",
+          "events": [
+            {
+              "start_ms": 211205,
+              "end_ms": 212801,
+              "gloss": "fs:l",
+              "start_frame": 10560,
+              "end_frame": 10641,
+              "lemma": "l",
+              "sign_type": "lexical",
+              "specifier": "fs",
+              "variation": null
+            },
+            {
+              "start_ms": 213463,
+              "end_ms": 214363,
+              "gloss": "fs:l",
+              "start_frame": 10673,
+              "end_frame": 10719,
+              "lemma": "l",
+              "sign_type": "lexical",
+              "specifier": "fs",
+              "variation": null
+            },
+            {
+              "start_ms": 222310,
+              "end_ms": 222634,
+              "gloss": "fs:l",
+              "start_frame": 11115,
+              "end_frame": 11132,
+              "lemma": "l",
+              "sign_type": "lexical",
+              "specifier": "fs",
+              "variation": null
+            }
+          ]
+        },
+        {
+          "id": "CLSFBI0115A_S002_B:302760:328850",
+          "french": "Quand je voulais rendre visite à ma grand-maman, je demandais à mon papa si je pouvais y aller en tram. Il refusait à chaque fois et me disait que je devais y aller à pied ! « Il faut marcher » qu’il disait ! Je rouspétais parce que c’était loin, de Verviers à Ensival, mais il m’obligeait à marcher jusque-là.",
+          "events": [
+            {
+              "start_ms": 322592,
+              "end_ms": 324567,
+              "gloss": "fs:onsvah(onsval)",
+              "start_frame": 16129,
+              "end_frame": 16229,
+              "lemma": "onsvah",
+              "sign_type": "lexical",
+              "specifier": "fs",
+              "variation": "(onsval)"
+            }
+          ]
+        },
+        {
+          "id": "CLSFBI0115A_S002_B:495402:508020",
+          "french": "La viande qu’on cuisait avec ça était succulente ! Malheureusement, j’ai dû la vendre suite au décès de maman. Par la suite, j’ai eu une cuisinière au gaz. La cuisson n’avait vraiment rien à voir, la viande était dure comme du bois.",
+          "events": [
+            {
+              "start_ms": 501478,
+              "end_ms": 501855,
+              "gloss": "fs:m",
+              "start_frame": 25073,
+              "end_frame": 25093,
+              "lemma": "m",
+              "sign_type": "lexical",
+              "specifier": "fs",
+              "variation": null
+            }
+          ]
+        },
+        {
+          "id": "CLSFBI0120A_S002_B:73839:77389",
+          "french": "La carte bancaire VISA.",
+          "events": [
+            {
+              "start_ms": 75459,
+              "end_ms": 77381,
+              "gloss": "fs:vsa(visa)",
+              "start_frame": 3772,
+              "end_frame": 3870,
+              "lemma": "vsa",
+              "sign_type": "lexical",
+              "specifier": "fs",
+              "variation": "(visa)"
+            }
+          ]
+        },
+        {
+          "id": "CLSFBI0120A_S002_B:80889:86879",
+          "french": "Il y a aussi une autre carte, Bancontact Mistercash.",
+          "events": [
+            {
+              "start_ms": 82639,
+              "end_ms": 85043,
+              "gloss": "fs:bancotac(bancontact",
+              "start_frame": 4131,
+              "end_frame": 4253,
+              "lemma": "bancotac(bancontact",
+              "sign_type": "lexical",
+              "specifier": "fs",
+              "variation": null
+            },
+            {
+              "start_ms": 85123,
+              "end_ms": 86861,
+              "gloss": "fs:msach(mistercasd)",
+              "start_frame": 4256,
+              "end_frame": 4344,
+              "lemma": "msach",
+              "sign_type": "lexical",
+              "specifier": "fs",
+              "variation": "(mistercasd)"
+            }
+          ]
+        },
+        {
+          "id": "CLSFBI0301A_S008_B:37054:40306",
+          "french": "Moi c'est Michel, mon nom signé est \"Michel-vélo\".",
+          "events": [
+            {
+              "start_ms": 37320,
+              "end_ms": 39223,
+              "gloss": "fs:michel",
+              "start_frame": 1866,
+              "end_frame": 1962,
+              "lemma": "michel",
+              "sign_type": "lexical",
+              "specifier": "fs",
+              "variation": null
+            }
+          ]
+        },
+        {
+          "id": "CLSFBI0301A_S008_B:55698:64536",
+          "french": "Moi, c'est \"m.descornet@hotmail.com\".",
+          "events": [
+            {
+              "start_ms": 56001,
+              "end_ms": 56299,
+              "gloss": "fs:m",
+              "start_frame": 2800,
+              "end_frame": 2815,
+              "lemma": "m",
+              "sign_type": "lexical",
+              "specifier": "fs",
+              "variation": null
+            },
+            {
+              "start_ms": 56957,
+              "end_ms": 60384,
+              "gloss": "fs:descorntet(descornet",
+              "start_frame": 2847,
+              "end_frame": 3020,
+              "lemma": "descorntet(descornet",
+              "sign_type": "lexical",
+              "specifier": "fs",
+              "variation": null
+            },
+            {
+              "start_ms": 61440,
+              "end_ms": 63594,
+              "gloss": "fs:hotmail",
+              "start_frame": 3072,
+              "end_frame": 3180,
+              "lemma": "hotmail",
+              "sign_type": "lexical",
+              "specifier": "fs",
+              "variation": null
+            },
+            {
+              "start_ms": 64021,
+              "end_ms": 64537,
+              "gloss": "fs:com",
+              "start_frame": 3201,
+              "end_frame": 3227,
+              "lemma": "com",
+              "sign_type": "lexical",
+              "specifier": "fs",
+              "variation": null
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "split_overlaps": {
+    "recordings": [],
+    "signers": [],
+    "exact_conversation_prefixes": [
+      "CLSFBI0103A",
+      "CLSFBI0104A",
+      "CLSFBI0115A",
+      "CLSFBI0120A",
+      "CLSFBI0502A",
+      "CLSFBI1402A",
+      "CLSFBI2702A",
+      "CLSFBI2703A",
+      "CLSFBI2704A",
+      "CLSFBI2709A",
+      "CLSFBI2711A",
+      "CLSFBI2712A",
+      "CLSFBI2714A",
+      "CLSFBI2716A"
+    ],
+    "conversation_prefixes_ignoring_final_letter": [
+      "CLSFBI0103",
+      "CLSFBI0104",
+      "CLSFBI0115",
+      "CLSFBI0120",
+      "CLSFBI0502",
+      "CLSFBI1402",
+      "CLSFBI2702",
+      "CLSFBI2703",
+      "CLSFBI2704",
+      "CLSFBI2709",
+      "CLSFBI2711",
+      "CLSFBI2712",
+      "CLSFBI2714",
+      "CLSFBI2716"
+    ],
+    "normalized_french_inputs": []
+  },
+  "vocabulary": {
+    "inventory": 6743,
+    "paired_train_types": 4103,
+    "never_targeted_inventory_units": 2640,
+    "isol_train_units": 499,
+    "train_tokens_with_isol_assets": 38170,
+    "train_pairs_fully_inside_isol_inventory": 523,
+    "val_tokens_unseen_in_paired_train": 782,
+    "val_tokens_outside_inventory": 657
+  },
+  "generated_test_diagnostics": {
+    "constrained": {
+      "examples": 435,
+      "reference_tokens": 5189,
+      "predicted_tokens": 20224,
+      "substitutions": 4191,
+      "deletions": 567,
+      "insertions": 15602,
+      "wer": 3.9236847176719984,
+      "mean_prediction_length": 46.49195402298851,
+      "mean_reference_length": 11.928735632183908,
+      "sequences_with_repeated_trigrams": 212,
+      "reference_sequences_with_repeated_trigrams": 23,
+      "without_eos": 1,
+      "invalid_sequences": 0,
+      "most_common_predictions": [
+        {
+          "units": [
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi"
+          ],
+          "count": 16
+        },
+        {
+          "units": [
+            "lexical:oui"
+          ],
+          "count": 8
+        },
+        {
+          "units": [
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up"
+          ],
+          "count": 8
+        }
+      ],
+      "top_predicted_units": [
+        [
+          "lexical:aussi",
+          3286
+        ],
+        [
+          "palm-up:palm-up",
+          1614
+        ],
+        [
+          "lexical:avant",
+          1024
+        ],
+        [
+          "lexical:exemple",
+          682
+        ],
+        [
+          "lexical:gsign",
+          673
+        ],
+        [
+          "pointing:pt:pro1",
+          586
+        ],
+        [
+          "lexical:si",
+          518
+        ],
+        [
+          "lexical:1",
+          507
+        ],
+        [
+          "lexical:d",
+          441
+        ],
+        [
+          "lexical:avoir",
+          424
+        ],
+        [
+          "lexical:chef",
+          369
+        ],
+        [
+          "lexical:simple",
+          367
+        ],
+        [
+          "lexical:toujours",
+          346
+        ],
+        [
+          "lexical:4",
+          336
+        ],
+        [
+          "lexical:non",
+          327
+        ]
+      ],
+      "top_reference_units": [
+        [
+          "depictive:ds",
+          327
+        ],
+        [
+          "pointing:pt:pro1",
+          209
+        ],
+        [
+          "lexical:aussi",
+          136
+        ],
+        [
+          "pointing:pt:det",
+          109
+        ],
+        [
+          "lexical:gsign",
+          91
+        ],
+        [
+          "lexical:ls",
+          56
+        ],
+        [
+          "lexical:avoir",
+          52
+        ],
+        [
+          "pointing:pt:pro2",
+          48
+        ],
+        [
+          "lexical:quoi",
+          48
+        ],
+        [
+          "pointing:pt:loc",
+          46
+        ],
+        [
+          "lexical:fsign",
+          46
+        ],
+        [
+          "lexical:mais",
+          43
+        ],
+        [
+          "pointing:pt:pro3",
+          38
+        ],
+        [
+          "lexical:dire",
+          36
+        ],
+        [
+          "pointing:pt:pro1(b)",
+          35
+        ]
+      ]
+    },
+    "raw": {
+      "examples": 435,
+      "reference_tokens": 5189,
+      "predicted_tokens": 18240,
+      "substitutions": 4121,
+      "deletions": 681,
+      "insertions": 13732,
+      "wer": 3.571786471381769,
+      "mean_prediction_length": 41.93103448275862,
+      "mean_reference_length": 11.928735632183908,
+      "sequences_with_repeated_trigrams": 189,
+      "reference_sequences_with_repeated_trigrams": 23,
+      "without_eos": 1,
+      "invalid_sequences": 201,
+      "most_common_predictions": [
+        {
+          "units": [
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi",
+            "lexical:aussi"
+          ],
+          "count": 15
+        },
+        {
+          "units": [
+            "lexical:oui"
+          ],
+          "count": 8
+        },
+        {
+          "units": [
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up",
+            "palm-up:palm-up"
+          ],
+          "count": 6
+        }
+      ],
+      "top_predicted_units": [
+        [
+          "lexical:aussi",
+          2812
+        ],
+        [
+          "palm-up:palm-up",
+          1568
+        ],
+        [
+          "lexical:exemple",
+          780
+        ],
+        [
+          "lexical:avant",
+          690
+        ],
+        [
+          "lexical:si",
+          517
+        ],
+        [
+          "lexical:avoir",
+          435
+        ],
+        [
+          "pointing:pt:pro1",
+          384
+        ],
+        [
+          "lexical:d",
+          368
+        ],
+        [
+          "lexical:simple",
+          367
+        ],
+        [
+          "lexical:gsign",
+          357
+        ],
+        [
+          "lexical:toujours",
+          346
+        ],
+        [
+          "<INVALID:18837>",
+          313
+        ],
+        [
+          "lexical:1",
+          290
+        ],
+        [
+          "<INVALID:1409>",
+          289
+        ],
+        [
+          "lexical:3",
+          277
+        ]
+      ],
+      "top_reference_units": [
+        [
+          "depictive:ds",
+          327
+        ],
+        [
+          "pointing:pt:pro1",
+          209
+        ],
+        [
+          "lexical:aussi",
+          136
+        ],
+        [
+          "pointing:pt:det",
+          109
+        ],
+        [
+          "lexical:gsign",
+          91
+        ],
+        [
+          "lexical:ls",
+          56
+        ],
+        [
+          "lexical:avoir",
+          52
+        ],
+        [
+          "pointing:pt:pro2",
+          48
+        ],
+        [
+          "lexical:quoi",
+          48
+        ],
+        [
+          "pointing:pt:loc",
+          46
+        ],
+        [
+          "lexical:fsign",
+          46
+        ],
+        [
+          "lexical:mais",
+          43
+        ],
+        [
+          "pointing:pt:pro3",
+          38
+        ],
+        [
+          "lexical:dire",
+          36
+        ],
+        [
+          "pointing:pt:pro1(b)",
+          35
+        ]
+      ]
+    }
+  },
+  "validation_history": [
+    {
+      "eval_loss": 6.958256244659424,
+      "eval_wer": 5.183744055339386,
+      "eval_exact_match": 0.019830028328611898,
+      "eval_empty_rate": 0.0084985835694051,
+      "eval_invalid_sequence_rate": 0.0,
+      "eval_eos_rate": 1.0,
+      "eval_reference_oov_rate": 0.06431041936878512,
+      "eval_mean_predicted_units": 67.8186968838527,
+      "eval_mean_reference_units": 13.104815864022664,
+      "eval_runtime": 269.7259,
+      "eval_samples_per_second": 2.617,
+      "eval_steps_per_second": 0.167,
+      "epoch": 1.0,
+      "step": 1090
+    },
+    {
+      "eval_loss": 6.691998481750488,
+      "eval_wer": 3.9860570687418937,
+      "eval_exact_match": 0.0226628895184136,
+      "eval_empty_rate": 0.0113314447592068,
+      "eval_invalid_sequence_rate": 0.0,
+      "eval_eos_rate": 0.9985835694050992,
+      "eval_reference_oov_rate": 0.06431041936878512,
+      "eval_mean_predicted_units": 51.68271954674221,
+      "eval_mean_reference_units": 13.104815864022664,
+      "eval_runtime": 266.9406,
+      "eval_samples_per_second": 2.645,
+      "eval_steps_per_second": 0.169,
+      "epoch": 2.0,
+      "step": 2180
+    },
+    {
+      "eval_loss": 6.552111625671387,
+      "eval_wer": 4.284803285776048,
+      "eval_exact_match": 0.025495750708215296,
+      "eval_empty_rate": 0.007082152974504249,
+      "eval_invalid_sequence_rate": 0.0,
+      "eval_eos_rate": 0.9971671388101983,
+      "eval_reference_oov_rate": 0.06431041936878512,
+      "eval_mean_predicted_units": 55.69263456090651,
+      "eval_mean_reference_units": 13.104815864022664,
+      "eval_runtime": 261.8358,
+      "eval_samples_per_second": 2.696,
+      "eval_steps_per_second": 0.172,
+      "epoch": 3.0,
+      "step": 3270
+    },
+    {
+      "eval_loss": 6.489869594573975,
+      "eval_wer": 4.379161262429745,
+      "eval_exact_match": 0.024079320113314446,
+      "eval_empty_rate": 0.0028328611898017,
+      "eval_invalid_sequence_rate": 0.0,
+      "eval_eos_rate": 0.9985835694050992,
+      "eval_reference_oov_rate": 0.06431041936878512,
+      "eval_mean_predicted_units": 57.23937677053824,
+      "eval_mean_reference_units": 13.104815864022664,
+      "eval_runtime": 263.4632,
+      "eval_samples_per_second": 2.68,
+      "eval_steps_per_second": 0.171,
+      "epoch": 4.0,
+      "step": 4360
+    },
+    {
+      "eval_loss": 6.399373531341553,
+      "eval_wer": 3.7832900994379592,
+      "eval_exact_match": 0.025495750708215296,
+      "eval_empty_rate": 0.0028328611898017,
+      "eval_invalid_sequence_rate": 0.0,
+      "eval_eos_rate": 0.9985835694050992,
+      "eval_reference_oov_rate": 0.06431041936878512,
+      "eval_mean_predicted_units": 49.196883852691215,
+      "eval_mean_reference_units": 13.104815864022664,
+      "eval_runtime": 264.3682,
+      "eval_samples_per_second": 2.671,
+      "eval_steps_per_second": 0.17,
+      "epoch": 5.0,
+      "step": 5450
+    },
+    {
+      "eval_loss": 6.36185359954834,
+      "eval_wer": 3.5723086900129704,
+      "eval_exact_match": 0.025495750708215296,
+      "eval_empty_rate": 0.0,
+      "eval_invalid_sequence_rate": 0.0,
+      "eval_eos_rate": 1.0,
+      "eval_reference_oov_rate": 0.06431041936878512,
+      "eval_mean_predicted_units": 46.447592067988666,
+      "eval_mean_reference_units": 13.104815864022664,
+      "eval_runtime": 257.4492,
+      "eval_samples_per_second": 2.742,
+      "eval_steps_per_second": 0.175,
+      "epoch": 6.0,
+      "step": 6540
+    },
+    {
+      "eval_loss": 6.326021194458008,
+      "eval_wer": 3.498378728923476,
+      "eval_exact_match": 0.025495750708215296,
+      "eval_empty_rate": 0.0,
+      "eval_invalid_sequence_rate": 0.0,
+      "eval_eos_rate": 1.0,
+      "eval_reference_oov_rate": 0.06431041936878512,
+      "eval_mean_predicted_units": 45.303116147308785,
+      "eval_mean_reference_units": 13.104815864022664,
+      "eval_runtime": 262.616,
+      "eval_samples_per_second": 2.688,
+      "eval_steps_per_second": 0.171,
+      "epoch": 7.0,
+      "step": 7630
+    },
+    {
+      "eval_loss": 6.318751811981201,
+      "eval_wer": 3.7408127972330307,
+      "eval_exact_match": 0.024079320113314446,
+      "eval_empty_rate": 0.0,
+      "eval_invalid_sequence_rate": 0.0,
+      "eval_eos_rate": 1.0,
+      "eval_reference_oov_rate": 0.06431041936878512,
+      "eval_mean_predicted_units": 48.946175637393765,
+      "eval_mean_reference_units": 13.104815864022664,
+      "eval_runtime": 267.7045,
+      "eval_samples_per_second": 2.637,
+      "eval_steps_per_second": 0.168,
+      "epoch": 8.0,
+      "step": 8720
+    },
+    {
+      "eval_loss": 6.293968200683594,
+      "eval_wer": 3.7521616947686987,
+      "eval_exact_match": 0.028328611898016998,
+      "eval_empty_rate": 0.0,
+      "eval_invalid_sequence_rate": 0.0,
+      "eval_eos_rate": 1.0,
+      "eval_reference_oov_rate": 0.06431041936878512,
+      "eval_mean_predicted_units": 48.91784702549575,
+      "eval_mean_reference_units": 13.104815864022664,
+      "eval_runtime": 261.081,
+      "eval_samples_per_second": 2.704,
+      "eval_steps_per_second": 0.172,
+      "epoch": 9.0,
+      "step": 9810
+    },
+    {
+      "eval_loss": 6.279135704040527,
+      "eval_wer": 3.5165369649805447,
+      "eval_exact_match": 0.026912181303116147,
+      "eval_empty_rate": 0.0,
+      "eval_invalid_sequence_rate": 0.0,
+      "eval_eos_rate": 1.0,
+      "eval_reference_oov_rate": 0.06431041936878512,
+      "eval_mean_predicted_units": 45.892351274787536,
+      "eval_mean_reference_units": 13.104815864022664,
+      "eval_runtime": 266.9732,
+      "eval_samples_per_second": 2.644,
+      "eval_steps_per_second": 0.169,
+      "epoch": 10.0,
+      "step": 10900
+    }
+  ],
+  "late_training_losses": [
+    {
+      "loss": 5.7413,
+      "grad_norm": 9.766661643981934,
+      "learning_rate": 2e-05,
+      "epoch": 9.8348623853211,
+      "step": 10720
+    },
+    {
+      "loss": 5.855,
+      "grad_norm": 6.435212135314941,
+      "learning_rate": 2e-05,
+      "epoch": 9.853211009174313,
+      "step": 10740
+    },
+    {
+      "loss": 5.5179,
+      "grad_norm": 5.975612640380859,
+      "learning_rate": 2e-05,
+      "epoch": 9.871559633027523,
+      "step": 10760
+    },
+    {
+      "loss": 5.6339,
+      "grad_norm": 6.897928237915039,
+      "learning_rate": 2e-05,
+      "epoch": 9.889908256880734,
+      "step": 10780
+    },
+    {
+      "loss": 5.8404,
+      "grad_norm": 6.416932582855225,
+      "learning_rate": 2e-05,
+      "epoch": 9.908256880733944,
+      "step": 10800
+    },
+    {
+      "loss": 5.5108,
+      "grad_norm": 6.334378719329834,
+      "learning_rate": 2e-05,
+      "epoch": 9.926605504587156,
+      "step": 10820
+    },
+    {
+      "loss": 5.4522,
+      "grad_norm": 10.128482818603516,
+      "learning_rate": 2e-05,
+      "epoch": 9.944954128440367,
+      "step": 10840
+    },
+    {
+      "loss": 5.7382,
+      "grad_norm": 6.319871425628662,
+      "learning_rate": 2e-05,
+      "epoch": 9.963302752293577,
+      "step": 10860
+    },
+    {
+      "loss": 5.4339,
+      "grad_norm": 7.828071594238281,
+      "learning_rate": 2e-05,
+      "epoch": 9.98165137614679,
+      "step": 10880
+    },
+    {
+      "loss": 5.3075,
+      "grad_norm": 13.062870025634766,
+      "learning_rate": 2e-05,
+      "epoch": 10.0,
+      "step": 10900
+    }
+  ],
+  "limitations": [
+    "No automatic flag proves linguistic invalidity.",
+    "Thin source snapshots omit separate left/right hand tiers; one original local shard can be audited separately.",
+    "No free-running training predictions available: train-fit vs generalization is not resolved.",
+    "Full source video/context and LSFB expertise needed to verify suspected semantic mismatches.",
+    "Vocabulary inventory coverage is not evidence of learned translation or motion coverage."
+  ]
+}

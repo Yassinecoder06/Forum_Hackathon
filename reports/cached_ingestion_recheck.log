@@ -1,0 +1,47 @@
+{
+  "status": "complete",
+  "network_requests": 0,
+  "active_library_unchanged": true,
+  "selected_capture_files_unchanged": true,
+  "results": [
+    {
+      "source": "commons",
+      "capture_id": "2a6eb51d-7ca1-5ddf-a204-e01c00897c32",
+      "source_sha256": "32c970ea1d9ed8bdba03f9d681dd3b48414f614d137530fd785166a4e5db2cb1",
+      "registered_language": "fsl",
+      "rights_status": "cleared",
+      "review_status": "pending",
+      "synthetic": false,
+      "quality": {
+        "sampled_frames": 30,
+        "pose_frames": 30,
+        "pose_coverage": 1.0,
+        "left_hand_coverage": 0.767,
+        "right_hand_coverage": 0.733,
+        "face_coverage": 1.0,
+        "missing_frames": 0
+      },
+      "status": "imported in isolated offline library"
+    },
+    {
+      "source": "dictasign",
+      "capture_id": "0cf6f6ce-bcc8-5239-a3d9-eccde8e17e42",
+      "source_sha256": "e1d376692bb0ffc408125407775d71c2ff7653d5823e65c7b5f26eaa448b2a19",
+      "registered_language": "fsl",
+      "rights_status": "pending",
+      "review_status": "pending",
+      "synthetic": false,
+      "quality": {
+        "sampled_frames": 37,
+        "pose_frames": 37,
+        "pose_coverage": 1.0,
+        "left_hand_coverage": 1.0,
+        "right_hand_coverage": 1.0,
+        "face_coverage": 1.0,
+        "missing_frames": 0
+      },
+      "status": "imported in isolated offline library"
+    }
+  ],
+  "limitations": "Exercises registration and metadata on cached genuine captures; does not rerun CV or grant linguistic approval."
+}

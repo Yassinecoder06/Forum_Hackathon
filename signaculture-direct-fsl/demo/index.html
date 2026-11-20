@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Motion Lab · SignaCulture</title>
+<link rel="stylesheet" href="style.css">
+<script src="app.js" defer></script>
+</head>
+<body>
+<header><div class="shell brand"><span class="mark" aria-hidden="true">✳</span><b>SignaCulture</b><span class="divider"></span> Motion Lab</div></header>
+<main class="shell">
+<section class="intro">
+<div><h1>From French text<br>to signing motion.</h1><p>Inspect the 2D skeleton produced by our France-LSF research model and compare it with motion captured from real recordings.</p></div>
+<span class="status"><i></i> Experimental prototype</span>
+</section>
+<section class="viewer" aria-labelledby="motion-title">
+<div class="viewer-head"><h2 id="motion-title">Skeleton playback</h2>
+<div class="options" role="group" aria-label="Choose an example">
+<button type="button" data-sample="new_test" aria-pressed="true">Held-out example 1</button>
+<button type="button" data-sample="test" aria-pressed="false">Held-out example 2</button>
+<button type="button" data-sample="demo" aria-pressed="false">New sentence</button>
+</div></div>
+<div class="caption"><span id="caption-label">French subtitle</span><p id="caption" lang="fr"></p></div>
+<div class="stage">
+<video id="motion" controls playsinline preload="metadata" aria-label="Skeleton animation"></video>
+</div>
+<p id="playback-note" class="note"></p>
+</section>
+<section class="results" aria-labelledby="results-title">
+<div><h2 id="results-title">Held-out performance</h2><p>45 cues from four recordings. Joint error measures distance in normalized 2D coordinates. Lower is better.</p></div>
+<div class="table-wrap"><table><caption>Joint error by method and test set</caption><thead><tr><th>Method</th><th>Original test<br><small>19 cues</small></th><th>Additional test<br><small>26 cues</small></th></tr></thead><tbody id="scores"></tbody></table></div>
+<p class="note">The average training motion had lower joint error on all four recordings. The source subtitles have weak timing alignment, and a fluent France-LSF review is pending.</p>
+</section>
+</main>
+<footer class="shell">SignaCulture · SignVerse-2M <code>fsl</code> research subset · Noncommercial research</footer>
+</body>
+</html>

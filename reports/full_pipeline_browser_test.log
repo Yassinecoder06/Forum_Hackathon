@@ -1,0 +1,6 @@
+npm notice run test
+npm notice run node smoke.mjs
+Composition, seeking and real WebM export passed.
+Real WAV analysis and pause-aware timing passed.
+JSON capture, provenance, persistence and text lookup passed.
+Unknown-word handling, mobile layout and offline errors passed.

@@ -1,0 +1,13 @@
+{
+  "status": "complete",
+  "apply_requested": false,
+  "applied": false,
+  "total_rows": 1446,
+  "newly_verified": 0,
+  "unresolved": [],
+  "before_sha256": "022881539c5bd2bd798b522bfedf972ca34b9da2b8726309fa01a67b9f61fc71",
+  "after_sha256": "022881539c5bd2bd798b522bfedf972ca34b9da2b8726309fa01a67b9f61fc71",
+  "non_language_fields_unchanged": true,
+  "qualified_linguistic_approval": false,
+  "network_requests": 0
+}

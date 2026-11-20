@@ -1,0 +1,70 @@
+{
+  "status": "complete",
+  "coverage": {
+    "verified_tensor_count": 185,
+    "verified_elements": 93178133,
+    "missing_unused_decoder_tensors": [
+      "modality_encoders.AUDIO.decoder.blocks.0.0.weight",
+      "modality_encoders.AUDIO.decoder.blocks.0.0.bias",
+      "modality_encoders.AUDIO.decoder.blocks.1.0.weight",
+      "modality_encoders.AUDIO.decoder.blocks.1.0.bias",
+      "modality_encoders.AUDIO.decoder.blocks.2.0.weight",
+      "modality_encoders.AUDIO.decoder.blocks.2.0.bias",
+      "modality_encoders.AUDIO.decoder.blocks.3.0.weight",
+      "modality_encoders.AUDIO.decoder.blocks.3.0.bias",
+      "modality_encoders.AUDIO.decoder.proj.weight",
+      "modality_encoders.AUDIO.decoder.proj.bias"
+    ],
+    "inference_parameter_check": "exact tensor equality",
+    "semantic_accuracy_validated": false
+  },
+  "funasr_version": "1.4.26",
+  "model_revision": "7be9a30d52bdc793cc24e6f7d25358d6648927c1",
+  "checkpoint_sha256": "327e861049c7105a3f8589edfd16543a7cdc0c1926f1b64de975d98e0650cdd3",
+  "audio_sha256": "32931163673d04a0848657efc92cff940edddf6f224cd6a481caa81ee6941f30",
+  "code_sha256": {
+    "model.py": "a9967e269646fcbefcacc29b9d4c76c5d03ca055de5b53884be95dafc53e921f",
+    "audio.py": "94c425d23ca096924fdd2157067b2b23a24061dbd9bd9f7e7433e4f3c8cabf44"
+  },
+  "reconstruction_decoder_forward_calls": 0,
+  "decoder_nan_perturbation_scores_identical": true,
+  "result": {
+    "labels": [
+      "\u751f\u6c14/angry",
+      "\u538c\u6076/disgusted",
+      "\u6050\u60e7/fearful",
+      "\u5f00\u5fc3/happy",
+      "\u4e2d\u7acb/neutral",
+      "\u5176\u4ed6/other",
+      "\u96be\u8fc7/sad",
+      "\u5403\u60ca/surprised",
+      "<unk>"
+    ],
+    "scores": [
+      0.0003168382099829614,
+      0.0030924552120268345,
+      3.996562008978799e-05,
+      4.691256253863685e-05,
+      0.9925520420074463,
+      8.37101924844319e-06,
+      0.003864450380206108,
+      1.57302395109582e-06,
+      7.745948823867366e-05
+    ]
+  },
+  "qualified_emotion_accuracy_validated": false,
+  "scope": "One existing 8-second French demo excerpt; validates weight coverage and execution, not emotional correctness.",
+  "license_status": "Local model card declares other/model-license; no independent commercial-use permission conclusion.",
+  "worker_scores_equal_prior_run": true,
+  "service_scores_equal_worker": true,
+  "guarded_worker_run_passed": true,
+  "verification_code_sha256": {
+    "backend/app/workers/emotion.py": "71359b545f2f1980049a7c528aebb77ef9c070954c5d07100185b060a54d97fa",
+    "backend/app/workers/emotion_validation.py": "9076aff9b256636b0033571a3420e029553bcd030d1ada651203928fe3d7efa6",
+    "scripts/audit_emotion_weights.py": "fe4fa45fe2fa670ac8528cd980d61a93b133ed2f9668e1d0f99852732b4823b2"
+  },
+  "tests": {
+    "weight_and_score_validation": 5,
+    "backend_api_and_capture_regression": 24
+  }
+}

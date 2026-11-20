@@ -1,0 +1,8 @@
+torch
+numpy
+PyYAML
+matplotlib
+pillow
+transformers
+sentencepiece
+safetensors

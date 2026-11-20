@@ -1,0 +1,10 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.14, pytest-9.2.0, pluggy-1.7.0
+rootdir: /home/jmal/Projects/Active/Forum_Hackathon
+configfile: pytest.ini
+collected 5 items
+
+training/lsfb_cont/test_scoring.py ...                                   [ 60%]
+training/lsfb_cont/test_extracted.py ..                                  [100%]
+
+============================== 5 passed in 2.26s ===============================

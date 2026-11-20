@@ -124,6 +124,36 @@ export default function App() {
   const [recording, setRecording] = useState(false);
   const [sourceUrl, setSourceUrl] = useState("");
   const [referenceUrl, setReferenceUrl] = useState("");
+  const [showWebcam, setShowWebcam] = useState(false);
+  const webcamFrame = useRef<HTMLIFrameElement>(null);
+
+  useEffect(() => {
+    function receiveWebcamMotion(event: MessageEvent) {
+      if (event.origin !== window.location.origin ||
+          event.source !== webcamFrame.current?.contentWindow ||
+          event.data?.type !== "signaculture:webcam-motion" ||
+          !Array.isArray(event.data.motion?.frames)) return;
+
+      const video = event.data.video;
+      if (video instanceof Blob && video.size > 0 && video.type.startsWith("video/")) {
+        const extension = video.type.includes("mp4") ? "mp4" : "webm";
+        setCaptureFile(new File([video], `webcam-source.${extension}`, { type: video.type }));
+        setSourceUrl(URL.createObjectURL(video));
+      } else {
+        setCaptureFile(new File([JSON.stringify(event.data.motion)], "webcam-motion.json", {
+          type: "application/json",
+        }));
+        setSourceUrl("");
+      }
+      setJob(null);
+      setSaved(false);
+      setRights(false);
+      setShowWebcam(false);
+    }
+    window.addEventListener("message", receiveWebcamMotion);
+    return () => window.removeEventListener("message", receiveWebcamMotion);
+  }, []);
+
   const [captureFile, setCaptureFile] = useState<File | null>(null);
   const [rights, setRights] = useState(false);
   const [job, setJob] = useState<CaptureJob | null>(null);
@@ -302,6 +332,7 @@ export default function App() {
   }
 
   async function loadConceptPlan(result: AnimationPlan) {
+    const token = ++generation.current;
     const files = await Promise.all(
       result.segments.map(
         async (seg) =>
@@ -313,7 +344,7 @@ export default function App() {
           ] as const,
       ),
     );
-    generation.current += 1;
+    if (token !== generation.current) return;
     setPlan(result);
     setMotion(stitchAnimationPlan(result, new Map(files)));
     setTime(0);
@@ -984,6 +1015,23 @@ export default function App() {
                       </div>
                       <Film size={20} />
                     </div>
+                    <button
+                      type="button"
+                      className="video-drop"
+                      aria-expanded={showWebcam}
+                      onClick={() => setShowWebcam(!showWebcam)}
+                    >
+                      {showWebcam ? "Fermer la webcam" : "Capturer avec la webcam"}
+                    </button>
+                    {showWebcam && (
+                      <iframe
+                        ref={webcamFrame}
+                        src="/webcam/"
+                        title="Capture webcam"
+                        allow="camera"
+                        className="webcam-frame"
+                      />
+                    )}
                     <input
                       ref={videoInput}
                       type="file"

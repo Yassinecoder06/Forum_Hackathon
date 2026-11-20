@@ -1,0 +1,17 @@
+{
+  "train": {
+    "cues": 21,
+    "recordings": 3,
+    "mean_valid_fraction": 0.7571963355654762
+  },
+  "val": {
+    "cues": 47,
+    "recordings": 2,
+    "mean_valid_fraction": 0.7851874168882979
+  },
+  "test": {
+    "cues": 19,
+    "recordings": 2,
+    "mean_valid_fraction": 0.8163677014802632
+  }
+}

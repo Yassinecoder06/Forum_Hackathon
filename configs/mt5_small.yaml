@@ -1,0 +1,14 @@
+model: google/mt5-small
+local_model: .worktrees/wt-codex2/training/weights/mt5-small
+revision: 73fb5dbe4756edadc8fbe8c769b0a109493acf7a
+sign_language: fsl
+mode: published_annotation_feasibility
+prefix: 'translate French to France-LSF glosses: '
+seed: 71
+lora_rank: 16
+learning_rate: 0.0002
+batch_size: 1
+gradient_accumulation: 8
+precision: bfloat16
+source_limit: 256
+target_limit: 256

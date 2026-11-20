@@ -1,0 +1,121 @@
+{
+  "splits": {
+    "train": {
+      "rows": 111,
+      "reference_tokens": 884,
+      "target_vocabulary": 407,
+      "unseen_tokens_vs_train": 0,
+      "sentences_with_unseen_target_tokens": 0,
+      "signers": [
+        "S001",
+        "S036",
+        "S062",
+        "S065"
+      ],
+      "recordings": 11
+    },
+    "val": {
+      "rows": 12,
+      "reference_tokens": 75,
+      "target_vocabulary": 57,
+      "unseen_tokens_vs_train": 45,
+      "sentences_with_unseen_target_tokens": 11,
+      "signers": [
+        "S022"
+      ],
+      "recordings": 1
+    },
+    "test": {
+      "rows": 129,
+      "reference_tokens": 1156,
+      "target_vocabulary": 492,
+      "unseen_tokens_vs_train": 596,
+      "sentences_with_unseen_target_tokens": 119,
+      "signers": [
+        "S041"
+      ],
+      "recordings": 9
+    }
+  },
+  "train_target_vocabulary": 407,
+  "train_target_singletons": 257,
+  "total_target_vocabulary": 815,
+  "runs": {
+    "poc-100": {
+      "examples": 129,
+      "exact_matches": 0,
+      "normalized_exact_matches": 0,
+      "independent_wer": 1.0354671280276817,
+      "edit_operations": {
+        "replace": 160,
+        "delete": 996,
+        "insert": 41
+      },
+      "reference_tokens": 1156,
+      "predicted_tokens": 201,
+      "unique_predictions": 11,
+      "pretraining_marker_outputs": 129
+    },
+    "t5-base-300": {
+      "examples": 129,
+      "exact_matches": 0,
+      "normalized_exact_matches": 0,
+      "independent_wer": 2.903114186851211,
+      "edit_operations": {
+        "replace": 1033,
+        "insert": 2262,
+        "delete": 61
+      },
+      "reference_tokens": 1156,
+      "predicted_tokens": 3357,
+      "unique_predictions": 102,
+      "pretraining_marker_outputs": 0
+    },
+    "flan-t5-base-300": {
+      "examples": 129,
+      "exact_matches": 0,
+      "normalized_exact_matches": 0,
+      "independent_wer": 2.6271626297577853,
+      "edit_operations": {
+        "insert": 1932,
+        "replace": 1022,
+        "delete": 83
+      },
+      "reference_tokens": 1156,
+      "predicted_tokens": 3005,
+      "unique_predictions": 90,
+      "pretraining_marker_outputs": 0
+    }
+  },
+  "tokenizer_inspection": {
+    "source": "Actual final tokenizers inspected on the Colab runtime; summary retained from tool output",
+    "mt5": {
+      "added_task_tokens": 0,
+      "train_eos": 111,
+      "val_eos": 12,
+      "test_eos": 129,
+      "train_unknown_ids": 0,
+      "test_unknown_ids": 0,
+      "test_lossless_roundtrips": 129
+    },
+    "t5_base": {
+      "added_task_tokens": 0,
+      "train_eos": 111,
+      "val_eos": 12,
+      "test_eos": 129,
+      "train_unknown_ids": 0,
+      "test_unknown_ids": 1,
+      "test_lossless_roundtrips": 128
+    },
+    "flan_t5_base": {
+      "added_task_tokens": 0,
+      "train_eos": 111,
+      "val_eos": 12,
+      "test_eos": 129,
+      "train_unknown_ids": 0,
+      "test_unknown_ids": 1,
+      "test_lossless_roundtrips": 128
+    },
+    "interpretation": "One T5/FLAN test label contains an unrepresentable backtick; this cannot explain 129 failed exact matches. All targets have EOS. Missing task tokens is a paper-recipe difference, not proof of an encoding failure."
+  }
+}
