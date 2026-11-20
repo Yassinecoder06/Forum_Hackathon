@@ -12,9 +12,9 @@ backend/tests
 !deployment/__init__.py
 !deployment/server.py
 !deployment/requirements-docker-audio.txt
-!experiments/
-!experiments/motion_extraction/
-!experiments/motion_extraction/requirements-optional.txt
+!research/code/experiments/
+!research/code/experiments/motion_extraction/
+!research/code/experiments/motion_extraction/requirements-optional.txt
 !site/
 !site/**
 site/media

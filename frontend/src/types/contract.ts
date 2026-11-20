@@ -1,5 +1,5 @@
 /**
- * SignaCulture AI — Integration Contract Types (docs/INTEGRATION_CONTRACT.md)
+ * SignaCulture AI — Integration Contract Types (docs/architecture/INTEGRATION_CONTRACT.md)
  * Contract is authoritative for all integration schemas and field types.
  * All timestamps are in milliseconds (ms). Keys are snake_case.
  */

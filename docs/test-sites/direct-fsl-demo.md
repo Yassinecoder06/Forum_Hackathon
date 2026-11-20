@@ -1,6 +1,6 @@
 # Motion Lab demo
 
-Port 8104. Code and generated assets: `~/Projects/Active/Forum_Tests/direct_fsl_demo/`. It reads experiment outputs from `signaculture-direct-fsl/outputs/` in this repo. Regenerate the static assets and serve them (normally the `signaculture-direct-fsl-demo` unit does this):
+Port 8104. Code and generated assets: `~/Projects/Active/Forum_Tests/direct_fsl_demo/`. It reads experiment outputs from `research/code/signaculture-direct-fsl/outputs/` in this repo. Regenerate the static assets and serve them (normally the `signaculture-direct-fsl-demo` unit does this):
 
 ```bash
 cd ~/Projects/Active/Forum_Tests
@@ -10,7 +10,7 @@ python3 -m http.server 8104 --bind 127.0.0.1 --directory direct_fsl_demo
 
 Open http://127.0.0.1:8104/. The page uses the saved expanded checkpoint’s exploratory prediction and both held-out comparison videos from the retrieval evaluation. FFmpeg is required to generate poster frames. Derived motion assets and subtitle excerpts stay local and are excluded from Git.
 
-Training examples are generated separately from exact captions and pose slices in the original 102-cue checkpoint manifest. From the experiment directory `signaculture-direct-fsl/` in this repo:
+Training examples are generated separately from exact captions and pose slices in the original 102-cue checkpoint manifest. From the experiment directory `research/code/signaculture-direct-fsl/` in this repo:
 
 ```bash
 FT=~/Projects/Active/Forum_Tests

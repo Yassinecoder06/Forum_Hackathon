@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdir } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 const base=process.env.APP_URL||'http://127.0.0.1:15177';
-const output=process.env.E2E_OUTPUT||fileURLToPath(new URL('../reports/private/research-panel-browser/',import.meta.url));
+const output=process.env.E2E_OUTPUT||fileURLToPath(new URL('../research/private/research-panel-browser/',import.meta.url));
 await mkdir(output,{recursive:true});
 const browser=await chromium.launch({headless:true,...(process.env.CHROME_PATH?{executablePath:process.env.CHROME_PATH}:{}),args:['--no-sandbox','--enable-unsafe-swiftshader']});
 try {

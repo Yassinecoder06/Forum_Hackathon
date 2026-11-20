@@ -12,34 +12,34 @@ def sha(path):return hashlib.sha256(path.read_bytes()).hexdigest()
 
 def main():
     evidence={}
-    for name in ['data/parallel/manifest.json','reports/private/fsl-mt5-small-comparison-v1/RESULT.json',
-                 'reports/private/fsl-t5-base-comparison-v3/RESULT.json','reports/private/fsl-motion-v1/RESULTS.json',
-                 'reports/LSFB_SEED_REPLICATION_RESULT.json','reports/LSFB_SOURCE_ALIGNMENT_AUDIT.json',
-                 'reports/EMOTION2VEC_WEIGHT_AUDIT.json','reports/CAPTURE_LANGUAGE_MIGRATION.json',
-                 'reports/CAPTURE_LANGUAGE_ASSET_RECHECK.json','configs/asr_model.json',
-                 'reports/ASR_SMOKE_RESULT.json','reports/VIDEO_API_LANDMARK_RECHECK.json',
-                 'reports/STUDIO_PLAYBACK_RECHECK.md','reports/FSL_TRAINING_REVIEW_PACKET.md',
-                 'reports/FSL_MOTION_INVENTORY_FOLLOWUP.json','reports/FSL_VISIBLE_ENDPOINTS_LEARNED.json',
-                 'reports/FSL_CAPTION_POSE_BASELINE.json','reports/LSFB_FREQUENT_CONTEXT_RESULT.md']:
+    for name in ['data/parallel/manifest.json','research/private/fsl-mt5-small-comparison-v1/RESULT.json',
+                 'research/private/fsl-t5-base-comparison-v3/RESULT.json','research/private/fsl-motion-v1/RESULTS.json',
+                 'research/text-to-gloss/lsfb/LSFB_SEED_REPLICATION_RESULT.json','research/text-to-gloss/lsfb/LSFB_SOURCE_ALIGNMENT_AUDIT.json',
+                 'research/audio/EMOTION2VEC_WEIGHT_AUDIT.json','docs/verification/CAPTURE_LANGUAGE_MIGRATION.json',
+                 'docs/verification/CAPTURE_LANGUAGE_ASSET_RECHECK.json','configs/asr_model.json',
+                 'research/audio/ASR_SMOKE_RESULT.json','docs/verification/VIDEO_API_LANDMARK_RECHECK.json',
+                 'docs/verification/STUDIO_PLAYBACK_RECHECK.md','research/text-to-gloss/fsl/FSL_TRAINING_REVIEW_PACKET.md',
+                 'research/motion/FSL_MOTION_INVENTORY_FOLLOWUP.json','research/motion/FSL_VISIBLE_ENDPOINTS_LEARNED.json',
+                 'research/motion/FSL_CAPTION_POSE_BASELINE.json','research/text-to-gloss/lsfb/LSFB_FREQUENT_CONTEXT_RESULT.md']:
         evidence[name]={'sha256':sha(ROOT/name),'bytes':(ROOT/name).stat().st_size}
     manifest=read('data/parallel/manifest.json')
     for split,digest in manifest['files'].items():
         assert sha(ROOT/f'data/parallel/fsl_ud_feasibility_{split}.jsonl')==digest
     comparisons={}
     for name,folder in [('mt5-small','fsl-mt5-small-comparison-v1'),('t5-base','fsl-t5-base-comparison-v3')]:
-        prefix='reports/private/'+folder+'/';result=read(prefix+'RESULT.json');config=read(prefix+'CONFIG.json')
+        prefix='research/private/'+folder+'/';result=read(prefix+'RESULT.json');config=read(prefix+'CONFIG.json')
         assert result['status']=='complete' and result['examples']==len(read(prefix+'predictions.json'))
         for split,digest in config['data_sha256'].items():assert manifest['files'][split]==digest
         assert (ROOT/prefix/'adapter/adapter_model.safetensors').is_file()
         comparisons[name]={k:result[k] for k in ['examples','exact','wer','bleu','chrf','cap_hits','peak_cuda_mb']}
-    seeds=read('reports/LSFB_SEED_REPLICATION_RESULT.json')
+    seeds=read('research/text-to-gloss/lsfb/LSFB_SEED_REPLICATION_RESULT.json')
     for r in seeds['runs']:
         folder='lsfb-narrow-current-run-v1' if r['seed']==84 else f"lsfb-narrow-current-seed{r['seed']}-v1"
         assert sha(ROOT/'.runtime'/folder/'RESULT.json')==r['result_sha256']
     with sqlite3.connect('file:'+str(ROOT/'data/catalog/catalog.sqlite')+'?mode=ro',uri=True) as db:
         assert db.execute('pragma integrity_check').fetchone()[0]=='ok'
         reviews=db.execute('select count(*) from reviews').fetchone()[0]
-    library=read('.runtime/library.json');migration=read('reports/CAPTURE_LANGUAGE_MIGRATION.json')
+    library=read('.runtime/library.json');migration=read('docs/verification/CAPTURE_LANGUAGE_MIGRATION.json')
     migration_snapshot_matches_current=sha(ROOT/'.runtime/library.json')==migration['after_sha256']
     assert all(r.get('sign_language')=='fsl' for r in library)
     small=comparisons['mt5-small'];base=comparisons['t5-base']
@@ -48,12 +48,12 @@ def main():
     asr_files={name: (ROOT/'.models/faster-whisper-small'/name).is_file()
                and sha(ROOT/'.models/faster-whisper-small'/name)==digest
                for name,digest in asr_config['file_hashes'].items()}
-    asr_smoke=read('reports/ASR_SMOKE_RESULT.json')
-    landmark_result = read('reports/VIDEO_API_LANDMARK_RECHECK.json')
+    asr_smoke=read('research/audio/ASR_SMOKE_RESULT.json')
+    landmark_result = read('docs/verification/VIDEO_API_LANDMARK_RECHECK.json')
     assert landmark_result['source_sha256'] == sha(ROOT/'data/public_examples/bonjour.webm')
-    coverage = read('reports/FSL_MOTION_INVENTORY_FOLLOWUP.json')
-    motion_experiment = read('reports/FSL_VISIBLE_ENDPOINTS_LEARNED.json')
-    caption_experiment = read('reports/FSL_CAPTION_POSE_BASELINE.json')
+    coverage = read('research/motion/FSL_MOTION_INVENTORY_FOLLOWUP.json')
+    motion_experiment = read('research/motion/FSL_VISIBLE_ENDPOINTS_LEARNED.json')
+    caption_experiment = read('research/motion/FSL_CAPTION_POSE_BASELINE.json')
     gates={
         'qualified_linguistic_reviews_present':reviews>0,
         'france_lsf_parallel_pairs_locally_reviewed':manifest['local_reviewed_pairs']>0,
@@ -85,7 +85,7 @@ def main():
                 evidence=evidence,
                 interpretation='Artifact integrity and measured failures are verified; absence of human validation cannot be supplied by software tests.',
                 next_required_external_input='Qualified France-LSF/Belgian LSFB review of source alignment and representation, or a newly accessible appropriately licensed verified parallel corpus.')
-    (ROOT/'reports/CURRENT_RESEARCH_STATUS.json').write_text(json.dumps(result,indent=2)+'\n')
+    (ROOT/'research/CURRENT_RESEARCH_STATUS.json').write_text(json.dumps(result,indent=2)+'\n')
     print(json.dumps({k:v for k,v in result.items() if k!='evidence'},indent=2))
 
 

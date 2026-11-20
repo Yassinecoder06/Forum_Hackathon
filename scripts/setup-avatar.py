@@ -24,4 +24,4 @@ for name,(url,expected) in MODELS.items():
     if hashlib.sha256(raw).hexdigest()!=expected:raise ValueError(f'Upstream model {name} changed: review before use.')
     target.write_bytes(raw)
     print(f'{name}: installed.')
-print('Local review models installed. See docs/AVATAR_PROVENANCE.md; redistribution/publication rights remain pending.')
+print('Local review models installed. See docs/avatar/AVATAR_PROVENANCE.md; redistribution/publication rights remain pending.')

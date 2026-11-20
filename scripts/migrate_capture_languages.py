@@ -79,7 +79,7 @@ def main():
     report=dict(status='complete',apply_requested=args.apply,applied=applied,total_rows=len(rows),
                 newly_verified=len(verified),unresolved=unresolved,before_sha256=before,after_sha256=sha(path),
                 non_language_fields_unchanged=True,qualified_linguistic_approval=False,network_requests=0)
-    report_path=args.report or ROOT/'reports'/('CAPTURE_LANGUAGE_MIGRATION.json' if applied else 'CAPTURE_LANGUAGE_MIGRATION_RECHECK.json')
+    report_path=args.report or ROOT/'docs/verification'/('CAPTURE_LANGUAGE_MIGRATION.json' if applied else 'CAPTURE_LANGUAGE_MIGRATION_RECHECK.json')
     report_path.write_text(json.dumps(report,indent=2)+'\n')
     print(json.dumps(report,indent=2))
 

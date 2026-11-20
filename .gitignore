@@ -21,10 +21,10 @@ artifacts/cv-review/
 /SignaCulture_offline_*
 
 # Local planning and orchestration documents
-/ORCHESTRATION.md
-/SignaCulture_AI_Plan_Developpement.md
-/SignaCulture_Full_Pipeline.pdf
-/SignaCulture_PaperB_Datasets_Centralisation_Finetuning_RTX4060.md
+/docs/planning/ORCHESTRATION.md
+/docs/planning/SignaCulture_AI_Plan_Developpement.md
+/docs/presentation/SignaCulture_Full_Pipeline.pdf
+/research/paper-b/RESEARCH_BRIEF.md
 
 # graft local code-search cache (regenerable with `graft build`)
 /graft/
@@ -37,5 +37,5 @@ site/media/
 /data/parallel/*.jsonl
 /data/poses/*.npz
 /data/poses/private/
-/reports/private/
-/reports/*preview*.html
+/research/private/
+/research/motion/*preview*.html

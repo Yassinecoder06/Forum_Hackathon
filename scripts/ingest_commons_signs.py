@@ -88,7 +88,7 @@ def inventory():
 
 def prepare_author_mirrors(entries):
     revision='701563bb9de3a5e7d64d52632bb40973f17388bf'
-    tree_path=ROOT/'research/parlr_tree.json'
+    tree_path=ROOT/'research/datasets/sources/parlr_tree.json'
     if not tree_path.exists(): return entries
     tree={item['path']:item for item in json.loads(tree_path.read_text())['tree']}
     segments={}

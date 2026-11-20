@@ -4,7 +4,7 @@ cd "$(dirname "$0")/.."
 case "${1:-all}" in
   motion|all)
     uv venv --python 3.11 --allow-existing .venv-motion
-    uv pip install --python .venv-motion/bin/python -r experiments/motion_extraction/requirements-optional.txt
+    uv pip install --python .venv-motion/bin/python -r research/code/experiments/motion_extraction/requirements-optional.txt
     ;;
 esac
 case "${1:-all}" in
@@ -15,7 +15,7 @@ case "${1:-all}" in
     uv pip install --python .venv-audio/bin/python -r backend/requirements-audio-asr.txt
     hf download emotion2vec/emotion2vec_plus_seed --revision 7be9a30d52bdc793cc24e6f7d25358d6648927c1 config.yaml configuration.json tokens.txt model.pt --local-dir .models/emotion2vec-seed --max-workers 1
     if [[ ! -f .models/faster-whisper-small/model.bin ]]; then
-      echo "French ASR model missing. Follow reports/ASR_MODEL_SETUP.md to transfer the pinned public model from Colab."
+      echo "French ASR model missing. Follow research/audio/ASR_MODEL_SETUP.md to transfer the pinned public model from Colab."
     fi
     ;;
 esac

@@ -6,7 +6,7 @@ corresponding MediaPipe frames. It supports searchable subtitles,
 single-window playback, looping, playback speed, and a full-frame or
 interpreter-only view. Coverage filtering uses the same candidate flag as
 the extraction output. Collection and alignment are documented in
-[training/lsf_youtube/README.md](../../training/lsf_youtube/README.md).
+[research/code/training/lsf_youtube/README.md](../../research/code/training/lsf_youtube/README.md).
 
 Code: `~/Projects/Active/Forum_Tests/broadcast_viewer/`. Data:
 `.runtime/youtube-lsf/` in this repository.

@@ -339,7 +339,7 @@ for i, (big, small) in enumerate(stats):
     p.rect(x, end + 60, 340, 130, '#fafbfa', LINE, 14, 1)
     p.text(x + 26, end + 122, big, 38, 'green', 700)
     p.text(x + 26, end + 158, small, 16, MUTED)
-p.footer('Sources: data/source_inventory/dictasign_ingestion_report.json, ingestion_report.json, research/DATASET_CARD.md')
+p.footer('Sources: data/source_inventory/dictasign_ingestion_report.json, ingestion_report.json, research/datasets/DATASET_CARD.md')
 pages.append(p.save())
 
 # 7 ─ Language models table ─────────────────────────────────────────────────
@@ -392,7 +392,7 @@ for i, (big, small) in enumerate(cards):
     p.rect(x, 650, 460, 120, '#fafbfa', LINE, 14, 1)
     p.text(x + 24, 705, big, 32, 'green', 700)
     p.text(x + 24, 742, small, 16, MUTED)
-p.footer('Sources: research/runs/transition-intrasign-v1/metrics.json, docs/AVATAR_PLAYBACK.md, docs/HAND_COLLISION_FIX.md')
+p.footer('Sources: research/runs/transition-intrasign-v1/metrics.json, docs/avatar/AVATAR_PLAYBACK.md, docs/avatar/HAND_COLLISION_FIX.md')
 pages.append(p.save())
 
 # Gallery page

@@ -53,7 +53,7 @@ def main():
     for name,digest in before.items():assert sha(Path(name))==digest
     report=dict(status='complete',network_requests=0,active_library_unchanged=True,selected_capture_files_unchanged=True,results=results,
                 limitations='Exercises registration and metadata on cached genuine captures; does not rerun CV or grant linguistic approval.')
-    (ROOT/'reports/CACHED_INGESTION_RECHECK.json').write_text(json.dumps(report,indent=2)+'\n')
+    (ROOT/'docs/verification/CACHED_INGESTION_RECHECK.json').write_text(json.dumps(report,indent=2)+'\n')
     print(json.dumps(report,indent=2))
 
 

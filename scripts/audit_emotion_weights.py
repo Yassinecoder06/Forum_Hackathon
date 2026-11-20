@@ -15,7 +15,7 @@ def main():
     ap=argparse.ArgumentParser()
     ap.add_argument('--model',type=Path,default=Path('.models/emotion2vec-seed'))
     ap.add_argument('--audio',type=Path,default=Path('.runtime/pipeline-recheck-voice.wav'))
-    ap.add_argument('--output',type=Path,default=Path('reports/EMOTION2VEC_WEIGHT_AUDIT.json'))
+    ap.add_argument('--output',type=Path,default=Path('research/audio/EMOTION2VEC_WEIGHT_AUDIT.json'))
     args=ap.parse_args();torch.set_num_threads(4)
     from funasr import AutoModel
     auto=AutoModel(model=str(args.model.resolve()),device='cpu',disable_update=True,disable_pbar=True)

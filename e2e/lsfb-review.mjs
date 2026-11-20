@@ -2,7 +2,7 @@ import { chromium } from 'playwright';
 import assert from 'node:assert/strict';
 import { pathToFileURL } from 'node:url';
 import path from 'node:path';
-const file=path.resolve(process.env.REVIEW_HTML||'../reports/private/lsfb-alignment-audit/video-review/index.html');
+const file=path.resolve(process.env.REVIEW_HTML||'../research/private/lsfb-alignment-audit/video-review/index.html');
 const browser=await chromium.launch({headless:true,executablePath:process.env.CHROME_PATH||'/home/jmal/.local/bin/google-chrome',args:['--no-sandbox']});
 try {
  const page=await browser.newPage({viewport:{width:1280,height:900}}),errors=[];

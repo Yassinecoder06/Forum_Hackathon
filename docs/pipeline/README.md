@@ -1,6 +1,6 @@
 # Full pipeline diagrams
 
-The four-page vector PDF is saved at the repository root as `SignaCulture_Full_Pipeline.pdf`.
+The four-page vector PDF is saved at the repository root as `docs/presentation/SignaCulture_Full_Pipeline.pdf`.
 
 1. Current application: French text, default concept lookup, manual editable concept sequences, motion composition, audio analysis, avatar and WebM export.
 2. Video ingestion: rights, checksums, MediaPipe, tracking review, real motion library and traceability.

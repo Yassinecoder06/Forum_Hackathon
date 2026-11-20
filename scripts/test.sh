@@ -34,12 +34,12 @@ echo "[TEST] 2/5 - Execution des tests unitaires backend..."
 "${VENV_PYTHON}" -m pytest "${REPO_ROOT}/backend/tests" -v
 
 # 3. Tests des experimentations (motion extraction)
-if [ ! -d "${REPO_ROOT}/experiments/motion_extraction" ]; then
-    echo "[ERROR] Repertoire experiments/motion_extraction requis mais manquant." >&2
+if [ ! -d "${REPO_ROOT}/research/code/experiments/motion_extraction" ]; then
+    echo "[ERROR] Repertoire research/code/experiments/motion_extraction requis mais manquant." >&2
     exit 1
 fi
-echo "[TEST] 3/5 - Execution des tests experiments/motion_extraction..."
-"${VENV_PYTHON}" -m pytest "${REPO_ROOT}/experiments/motion_extraction" -v
+echo "[TEST] 3/5 - Execution des tests research/code/experiments/motion_extraction..."
+"${VENV_PYTHON}" -m pytest "${REPO_ROOT}/research/code/experiments/motion_extraction" -v
 
 # 4. Frontend Lint & Build
 if [ ! -d "${REPO_ROOT}/frontend" ]; then

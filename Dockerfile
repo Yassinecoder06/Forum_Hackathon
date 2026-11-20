@@ -35,7 +35,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ffmpeg libgl1 libglib2.0-0 libgomp1 libsndfile1 \
     && rm -rf /var/lib/apt/lists/*
 COPY backend/requirements.txt /tmp/api.txt
-COPY experiments/motion_extraction/requirements-optional.txt /tmp/motion.txt
+COPY research/code/experiments/motion_extraction/requirements-optional.txt /tmp/motion.txt
 RUN pip install -r /tmp/api.txt \
     && python -m venv /opt/motion \
     && /opt/motion/bin/pip install -r /tmp/motion.txt

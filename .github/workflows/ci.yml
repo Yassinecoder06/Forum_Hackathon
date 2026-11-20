@@ -47,7 +47,7 @@ jobs:
         run: python3 -m pytest backend/tests -v
 
       - name: Run Experiments Tests
-        run: python3 -m pytest experiments/motion_extraction -v
+        run: python3 -m pytest research/code/experiments/motion_extraction -v
 
       - name: Integration & Smoke Tests against live FastAPI
         run: |

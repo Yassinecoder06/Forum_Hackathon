@@ -7,6 +7,17 @@ from .capture_library import ROOT,corpus_status
 
 PREDICTION_LOCK=BoundedSemaphore(1)
 
+def relocated(path):
+    """Map a path recorded before the 2026-11-20 restructure to its current location."""
+    path=Path(path)
+    try: rel=path.resolve().relative_to(ROOT).as_posix()
+    except ValueError: return path
+    try: moves=json.loads((ROOT/'research/PATH_MAP.json').read_text())['moves']
+    except (ValueError,OSError,KeyError): return path
+    for old in sorted(moves,key=len,reverse=True):
+        if rel==old or rel.startswith(old+'/'): return ROOT/(moves[old]+rel[len(old):])
+    return path
+
 def reports():
     result=[]
     for path in sorted((ROOT/'research/runs').glob('*/metrics.json')):
@@ -18,11 +29,11 @@ def reports():
     return result
 
 def checkpoint_runtime(report):
-    checkpoint=Path(report.get('checkpoint','')).resolve()
-    allowed=[ROOT/'training/checkpoints',ROOT/'.worktrees/wt-codex2/training/checkpoints']
+    checkpoint=relocated(report.get('checkpoint','')).resolve()
+    allowed=[ROOT/'research/code/training/checkpoints',ROOT/'.worktrees/wt-codex2/training/checkpoints']
     if not any(checkpoint.is_relative_to(parent) for parent in allowed) or not (checkpoint/'research_metadata.json').is_file(): return None
-    owner=checkpoint.parents[2]
-    choices=[owner/'training/.venv-train/bin/python',owner/'training/.venv-smoke/bin/python']
+    training=checkpoint.parents[1]
+    choices=[training/'.venv-train/bin/python',training/'.venv-smoke/bin/python']
     runtime=next((p for p in choices if p.is_file()),None)
     return (checkpoint,runtime) if runtime else None
 
@@ -52,7 +63,7 @@ def predict(text,run_id):
     checkpoint,runtime=config
     if not PREDICTION_LOCK.acquire(blocking=False): raise BlockingIOError('Une prédiction est déjà en cours.')
     try:
-        result=subprocess.run([str(runtime),str(ROOT/'training/infer.py'),'--text',text,'--model',str(checkpoint),'--device','cpu'],capture_output=True,text=True,timeout=120,cwd=ROOT)
+        result=subprocess.run([str(runtime),str(ROOT/'research/code/training/infer.py'),'--text',text,'--model',str(checkpoint),'--device','cpu'],capture_output=True,text=True,timeout=120,cwd=ROOT)
         if result.returncode: raise RuntimeError('Le modèle n’a pas pu produire de prédiction. Consultez les logs de l’expérience.')
         return json.loads(result.stdout.strip().splitlines()[-1])
     finally: PREDICTION_LOCK.release()
@@ -75,8 +86,8 @@ def recent_experiments():
     for run,model,config_raw,metrics_raw,language,representation,digest,report in rows:
         if language not in ('fsl','sfb'):continue
         entry={'run_id':run,'model_base':model,'sign_language':language,'representation':representation,'evidence_status':'unavailable','inference_ready':False,'linguistic_review':'pending','evaluation_scope':'development; inspected during model selection','metrics':None}
-        report=Path(report).resolve()
-        if not any(report.is_relative_to(parent) for parent in (ROOT/'.runtime',ROOT/'reports/private')):
+        report=relocated(report).resolve()
+        if not any(report.is_relative_to(parent) for parent in (ROOT/'.runtime',ROOT/'research/private')):
             entry['evidence_status']='outside_allowed_roots';entries.append(entry);continue
         try:
             if report.stat().st_size>1024*1024:raise ValueError('Oversized report')

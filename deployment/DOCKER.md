@@ -19,10 +19,10 @@ The image contains the attributed Bonjour example and its motion assets.
 It uses read-only mounts for avatar files and audio model weights.
 
 - Put the existing checksum-pinned `Noa.glb` or `ReadyEva.glb` in
-  `.runtime/avatar-candidates/`. See [avatar provenance](../docs/AVATAR_PROVENANCE.md)
+  `.runtime/avatar-candidates/`. See [avatar provenance](../docs/avatar/AVATAR_PROVENANCE.md)
   for the asset setup and reuse terms.
 - Put existing model files in `.models/emotion2vec-seed/` and
-  `.models/faster-whisper-small/`. See [audio model setup](../reports/ASR_MODEL_SETUP.md).
+  `.models/faster-whisper-small/`. See [audio model setup](../research/audio/ASR_MODEL_SETUP.md).
   The service checks for local files. It does not require a GPU or download the
   weights at startup. Missing weights leave the corresponding capability disabled.
 - Captures, the library, and the plan database persist in `.runtime/docker-state/`.
