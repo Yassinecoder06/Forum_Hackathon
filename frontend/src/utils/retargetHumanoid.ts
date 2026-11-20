@@ -3,6 +3,7 @@ import { interpolateJointPositions, type InterpolatedJoints } from "./motionInte
 import type { MotionFile } from "../types/contract";
 import { frameInterval, hasHand, stabilizeRotations, type HandState } from "./avatarPlayback";
 import { handContact, type Capsule } from "./handContact";
+import { detectRigProfile, rigBoneName, type RigProfile } from "./rigProfiles";
 const fingers = ["Thumb", "Index", "Middle", "Ring", "Pinky"];
 type Bind = {
   bone: THREE.Bone;
@@ -11,6 +12,27 @@ type Bind = {
   direction: THREE.Vector3;
 };
 const vec = (a: number[]) => new THREE.Vector3(a[0], a[1], a[2]);
+/** Reference (median) body pose of a generated clip: the body layer moves the torso, shoulders and head by the
+ * DEVIATION from it, so a clip's average posture keeps the avatar's own rest posture. */
+type BodyRef = { neck: THREE.Vector3; shrug: [number, number]; head: THREE.Vector3; eyeRoll: number | null };
+const median = (a: number[]) => { const s = [...a].sort((x, y) => x - y); return s.length ? s[s.length >> 1] : 0; };
+/** Body following is enabled for motions produced by the LSF engines (whole-body generated poses). Captured clips
+ * keep the original arms-and-hands behaviour. */
+export function followsBody(motion: MotionFile) {
+  const m = motion as MotionFile & { capture_method?: string };
+  return Boolean(m.generation) || Boolean(m.capture_method?.startsWith("lsf-engine"));
+}
+function bodyReference(motion: MotionFile): BodyRef | null {
+  const f = motion.frames.map((x) => x.joints).filter((j) => j.neck && j.left_shoulder && j.right_shoulder && j.head);
+  if (!f.length) return null;
+  const eyes = f.filter((j) => j.left_eye && j.right_eye);
+  return {
+    neck: new THREE.Vector3(median(f.map((j) => j.neck[0])), median(f.map((j) => j.neck[1])), median(f.map((j) => j.neck[2]))),
+    shrug: [median(f.map((j) => j.left_shoulder[1] - j.neck[1])), median(f.map((j) => j.right_shoulder[1] - j.neck[1]))],
+    head: new THREE.Vector3(median(f.map((j) => j.head[0] - j.neck[0])), median(f.map((j) => j.head[1] - j.neck[1])), median(f.map((j) => j.head[2] - j.neck[2]))),
+    eyeRoll: eyes.length ? median(eyes.map((j) => Math.atan2(j.left_eye[1] - j.right_eye[1], j.left_eye[0] - j.right_eye[0]))) : null,
+  };
+}
 function basis(
   wrist: THREE.Vector3,
   index: THREE.Vector3,
@@ -36,20 +58,40 @@ export class HumanoidRetargeter {
   private neckOrigin = new THREE.Vector3();
   private shoulderWidth = 0.36;
   private tracks = new WeakMap<MotionFile, ReturnType<HumanoidRetargeter["prepare"]>>();
+  /** Set while preparing an engine motion; null = arms/hands only (original behaviour). */
+  private bodyRef: BodyRef | null = null;
   diagnostics = { preparedMs: 0, rejectedSpikes: 0, correctedFrames: 0, contactFrames: 0, maxCorrection: 0, maxPenetration: 0 };
-  constructor(private root: THREE.Object3D) {
+  /** Bind segment lengths for explicitly mapped rigs (RPM keeps local translations). */
+  private lengths = new Map<string, number>();
+  constructor(private root: THREE.Object3D, readonly profile: RigProfile = detectRigProfile(root)) {
     root.updateMatrixWorld(true);
+    // Bones are keyed by canonical (Ready Player Me) names. RPM rigs keep every bone
+    // (identity mapping, original behaviour); mapped rigs only expose their mapped joints,
+    // so MetaHuman's corrective/facial joints are never touched by the retargeter.
+    const canonical = new Map<string, string>();
+    if (profile.bones) for (const [name, rig] of Object.entries(profile.bones)) canonical.set(rig, name);
+    const rigBones = new Map<string, THREE.Bone>();
+    root.traverse((o) => { if (o instanceof THREE.Bone) rigBones.set(o.name, o); });
+    const position = (o: THREE.Object3D) => o.getWorldPosition(new THREE.Vector3());
     root.traverse((o) => {
       if (o instanceof THREE.Bone) {
-        const child = o.children.find((c) => c instanceof THREE.Bone);
+        const name = profile.bones ? canonical.get(o.name) : o.name;
+        if (!name) return;
         const world = o.getWorldQuaternion(new THREE.Quaternion());
-        const direction = child
-          ? child
-              .getWorldPosition(new THREE.Vector3())
-              .sub(o.getWorldPosition(new THREE.Vector3()))
-              .normalize()
-          : new THREE.Vector3(0, 1, 0).applyQuaternion(world);
-        this.binds.set(o.name, {
+        let direction: THREE.Vector3;
+        if (profile.chain) {
+          const next = profile.chain[name] ? rigBones.get(rigBoneName(profile, profile.chain[name])) : undefined;
+          if (next) direction = position(next).sub(position(o)).normalize();
+          else if (o.parent instanceof THREE.Bone) direction = position(o).sub(position(o.parent)).normalize();
+          else direction = new THREE.Vector3(0, 1, 0).applyQuaternion(world);
+          if (o.parent instanceof THREE.Bone) this.lengths.set(name, position(o).distanceTo(position(o.parent)));
+        } else {
+          const child = o.children.find((c) => c instanceof THREE.Bone);
+          direction = child
+            ? position(child).sub(position(o)).normalize()
+            : new THREE.Vector3(0, 1, 0).applyQuaternion(world);
+        }
+        this.binds.set(name, {
           bone: o,
           local: o.quaternion.clone(),
           world,
@@ -115,7 +157,8 @@ export class HumanoidRetargeter {
     const upper = this.bone(side + "Arm")!, lower = this.bone(side + "ForeArm")!, hand = this.bone(side + "Hand")!;
     const palm = hand.getWorldQuaternion(new THREE.Quaternion());
     const shoulder = upper.getWorldPosition(new THREE.Vector3());
-    const l1 = lower.position.length(), l2 = hand.position.length();
+    const l1 = this.lengths.get(side + "ForeArm") ?? lower.position.length(),
+      l2 = this.lengths.get(side + "Hand") ?? hand.position.length();
     const axis = target.clone().sub(shoulder);
     const d = THREE.MathUtils.clamp(axis.length(), Math.abs(l1 - l2) + .005, l1 + l2 - .005);
     axis.normalize();
@@ -134,9 +177,70 @@ export class HumanoidRetargeter {
       hand.updateWorldMatrix(false, true);
     }
   }
+  /** Rotate a bone by a world-space rotation (keeps its children attached). */
+  private turn(name: string, rotation: THREE.Quaternion) {
+    const bone = this.bone(name);
+    if (!bone) return;
+    const world = bone.getWorldQuaternion(new THREE.Quaternion());
+    const parent = bone.parent?.getWorldQuaternion(new THREE.Quaternion()) || new THREE.Quaternion();
+    bone.quaternion.copy(parent.invert().multiply(rotation.clone().multiply(world)));
+    bone.updateWorldMatrix(false, true);
+  }
+  /** Body layer (engine motions): torso lean/tilt, shoulder shrug and head orientation follow the source's
+   * deviation from the clip's median pose. Rotations are bounded; yaw is not observable from 2D shoulders. */
+  private applyBody(joints: InterpolatedJoints, ref: BodyRef) {
+    const { neck, left_shoulder: ls, right_shoulder: rs, head } = joints;
+    if (!neck || !ls || !rs || !head) return;
+    const clamp = THREE.MathUtils.clamp, torso = 0.5;
+    const d = vec(neck).sub(ref.neck);
+    // lateral sway -> roll about the forward (z) axis; forward/back -> pitch about x. The shoulder-line tilt is
+    // NOT added here: the clavicles below reproduce it (the neck is the shoulders' midpoint, so the per-side
+    // lift relative to it is exactly that tilt; counting it in the spine too would apply it twice).
+    const roll = clamp(-Math.atan2(d.x, torso), -0.25, 0.25), pitch = clamp(Math.atan2(d.z, torso), -0.2, 0.2);
+    // Follow-through (animation cheat): the chest turns a little toward hands that work off-centre, as a real
+    // signer's torso does when reaching across; at most ~5 degrees.
+    const lw = joints.left_wrist, rw = joints.right_wrist;
+    const reach = lw && rw ? (lw[0] + rw[0]) / 2 - neck[0] : 0;
+    const yaw = clamp(0.45 * reach, -0.09, 0.09);
+    const spine = ["Spine", "Spine1", "Spine2"].filter((n) => this.binds.has(n));
+    if (spine.length) {
+      const part = new THREE.Quaternion().setFromEuler(new THREE.Euler(pitch / spine.length, yaw / spine.length, roll / spine.length, "XYZ"));
+      for (const n of spine) this.turn(n, part);
+    }
+    // shoulder shrug: raise/lower the clavicle so the shoulder moves like the source's (relative to the neck)
+    for (const [side, s, i] of [["Left", ls, 0], ["Right", rs, 1]] as const) {
+      const clavicle = this.bone(side + "Shoulder"), arm = this.bone(side + "Arm");
+      if (!clavicle || !arm) continue;
+      // + automatic elevation: real clavicles rise when the hand goes above shoulder height (up to 3.5 cm)
+      const wrist = side === "Left" ? lw : rw;
+      const rise = wrist ? THREE.MathUtils.smoothstep(wrist[1] - s[1], -0.05, 0.25) * 0.035 : 0;
+      const lift = clamp((s[1] - neck[1]) - ref.shrug[i] + rise, -0.04, 0.07);
+      const c = clavicle.getWorldPosition(new THREE.Vector3()), a = arm.getWorldPosition(new THREE.Vector3());
+      const from = a.clone().sub(c), to = from.clone().add(new THREE.Vector3(0, lift, 0));
+      if (from.lengthSq() > 1e-6) this.turn(side + "Shoulder", new THREE.Quaternion().setFromUnitVectors(from.normalize(), to.normalize()));
+    }
+    // head: rotation taking the median neck->nose direction to the current one, plus the eye-line tilt;
+    // the torso rotation already applied is removed so the head is not turned twice. 40 % neck, 60 % head.
+    const now = vec(head).sub(vec(neck)), rest = ref.head.clone();
+    if (now.lengthSq() < 1e-6 || rest.lengthSq() < 1e-6) return;
+    const look = new THREE.Quaternion().setFromUnitVectors(rest.normalize(), now.normalize());
+    const torsoRot = new THREE.Quaternion().setFromEuler(new THREE.Euler(pitch, yaw, roll, "XYZ"));
+    look.premultiply(torsoRot.invert());
+    if (ref.eyeRoll !== null && joints.left_eye && joints.right_eye) {
+      const eyeRoll = Math.atan2(joints.left_eye[1] - joints.right_eye[1], joints.left_eye[0] - joints.right_eye[0]) - ref.eyeRoll - roll;
+      look.premultiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 0, 1), clamp(eyeRoll, -0.3, 0.3)));
+    }
+    look.rotateTowards(new THREE.Quaternion(), Math.max(0, 2 * Math.acos(Math.min(1, Math.abs(look.w))) - 0.45));   // at most ~26 degrees
+    const identity = new THREE.Quaternion();
+    this.turn("Neck", identity.clone().slerp(look, 0.4));
+    this.turn("Head", identity.clone().slerp(look, 0.6));
+  }
   apply(joints: InterpolatedJoints) {
     for (const b of this.binds.values()) b.bone.quaternion.copy(b.local);
     this.root.updateMatrixWorld(true);
+    if (this.bodyRef) this.applyBody(joints, this.bodyRef);
+    // arm targets are placed relative to the avatar's CURRENT neck, so the arms travel with the body layer
+    const neckNow = this.bodyRef && this.bone("Neck") ? this.bone("Neck")!.getWorldPosition(new THREE.Vector3()) : this.neckOrigin;
     const srcNeck = vec(joints.neck || [0, 1.5, 0]);
     const sourceWidth =
       joints.left_shoulder && joints.right_shoulder
@@ -148,7 +252,7 @@ export class HumanoidRetargeter {
       1.3,
     );
     const map = (a: number[]) =>
-      vec(a).sub(srcNeck).multiplyScalar(scale).add(this.neckOrigin);
+      vec(a).sub(srcNeck).multiplyScalar(scale).add(neckNow);
     for (const side of ["Left", "Right"]) {
       const prefix = side.toLowerCase();
       const upper = this.bone(side + "Arm"),
@@ -265,10 +369,12 @@ export class HumanoidRetargeter {
 
   private prepare(motion: MotionFile) {
     const start = performance.now(), names = [...this.binds.keys()];
+    this.bodyRef = followsBody(motion) ? bodyReference(motion) : null;
     const all = motion.frames.map((frame) => {
       this.apply(frame.joints);
       return { time: frame.time_ms, rotations: names.map((n) => this.binds.get(n)!.bone.quaternion.clone()) };
     });
+    this.bodyRef = null;
     let rejected = 0;
     const states: Record<string, HandState[]> = {};
     for (const side of ["Left", "Right"]) {
@@ -438,6 +544,15 @@ export class HumanoidRetargeter {
     return { all: dense, names, states: denseStates, diagnostics };
   }
 
+  /** True when the motion's offline derivation is cached (applyMotion will not block). */
+  isPrepared(motion: MotionFile) {
+    return this.tracks.has(motion);
+  }
+  /** Derive and cache a motion ahead of playback (blocks for about 0.25 s per second of motion). Leaves the
+   * rig in an arbitrary pose: the caller re-applies the current motion afterwards. */
+  prime(motion: MotionFile) {
+    if (!this.tracks.has(motion)) this.tracks.set(motion, this.prepare(motion));
+  }
   /** Cached offline derivation; seeking never depends on past render calls. */
   applyMotion(motion: MotionFile, time: number) {
     let track = this.tracks.get(motion);

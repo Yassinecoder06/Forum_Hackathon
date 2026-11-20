@@ -1,0 +1,6 @@
+# Optional: local inference of the experimental LSF engines (POST /lsf/generate).
+# The model weights are private and are NOT installed by this file: see docs/pipeline/LSF_ENGINES.md.
+-r requirements.txt
+torch>=2.2
+transformers>=4.40,<5
+scipy>=1.11

@@ -1,6 +1,7 @@
 """Real emotion2vec+ inference, isolated from FastAPI and pose dependencies."""
 import argparse
 import json
+import os
 import tempfile
 import wave
 from pathlib import Path
@@ -13,15 +14,10 @@ except ImportError:  # Worker is launched as a standalone script by the API.
     from emotion_validation import verify_checkpoint, normalize_scores
     from emotion_timeline import FRAME_S, PAUSE_RMS, build_timeline, voiced_span, window_bounds
 
-
-def score(model, inputs):
-    results = model.generate(input=inputs, granularity='utterance', extract_embedding=False)
-    if len(results) != len(inputs):
-        raise ValueError('emotion2vec returned an unexpected number of results')
-    return [normalize_scores(item['labels'], item['scores']) for item in results]
+MODEL_ID=os.getenv('SIGNACULTURE_EMOTION_MODEL_ID') or (Path(os.environ['SIGNACULTURE_EMOTION_MODEL_DIR']).name if os.getenv('SIGNACULTURE_EMOTION_MODEL_DIR') else 'emotion2vec_plus_seed')
 
 
-def run(audio, model_path, output):
+def load(model_path):
     torch.set_num_threads(4)
     from funasr import AutoModel
     model=AutoModel(model=str(Path(model_path).resolve()),device='cpu',disable_update=True,disable_pbar=True)
@@ -30,6 +26,25 @@ def run(audio, model_path, output):
         def reject_untrained_decoder(*args):
             raise RuntimeError('Inference attempted to use the untrained reconstruction decoder')
         model.model.modality_encoders['AUDIO'].decoder.register_forward_pre_hook(reject_untrained_decoder)
+    return model,coverage
+
+
+def score(model, inputs):
+    results = model.generate(input=inputs, granularity='utterance', extract_embedding=False)
+    if len(results) != len(inputs):
+        raise ValueError('emotion2vec returned an unexpected number of results')
+    return [normalize_scores(item['labels'], item['scores']) for item in results]
+
+
+def run_batch(audios,model_path,output):
+    """One model load for many clips (film mode: one clip per subtitle line)."""
+    model,coverage=load(model_path)
+    items=score(model,[str(Path(a).resolve()) for a in audios]) if audios else []
+    Path(output).write_text(json.dumps({'items':items,'model':MODEL_ID,'device':'cpu','weight_coverage':coverage},allow_nan=False))
+
+
+def run(audio, model_path, output):
+    model,coverage=load(model_path)
     audio=Path(audio).resolve()
     values=score(model,[str(audio)])[0]
 
@@ -57,8 +72,11 @@ def run(audio, model_path, output):
             for i,item in zip(indices,score(model,paths)):
                 window_scores[i]=item
     timeline=build_timeline(bounds,rate,window_scores)
-    Path(output).write_text(json.dumps({'scores':values,'timeline':timeline,'model':'emotion2vec_plus_seed','device':'cpu','weight_coverage':coverage},allow_nan=False))
+    Path(output).write_text(json.dumps({'scores':values,'timeline':timeline,'model':MODEL_ID,'device':'cpu','weight_coverage':coverage},allow_nan=False))
+
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('audio');p.add_argument('model');p.add_argument('output');a=p.parse_args()
-    run(a.audio,a.model,a.output)
+    p=argparse.ArgumentParser();p.add_argument('audio');p.add_argument('model');p.add_argument('output')
+    p.add_argument('--batch',action='store_true',help='audio is a JSON list of wav paths');a=p.parse_args()
+    if a.batch: run_batch(json.loads(Path(a.audio).read_text()),a.model,a.output)
+    else: run(a.audio,a.model,a.output)

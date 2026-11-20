@@ -13,6 +13,4 @@ For an existing local Chrome installation, set `CHROME_PATH` to its executable. 
 
 The browser also exports a real watermarked WebM and checks its download size, imports an explicitly synthetic JSON fixture with provenance, verifies persistent lookup, and removes its test registration in a finally block. Optional local emotion2vec is actually invoked when available. Screenshots show the current UI, not mocked responses.
 
-After expanding the real corpus, `npm run test:concepts` verifies manual concept selection (Bonjour and demain), reordering, real preview composition, pending-review status, review-sheet download and mobile layout. It requires the expanded local corpus; the default smoke test also works with the bundled Bonjour-only corpus.
 
-With the recorded local Qwen server running, `SEMANTIC_CHECK=1 npm run test:concepts` also invokes the actual model through FastAPI, checks verified Bonjour IDs and pending validation, and previews the editable result. It does not measure translation accuracy.

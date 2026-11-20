@@ -42,3 +42,6 @@ site/media/
 
 # Third-party research papers: keep local copies only (copyright)
 /research/paper-b/*.pdf
+
+# Demo media cut from the private dataset (never commit)
+frontend/public/demo-media/

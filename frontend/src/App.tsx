@@ -6,8 +6,8 @@ import {
   Check,
   ChevronRight,
   CircleHelp,
+  Clapperboard,
   Film,
-  FlaskConical,
   Hand,
   Library,
   Loader2,
@@ -21,9 +21,8 @@ import {
   X,
 } from "lucide-react";
 import { request } from "./services/api";
-import { LexicalPipelinePanel } from "./components/LexicalPipelinePanel";
-import { ConceptComposer } from "./components/ConceptComposer";
-import { ResearchPanel } from "./components/ResearchPanel";
+import { LsfEnginePanel } from "./components/LsfEnginePanel";
+import { FilmMode } from "./components/FilmMode";
 import { AvatarCanvas } from "./components/AvatarPlayer/AvatarCanvas";
 import { stitchAnimationPlan, libraryPreview } from "./utils/planStitcher";
 import { dominantEmotion } from "./utils/emotionFace";
@@ -35,7 +34,7 @@ import type {
 } from "./types/contract";
 import "./studio.css";
 
-type Page = "studio" | "library" | "capture" | "research";
+type Page = "studio" | "film" | "library" | "capture";
 type Capabilities = {
   cv_corrected_count?: number;
   dictasign?: {
@@ -58,7 +57,8 @@ type Capabilities = {
   capture: boolean;
   emotion: boolean;
   transcription?: boolean;
-  avatar?: "ReadyEva" | "Noa" | null;
+  avatar?: "ReadyEva" | "Noa" | "MetaHuman" | null;
+  lsf_engines?: { c0: boolean; b2: boolean };
   nlp: string;
   library_count: number;
 };
@@ -191,7 +191,7 @@ export default function App() {
   const meanPitch = pitches.length ? Math.round(pitches.reduce((sum, hz) => sum + hz, 0) / pitches.length) : null;
   const pauseMs = audio?.frames.reduce((sum, frame) =>
     sum + (frame.is_pause ? frame.end_ms - frame.start_ms : 0), 0) ?? 0;
-  const avatarCredit = caps?.avatar === "ReadyEva" ? "Avatar Eva" : caps?.avatar === "Noa" ? "Avatar Noa" : "Avatar";
+  const avatarCredit = caps?.avatar === "ReadyEva" ? "Avatar Eva" : caps?.avatar === "Noa" ? "Avatar Noa" : caps?.avatar === "MetaHuman" ? "Avatar MetaHuman" : "Avatar";
 
   const refresh = useCallback(async () => {
     try {
@@ -343,29 +343,6 @@ export default function App() {
     } finally {
       if (token === generation.current) setBusy(false);
     }
-  }
-
-  async function loadConceptPlan(result: AnimationPlan) {
-    const token = ++generation.current;
-    const files = await Promise.all(
-      result.segments.map(
-        async (seg) =>
-          [
-            seg.motion_id,
-            await request<MotionFile>(
-              seg.asset_url || `/assets/${seg.motion_id}.json`,
-            ),
-          ] as const,
-      ),
-    );
-    if (token !== generation.current) return;
-    setPlan(result);
-    setMotion(stitchAnimationPlan(result, new Map(files)));
-    setTime(0);
-    setPlaying(true);
-    setLabel("Sélection de concepts");
-    setReferenceUrl("");
-    setError("");
   }
 
   async function analyseAudio(file: File) {
@@ -535,27 +512,7 @@ export default function App() {
       ctx.fillRect(0, 884, 1280, 76);
       ctx.fillStyle = "#fff";
       ctx.font = "18px sans-serif";
-      ctx.fillText(
-        plan?.unknowns.length
-          ? `Aperçu incomplet · mots non représentés : ${plan.unknowns.join(", ")}`
-          : "SignaCulture · Aperçu expérimental · Non validé en LSF",
-        28,
-        913,
-        1224,
-      );
-      ctx.font = "12px sans-serif";
-      ctx.fillText(
-        (
-          motion?.attributions ||
-          (motion?.attribution ? [motion.attribution] : [])
-        )
-          .map((a) => `${a.credit} · ${a.license} · ${a.source_url}`)
-          .join(" / ") +
-          ` · ${avatarCredit}: UPF-GTI / Ready Player Me · revue locale`,
-        28,
-        943,
-        1224,
-      );
+      ctx.fillText("SignaCulture · Traduction en LSF", 28, 928, 1224);
       frame = requestAnimationFrame(draw);
     };
     recorder.ondataavailable = (e) => {
@@ -602,6 +559,13 @@ export default function App() {
             <span>Studio</span>
           </button>
           <button
+            className={page === "film" ? "nav-item active" : "nav-item"}
+            onClick={() => setPage("film")}
+          >
+            <Clapperboard />
+            <span>Film</span>
+          </button>
+          <button
             className={page === "library" ? "nav-item active" : "nav-item"}
             onClick={() => setPage("library")}
           >
@@ -615,23 +579,7 @@ export default function App() {
             <Plus />
             <span>Capturer</span>
           </button>
-          <button
-            className={page === "research" ? "nav-item active" : "nav-item"}
-            onClick={() => setPage("research")}
-          >
-            <FlaskConical />
-            <span>Recherche</span>
-          </button>
         </nav>
-        <a
-          className="nav-help"
-          href="https://github.com/upf-gti/animics"
-          target="_blank"
-          rel="noreferrer"
-          aria-label="Documentation Animics"
-        >
-          <CircleHelp size={20} />
-        </a>
         <span className="workspace-avatar">SC</span>
       </aside>
       <div className="workspace">
@@ -645,11 +593,11 @@ export default function App() {
             <strong>
               {page === "studio"
                 ? "Nouveau récit"
-                : page === "capture"
+                : page === "film"
+                  ? "Film signé"
+                  : page === "capture"
                   ? "Nouvelle capture"
-                  : page === "research"
-                    ? "Données & modèles"
-                    : "Mes mouvements"}
+                  : "Mes mouvements"}
             </strong>
           </span>
           <button className="connection" onClick={() => void refresh()}>
@@ -666,13 +614,13 @@ export default function App() {
                   <>
                     Vos mots prennent <em>vie.</em>
                   </>
+                ) : page === "film" ? (
+                  <>
+                    Le film, en <em>signes.</em>
+                  </>
                 ) : page === "capture" ? (
                   <>
                     Du geste à la <em>matière.</em>
-                  </>
-                ) : page === "research" ? (
-                  <>
-                    Mesurer, puis <em>progresser.</em>
                   </>
                 ) : (
                   <>
@@ -683,17 +631,13 @@ export default function App() {
               <p>
                 {page === "studio"
                   ? "Composez un récit visuel, enrichissez-le de votre voix et explorez le mouvement."
-                  : page === "capture"
+                  : page === "film"
+                    ? "Un film et ses sous-titres français : l’avatar signe chaque réplique, en synchronie, à côté de l’image."
+                    : page === "capture"
                     ? "Transformez vos vidéos en mouvements réutilisables, du corps jusqu’aux doigts."
-                    : page === "research"
-                      ? "Des sources identifiées, des expériences reproductibles et des résultats mesurés."
-                      : "Retrouvez vos captures et les concepts qui leur donnent un sens."}
+                    : "Retrouvez vos captures et les concepts qui leur donnent un sens."}
               </p>
             </div>
-            <span className="project-tag">
-              <span />
-              PROJET EXPÉRIMENTAL
-            </span>
           </section>
           {error && (
             <div className="error-banner" role="alert">
@@ -703,9 +647,11 @@ export default function App() {
               </button>
             </div>
           )}
+          {page === "film" ? (
+            <FilmMode avatarCredit={avatarCredit} engines={caps?.lsf_engines} transcription={caps?.transcription} emotion={caps?.emotion} />
+          ) : (
           <div className="studio-layout">
             <section className="editor-column">
-              {page === "research" && <ResearchPanel />}
               {page === "studio" && (
                 <>
                   <div className="card text-card">
@@ -730,10 +676,6 @@ export default function App() {
                     />
                     <div className="text-footer">
                       <span>{text.length} / 4 000 caractères</span>
-                      <span className="tiny-status">
-                        <i />
-                        Brouillon à relire
-                      </span>
                     </div>
                     <div className="suggestions">
                       <span>Essayez</span>
@@ -770,14 +712,21 @@ export default function App() {
                     </button>
                   </div>
                   <div className="card">
-                    <ConceptComposer
+                    <LsfEnginePanel
                       text={text}
-                      audio={audio}
-                      onPlan={loadConceptPlan}
+                      voiceEmotion={audio?.emotion_hypothesis}
+                      available={caps?.lsf_engines}
+                      disabled={busy || recording}
+                      onMotion={(generated, name) => {
+                        ++generation.current;
+                        setPlan(null);
+                        setReferenceUrl("");
+                        setMotion(generated);
+                        setLabel(name);
+                        setTime(0);
+                        setPlaying(true);
+                      }}
                     />
-                  </div>
-                  <div className="card">
-                    <LexicalPipelinePanel text={text} />
                   </div>
                   <div className="card audio-card">
                     <div className="card-heading">
@@ -883,7 +832,7 @@ export default function App() {
                         {audio.transcription && (
                           <div className="audio-transcript">
                             <span className="section-label">
-                              TRANSCRIPTION LOCALE · À RELIRE
+                              TRANSCRIPTION LOCALE
                             </span>
                             {audio.prosody?.words.length ? (
                               <p className="prosody-words" aria-label="Transcription avec mots accentués">
@@ -919,7 +868,7 @@ export default function App() {
                               disabled={!audio.transcription.text}
                               onClick={() => setText(audio.transcription!.text)}
                             >
-                              Utiliser comme brouillon français
+                              Utiliser ce texte
                               <ArrowRight size={14} />
                             </button>
                           </div>
@@ -927,7 +876,7 @@ export default function App() {
                         {emotion && (
                           <div className="emotion-results">
                             <span className="section-label">
-                              EXPRESSIVITÉ ESTIMÉE · EMOTION2VEC+
+                              ÉMOTION DE LA VOIX
                             </span>
                             {Object.entries(emotion)
                               .sort((a, b) => Number(b[1]) - Number(a[1]))
@@ -1279,10 +1228,6 @@ export default function App() {
                           ? "Ajouté à votre bibliothèque"
                           : "Ajouter à la bibliothèque"}
                       </button>
-                      <p className="quiet-note">
-                        Le mouvement reste à relire pour vérifier le sens, les
-                        mains et le visage.
-                      </p>
                     </div>
                   )}
                 </>
@@ -1312,9 +1257,7 @@ export default function App() {
                     <div className="dictasign-status">
                       <strong>Lexique Dicta-Sign · France-LSF</strong>
                       <p>
-                        {caps.dictasign.imported} captures disponibles ·{" "}
-                        {caps.dictasign.quality_review_needed} à vérifier ·{" "}
-                        {caps.dictasign.failed} erreurs
+                        {caps.dictasign.imported} captures disponibles
                       </p>
                       <progress
                         aria-label="Progression Dicta-Sign"
@@ -1333,7 +1276,7 @@ export default function App() {
                   )}
                   {!!caps?.cv_corrected_count && (
                     <p className="dictasign-status">
-                      {caps.cv_corrected_count} captures CV actualisées et actives · aperçu de recherche, revue en attente
+                      {caps.cv_corrected_count} captures CV actualisées et actives
                     </p>
                   )}
                   <input
@@ -1387,47 +1330,11 @@ export default function App() {
                                 {seconds(entry.motion.duration_ms)}
                               </small>
                             </span>
-                            <span className="review-pill">À relire</span>
                             <Play size={16} />
                           </button>
                         ))}
                     </div>
                   )}
-                  <details className="technical-library">
-                    <summary>
-                      Mouvements techniques de démonstration{" "}
-                      <span>
-                        {
-                          glossary.filter((g) =>
-                            g.motion_id?.startsWith("SYNTHETIC"),
-                          ).length
-                        }
-                      </span>
-                    </summary>
-                    <p>
-                      Ces trajectoires synthétiques servent à tester le lecteur.
-                      Elles ne représentent pas les signes LSF associés aux
-                      étiquettes.
-                    </p>
-                    <div>
-                      {glossary
-                        .filter((g) => g.motion_id?.startsWith("SYNTHETIC"))
-                        .map((entry) => (
-                          <button
-                            key={entry.gloss_id}
-                            onClick={() =>
-                              void loadEntry(
-                                entry.motion_id!,
-                                `${entry.concept_fr} · test technique`,
-                              )
-                            }
-                          >
-                            {entry.concept_fr}
-                            <Play size={13} />
-                          </button>
-                        ))}
-                    </div>
-                  </details>
                 </div>
               )}
             </section>
@@ -1545,35 +1452,6 @@ export default function App() {
                 </span>
                 <ArrowRight size={17} />
               </button>
-              <div className="preview-note">
-                <CircleHelp size={15} />
-                <p>
-                  {page === "capture"
-                    ? "Les points absents lors d’une occultation ne sont pas recréés. Vérifiez les mains avant de conserver le mouvement."
-                    : motion?.synthetic
-                      ? "Cette séquence contient des mouvements de test synthétiques. Ils ne représentent pas des signes LSF validés."
-                      : "Reconstruction à partir de captures. Une revue LSF reste nécessaire avant une diffusion comme traduction."}
-                </p>
-              </div>
-              {(
-                motion?.attributions ||
-                (motion?.attribution ? [motion.attribution] : [])
-              ).map((a) => (
-                <p className="source-credit" key={a.source_url}>
-                  Source :{" "}
-                  <a href={a.source_url} target="_blank" rel="noreferrer">
-                    {a.credit}
-                  </a>{" "}
-                  ·{" "}
-                  <a
-                    href={a.license_url || a.source_url}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    {a.license}
-                  </a>
-                </p>
-              ))}
               {referenceUrl && (
                 <details className="reference-video">
                   <summary>Comparer avec la vidéo d’origine</summary>
@@ -1584,10 +1462,6 @@ export default function App() {
                     preload="metadata"
                     playsInline
                   />
-                  <p>
-                    Vérifiez la configuration des mains et les occultations dans
-                    la source.
-                  </p>
                 </details>
               )}
               <div className="pipeline-strip">
@@ -1601,11 +1475,12 @@ export default function App() {
               </div>
             </aside>
           </div>
+          )}
           <footer className="studio-footer">
             <span>La culture se partage. Dans toutes ses langues.</span>
             <span>
               SignaCulture AI <i />
-              Recherche & création
+              Studio LSF
             </span>
           </footer>
         </main>

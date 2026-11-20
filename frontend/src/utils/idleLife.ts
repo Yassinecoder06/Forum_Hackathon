@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { findRigBone, RPM_PROFILE, type RigProfile } from "./rigProfiles";
 
 /**
  * Display-only "aliveness" layer: breathing, blinking, gaze saccades and a slow
@@ -30,11 +31,11 @@ export class IdleLife {
   private euler = new THREE.Euler();
   private delta = new THREE.Quaternion();
 
-  constructor(root: THREE.Object3D) {
-    this.spine1 = root.getObjectByName("Spine1");
-    this.spine2 = root.getObjectByName("Spine2");
-    this.neck = root.getObjectByName("Neck");
-    this.head = root.getObjectByName("Head");
+  constructor(root: THREE.Object3D, profile: RigProfile = RPM_PROFILE) {
+    this.spine1 = findRigBone(root, profile, "Spine1");
+    this.spine2 = findRigBone(root, profile, "Spine2");
+    this.neck = findRigBone(root, profile, "Neck");
+    this.head = findRigBone(root, profile, "Head");
   }
 
   private rotate(bone: THREE.Object3D | undefined, x: number, y: number, z: number) {
@@ -42,6 +43,15 @@ export class IdleLife {
     this.euler.set(x, y, z);
     bone.quaternion.multiply(this.delta.setFromEuler(this.euler));
   }
+
+  /** Phrase-aware blink (interpreters blink at clause ends and when the hands return to rest): starts a blink
+   * now unless one is running or happened in the last 0.8 s. */
+  requestBlink(time: number) {
+    if (this.blinkStart >= 0 || time - this.lastBlinkAt < 0.8) return;
+    this.blinkStart = time;
+    this.doubleBlink = false;
+  }
+  private lastBlinkAt = -10;
 
   update(time: number, signing: boolean): IdleSample {
     const dt = this.last < 0 ? 0 : Math.min(0.1, time - this.last);
@@ -84,6 +94,7 @@ export class IdleLife {
           this.blinkStart = time + 0.08;
         } else {
           this.blinkStart = -1;
+          this.lastBlinkAt = time;
           this.nextBlink = time + random(2.5, 5.5);
         }
       } else if (u >= 0) blink = Math.sin(Math.PI * u);

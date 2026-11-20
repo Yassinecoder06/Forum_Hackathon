@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import * as THREE from "three";
 import { stitchAnimationPlan, libraryPreview } from "../src/utils/planStitcher";
 import { HumanoidRetargeter } from "../src/utils/retargetHumanoid";
+import { detectRigProfile } from "../src/utils/rigProfiles";
+import { MetaHumanFaceDriver } from "../src/utils/metahumanFace";
 import { browWeights, faceCalibration, sampleFace, stabilizeRotations, hasHand } from "../src/utils/avatarPlayback";
 import { handContact, segmentDistance } from "../src/utils/handContact";
 import { interpolateJointPositions } from "../src/utils/motionInterpolator";
@@ -281,6 +283,232 @@ assert(hasHand({...rejectedHand,playback_quality:undefined},"left"),"Keep the or
 const libraryClip={...a,playback_window:{start_ms:0,end_ms:100}};
 const libraryRaw=JSON.stringify(libraryClip);libraryPreview(libraryClip);
 assert.equal(JSON.stringify(libraryClip),libraryRaw,"Preview windows never mutate original source data");
+
+// MetaHuman profile: same geometry as the synthetic RPM rig above, UE5 joint names, corrective
+// joints inserted as FIRST children (so "first child" would aim at the wrong bone), tip joints
+// named <finger>_04_<side>. Authored software checks, not signed-language ground truth.
+{
+  const names: Record<string, string> = { Neck: "neck_01", Head: "head" };
+  for (const [side, s] of [["Left", "l"], ["Right", "r"]] as const) {
+    Object.assign(names, { [side + "Arm"]: `upperarm_${s}`, [side + "ForeArm"]: `lowerarm_${s}`, [side + "Hand"]: `hand_${s}` });
+    for (const f of ["Thumb", "Index", "Middle", "Ring", "Pinky"])
+      for (let i = 1; i <= 4; i++) names[`${side}Hand${f}${i}`] = `${f.toLowerCase()}_0${i}_${s}`;
+  }
+  const mhRoot = new THREE.Group(), mhBones: THREE.Bone[] = [];
+  const clone = (src: THREE.Object3D, parent: THREE.Object3D) => {
+    for (const child of src.children) {
+      if (!(child instanceof THREE.Bone)) continue;
+      const helper = new THREE.Bone();
+      helper.name = names[child.name] + "_correctiveRoot";
+      helper.position.set(0.02, 0.01, 0.03);
+      const b = new THREE.Bone();
+      b.name = names[child.name];
+      b.position.copy(child.position);
+      parent.add(helper);
+      parent.add(b);
+      mhBones.push(b);
+      clone(child, b);
+    }
+  };
+  // fresh RPM rig at bind pose for comparison
+  const rpmRoot = new THREE.Group();
+  const rpmNeck = new THREE.Bone(); rpmNeck.name = "Neck"; rpmNeck.position.set(0, 1.5, 0); rpmRoot.add(rpmNeck);
+  const rpmHead = new THREE.Bone(); rpmHead.name = "Head"; rpmHead.position.set(0, 0.12, 0); rpmNeck.add(rpmHead);
+  for (const b of bones.filter((x) => x.parent === root && x.name !== "Neck")) {
+    const copy = b.clone(true);
+    copy.traverse((o) => o.quaternion.identity());
+    rpmRoot.add(copy);
+  }
+  clone(rpmRoot, mhRoot);
+  const mh = new HumanoidRetargeter(mhRoot);
+  assert.equal(mh.profile.id, "metahuman");
+  assert.equal(detectRigProfile(rpmRoot).id, "rpm");
+  const rpm = new HumanoidRetargeter(rpmRoot);
+  const mhLengths = mhBones.map((b) => b.position.length());
+  const motionJoints = { ...joints, ...Object.fromEntries(["left", "right"].flatMap((side) => {
+    const w = joints[`${side}_wrist`];
+    return ["thumb", "index", "middle", "ring", "pinky"].flatMap((f, k) => [1, 2, 3, 4].map((i) =>
+      [`${side}_${f}_${i}`, [w[0] + (k - 2) * 0.015, w[1] - 0.05 - 0.02 * i, w[2] + 0.01 * i] as [number, number, number]]));
+  })) } as Record<string, [number, number, number]>;
+  rpm.apply(motionJoints);
+  mh.apply(motionJoints);
+  rpmRoot.updateMatrixWorld(true);
+  mhRoot.updateMatrixWorld(true);
+  for (const canonical of ["LeftHand", "RightHand", "LeftForeArm", "LeftHandIndex4", "RightHandThumb4"]) {
+    const a = rpmRoot.getObjectByName(canonical)!.getWorldPosition(new THREE.Vector3());
+    const b = mhRoot.getObjectByName(names[canonical])!.getWorldPosition(new THREE.Vector3());
+    assert(a.distanceTo(b) < 1e-6, `MetaHuman ${names[canonical]} follows the same IK as ${canonical}`);
+  }
+  const pose = mhBones.map((b) => b.quaternion.toArray());
+  mh.apply({ ...motionJoints, left_wrist: [0.4, 1.3, 0.2] });
+  mh.apply(motionJoints);
+  assert.deepEqual(mhBones.map((b) => b.quaternion.toArray()), pose, "MetaHuman seeking is deterministic");
+  assert.deepEqual(mhBones.map((b) => b.position.length()), mhLengths, "MetaHuman retargeting cannot stretch bones");
+  const helpers: THREE.Object3D[] = [];
+  mhRoot.traverse((o) => { if (o.name.endsWith("_correctiveRoot")) helpers.push(o); });
+  assert(helpers.every((o) => o.quaternion.equals(new THREE.Quaternion())), "Corrective joints are never driven");
+
+  // Body layer: LSF-engine motions move the neck/head (and torso/clavicles when the rig has them) from the
+  // source's deviation from the clip's median pose; captured clips keep the original arms-and-hands behaviour.
+  {
+    const base = { ...motionJoints, head: [0, 1.62, 0.09] as [number, number, number] };
+    const nod = { ...base, neck: [0.03, 1.5, 0] as [number, number, number], head: [0.06, 1.58, 0.09] as [number, number, number] };
+    const clip = (engine: boolean): MotionFile => ({
+      rig_version: "signaculture-v1", fps: 25, duration_ms: 160, joints: ["neck", "head"], synthetic: true,
+      ...(engine ? { capture_method: "lsf-engine-c0-2d-bone-length-lift" } : {}),
+      frames: [0, 40, 80, 120, 160].map((t) => ({ time_ms: t, joints: t === 80 ? nod : base })),
+    } as MotionFile);
+    const headBone = mhRoot.getObjectByName("head")!, neckBone = mhRoot.getObjectByName("neck_01")!;
+    const bindHead = headBone.quaternion.clone(), bindNeck = neckBone.quaternion.clone();
+    const engineRig = new HumanoidRetargeter(mhRoot);
+    engineRig.applyMotion(clip(true), 80);
+    assert(headBone.quaternion.angleTo(bindHead) > 0.02 || neckBone.quaternion.angleTo(bindNeck) > 0.02, "Engine motion turns the neck/head");
+    engineRig.applyMotion(clip(true), 0);
+    assert(headBone.quaternion.angleTo(bindHead) < 1e-6 && neckBone.quaternion.angleTo(bindNeck) < 1e-6, "At the median pose the head is at rest");
+    const capturedRig = new HumanoidRetargeter(mhRoot);
+    capturedRig.applyMotion(clip(false), 80);
+    assert(headBone.quaternion.angleTo(bindHead) < 1e-6 && neckBone.quaternion.angleTo(bindNeck) < 1e-6, "Captured clips keep the head at bind (unchanged behaviour)");
+    console.log("Body layer checks passed: engine motions move the head, captured clips unchanged.");
+  }
+
+  // Face joints: no blendshapes, the driver moves FACIAL_* joints and resets them every call.
+  const face = new THREE.Group();
+  const facial = (name: string, parent: THREE.Object3D, p: number[]) => { const b = new THREE.Bone(); b.name = name; b.position.fromArray(p); parent.add(b); return b; };
+  const jaw = facial("FACIAL_C_Jaw", face, [0, 1.62, 0.03]);
+  const chin = facial("FACIAL_C_Chin", jaw, [0, -0.07, 0.06]);
+  const lowerLip = facial("FACIAL_C_LowerLipRotation", face, [0, 1.62, 0.03]);
+  const lid = facial("FACIAL_L_EyelidUpperA", face, [0.03, 1.666, 0.09]);
+  const lidEdge = facial("FACIAL_L_EyelidUpperA1", lid, [0, 0.003, 0.012]);
+  const brow = facial("FACIAL_L_ForeheadIn", face, [0.016, 1.688, 0.11]);
+  face.updateMatrixWorld(true);
+  const driver = MetaHumanFaceDriver.create(face)!;
+  assert(driver, "MetaHuman facial joints are detected");
+  assert.equal(MetaHumanFaceDriver.create(rpmRoot), null, "RPM rigs keep their blendshapes");
+  const at = (o: THREE.Object3D) => { face.updateMatrixWorld(true); return o.getWorldPosition(new THREE.Vector3()); };
+  const chin0 = at(chin), lid0 = at(lidEdge), brow0 = at(brow);
+  driver.apply({ jawOpen: 1, eyeBlinkLeft: 1, browInnerUp: 1 });
+  assert(at(chin).y < chin0.y - 0.01, "jawOpen lowers the chin");
+  assert(at(lidEdge).y < lid0.y - 0.004, "blink lowers the upper lid");
+  assert(at(brow).y > brow0.y + 0.004, "browInnerUp raises the inner brow");
+  assert(!lowerLip.quaternion.equals(new THREE.Quaternion()), "the lower lip follows the jaw");
+  driver.apply({});
+  assert(at(chin).distanceTo(chin0) < 1e-9 && at(lidEdge).distanceTo(lid0) < 1e-9 && at(brow).distanceTo(brow0) < 1e-9, "Zero weights restore the bind face");
+  console.log("MetaHuman checks passed: profile detection, explicit limb chains, same IK as RPM, deterministic seeking, facial joint driver.");
+}
+
+// Film mode: subtitle parsing (SRT and WebVTT), placement of one motion per cue, active motion at a time.
+{
+  const { parseSubtitles, placeMotions, activeAt } = await import("../src/utils/subtitles");
+  const srt = "1\r\n00:00:01,000 --> 00:00:03,500\r\n<i>Bonjour</i> à tous.\r\n\r\n2\r\n00:00:04,000 --> 00:00:06,000\r\nLe musée\r\nest fermé.\r\n";
+  const vtt = "WEBVTT\n\n00:01.000 --> 00:03.500 align:center\nBonjour à tous.\n\nnote\n00:04.000 --> 00:06.000\nLe musée est fermé.\n";
+  for (const raw of [srt, vtt]) {
+    const cues = parseSubtitles(raw);
+    assert.deepEqual(cues, [
+      { start_ms: 1000, end_ms: 3500, text: "Bonjour à tous." },
+      { start_ms: 4000, end_ms: 6000, text: "Le musée est fermé." },
+    ], "SRT and VTT give the same cues, tags removed, lines joined");
+  }
+  const cues = parseSubtitles(srt);
+  const placed = placeMotions(cues, [4000, 1000]);
+  assert.equal(placed[0].start_ms, 1000);
+  assert.equal(placed[1].start_ms, 5150, "a motion still playing delays the next one (150 ms rest)");
+  assert.equal(placed[1].delay_ms, 1150, "the delay is reported");
+  assert.deepEqual(activeAt(placed, [true, true], 500), { index: 0, local_ms: 0 }, "before the first cue: first motion at rest");
+  assert.deepEqual(activeAt(placed, [true, true], 4500), { index: 0, local_ms: 3500 });
+  assert.deepEqual(activeAt(placed, [true, true], 9000), { index: 1, local_ms: 1000 }, "after a motion: its last pose is held");
+  assert.equal(activeAt(placed, [false, false], 2000), null);
+  console.log("Film mode checks passed: SRT/VTT parsing, cue placement with reported delay, active motion.");
+}
+
+// Engine face channels -> ARKit weights relative to the clip's neutral; grammatical markers kept separate.
+{
+  const { engineFace } = await import("../src/utils/engineFace");
+  const neutral = { brow_left: .43, brow_right: .42, mouth_width: .57, mouth_corner: -.024, eye_open_left: .07, eye_open_right: .07 };
+  const rest = engineFace({ mouth_width: .57, mouth_corner: -.024, eye_open_left: .07, eye_open_right: .07, mouth_open: .01 }, neutral);
+  assert(Object.values(rest.weights).every((w) => w < 1e-9), "the neutral face gives no expression");
+  const round = engineFace({ mouth_width: .45, mouth_open: .1, mouth_corner: -.024 }, neutral);
+  assert(round.weights.mouthPucker > .3 && round.weights.mouthFunnel > .3, "narrow, open lips -> rounded");
+  const spread = engineFace({ mouth_width: .7, mouth_corner: .05 }, neutral);
+  assert(spread.weights.mouthStretchLeft > .3 && spread.weights.mouthSmileLeft > .3, "wide lips, raised corners -> spread, smile");
+  const squint = engineFace({ eye_open_left: .03, eye_open_right: .07 }, neutral);
+  assert(squint.weights.eyeSquintLeft > .3 && squint.weights.eyeSquintRight < 1e-9, "eyes are measured per side");
+  const nm = engineFace({ nm_brow_raise: .65, nm_head_yaw: .9, nm_head_pitch: .1 }, neutral).nonmanual;
+  assert(nm.browRaise === .65 && nm.headYaw === .4 && nm.headPitch === .1, "markers pass through, head motion bounded");
+  console.log("Engine face checks passed: neutral, rounded/spread lips, per-eye squint, bounded grammatical markers.");
+}
+
+// Interpreter performance layer: forearm twist sharing, springs driven by the motion clock (deterministic on seek),
+// emotion face below grammar, procedural emotion posture.
+{
+  const { PerformanceLayer } = await import("../src/utils/performanceLayer");
+  const { EmotionStyle, emotionFace } = await import("../src/utils/emotionStyle");
+  const { RPM_PROFILE } = await import("../src/utils/rigProfiles");
+  const make = (name: string, parent: THREE.Object3D, p: number[]) => { const b = new THREE.Bone(); b.name = name; b.position.fromArray(p); parent.add(b); return b; };
+  const root = new THREE.Group();
+  const spine = make("Spine", root, [0, 1.1, 0]), spine1 = make("Spine1", spine, [0, 0.1, 0]), spine2 = make("Spine2", spine1, [0, 0.1, 0]);
+  const neck = make("Neck", spine2, [0, 0.2, 0]), headB = make("Head", neck, [0, 0.1, 0]);
+  const shoulder = make("LeftShoulder", spine2, [0.03, 0.15, 0]);
+  const arm = make("LeftArm", shoulder, [0.12, 0, 0]), fore = make("LeftForeArm", arm, [0.28, 0, 0]);
+  const hand = make("LeftHand", fore, [0.25, 0, 0]);
+  const tw1 = make("lowerarm_twist_01_l", fore, [0.17, 0, 0]), tw2 = make("lowerarm_twist_02_l", fore, [0.08, 0, 0]);
+  root.updateMatrixWorld(true);
+  const layer = new PerformanceLayer(root, RPM_PROFILE);
+  // twist: hand rolled 90 degrees about the forearm axis (+x here) -> twist bones get 60 and 30 degrees
+  hand.quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, 0), Math.PI / 2);
+  layer.update(undefined, false);
+  assert(Math.abs(2 * Math.acos(Math.min(1, tw1.quaternion.w)) - Math.PI / 3) < 1e-3, "twist_01 carries 2/3 of the roll");
+  assert(Math.abs(2 * Math.acos(Math.min(1, tw2.quaternion.w)) - Math.PI / 6) < 1e-3, "twist_02 carries 1/3 of the roll");
+  // springs: during playback the arm lags a sudden change, then settles; a seek gives the exact target at once
+  hand.quaternion.identity();
+  arm.quaternion.identity();
+  layer.update(0, true);
+  const target = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 0, 1), 0.8);
+  arm.quaternion.copy(target);
+  layer.update(40, true);
+  const lag = arm.quaternion.angleTo(target);
+  assert(lag > 0.1, "the spring lags a sudden 0.8 rad change during playback");
+  for (let t = 80; t <= 1200; t += 40) { arm.quaternion.copy(target); layer.update(t, true); }
+  assert(arm.quaternion.angleTo(target) < 0.01, "and settles on the target");
+  arm.quaternion.identity();
+  layer.update(5000, true);                                   // seek: no simulation, exact pose
+  assert(arm.quaternion.angleTo(new THREE.Quaternion()) < 1e-9, "a seek shows the retargeted pose exactly");
+  // emotion face: presets, and brows cut to 30 % under a grammatical marker
+  const happy = emotionFace("happy", 1, false);
+  assert(happy.mouthSmileLeft > 0.4 && happy.cheekSquintLeft > 0.3, "happy = smile + cheek raise");
+  assert(Math.abs(emotionFace("angry", 1, true).browDownLeft - 0.3 * emotionFace("angry", 1, false).browDownLeft) < 1e-9, "grammar wins over emotional brows");
+  assert(Object.keys(emotionFace("neutral", 1, false)).length === 0, "neutral adds nothing");
+  // procedural posture: sad tilts the head forward (world +x rotation moves the face down/forward)
+  const style = new EmotionStyle(root, RPM_PROFILE);
+  root.updateMatrixWorld(true);
+  const before = headB.getWorldQuaternion(new THREE.Quaternion());
+  const rest = [spine, spine1, spine2, neck, headB, shoulder].map((b) => b.quaternion.clone());
+  for (let i = 0; i < 60; i++) {
+    // the retargeter resets every bone each frame before the posture is added; do the same here
+    [spine, spine1, spine2, neck, headB, shoulder].forEach((b, k) => b.quaternion.copy(rest[k]));
+    root.updateMatrixWorld(true);
+    style.apply(i / 30, "sad", 1, 1 / 30);
+  }
+  root.updateMatrixWorld(true);
+  const tilt = new THREE.Euler().setFromQuaternion(headB.getWorldQuaternion(new THREE.Quaternion()).multiply(before.invert()));
+  assert(tilt.x > 0.03, "sad posture lowers the head");
+  // ponytail chain: lags a head turn, bounded per link, exact again after a seek
+  const tailRoot = new THREE.Group();
+  const tHead = make("Head", tailRoot, [0, 1.6, 0]);
+  const links = [1, 2, 3, 4].map((i) => i).reduce<THREE.Bone[]>((acc, i) => [...acc, make(`hair_ponytail_0${i}`, acc[acc.length - 1] ?? tHead, [0, -0.025, 0.02])], []);
+  tailRoot.updateMatrixWorld(true);
+  const tail = new PerformanceLayer(tailRoot, RPM_PROFILE);
+  const turn = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), 0.6);
+  const resetTail = () => links.forEach((b) => b.quaternion.identity());
+  resetTail(); tail.update(0, true);
+  tHead.quaternion.copy(turn);
+  resetTail(); tail.update(33, true);
+  const swing = links.map((b) => b.quaternion.angleTo(new THREE.Quaternion()));
+  assert(swing[0] > 0.05, "the ponytail lags a quick head turn");
+  assert(swing.every((a, i) => a <= THREE.MathUtils.degToRad(10 + 3 * i) + 1e-6), "each link stays within its angle limit");
+  resetTail(); tail.update(9000, true);
+  assert(links.every((b) => b.quaternion.angleTo(new THREE.Quaternion()) < 1e-9), "a seek shows the ponytail at rest under the head");
+  console.log("Performance checks passed: forearm twist 2/3-1/3, springs lag/settle/seek-exact, emotion face below grammar, sad posture, ponytail chain.");
+}
 
 // Voice emotion -> ARKit blendshapes.
 {
