@@ -388,12 +388,17 @@ def compose_concepts(body: ConceptSequenceRequest):
     return compose_draft({'source_text':body.text,'gloss_sequence':[allowed[i] for i in body.concept_ids],
         'unknowns':body.unsupported},body.audio_features)
 
+# Local rigs in preference order. FrenchWoman is built from a MetaHuman export by
+# scripts/build-metahuman-avatar.py; ReadyEva and Noa come from scripts/setup-avatar.py.
+AVATARS = ('FrenchWoman', 'ReadyEva', 'Noa')
+
+
 def local_avatar():
     configured = os.getenv('SIGNACULTURE_AVATAR')
-    names = (configured,) if configured else ('ReadyEva', 'Noa')
+    names = (configured,) if configured else AVATARS
     folder = Path(os.environ['SIGNACULTURE_AVATAR_DIR']) if os.getenv('SIGNACULTURE_AVATAR_DIR') else capture_library.storage() / 'avatar-candidates'
     for name in names:
-        if name in ('ReadyEva', 'Noa'):
+        if name in AVATARS:
             path = folder / f'{name}.glb'
             if path.is_file():
                 return name, path
@@ -404,7 +409,7 @@ def local_avatar():
 def avatar_model():
     name, path = local_avatar()
     if path is None:
-        if name and name not in ('ReadyEva', 'Noa'):
+        if name and name not in AVATARS:
             raise HTTPException(503, f'Avatar inconnu : {name}')
         detail = f'Le modèle 3D local {name} est absent.' if name else 'Aucun personnage 3D local trouvé.'
         raise HTTPException(503, f'{detail} Exécutez scripts/setup-avatar.py.')

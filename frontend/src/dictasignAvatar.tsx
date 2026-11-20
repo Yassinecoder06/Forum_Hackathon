@@ -7,7 +7,7 @@ export function mountAvatar(host: HTMLElement) {
   return (motion: MotionFile | null, timeMs: number, faceBlendshapes?: Record<string, number>, headRotation?: number[]) => {
     root.render(
       <AvatarCanvas
-        avatarCredit="Noa"
+        avatarCredit="Avatar Noa · UPF-GTI / Ready Player Me"
         fitNarrowViewport
         renderOnChange
         motion={motion}

@@ -1,6 +1,37 @@
 # Local rigged avatar provenance
 
-The studio renders the public **Ready Eva** demo GLB (default) served by UPF-GTI and listed in the Performs application. **Noa** remains installed as the reference rig for the measurement scripts (`frontend/scripts/measure-*.ts`). Both share the same Ready Player Me skeleton and ARKit blendshapes, so retargeting is identical. With no explicit setting, the studio uses installed ReadyEva first and Noa next. The studio and video previews credit the selected rig. Use `SIGNACULTURE_AVATAR=ReadyEva|Noa` to require a particular model. An explicitly selected missing file produces an error.
+## FrenchWoman (MetaHuman) — default when installed
+
+The Studio prefers **FrenchWoman**, a MetaHuman character exported from Epic Games' MetaHuman tools as FBX (body, face, outfit, hair and eyebrow cards, baked textures). The backend order is `FrenchWoman`, then `ReadyEva`, then `Noa` (`AVATARS` in `backend/app/main.py`); `SIGNACULTURE_AVATAR` still forces one.
+
+- Source export (not in Git): `.runtime/avatar-sources/FrenchWoman/`
+- Built model (not in Git): `.runtime/avatar-candidates/FrenchWoman.glb` (~7 MB)
+- Build: `scripts/build-metahuman-avatar.py`, run with Blender's Python module in an isolated tool environment:
+
+```bash
+uv venv .runtime/tools/bpy-venv --python 3.11
+uv pip install --python .runtime/tools/bpy-venv/bin/python bpy==4.2.0
+.runtime/tools/bpy-venv/bin/python scripts/build-metahuman-avatar.py \
+    .runtime/avatar-sources/FrenchWoman .runtime/avatar-candidates/FrenchWoman.glb
+```
+
+The conversion adapts the asset to the Studio rather than changing the retargeter:
+
+- Body, face, outfit, hair and eyebrows are merged onto one skeleton. Twist, corrective and helper bones are removed and their skin weights merged into the nearest kept bone, so every arm and finger bone has a single bone child (the retargeter derives each bone's direction from its child).
+- Core bones are renamed to the Studio names (`Hips`, `Spine1/2`, `Neck`, `Head`, `LeftArm`, `LeftForeArm`, `LeftHand`, `LeftHandIndex1`…); fingertip (`…4`) and `HeadTop_End` bones are added.
+- Face material slots are classified by geometry. This export carries material names shifted by one slot (the head skin arrives labelled "Teeth"). The transparent eye shell and tear film layers are dropped.
+- Facial blendshapes are **derived approximations**, not MetaHuman RigLogic:
+  - `jawOpen` rotates the jaw joint and carries the lower-lip joints with it.
+  - `eyeBlinkLeft/Right` move the upper-lid joints onto the lower lid. The lids close about 90%, and a sliver of iris stays visible at full blink.
+  - `browInnerUp`, `browOuterUp*` and `browDown*` are smooth displacement fields, because no brow joints are weighted at this LOD.
+- Unreal computes hair colour procedurally, so the hair uses a chosen dark brown with opacity from the card atlas coverage channel. The iris is composited into the sclera texture. Outfit colours are chosen (dark top for hand legibility).
+- glTF keeps 4 joint influences per vertex; some face vertices had more and are renormalized.
+
+**Rights boundary:** MetaHuman assets are governed by Epic Games' MetaHuman and Unreal Engine licence terms. The converted GLB is kept local and is not bundled in Git. Before publishing it on a public site (where the GLB itself becomes downloadable), confirm that those terms permit that distribution of a converted character. No such confirmation is recorded here.
+
+## Ready Eva and Noa
+
+The studio can render the public **Ready Eva** demo GLB served by UPF-GTI and listed in the Performs application. **Noa** remains installed as the reference rig for the measurement scripts (`frontend/scripts/measure-*.ts`). Both share the same Ready Player Me skeleton and ARKit blendshapes, so retargeting is identical. With no explicit setting, the studio uses FrenchWoman when installed, then ReadyEva, then Noa. The studio and video previews credit the selected rig. Use `SIGNACULTURE_AVATAR=ReadyEva|Noa` to require a particular model. An explicitly selected missing file produces an error.
 
 - Ready Eva: https://resources.gti.upf.edu/3Dcharacters/ReadyEva/ReadyEva.glb
 - Ready Eva SHA-256: `b6dc3c8e34df93aad378d24daa38f305c753f45fac147608fc0149218812bbf0`

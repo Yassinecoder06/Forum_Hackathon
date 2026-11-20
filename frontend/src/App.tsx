@@ -57,7 +57,7 @@ type Capabilities = {
   capture: boolean;
   emotion: boolean;
   transcription?: boolean;
-  avatar?: "ReadyEva" | "Noa" | null;
+  avatar?: "FrenchWoman" | "ReadyEva" | "Noa" | null;
   nlp: string;
   library_count: number;
 };
@@ -177,7 +177,8 @@ export default function App() {
   const meanPitch = pitches.length ? Math.round(pitches.reduce((sum, hz) => sum + hz, 0) / pitches.length) : null;
   const pauseMs = audio?.frames.reduce((sum, frame) =>
     sum + (frame.is_pause ? frame.end_ms - frame.start_ms : 0), 0) ?? 0;
-  const avatarCredit = caps?.avatar === "ReadyEva" ? "Avatar Eva" : caps?.avatar === "Noa" ? "Avatar Noa" : "Avatar";
+  // Credit shown under the stage and burned into exported previews; each rig names its own source.
+  const avatarCredit = caps?.avatar === "FrenchWoman" ? "Avatar MetaHuman · Epic Games" : caps?.avatar === "ReadyEva" ? "Avatar Eva · UPF-GTI / Ready Player Me" : caps?.avatar === "Noa" ? "Avatar Noa · UPF-GTI / Ready Player Me" : "Avatar";
 
   const refresh = useCallback(async () => {
     try {
@@ -537,7 +538,7 @@ export default function App() {
         )
           .map((a) => `${a.credit} · ${a.license} · ${a.source_url}`)
           .join(" / ") +
-          ` · ${avatarCredit}: UPF-GTI / Ready Player Me · revue locale`,
+          ` · ${avatarCredit} · revue locale`,
         28,
         943,
         1224,
