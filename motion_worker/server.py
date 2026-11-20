@@ -12,9 +12,9 @@ import numpy as np
 import torch
 from fastapi import FastAPI, HTTPException
 
-from dictasign_review.extract_pose import WORK, normalized_groups, sapiens_predictor
-from dictasign_review.hamer import load_predictor
-from .generate import checkpoint, learned_motion
+from .pose_models import WORK, normalized_groups, sapiens_predictor
+from .hamer import load_predictor
+from .transition_model import checkpoint, learned_motion
 
 app = FastAPI()
 gpu_lock = Lock()

@@ -46,9 +46,9 @@ We adapted its temporal shoulder normalization to stabilize our motion exports. 
 
 ## Where to resume
 
-- [Review setup and inference commands](dictasign_review/README.md)
-- [Review server](dictasign_review/server.py), [browser comparison](dictasign_review/review.js), and [review layout](dictasign_review/index.html)
-- [Pose extraction runner](dictasign_review/extract_pose.py), [SDPose adapter](dictasign_review/sdpose.py), and [HaMeR runner](dictasign_review/hamer.py)
+- [Review setup and inference commands](docs/test-sites/cv-comparison.md) and the [test-site index](docs/test-sites/README.md)
+- Viewer code moved to the sibling folder `~/Projects/Active/Forum_Tests/` (`cv_comparison/server.py`, `review.js`, `index.html`, `extract_pose.py`, `run_hamer.py`, `sdpose.py`)
+- Shared pose and HaMeR loaders: [motion_worker/pose_models.py](motion_worker/pose_models.py) and [motion_worker/hamer.py](motion_worker/hamer.py)
 - [Offline MediaPipe worker](backend/app/workers/capture.py) and [webcam motion exporter](webcam/src/capture.mjs)
 - `data/source_inventory/dictasign_lsf.json` selects the clips. Cached source media and MediaPipe data live in `.runtime/captures/`. The other model outputs live in `.runtime/pose-comparison/results/`.
 - User services `signaculture-dictasign-review`, `signaculture-cv-origin`, and `signaculture-webcam` serve the two review origins and local webcam. The system `cloudflared` service handles the public hostname.

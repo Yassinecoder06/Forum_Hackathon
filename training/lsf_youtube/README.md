@@ -57,8 +57,10 @@ supports searchable subtitles, single-window playback, looping, playback
 speed, and a full-frame or interpreter-only view. Coverage filtering uses
 the same candidate flag as the extraction output.
 
+The viewer code moved to `~/Projects/Active/Forum_Tests/broadcast_viewer/`; see [docs/test-sites/broadcast-viewer.md](../../docs/test-sites/broadcast-viewer.md).
+
 ```bash
-python -m training.lsf_youtube.viewer_server --wait-for-results --port 8100
+cd ~/Projects/Active/Forum_Tests && python3 -m broadcast_viewer.server --wait-for-results --port 8100
 ```
 
 The viewer listens on loopback. It waits for all three full extractions,

@@ -1,13 +1,7 @@
-"""Extract 2D pose previews for the 100 local Dicta-Sign review clips."""
+"""Whole-body pose predictors (MMPose DWPose, Sapiens) and landmark normalization."""
 
-import argparse
-from contextlib import nullcontext
-import hashlib
-import json
 from pathlib import Path
 import sys
-from time import perf_counter
-from uuid import NAMESPACE_URL, uuid5
 
 import cv2
 import numpy as np
@@ -138,96 +132,3 @@ def extract(source, predict, model, stride):
     if not frames:
         raise ValueError("No source frames decoded")
     return {"source_fps": fps, "sample_interval_ms": stride * 1000 / fps, "frames": frames}
-
-
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("model", choices=("mmpose", "sapiens", "sdpose"))
-    parser.add_argument("--checkpoint", type=Path, required=True)
-    parser.add_argument("--label", required=True, help="Displayed checkpoint name")
-    parser.add_argument("--device", choices=("cpu", "cuda"), default="cpu")
-    parser.add_argument("--precision", choices=("fp32", "bf16"), default="fp32")
-    parser.add_argument("--limit", type=int, choices=range(1, 101), default=100)
-    parser.add_argument("--stride", type=int, default=2)
-    parser.add_argument("--sapiens-demo", type=Path, default=WORK / "sapiens" / "lite" / "demo")
-    args = parser.parse_args()
-    checkpoint_exists = args.checkpoint.is_dir() if args.model == "sdpose" else args.checkpoint.is_file()
-    if args.stride < 1 or not checkpoint_exists:
-        parser.error("A local checkpoint and positive stride are required")
-    if args.precision == "bf16" and (args.model == "mmpose" or args.device != "cuda"):
-        parser.error("BF16 is supported for Sapiens and SDPose on CUDA")
-    if args.model == "sdpose":
-        bundle = hashlib.sha256()
-        for name in sorted(args.checkpoint.rglob("*")):
-            if not name.is_file() or name.suffix not in (".safetensors", ".json", ".txt"):
-                continue
-            with name.open("rb") as file:
-                bundle.update(name.relative_to(args.checkpoint).as_posix().encode() + b"\0")
-                bundle.update(hashlib.file_digest(file, "sha256").digest())
-        sha256 = bundle.hexdigest()
-    else:
-        with args.checkpoint.open("rb") as file:
-            sha256 = hashlib.file_digest(file, "sha256").hexdigest()
-    cv2.setNumThreads(1)
-    if args.model == "mmpose":
-        predictor = mmpose_predictor(args.checkpoint, args.device)
-    elif args.model == "sapiens":
-        predictor = sapiens_predictor(args.checkpoint, args.device, args.sapiens_demo)
-    else:
-        from .sdpose import predictor as sdpose_predictor
-
-        sys.path.insert(0, str(args.sapiens_demo))
-        from pose_utils import udp_decode
-
-        predictor = sdpose_predictor(args.checkpoint, args.device, args.precision, udp_decode)
-
-    precision_context = nullcontext()
-    if args.model == "sapiens" and args.precision == "bf16":
-        import torch
-
-        if not torch.cuda.is_bf16_supported(including_emulation=False):
-            parser.error("This GPU does not have native BF16 support")
-        torch._C._jit_set_autocast_mode(False)
-        precision_context = torch.autocast(device_type="cuda", dtype=torch.bfloat16)
-
-    with precision_context:
-        return extract_inventory(args, predictor, sha256)
-
-
-def extract_inventory(args, predictor, sha256):
-    output = WORK / "results" / args.model
-    output.mkdir(parents=True, exist_ok=True)
-    entries = json.loads(INVENTORY.read_text())["entries"]
-    entries = [entry for entry in entries if entry["language"] == "fsl"][:args.limit]
-    failed = 0
-    for index, entry in enumerate(entries, start=1):
-        capture_id = str(uuid5(NAMESPACE_URL, entry["video_url"]))
-        source = ROOT / ".runtime" / "captures" / capture_id / "source.mp4"
-        path = output / f"{capture_id}.json"
-        if path.is_file():
-            old = json.loads(path.read_text())
-            if (old.get("frames") and old.get("sha256") == sha256
-                    and old.get("stride") == args.stride
-                    and old.get("precision", "fp32") == args.precision):
-                continue
-        started = perf_counter()
-        record = {
-            "model": args.model, "checkpoint": args.label, "device": args.device,
-            "sha256": sha256, "stride": args.stride, "precision": args.precision,
-            "roi": "whole source frame",
-        }
-        try:
-            record.update(extract(source, predictor, args.model, args.stride))
-        except Exception as error:
-            failed += 1
-            record.update(frames=[], error=f"Extraction failed: {error}")
-        temporary = path.with_suffix(".tmp")
-        temporary.write_text(json.dumps(record, separators=(",", ":"), allow_nan=False))
-        temporary.replace(path)
-        print(f"{index}/{len(entries)} {entry['concept_fr']}: {len(record['frames'])} frames "
-              f"in {perf_counter() - started:.2f}s {record.get('error', '')}", flush=True)
-    return int(failed > 0)
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())

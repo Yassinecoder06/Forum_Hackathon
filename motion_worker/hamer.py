@@ -1,20 +1,11 @@
-"""Run HaMeR on hand crops guided by timestamp-matched MediaPipe detections."""
+"""HaMeR hand-mesh predictor on crops guided by MediaPipe or Sapiens hand hints."""
 
-import argparse
-from contextlib import nullcontext
-import gzip
 import hashlib
-import json
-from pathlib import Path
 import sys
-import subprocess
-from time import perf_counter
-from uuid import NAMESPACE_URL, uuid5
 
 import cv2
 import numpy as np
 
-from .extract_pose import INVENTORY, ROOT, WORK
 
 CHECKPOINT_SHA = "e5cc06f294d88a92dee24e603480aab04de532b49f0e08200804ee7d90e16f53"
 MANO_SHA = "45d60aa3b27ef9107a7afd4e00808f307fd91111e1cfa35afd5c4a62de264767"
@@ -176,132 +167,3 @@ def holistic_frame(mp, detector, image, time_ms, fallback):
         },
         "fallback_hands": recovered,
     }
-
-
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--limit", type=int, choices=range(1, 101), default=100)
-    crops = parser.add_mutually_exclusive_group()
-    crops.add_argument("--sapiens", action="store_true", help="Use cached Sapiens 0.3B landmarks for body and hand crops")
-    crops.add_argument("--holistic-model", type=Path, help="Run installed MediaPipe Holistic on source frames and write a separate preview")
-    args = parser.parse_args()
-    cv2.setNumThreads(1)
-    predict, mesh_faces = load_predictor(WORK / "models" / "hamer", WORK / "hamer-source")
-    result_name = "hamer-sapiens" if args.sapiens else "hamer-latest" if args.holistic_model else "hamer"
-    destination = WORK / "results" / result_name
-    checkpoint_label = "HaMeR · MediaPipe hand crops"
-    versions = {}
-    if args.holistic_model:
-        import mediapipe as mp
-
-        options = mp.tasks.vision.HolisticLandmarkerOptions(
-            base_options=mp.tasks.BaseOptions(model_asset_path=str(args.holistic_model)),
-            running_mode=mp.tasks.vision.RunningMode.VIDEO,
-            output_face_blendshapes=True,
-        )
-        revision = subprocess.check_output(["git", "-C", str(WORK / "hamer-source"), "rev-parse", "HEAD"], text=True).strip()
-        versions = {"mediapipe_version": mp.__version__, "hamer_revision": revision, "preview_format": 2}
-        checkpoint_label = f"MediaPipe {mp.__version__} + HaMeR {revision[:7]}"
-    destination.mkdir(parents=True, exist_ok=True)
-    entries = json.loads(INVENTORY.read_text())["entries"]
-    failed = 0
-    for i, entry in enumerate([e for e in entries if e["language"] == "fsl"][:args.limit], start=1):
-        identifier = str(uuid5(NAMESPACE_URL, entry["video_url"]))
-        path = destination / f"{identifier}.json"
-        baseline_model = "sapiens" if args.sapiens else "mmpose"
-        baseline = json.loads((WORK / "results" / baseline_model / path.name).read_text())
-        if args.sapiens:
-            versions = {"sapiens_sha256": baseline["sha256"], "sapiens_precision": baseline["precision"]}
-            checkpoint_label = "Sapiens 0.3B + HaMeR"
-        if path.is_file():
-            cached = json.loads(path.read_text())
-            if cached.get("mesh_faces") and cached.get("frames") and all(cached.get(k) == v for k, v in versions.items()):
-                continue
-        folder = ROOT / ".runtime" / "captures" / identifier
-        fps = baseline["source_fps"]
-        sample_times = {round(frame["time_ms"] * fps / 1000): frame["time_ms"] for frame in baseline["frames"]}
-        if args.sapiens:
-            sapiens_frames = {frame["time_ms"]: frame for frame in baseline["frames"]}
-        else:
-            with gzip.open(folder / "animics-landmarks.json.gz", "rt") as source:
-                hints = {round(frame["time_ms"] * fps / 1000): frame for frame in json.load(source)}
-        video = cv2.VideoCapture(str(folder / "source.mp4"))
-        frames = []
-        started = perf_counter()
-        try:
-            with (mp.tasks.vision.HolisticLandmarker.create_from_options(options)
-                  if args.holistic_model else nullcontext()) as detector:
-                for index in range(max(sample_times) + 1):
-                    ok, image = video.read()
-                    if not ok:
-                        break
-                    if index not in sample_times:
-                        continue
-                    time_ms = sample_times[index]
-                    frame = {"time_ms": time_ms}
-                    if args.sapiens:
-                        pose = sapiens_frames[time_ms]
-                        frame.update(body=pose.get("body"), face=pose.get("face"))
-                        crop_hints = {
-                            key: [{"x": point[0], "y": point[1]} for point in pose.get(side) or [] if point]
-                            for key, side in (("LLM", "left"), ("RLM", "right"))
-                        }
-                    elif detector is not None:
-                        crop_hints, holistic = holistic_frame(mp, detector, image, time_ms, hints.get(index, {}))
-                        frame.update(holistic)
-                    else:
-                        crop_hints = hints.get(index, {})
-                    hands = predict(image, crop_hints)
-                    # HaMeR can reject a hand while the body model still has a
-                    # usable 21-point hand. Keep that hand instead of leaving a
-                    # hole that the avatar fills with its bind pose. Never
-                    # replace a hand HaMeR did return: a wrist offset is not
-                    # evidence that the tracked hand is wrong.
-                    tracked = {side for side in ("left", "right") if hands.get(side)}
-                    restored = [side for side in frame.get("fallback_hands", []) if side not in tracked]
-                    for side, key in (("left", "LLM"), ("right", "RLM")):
-                        if side in tracked:
-                            continue
-                        points = crop_hints.get(key)
-                        if not isinstance(points, list) or len(points) != 21:
-                            continue
-                        try:
-                            hand = [[float(point["x"]), float(point["y"])] for point in points]
-                        except (KeyError, TypeError, ValueError):
-                            continue
-                        if not np.isfinite(hand).all():
-                            continue
-                        hands[side] = hand
-                        hands[f"{side}_depth"] = [0.0] * 21
-                        if side not in restored:
-                            restored.append(side)
-                    if restored:
-                        hands["fallback_hands"] = restored
-                    else:
-                        frame.pop("fallback_hands", None)
-                    frame.update(hands)
-                    if frame.get("face"):
-                        height, width = image.shape[:2]
-                        frame["head_rotation"] = estimate_head_rotation(frame["face"], width, height, args.sapiens)
-                    frames.append(frame)
-        finally:
-            video.release()
-        if len(frames) != len(sample_times):
-            failed += 1
-            print(f"{i}: incomplete source decoding", flush=True)
-            continue
-        result = {
-            "model": "hamer", "checkpoint": checkpoint_label, "device": "cuda",
-            "sha256": CHECKPOINT_SHA, "mano_sha256": MANO_SHA,
-            "source_fps": fps, "sample_interval_ms": baseline["sample_interval_ms"],
-            "mesh_faces": mesh_faces, "frames": frames, **versions,
-        }
-        temporary = path.with_suffix(".tmp")
-        temporary.write_text(json.dumps(result, separators=(",", ":"), allow_nan=False))
-        temporary.replace(path)
-        print(f"{i}/{args.limit} {entry['concept_fr']}: {len(frames)} frames in {perf_counter()-started:.2f}s", flush=True)
-    return int(failed > 0)
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())

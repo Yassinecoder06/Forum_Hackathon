@@ -1,21 +1,13 @@
-"""Generate fair-timing Studio-vs-exp15 bridge comparisons from local LSF clips."""
+"""LSFB exp15 learned transition model shared by the Studio motion worker and previews."""
 from copy import deepcopy
-import json
 from pathlib import Path
-import subprocess
 
 import numpy as np
 import torch
 from torch import nn
 
 ROOT = Path(__file__).resolve().parents[1]
-WORK = ROOT / ".runtime/transition-preview"
 MODEL = ROOT / ".models/lsfb-transition/transition_model_exp15.pt"
-GROUPS = (
-    ("Je veux boire de l’eau", ("vouloir", "boire", "eau")),
-    ("Je veux manger à la maison", ("vouloir", "manger", "maison")),
-    ("Aller à la maison après le travail", ("travail", "aller", "maison")),
-)
 POINTS = [(i, name) for i, name in enumerate((
     "head", None, None, None, None, None, None, None, None, None, None,
     "left_shoulder", "right_shoulder", "left_elbow", "right_elbow", "left_wrist", "right_wrist",
@@ -108,40 +100,3 @@ def learned_motion(motion, net):
                     float(np.interp(progress, np.linspace(0, 1, 14), axis)) for axis in track.T
                 ]
     return result
-
-
-def main():
-    WORK.mkdir(parents=True, exist_ok=True)
-    library = json.loads((ROOT / ".runtime/library.json").read_text())
-    paths = {r["gloss"]["concept_fr"]: r["motion"]["path"] for r in library}
-    examples = [{"label": label, "glosses": list(glosses), "paths": [paths[g] for g in glosses]}
-                for label, glosses in GROUPS]
-    # Bundle the real Studio stitcher so the baseline uses production math.
-    bundle = WORK / "stitch.cjs"
-    subprocess.run([str(ROOT / "frontend/node_modules/.bin/esbuild"), str(ROOT / "transition_preview/stitch.ts"),
-                    "--bundle", "--platform=node", f"--outfile={bundle}"], check=True)
-    source = subprocess.run(["node", str(bundle)], input=json.dumps(examples), text=True, check=True, capture_output=True)
-    net = checkpoint()
-    torch.set_num_threads(2)
-    output = []
-    for item in json.loads(source.stdout):
-        math = item["motion"]
-        learned = learned_motion(math, net)
-        start = 0
-        intervals = []
-        for clip in item["clips"][:-1]:
-            start += clip["duration_ms"]
-            end = start + item["transition_ms"]
-            intervals.append([start, end])
-            start = end
-        changes = [a["time_ms"] for a, b in zip(math["frames"], learned["frames"]) if a != b]
-        assert changes and all(any(a < t < b for a, b in intervals) for t in changes)
-        assert [f["time_ms"] for f in math["frames"]] == [f["time_ms"] for f in learned["frames"]]
-        output.append({"label": item["label"], "glosses": item["glosses"], "intervals": intervals,
-                       "math": math, "learned": learned})
-        print(f"{item['label']}: {len(intervals)} bridges, {len(changes)} changed samples")
-    (WORK / "examples.json").write_text(json.dumps(output, ensure_ascii=False, allow_nan=False))
-
-
-if __name__ == "__main__":
-    main()

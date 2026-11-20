@@ -13,17 +13,18 @@ The top-down models use the full frame as a single-person region. They run at a 
 
 ## Run locally
 
-Serve from the project root using the project API environment.
+The code lives in the sibling folder `~/Projects/Active/Forum_Tests/cv_comparison/`. The shared Sapiens, MMPose and HaMeR loaders it uses live in this repo under `motion_worker/` (the Studio capture worker uses them too). Run the commands below from `Forum_Tests`, with `R=../Forum_Hackathon` pointing at this repo. Normally the servers run as systemd units (`make -C ../Forum_Tests status`).
 
 ```bash
-.venv/bin/python -m dictasign_review.server
+cd ~/Projects/Active/Forum_Tests && R=../Forum_Hackathon
+$R/.venv/bin/python -m cv_comparison.server
 ```
 
 Open http://127.0.0.1:8094/. A model panel displays its checkpoint and device when a result exists. Pending clips refresh automatically while open. The viewer uses one video timeline for all three canvases.
 
 The Cloudflare origin runs with `DICTASIGN_PUBLIC_REVIEW=1` and `--port 8095`. In this mode, browsers load videos directly from Dicta-Sign, and the review server delivers the 2D overlays. The local viewer can use its cached MP4 and WebM copies.
 
-All panels share the Noa avatar and SignaCulture retargeter. The four full-body previews use their own model's body and finger tracks, shoulder-width normalization, and fixed depth. HaMeR supplies hand poses and wrist-relative finger depth, with the body driven by MediaPipe. Each avatar uses the exact extraction timestamp selected by its own video overlay during playback and after seeking. If that sample lacks usable upper-body landmarks, the preview returns to its neutral pose. Facial expressions are outside the comparison preview. Build the viewer bundle from the project root after installing the frontend dependencies.
+All panels share the Noa avatar and SignaCulture retargeter. The four full-body previews use their own model's body and finger tracks, shoulder-width normalization, and fixed depth. HaMeR supplies hand poses and wrist-relative finger depth, with the body driven by MediaPipe. Each avatar uses the exact extraction timestamp selected by its own video overlay during playback and after seeking. If that sample lacks usable upper-body landmarks, the preview returns to its neutral pose. Facial expressions are outside the comparison preview. Build the viewer bundle from this repository's root after installing the frontend dependencies.
 
 ```bash
 frontend/node_modules/.bin/esbuild frontend/src/dictasignAvatar.tsx \
@@ -37,17 +38,17 @@ The server loads Noa from `.runtime/avatar-candidates/Noa.glb`.
 Use a Python 3.11 environment with NumPy, OpenCV, rtmlib, and ONNX Runtime for OpenMMLab. For Sapiens, use a CUDA-enabled PyTorch environment with NumPy and OpenCV. The example commands assume the paths below and an environment with those libraries installed.
 
 ```bash
-python -m dictasign_review.extract_pose mmpose \
-  --checkpoint .runtime/pose-comparison/models/dwpose-t.onnx \
+python -m cv_comparison.extract_pose mmpose \
+  --checkpoint $R/.runtime/pose-comparison/models/dwpose-t.onnx \
   --label 'DWPose-t · 133 landmarks' --device cpu --limit 100 --stride 2
 
-python -m dictasign_review.extract_pose sapiens \
-  --checkpoint .runtime/pose-comparison/models/sapiens_0.3b_goliath_best_goliath_AP_573_torchscript.pt2 \
-  --sapiens-demo .runtime/pose-comparison/sapiens/lite/demo \
+python -m cv_comparison.extract_pose sapiens \
+  --checkpoint $R/.runtime/pose-comparison/models/sapiens_0.3b_goliath_best_goliath_AP_573_torchscript.pt2 \
+  --sapiens-demo $R/.runtime/pose-comparison/sapiens/lite/demo \
   --label 'Goliath 0.3B · 308 landmarks' --device cuda --precision bf16 --limit 100 --stride 2
 
-python -m dictasign_review.extract_pose sdpose \
-  --checkpoint .runtime/pose-comparison/models/sdpose \
+python -m cv_comparison.extract_pose sdpose \
+  --checkpoint $R/.runtime/pose-comparison/models/sdpose \
   --label 'Wholebody · 133 landmarks' --device cuda --precision bf16 --limit 100 --stride 2
 ```
 
@@ -62,9 +63,9 @@ With the locally authorized MANO file in place, the runner uses HaMeR's official
 The local Python 3.11 GPU runtime uses Torch 2.7 with torchvision 0.22, Lightning, timm, smplx, yacs, einops, the HaMeR renderer import dependencies, and a Chumpy 0.70 source copy patched for Python 3.11 and NumPy 1.26. The runtime paths are kept outside the app.
 
 ```bash
-pose_work="$PWD/.runtime/pose-comparison"
+pose_work="$R/.runtime/pose-comparison"
 PYTHONPATH="$pose_work/hamer-deps:$pose_work/runtime-deps:$pose_work/chumpy-source/chumpy-0.70" \
-  PYOPENGL_PLATFORM=egl .runtime/t5-local-venv/bin/python -m dictasign_review.hamer --limit 100
+  PYOPENGL_PLATFORM=egl $R/.runtime/t5-local-venv/bin/python -m cv_comparison.run_hamer --limit 100
 ```
 
 ### MediaPipe 1.2.3 and HaMeR preview
@@ -83,10 +84,10 @@ Use the HaMeR environment above with MediaPipe 1.2.3 installed and the
 
 ```bash
 # In the HaMeR inference environment
-python -m dictasign_review.hamer --holistic-model .runtime/pose-comparison/models/holistic-landmarker.task --limit 10
+python -m cv_comparison.run_hamer --holistic-model $R/.runtime/pose-comparison/models/holistic-landmarker.task --limit 10
 
 # In the web server environment
-DICTASIGN_HAMER_PREVIEW=1 python -m dictasign_review.server --port 8096
+DICTASIGN_HAMER_PREVIEW=1 python -m cv_comparison.server --port 8096
 ```
 
 ### Sapiens 0.3B and HaMeR preview
@@ -108,10 +109,10 @@ affect the avatar arm and do not add a hand mesh to the source video.
 
 ```bash
 # In the HaMeR inference environment
-python -m dictasign_review.hamer --sapiens --limit 10
+python -m cv_comparison.run_hamer --sapiens --limit 10
 
 # In the web server environment
-DICTASIGN_HAMER_PREVIEW=sapiens python -m dictasign_review.server --port 8097
+DICTASIGN_HAMER_PREVIEW=sapiens python -m cv_comparison.server --port 8097
 ```
 
 ### Matignon notebook 07 full-frame preview
@@ -123,8 +124,8 @@ Noa uses the body and hand landmarks. The source video overlay also
 shows the facial landmarks.
 
 ```bash
-python -m dictasign_review.matignon .runtime/matignon-cv-review/extract_poses.py
-DICTASIGN_HAMER_PREVIEW=matignon python -m dictasign_review.server --port 8099
+python -m cv_comparison.matignon $R/.runtime/matignon-cv-review/extract_poses.py
+DICTASIGN_HAMER_PREVIEW=matignon python -m cv_comparison.server --port 8099
 ```
 
 Run extraction with the notebook's MediaPipe Tasks environment and
@@ -133,7 +134,7 @@ are under `.runtime/pose-comparison/results/matignon-full-frame/`.
 
 ### Full local capture benchmark
 
-`python -m dictasign_review.benchmark manifest` inventories
+`python -m cv_comparison.benchmark manifest` inventories
 `.runtime/captures/*/source.mp4`. The benchmark preserves a row for every
 source file and reuses computation for byte-identical files. It compares
 notebook 07 (full frame) with Sapiens BF16 and HaMeR on every second source

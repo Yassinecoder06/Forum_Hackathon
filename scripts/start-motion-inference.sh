@@ -13,4 +13,4 @@ studio = json.load(sys.stdin)["services"]["studio"]
 storage = studio["environment"]["SIGNACULTURE_STORAGE"]
 print(next(volume["source"] for volume in studio["volumes"] if volume["target"] == storage))
 ')"
-exec .runtime/t5-local-venv/bin/python -m uvicorn transition_preview.inference:app --uds "$socket_dir/motion.sock"
+exec .runtime/t5-local-venv/bin/python -m uvicorn motion_worker.server:app --uds "$socket_dir/motion.sock"
