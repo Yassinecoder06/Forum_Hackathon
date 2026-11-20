@@ -1,0 +1,10 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.14, pytest-9.2.0, pluggy-1.7.0
+rootdir: /home/jmal/Projects/Active/Forum_Hackathon
+configfile: pytest.ini
+collected 9 items
+
+tests/test_experiment_catalog.py ..                                      [ 22%]
+tests/test_geoquery_graphs.py .......                                    [100%]
+
+============================== 9 passed in 2.24s ===============================

@@ -56,6 +56,8 @@ type Capabilities = {
   } | null;
   capture: boolean;
   emotion: boolean;
+  transcription?: boolean;
+  avatar?: "ReadyEva" | "Noa" | null;
   nlp: string;
   library_count: number;
 };
@@ -74,6 +76,7 @@ type CaptureJob = {
   error?: string;
   quality?: Quality;
   duration_ms?: number;
+  landmarks_available?: boolean;
 };
 type LibraryEntry = {
   capture_id?: string;
@@ -121,10 +124,41 @@ export default function App() {
   const [recording, setRecording] = useState(false);
   const [sourceUrl, setSourceUrl] = useState("");
   const [referenceUrl, setReferenceUrl] = useState("");
+  const [showWebcam, setShowWebcam] = useState(false);
+  const webcamFrame = useRef<HTMLIFrameElement>(null);
+
+  useEffect(() => {
+    function receiveWebcamMotion(event: MessageEvent) {
+      if (event.origin !== window.location.origin ||
+          event.source !== webcamFrame.current?.contentWindow ||
+          event.data?.type !== "signaculture:webcam-motion" ||
+          !Array.isArray(event.data.motion?.frames)) return;
+
+      const video = event.data.video;
+      if (video instanceof Blob && video.size > 0 && video.type.startsWith("video/")) {
+        const extension = video.type.includes("mp4") ? "mp4" : "webm";
+        setCaptureFile(new File([video], `webcam-source.${extension}`, { type: video.type }));
+        setSourceUrl(URL.createObjectURL(video));
+      } else {
+        setCaptureFile(new File([JSON.stringify(event.data.motion)], "webcam-motion.json", {
+          type: "application/json",
+        }));
+        setSourceUrl("");
+      }
+      setJob(null);
+      setSaved(false);
+      setRights(false);
+      setShowWebcam(false);
+    }
+    window.addEventListener("message", receiveWebcamMotion);
+    return () => window.removeEventListener("message", receiveWebcamMotion);
+  }, []);
+
   const [captureFile, setCaptureFile] = useState<File | null>(null);
   const [rights, setRights] = useState(false);
   const [job, setJob] = useState<CaptureJob | null>(null);
   const [concept, setConcept] = useState("");
+  const [captureLanguage, setCaptureLanguage] = useState("");
   const [aliases, setAliases] = useState("");
   const [source, setSource] = useState("");
   const [licence, setLicence] = useState("");
@@ -138,12 +172,12 @@ export default function App() {
   const active = plan?.segments.find(
     (s) => time >= s.start_ms && time < s.start_ms + s.duration_ms,
   );
-  const sample = audio?.frames.find(
-    (f) =>
-      f.start_ms <= (duration ? (time / duration) * audio.duration_ms : 0) &&
-      f.end_ms > (duration ? (time / duration) * audio.duration_ms : 0),
-  );
   const emotion = audio?.emotion_hypothesis || null;
+  const pitches = audio?.frames.flatMap(({ pitch_hz }) => pitch_hz == null ? [] : [pitch_hz]) ?? [];
+  const meanPitch = pitches.length ? Math.round(pitches.reduce((sum, hz) => sum + hz, 0) / pitches.length) : null;
+  const pauseMs = audio?.frames.reduce((sum, frame) =>
+    sum + (frame.is_pause ? frame.end_ms - frame.start_ms : 0), 0) ?? 0;
+  const avatarCredit = caps?.avatar === "ReadyEva" ? "Avatar Eva" : caps?.avatar === "Noa" ? "Avatar Noa" : "Avatar";
 
   const refresh = useCallback(async () => {
     try {
@@ -298,6 +332,7 @@ export default function App() {
   }
 
   async function loadConceptPlan(result: AnimationPlan) {
+    const token = ++generation.current;
     const files = await Promise.all(
       result.segments.map(
         async (seg) =>
@@ -309,7 +344,7 @@ export default function App() {
           ] as const,
       ),
     );
-    generation.current += 1;
+    if (token !== generation.current) return;
     setPlan(result);
     setMotion(stitchAnimationPlan(result, new Map(files)));
     setTime(0);
@@ -330,7 +365,7 @@ export default function App() {
       form.append("file", file);
       setAudio(
         await request<AudioFeatures>(
-          `/analyze-audio?include_emotion=${caps?.emotion ? "true" : "false"}`,
+          `/analyze-audio?include_emotion=${caps?.emotion ? "true" : "false"}&include_transcription=${caps?.transcription ? "true" : "false"}`,
           { method: "POST", body: form },
         ),
       );
@@ -345,6 +380,7 @@ export default function App() {
 
   async function startCapture() {
     if (!captureFile || !rights || busy) return;
+    setCaptureLanguage("");
     setBusy(true);
     setError("");
     setSaved(false);
@@ -374,7 +410,7 @@ export default function App() {
   }
 
   async function saveCapture() {
-    if (!job || !concept.trim() || !source.trim() || !licence.trim()) return;
+    if (!job || !concept.trim() || !source.trim() || !licence.trim() || captureLanguage !== "fsl") return;
     setBusy(true);
     setError("");
     try {
@@ -382,6 +418,7 @@ export default function App() {
         `/captures/${job.job_id}/register`,
         json({
           concept,
+          sign_language: captureLanguage,
           aliases: aliases
             .split(",")
             .map((x) => x.trim())
@@ -500,7 +537,7 @@ export default function App() {
         )
           .map((a) => `${a.credit} · ${a.license} · ${a.source_url}`)
           .join(" / ") +
-          " · Avatar Eva: UPF-GTI / Ready Player Me · revue locale",
+          ` · ${avatarCredit}: UPF-GTI / Ready Player Me · revue locale`,
         28,
         943,
         1224,
@@ -767,9 +804,11 @@ export default function App() {
                             : audioName || "Importer un audio ou une vidéo"}
                         </strong>
                         <small>
-                          {audioBusy && caps?.emotion
-                            ? "Analyse locale avec emotion2vec+"
-                            : "WAV, MP3, MP4 · 60 secondes maximum"}
+                          {audioBusy && caps?.transcription
+                            ? "Transcription française et analyse locales"
+                            : audioBusy && caps?.emotion
+                              ? "Analyse locale avec emotion2vec+"
+                              : "WAV, MP3, MP4 · 60 secondes maximum"}
                         </small>
                       </span>
                       <Upload size={17} />
@@ -815,32 +854,41 @@ export default function App() {
                           </span>
                           <span>
                             <strong>
-                              {Math.round(
-                                audio.frames
-                                  .filter((f) => f.pitch_hz)
-                                  .reduce((a, f) => a + (f.pitch_hz || 0), 0) /
-                                  Math.max(
-                                    1,
-                                    audio.frames.filter((f) => f.pitch_hz)
-                                      .length,
-                                  ),
-                              )}{" "}
-                              Hz
+                              {meanPitch == null ? "Non mesurée" : `${meanPitch} Hz`}
                             </strong>
                             Hauteur moyenne
                           </span>
                           <span>
                             <strong>
-                              {Math.round(
-                                (audio.frames.filter((f) => f.is_pause).length /
-                                  audio.frames.length) *
-                                  100,
-                              )}{" "}
+                              {Math.round(pauseMs / audio.duration_ms * 100)}{" "}
                               %
                             </strong>
                             Pauses
                           </span>
                         </div>
+                        {audio.transcription && (
+                          <div className="audio-transcript">
+                            <span className="section-label">
+                              TRANSCRIPTION LOCALE · À RELIRE
+                            </span>
+                            <p>
+                              {audio.transcription.text ||
+                                "Aucune parole française détectée."}
+                            </p>
+                            <small>
+                              Whisper small · {audio.transcription.device} ·{" "}
+                              {audio.transcription.segments.length} segment(s)
+                            </small>
+                            <button
+                              className="secondary-button"
+                              disabled={!audio.transcription.text}
+                              onClick={() => setText(audio.transcription!.text)}
+                            >
+                              Utiliser comme brouillon français
+                              <ArrowRight size={14} />
+                            </button>
+                          </div>
+                        )}
                         {emotion && (
                           <div className="emotion-results">
                             <span className="section-label">
@@ -876,20 +924,28 @@ export default function App() {
                               ))}
                           </div>
                         )}
-                        <label className="switch-row">
+                        {emotion && <label className="switch-row">
                           <input
                             type="checkbox"
                             checked={expressive}
                             onChange={(e) => setExpressive(e.target.checked)}
                           />
                           <span>
-                            Explorer l’expressivité de la voix
+                            Prévisualiser l’émotion de la voix au repos
                             <small>
-                              Animation faciale expérimentale, sans validation
-                              linguistique.
+                              L’aperçu émotionnel s’affiche quand aucune séquence
+                              signée n’est chargée.
                             </small>
                           </span>
-                        </label>
+                        </label>}
+                        {audio.warnings.length > 0 && (
+                          <details open={!emotion && Boolean(caps?.emotion)}>
+                            <summary>Notes de l’analyse audio</summary>
+                            <ul>
+                              {audio.warnings.map((warning, index) => <li key={index}>{warning}</li>)}
+                            </ul>
+                          </details>
+                        )}
                       </>
                     )}
                   </div>
@@ -959,10 +1015,27 @@ export default function App() {
                       </div>
                       <Film size={20} />
                     </div>
+                    <button
+                      type="button"
+                      className="video-drop"
+                      aria-expanded={showWebcam}
+                      onClick={() => setShowWebcam(!showWebcam)}
+                    >
+                      {showWebcam ? "Fermer la webcam" : "Capturer avec la webcam"}
+                    </button>
+                    {showWebcam && (
+                      <iframe
+                        ref={webcamFrame}
+                        src="/webcam/"
+                        title="Capture webcam"
+                        allow="camera"
+                        className="webcam-frame"
+                      />
+                    )}
                     <input
                       ref={videoInput}
                       type="file"
-                      accept="video/*,.json"
+                      accept="video/*,.json,.json.gz"
                       hidden
                       onChange={(e) => {
                         const file = e.target.files?.[0];
@@ -989,7 +1062,7 @@ export default function App() {
                       <strong>
                         {captureFile?.name || "Choisir une vidéo"}
                       </strong>
-                      <span>MP4, MOV, WebM ou landmarks Animics JSON</span>
+                      <span>MP4, MOV, WebM ou points Animics (.json, .json.gz)</span>
                       <small>
                         De face · buste et mains visibles · 50 Mo maximum
                       </small>
@@ -1046,6 +1119,11 @@ export default function App() {
                           <span>{job.progress}%</span>
                         </div>
                         <progress value={job.progress} max={100} />
+                        {job.status === "ready" && job.landmarks_available && (
+                          <a href={`/api/captures/${encodeURIComponent(job.job_id)}/landmarks`} download>
+                            Télécharger les points Animics (.json.gz)
+                          </a>
+                        )}
                         {job.error && <p role="alert">{job.error}</p>}
                       </div>
                     )}
@@ -1080,6 +1158,17 @@ export default function App() {
                         </div>
                       )}
                       <div className="capture-form">
+                        <label>
+                          Langue des signes de la capture
+                          <select aria-label="Langue des signes de la capture" value={captureLanguage} onChange={(e) => setCaptureLanguage(e.target.value)}>
+                            <option value="">Choisir une langue</option>
+                            <option value="fsl">LSF — France</option>
+                            <option value="sfb">LSFB — Belgique</option>
+                            <option value="ssr">LSF suisse</option>
+                            <option value="und">Autre ou inconnue</option>
+                          </select>
+                        </label>
+                        {captureLanguage && captureLanguage !== "fsl" && <p>La capture peut être prévisualisée. Cette bibliothèque utilise les signes de France uniquement.</p>}
                         <label>
                           Concept français
                           <input
@@ -1117,6 +1206,7 @@ export default function App() {
                         className="primary-button"
                         disabled={
                           !concept.trim() ||
+                          captureLanguage !== "fsl" ||
                           !source.trim() ||
                           !licence.trim() ||
                           busy ||
@@ -1300,12 +1390,10 @@ export default function App() {
                   </button>
                 </div>
                 <AvatarCanvas
+                  avatarCredit={avatarCredit}
                   motion={motion}
                   currentTimeMs={time}
                   expressiveModulation={expressive}
-                  energyFactor={
-                    sample?.energy ? Math.min(1, sample.energy * 5) : 0
-                  }
                   emotion={expressive ? emotion : null}
                   onCanvasReady={setCanvas}
                 />

@@ -7,6 +7,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { request } from "../services/api";
+import { RecentExperiments, type ExperimentLedger } from "./RecentExperiments";
 
 type Metrics = {
   exact_match: number;
@@ -34,6 +35,7 @@ type Dataset = {
   limitations?: string[];
 };
 type Research = {
+  recent_experiments?: ExperimentLedger;
   transition_experiment?: {
     counts: Record<string, number>;
     metrics: Record<
@@ -112,6 +114,7 @@ export function ResearchPanel() {
   const dataset = status?.datasets[status.datasets.length - 1];
   return (
     <>
+      <RecentExperiments ledger={status?.recent_experiments} />
       {status?.transition_experiment && (
         <div className="card">
           <h2>CGAN de transition · expérience intra-signe</h2>

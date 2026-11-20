@@ -1,0 +1,10 @@
+Filesystem      Size  Used Avail Use% Mounted on
+overlay         113G  457M  113G   1% /
+[32m✓ Downloaded[0m
+  path: /content/fsl-one-shard/dataset/Sign_DWPose_NPZ_000637.tar
+{
+  "eligible_train_recordings": 34,
+  "bounded_french_candidates": 34,
+  "staged_recordings": 8,
+  "staged_bytes": 22961211
+}

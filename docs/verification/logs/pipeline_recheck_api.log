@@ -1,0 +1,40 @@
+INFO:     Started server process [9229]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:18000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:53696 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59040 - "GET /concepts/vocabulary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59054 - "GET /avatar/model HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59068 - "GET /glossary?include_synthetic=true HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59066 - "GET /capabilities HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59080 - "GET /library HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59086 - "GET /glossary?include_synthetic=true HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59084 - "GET /concepts/vocabulary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59100 - "GET /capabilities HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59104 - "GET /library HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58528 - "GET /concepts/vocabulary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58534 - "POST /compose-animation HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58562 - "GET /assets/CAPTURE_e9ba3a7ccaee594a.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58550 - "GET /assets/CAPTURE_e7e9436f2bd556fb.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40400 - "GET /glossary?include_synthetic=true HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40394 - "GET /capabilities HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40408 - "GET /library HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40382 - "POST /analyze-audio?include_emotion=true HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40418 - "POST /compose-animation HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40428 - "POST /captures HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:40430 - "GET /captures/1700a81f-c969-49a8-822c-fbcf0264eb4d/motion HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40438 - "POST /captures/1700a81f-c969-49a8-822c-fbcf0264eb4d/register HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40450 - "GET /glossary?include_synthetic=true HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40442 - "GET /capabilities HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40456 - "GET /library HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40460 - "POST /gloss-lookup HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48262 - "GET /concepts/vocabulary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48264 - "GET /concepts/vocabulary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48276 - "POST /compose-animation HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48288 - "DELETE /library/CAPTURE_1700a81fc96949a8 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42010 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54422 - "GET /health HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [9229]

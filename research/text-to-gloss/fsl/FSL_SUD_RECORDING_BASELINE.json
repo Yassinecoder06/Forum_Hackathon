@@ -1,0 +1,108 @@
+{
+  "sign_language": "fsl",
+  "annotation_convention": "SUD FORM including annotated neutral-position tokens",
+  "linguistically_validated": false,
+  "license": "CC BY-SA 4.0",
+  "input_sha256": {
+    "Alpha_entretien_etudiant_souvenir.conllu": "bb203f280b715d4967f72d4d8c44fe1d3a5ff14e28bc6842cd2cc60d0cb31306",
+    "Alpha_entretien_etudiant_trajet.conllu": "ded73b983bc971388378afa8fd670b10218a1c3496866f15cdf8590b85dadb14",
+    "LS-Colin_champignon.conllu": "b7714a846e89f181551e047bf6676d0bceb6e6f357d674e6dd6957e12c208f4d",
+    "LS-Colin_cheval.conllu": "8ef6f3eafbbb7185a39b132260baaf61c36a3f2a5bd5741ec79f6abf7deb6307",
+    "STK_vacances-sud.conllu": "40e84338c99dd2ee9f78225a69ec22ea4890d723449bc5468d32bd20e5b2bdd3",
+    "presentation-CAP-petite-enfance.conllu": "04aa47bdb7d7251ca4310cc81ff7b3723109dc639cdd1e6e861f6713070b4e72",
+    "presentation-primaire-populaire.conllu": "df5457cf7039df8b88d8de981e2fb0556dde7892b957dea53f654484297fb57d"
+  },
+  "folds": [
+    {
+      "held_out_documents": [
+        "presentation-CAP-petite-enfance"
+      ],
+      "train_examples": 119,
+      "examples": 11,
+      "reference_forms": 88,
+      "unseen_reference_forms": 52,
+      "fully_covered_examples": 0,
+      "retrieval_exact": 0,
+      "retrieval_edits": 103,
+      "constant_exact": 0,
+      "constant_edits": 99,
+      "retrieval_empty": 0
+    },
+    {
+      "held_out_documents": [
+        "presentation-primaire-populaire"
+      ],
+      "train_examples": 119,
+      "examples": 11,
+      "reference_forms": 120,
+      "unseen_reference_forms": 84,
+      "fully_covered_examples": 0,
+      "retrieval_exact": 0,
+      "retrieval_edits": 129,
+      "constant_exact": 0,
+      "constant_edits": 130,
+      "retrieval_empty": 0
+    },
+    {
+      "held_out_documents": [
+        "Alpha_entretien_etudiant_souvenir"
+      ],
+      "train_examples": 110,
+      "examples": 20,
+      "reference_forms": 109,
+      "unseen_reference_forms": 80,
+      "fully_covered_examples": 1,
+      "retrieval_exact": 0,
+      "retrieval_edits": 151,
+      "constant_exact": 0,
+      "constant_edits": 130,
+      "retrieval_empty": 0
+    },
+    {
+      "held_out_documents": [
+        "Alpha_entretien_etudiant_trajet"
+      ],
+      "train_examples": 111,
+      "examples": 19,
+      "reference_forms": 97,
+      "unseen_reference_forms": 51,
+      "fully_covered_examples": 1,
+      "retrieval_exact": 0,
+      "retrieval_edits": 130,
+      "constant_exact": 0,
+      "constant_edits": 139,
+      "retrieval_empty": 1
+    },
+    {
+      "held_out_documents": [
+        "STK_vacances-sud"
+      ],
+      "train_examples": 101,
+      "examples": 29,
+      "reference_forms": 194,
+      "unseen_reference_forms": 146,
+      "fully_covered_examples": 0,
+      "retrieval_exact": 0,
+      "retrieval_edits": 242,
+      "constant_exact": 0,
+      "constant_edits": 248,
+      "retrieval_empty": 0
+    },
+    {
+      "held_out_documents": [
+        "LS-Colin_champignon",
+        "LS-Colin_cheval"
+      ],
+      "train_examples": 90,
+      "examples": 40,
+      "reference_forms": 215,
+      "unseen_reference_forms": 180,
+      "fully_covered_examples": 1,
+      "retrieval_exact": 0,
+      "retrieval_edits": 354,
+      "constant_exact": 0,
+      "constant_edits": 309,
+      "retrieval_empty": 0
+    }
+  ]
+}

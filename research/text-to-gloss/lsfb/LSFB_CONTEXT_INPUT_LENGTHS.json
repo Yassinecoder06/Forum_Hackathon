@@ -1,0 +1,7 @@
+{
+  "train_context_mean_tokens": 173.19310344827585,
+  "train_current_mean_tokens": 30.675862068965518,
+  "context_max": 381,
+  "current_max": 50,
+  "source_limit": 384
+}

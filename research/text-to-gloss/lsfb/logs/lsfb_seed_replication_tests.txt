@@ -1,0 +1,11 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.14, pytest-9.2.0, pluggy-1.7.0
+rootdir: /home/jmal/Projects/Active/Forum_Hackathon
+configfile: pytest.ini
+collected 8 items
+
+tests/test_parallel_csv_audit.py ...                                     [ 37%]
+training/lsfb_cont/test_narrow_context.py ..                             [ 62%]
+training/lsfb_cont/test_seed_replication.py ...                          [100%]
+
+============================== 8 passed in 2.26s ===============================

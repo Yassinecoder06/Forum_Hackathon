@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Revue d’alignement LSF</title>
+<style>
+body{font:1rem/1.5 system-ui;color:#1e293b;background:#f5f7fb;margin:0}
+main{max-width:52rem;margin:auto;padding:1rem}
+section,form{background:white;border:1px solid #dbe2ee;border-radius:1rem;padding:1rem;margin-block:1rem}
+[hidden]{display:none!important}
+video{display:block;width:100%;max-height:22rem;background:#e7edf5}
+nav,fieldset{display:flex;gap:.75rem;flex-wrap:wrap;align-items:end}
+label{display:grid;gap:.25rem}
+button,input,select,textarea{font:inherit;padding:.4rem}
+button{cursor:pointer}
+button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #2464b6}
+#status{min-height:1.5em}
+</style>
+<main>
+<h1>Revue d’alignement LSF</h1>
+<nav aria-label="Navigation des extraits">
+<button type="button" id="previous">Précédent</button>
+<label>Extrait <select id="items"></select></label>
+<button type="button" id="next">Suivant</button>
+<button type="button" id="export">Exporter les réponses CSV</button>
+</nav>
+<p id="progress"></p>
+<section>
+<video id="video" controls preload="metadata" playsinline></video>
+<details id="subtitle"><summary>Afficher le sous-titre</summary><p id="caption"></p></details>
+</section>
+<form id="review">
+<label>Qualité visuelle
+<select name="visual_quality" required><option value="">Choisir</option><option>bonne</option><option>partielle</option><option>illisible</option></select></label>
+<label>Correspondance du sens
+<select name="meaning_alignment" required><option value="">Choisir</option><option>complète</option><option>partielle</option><option>absente</option><option>indéterminable</option></select></label>
+<label>Élément examiné
+<select name="evidence" required><option value="">Choisir</option><option>squelette</option><option>vidéo source</option></select></label>
+<fieldset id="timing" hidden>
+<legend>Décalages par rapport au sous-titre, en millisecondes</legend>
+<label>Début <input type="number" step="1" name="start_offset_ms"></label>
+<label>Fin <input type="number" step="1" name="end_offset_ms"></label>
+<p>Renseignez les deux valeurs si la vidéo source permet de vérifier les limites. Une valeur positive décale la limite vers plus tard.</p>
+</fieldset>
+<label>Notes <textarea name="notes" rows="2"></textarea></label>
+<button type="submit">Enregistrer la réponse</button>
+<p id="status" role="status"></p>
+</form>
+</main>
+<script id="worksheet" type="application/json">__WORKSHEET__</script>
+<script>
+const {rows, fields, ratings, key} = JSON.parse(document.querySelector("#worksheet").textContent);
+const form = document.querySelector("#review");
+const pick = document.querySelector("#items");
+const video = document.querySelector("#video");
+const timing = document.querySelector("#timing");
+const status = document.querySelector("#status");
+const previous = document.querySelector("#previous");
+const next = document.querySelector("#next");
+let saved = {};
+try { saved = JSON.parse(localStorage.getItem(key) || "{}"); } catch (_) {}
+const control = name => form.elements.namedItem(name);
+function updateTiming() {
+  const source = control("evidence").value === "vidéo source";
+  timing.hidden = !source;
+  timing.disabled = !source;
+}
+function updateProgress() {
+  const answered = rows.filter(row => Object.hasOwn(saved, row.item)).length;
+  document.querySelector("#progress").textContent = `${answered} réponses enregistrées sur ${rows.length}`;
+}
+function show() {
+  const row = rows[pick.selectedIndex];
+  video.src = `${row.item}.mp4`;
+  document.querySelector("#subtitle").open = false;
+  document.querySelector("#caption").textContent = row.caption;
+  for (const field of ratings) control(field).value = saved[row.item]?.[field] || "";
+  previous.disabled = pick.selectedIndex === 0;
+  next.disabled = pick.selectedIndex === rows.length - 1;
+  status.textContent = "";
+  updateTiming();
+}
+for (const row of rows) pick.add(new Option(row.item, row.item));
+pick.addEventListener("change", show);
+previous.addEventListener("click", () => { pick.selectedIndex--; show(); });
+next.addEventListener("click", () => { pick.selectedIndex++; show(); });
+control("evidence").addEventListener("change", updateTiming);
+form.addEventListener("submit", event => {
+  event.preventDefault();
+  const row = rows[pick.selectedIndex];
+  const values = Object.fromEntries(new FormData(form));
+  const start = values.start_offset_ms || "";
+  const end = values.end_offset_ms || "";
+  if (Boolean(start) !== Boolean(end) || (start && (Number(row.start_ms) + Number(start) < 0 ||
+      Number(row.start_ms) + Number(start) >= Number(row.end_ms) + Number(end)))) {
+    status.textContent = "Vérifiez les deux décalages et l’ordre des limites.";
+    return;
+  }
+  saved[row.item] = values;
+  try {
+    localStorage.setItem(key, JSON.stringify(saved));
+    status.textContent = "Réponse enregistrée dans ce navigateur.";
+  } catch (_) {
+    status.textContent = "Réponse conservée pour cette session. Exportez le CSV avant de fermer.";
+  }
+  updateProgress();
+});
+document.querySelector("#export").addEventListener("click", () => {
+  const quote = value => '"' + String(value ?? "").replaceAll('"', '""') + '"';
+  const lines = [fields.map(quote).join(",")];
+  for (const row of rows) {
+    const record = {...row, ...saved[row.item]};
+    lines.push(fields.map(field => quote(record[field])).join(","));
+  }
+  const url = URL.createObjectURL(new Blob([lines.join("\r\n") + "\r\n"], {type:"text/csv;charset=utf-8"}));
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "reviewer-return.csv";
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+});
+updateProgress();
+if (rows.length) show();
+</script>
+</html>

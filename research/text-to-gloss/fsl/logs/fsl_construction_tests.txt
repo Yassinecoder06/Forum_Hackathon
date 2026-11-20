@@ -1,0 +1,9 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.14, pytest-9.2.0, pluggy-1.7.0
+rootdir: /home/jmal/Projects/Active/Forum_Hackathon
+configfile: pytest.ini
+collected 7 items
+
+tests/test_fsl_research.py .......                                       [100%]
+
+============================== 7 passed in 1.13s ===============================

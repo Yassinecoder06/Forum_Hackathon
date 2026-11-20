@@ -1,0 +1,57 @@
+Downloaded 702 bytes to .runtime/mt5-base/config.json
+Downloaded 147 bytes to .runtime/mt5-base/generation_config.json
+Downloaded 65 bytes to .runtime/mt5-base/special_tokens_map.json
+Downloaded 4309802 bytes to .runtime/mt5-base/spiece.model
+Downloaded 376 bytes to .runtime/mt5-base/tokenizer_config.json
+Downloaded 327 bytes to .runtime/mt5-base/PROVENANCE.json
+Traceback (most recent call last):
+  File "/home/jmal/.local/share/uv/tools/google-colab-cli/lib/python3.13/site-packages/urllib3/response.py", line 929, in _error_catcher
+    yield
+  File "/home/jmal/.local/share/uv/tools/google-colab-cli/lib/python3.13/site-packages/urllib3/response.py", line 1046, in _raw_read
+    data = self._fp_read(amt, read1=read1) if not fp_closed else b""
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/home/jmal/.local/share/uv/tools/google-colab-cli/lib/python3.13/site-packages/urllib3/response.py", line 1029, in _fp_read
+    return self._fp.read(amt) if amt is not None else self._fp.read()
+           ~~~~~~~~~~~~~^^^^^
+  File "/home/jmal/.local/share/uv/python/cpython-3.13.12-linux-x86_64-gnu/lib/python3.13/http/client.py", line 484, in read
+    s = self.fp.read(amt)
+  File "/home/jmal/.local/share/uv/python/cpython-3.13.12-linux-x86_64-gnu/lib/python3.13/socket.py", line 719, in readinto
+    return self._sock.recv_into(b)
+           ~~~~~~~~~~~~~~~~~~~~^^^
+  File "/home/jmal/.local/share/uv/python/cpython-3.13.12-linux-x86_64-gnu/lib/python3.13/ssl.py", line 1304, in recv_into
+    return self.read(nbytes, buffer)
+           ~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/home/jmal/.local/share/uv/python/cpython-3.13.12-linux-x86_64-gnu/lib/python3.13/ssl.py", line 1138, in read
+    return self._sslobj.read(len, buffer)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+TimeoutError: The read operation timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/jmal/.local/share/uv/tools/google-colab-cli/lib/python3.13/site-packages/requests/models.py", line 937, in generate
+    yield from self.raw.stream(chunk_size, decode_content=True)
+  File "/home/jmal/.local/share/uv/tools/google-colab-cli/lib/python3.13/site-packages/urllib3/response.py", line 1291, in stream
+    data = self.read(amt=amt, decode_content=decode_content)
+  File "/home/jmal/.local/share/uv/tools/google-colab-cli/lib/python3.13/site-packages/urllib3/response.py", line 1134, in read
+    data = self._raw_read(amt)
+  File "/home/jmal/.local/share/uv/tools/google-colab-cli/lib/python3.13/site-packages/urllib3/response.py", line 1045, in _raw_read
+    with self._error_catcher():
+         ~~~~~~~~~~~~~~~~~~~^^
+  File "/home/jmal/.local/share/uv/python/cpython-3.13.12-linux-x86_64-gnu/lib/python3.13/contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "/home/jmal/.local/share/uv/tools/google-colab-cli/lib/python3.13/site-packages/urllib3/response.py", line 934, in _error_catcher
+    raise ReadTimeoutError(self._pool, None, "Read timed out.") from e  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.ReadTimeoutError: HTTPSConnectionPool(host='8080-m-s-usc1c0-5obixmo41nxw-c.us-central1.prod.r.colab.dev', port=443): Read timed out.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/jmal/Projects/Active/Forum_Hackathon/.runtime/stream_mt5base_file.py", line 10, in <module>
+    for chunk in response.iter_content(1024*1024):f.write(chunk)
+                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/home/jmal/.local/share/uv/tools/google-colab-cli/lib/python3.13/site-packages/requests/models.py", line 943, in generate
+    raise ConnectionError(e)
+requests.exceptions.ConnectionError: HTTPSConnectionPool(host='8080-m-s-usc1c0-5obixmo41nxw-c.us-central1.prod.r.colab.dev', port=443): Read timed out.

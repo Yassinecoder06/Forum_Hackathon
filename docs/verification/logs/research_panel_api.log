@@ -1,0 +1,52 @@
+INFO:     Started server process [40342]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:18004 (Press CTRL+C to quit)
+INFO:     127.0.0.1:46090 - "GET /research/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53736 - "GET /concepts/vocabulary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53742 - "GET /avatar/model HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53760 - "GET /glossary?include_synthetic=true HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53756 - "GET /capabilities HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53762 - "GET /library HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53784 - "GET /concepts/vocabulary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53768 - "GET /research/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53786 - "GET /glossary?include_synthetic=true HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53800 - "GET /library HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53796 - "GET /capabilities HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53816 - "GET /research/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42896 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60168 - "GET /concepts/vocabulary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60190 - "GET /glossary?include_synthetic=true HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60184 - "GET /avatar/model HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60210 - "GET /concepts/vocabulary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60186 - "GET /capabilities HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60206 - "GET /library HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60226 - "GET /glossary?include_synthetic=true HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60240 - "GET /capabilities HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60244 - "GET /library HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60256 - "GET /concepts/vocabulary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60258 - "POST /compose-animation HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60266 - "GET /assets/CAPTURE_e9ba3a7ccaee594a.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60260 - "GET /assets/CAPTURE_e7e9436f2bd556fb.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44218 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44236 - "GET /glossary?include_synthetic=true HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44224 - "GET /capabilities HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44248 - "GET /library HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44216 - "POST /analyze-audio?include_emotion=true HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53076 - "POST /compose-animation HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53084 - "POST /captures HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:53090 - "GET /captures/b57699e7-07bc-45d5-aeb4-8d618f1b87ad/motion HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53106 - "POST /captures/b57699e7-07bc-45d5-aeb4-8d618f1b87ad/register HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53128 - "GET /glossary?include_synthetic=true HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53118 - "GET /capabilities HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53134 - "GET /library HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53146 - "POST /gloss-lookup HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36612 - "GET /concepts/vocabulary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36614 - "GET /concepts/vocabulary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36618 - "POST /compose-animation HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36630 - "DELETE /library/CAPTURE_b57699e707bc45d5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38828 - "GET /health HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [40342]

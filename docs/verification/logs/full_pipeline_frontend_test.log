@@ -1,0 +1,4 @@
+npm notice run signaculture-frontend@1.0.0 test
+npm notice run node scripts/test-motion.mjs
+Motion checks passed: preserved sign endpoints, continuous transition time, pause hold, fixed bone lengths and deterministic IK seeking.
+Avatar checks passed: brows, immutable spike filtering, gap states, contact preservation and cached seeking.

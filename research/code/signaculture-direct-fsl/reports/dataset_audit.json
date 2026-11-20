@@ -1,0 +1,23 @@
+{
+  "revision": "0c7e956a8471acad3a9cebaeb66bb23bf5deaafa",
+  "columns": [
+    "video_id",
+    "sign_language",
+    "split"
+  ],
+  "metadata_rows": 39197,
+  "original_rows": 39197,
+  "fsl_videos": 900,
+  "splits": {
+    "train": 810,
+    "test": 45,
+    "val": 45
+  },
+  "mapped_videos": 860,
+  "mapped_shards": 52,
+  "mapped_shard_bytes": 46820157440,
+  "full_inventory_shard_bytes": 598541107200,
+  "metadata_rows_with_subtitle_track": 0,
+  "archive_count": 724,
+  "clip_count_from_metadata": null
+}

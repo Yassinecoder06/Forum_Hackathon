@@ -1,0 +1,6 @@
+width: 96
+frames: 32
+batch: 4
+steps: 100
+seed: 17
+learning_rate: 0.001

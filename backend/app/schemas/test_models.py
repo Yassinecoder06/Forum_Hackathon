@@ -46,6 +46,22 @@ def test_valid_empty_silent_voiced_and_gapped_audio(frames):
     assert json.loads(model.model_dump_json())['frames'] == frames
 
 
+def test_optional_french_transcript_and_segment_bounds():
+    transcript = dict(
+        text='Bonjour.',
+        language='fr',
+        model_id='Systran/faster-whisper-small',
+        model_revision='536b0662742c02347bc0e980a01041f333bce120',
+        device='cuda',
+        compute_type='float16',
+        segments=[dict(start_ms=0, end_ms=10, text='Bonjour.')],
+    )
+    assert AudioFeatures.model_validate(dict(audio(), transcription=transcript)).transcription.text == 'Bonjour.'
+    with pytest.raises(ValidationError):
+        AudioFeatures.model_validate(dict(audio(), transcription=dict(
+            transcript, segments=[dict(start_ms=0, end_ms=21, text='Bonjour.')])) )
+
+
 @pytest.mark.parametrize('fps', [float('inf'), float('-inf'), float('nan'), 0])
 def test_motion_fps_must_be_finite_positive(fps):
     with pytest.raises(ValidationError):

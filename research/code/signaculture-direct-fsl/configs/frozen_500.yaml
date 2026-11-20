@@ -1,0 +1,7 @@
+width: 96
+frames: 32
+batch: 4
+steps: 500
+seed: 17
+learning_rate: 0.001
+encoder: frozen_french

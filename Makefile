@@ -32,7 +32,7 @@ test-backend:
 	@$(VENV_PYTHON) -m pytest backend/tests -v
 
 test-experiments:
-	@$(VENV_PYTHON) -m pytest experiments/motion_extraction -v
+	@$(VENV_PYTHON) -m pytest research/code/experiments/motion_extraction -v
 
 test-frontend:
 	@npm --prefix frontend run lint

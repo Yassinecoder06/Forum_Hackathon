@@ -1,0 +1,13 @@
+NVIDIA GeForce RTX 4060 Laptop GPU (5508169728, 8184725504)
+parameters 549857 splits {'train': 102, 'val': 47, 'test': 19}
+real two-cue overfit 3.8583507537841797 0.48170262575149536
+{"step": 10, "loss": 1.2414287328720093, "validation": 1.0579712390899658, "gpu_peak_bytes": 71105024}
+{"step": 20, "loss": 0.7587957382202148, "validation": 0.9607183337211609, "gpu_peak_bytes": 71105024}
+{"step": 30, "loss": 0.7581000924110413, "validation": 0.921104371547699, "gpu_peak_bytes": 71105024}
+{"step": 40, "loss": 0.6625428199768066, "validation": 0.9192972779273987, "gpu_peak_bytes": 71105024}
+{"step": 50, "loss": 0.5236733555793762, "validation": 0.9175474643707275, "gpu_peak_bytes": 71105024}
+{"step": 60, "loss": 0.6538029313087463, "validation": 0.8990094661712646, "gpu_peak_bytes": 71105024}
+{"step": 70, "loss": 0.5799751281738281, "validation": 0.889242947101593, "gpu_peak_bytes": 71105024}
+{"step": 80, "loss": 0.3728819489479065, "validation": 0.9612841606140137, "gpu_peak_bytes": 71105024}
+{"step": 90, "loss": 0.6045408844947815, "validation": 0.9342768788337708, "gpu_peak_bytes": 71105024}
+{"step": 100, "loss": 0.5381606817245483, "validation": 0.9400539994239807, "gpu_peak_bytes": 71105024}

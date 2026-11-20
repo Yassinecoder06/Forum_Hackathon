@@ -1,0 +1,82 @@
+`torch_dtype` is deprecated! Use `dtype` instead!
+reranked 1
+reranked 2
+reranked 3
+reranked 4
+reranked 5
+reranked 6
+reranked 7
+reranked 8
+reranked 9
+reranked 10
+reranked 11
+reranked 12
+reranked 13
+reranked 14
+reranked 15
+reranked 16
+reranked 17
+reranked 18
+reranked 19
+reranked 20
+reranked 21
+reranked 22
+reranked 23
+reranked 24
+reranked 25
+reranked 26
+reranked 27
+reranked 28
+reranked 29
+reranked 30
+reranked 31
+reranked 32
+reranked 33
+reranked 34
+reranked 35
+reranked 36
+reranked 37
+{
+  "task": "closed training-graph candidate reranking;cannot compose novel structures",
+  "candidate_count": 8,
+  "selection": "lowest mean teacher-forced token loss, frozen selected epoch1model",
+  "examples": 37,
+  "retrieval": {
+    "examples": 37,
+    "serialized_graph_exact": 0.0,
+    "triple_set_exact": 0.0,
+    "triple_micro_f1": 0.2296103896103896,
+    "articulation_micro_f1": 0.3652762119503946,
+    "invalid_reference_graphs": 0,
+    "invalid_prediction_graphs": 0,
+    "all_graphs_structurally_valid": true,
+    "interpretation": "lexical/graph overlap only; not signing comprehension"
+  },
+  "reranked": {
+    "examples": 37,
+    "serialized_graph_exact": 0.0,
+    "triple_set_exact": 0.0,
+    "triple_micro_f1": 0.17667154709614447,
+    "articulation_micro_f1": 0.27370689655172414,
+    "invalid_reference_graphs": 0,
+    "invalid_prediction_graphs": 0,
+    "all_graphs_structurally_valid": true,
+    "interpretation": "lexical/graph overlap only; not signing comprehension"
+  },
+  "cyclic_shuffled_input_same_candidates": {
+    "examples": 37,
+    "serialized_graph_exact": 0.0,
+    "triple_set_exact": 0.0,
+    "triple_micro_f1": 0.18155339805825244,
+    "articulation_micro_f1": 0.27682403433476394,
+    "invalid_reference_graphs": 0,
+    "invalid_prediction_graphs": 0,
+    "all_graphs_structurally_valid": true,
+    "interpretation": "lexical/graph overlap only; not signing comprehension"
+  },
+  "oracle_candidate_triple_f1": 0.34405542997857763,
+  "oracle_note": "mean per-example best candidate F1;uses references only for this diagnostic ceiling,not selection",
+  "seconds": 14.255677938461304,
+  "human_review": false,
+  "split": "previously inspected structure-heldout development;not independent test"
+}

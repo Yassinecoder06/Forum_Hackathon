@@ -1,0 +1,49 @@
+{
+  "registered_runs": [
+    {
+      "run_id": "lsfb-narrow-context-v1",
+      "sign_language": "sfb",
+      "representation": "lexical_projection",
+      "result_sha256": "b24e25dbd5a886b35ab356363596068e54d2ffc91325e2a7d1a76c0a62a25f2e"
+    },
+    {
+      "run_id": "lsfb-narrow-current-v1",
+      "sign_language": "sfb",
+      "representation": "lexical_projection",
+      "result_sha256": "93f2af3f5c4652237995b734b525453d99a3a0f3ea7d54cc282e34b0b67a2e39"
+    },
+    {
+      "run_id": "lsfb-extracted-v1",
+      "sign_language": "sfb",
+      "representation": "lexical_projection",
+      "result_sha256": "9da0145a4d777634497b20e58cb17e4cfe30d22d5e396e9b8c0422289c964d0e"
+    },
+    {
+      "run_id": "geoquery-full-graph-v1",
+      "sign_language": "sfb",
+      "representation": "temporal_graph",
+      "result_sha256": "1329f7b9e836bd64ff1f66a3a3b8ca73e428de3fa5bb39b757877bb0e27de679"
+    },
+    {
+      "run_id": "fsl-mt5-small-comparison-v1",
+      "sign_language": "fsl",
+      "representation": "source_annotated_gloss",
+      "result_sha256": "e5367393ca7fe98648de49a056d537c8ce587e88ae336602cea1ad16ac9eeebd"
+    },
+    {
+      "run_id": "fsl-t5-base-comparison-v3",
+      "sign_language": "fsl",
+      "representation": "source_annotated_gloss",
+      "result_sha256": "7b34f66c637b94a5551870775b15d5d760f49a4c43975905e538947c771e7613"
+    }
+  ],
+  "unchanged_source_table_counts": {
+    "pairs": 128,
+    "sources": 11,
+    "reviews": 0,
+    "annotations": 238
+  },
+  "catalog_integrity": "ok",
+  "qualified_reviews_added": 0,
+  "legacy_reviews_and_pairs_unchanged": true
+}

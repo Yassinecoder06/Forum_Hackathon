@@ -1,0 +1,32 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.14, pytest-9.2.0, pluggy-1.7.0
+rootdir: /home/jmal/Projects/Active/Forum_Hackathon
+configfile: pytest.ini
+collected 6 items
+
+training/transitions/test_transitions.py ...F..                          [100%]
+
+=================================== FAILURES ===================================
+___________ test_normalizer_train_only_and_immutable_source_targets ____________
+
+    def test_normalizer_train_only_and_immutable_source_targets():
+        m=load(ROOT/'research/TRANSITION_DATA_MANIFEST.json');train=np.load(ARTIFACTS/'train.npz')['windows'];flat=train.reshape(-1,10).astype(np.float64)
+        assert np.allclose(flat.mean(0),m['normalization']['mean'])
+        assert np.allclose(np.maximum(flat.std(0),1e-4),m['normalization']['std'])
+        # Inspect ALL heldout windows against the actual source JSON. Never impute target points.
+        cache={}
+        clips={r['clip_id']:r for r in m['clips']}
+        for row in m['windows']['test']:
+            c=clips[row['clip_id']]
+            if c['clip_id'] not in cache:
+>               assert sha(c['path'])==c['input_sha256'];cache[c['clip_id']]=load(c['path'])
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               AssertionError: assert 'f5bfc0b9f3a7...8888df9cbffe2' == '1fa6d44eb246...02619427f4360'
+E                 
+E                 - 1fa6d44eb24627c35b54cca6d460dff97fb264bb345b938fb9702619427f4360
+E                 + f5bfc0b9f3a7c4e51f8db1acea3ead49ae8dffc1c45ba422bca8888df9cbffe2
+
+training/transitions/test_transitions.py:50: AssertionError
+=========================== short test summary info ============================
+FAILED training/transitions/test_transitions.py::test_normalizer_train_only_and_immutable_source_targets
+========================= 1 failed, 5 passed in 0.99s ==========================

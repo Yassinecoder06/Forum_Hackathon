@@ -1,0 +1,32 @@
+{
+  "status": "complete",
+  "sign_language": "sfb",
+  "counts": {
+    "rows": 2531,
+    "target_matches_source": 2531,
+    "interval_matches_source": 2531,
+    "recording_matches_source": 2531,
+    "rows_with_nonlexical_events": 1577,
+    "rows_with_below_80_percent_events": 0,
+    "rows_with_frame_timestamp_deviation_above40ms": 0,
+    "rows_with_excluded_boundary_events": 0
+  },
+  "source_candidates_sha256": "ad547fbc860999fa3a2627eb3b39747467ebd98a92a4bfdd6fad5dfa72b6ed57",
+  "review_pack_counts": {
+    "train": 49,
+    "val": 6
+  },
+  "qualified_review": false,
+  "official_test_opened": false,
+  "limitations": [
+    "Source-event consistency does not prove French/sign semantic alignment.",
+    "Lexical targets omit pointing and other events; no nonmanual grammar completeness is established.",
+    "Frame consistency assumes the source 50 FPS annotation convention, not independent video synchronization."
+  ],
+  "video_review": {
+    "clips": 55,
+    "failures": 0,
+    "browser_test": "passed",
+    "decisions_created": 0
+  }
+}

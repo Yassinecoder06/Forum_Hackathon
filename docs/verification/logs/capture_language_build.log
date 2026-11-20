@@ -1,0 +1,16 @@
+npm notice run signaculture-frontend@1.0.0 build
+npm notice run tsc -b && vite build
+vite v6.4.6 building for production...
+transforming...
+✓ 2111 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.91 kB │ gzip:   0.50 kB
+dist/assets/index-CEz5dpIq.css   24.56 kB │ gzip:   6.03 kB
+dist/assets/index-CUbpyaSn.js   807.20 kB │ gzip: 220.26 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 1.75s

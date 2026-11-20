@@ -1,0 +1,248 @@
+{
+  "task": "previously inspected narrow LSFB development; not independent test",
+  "matched_fields_checked": true,
+  "context": {
+    "status": "complete",
+    "best": {
+      "epoch": 14,
+      "step": 266,
+      "train_sample": {
+        "examples": 32,
+        "exact": 0.375,
+        "operation_wer": 0.5882352941176471,
+        "raw_token_wer": 0.5882352941176471,
+        "invalid": 0.0,
+        "by_length": {
+          "one_sign": {
+            "examples": 18,
+            "exact": 0.6111111111111112,
+            "wer": 0.4444444444444444
+          },
+          "multiple_signs": {
+            "examples": 14,
+            "exact": 0.07142857142857142,
+            "wer": 0.6666666666666666
+          }
+        },
+        "cap_hits": 0
+      },
+      "val_selection": {
+        "examples": 23,
+        "exact": 0.43478260869565216,
+        "operation_wer": 0.5666666666666667,
+        "raw_token_wer": 0.5666666666666667,
+        "invalid": 0.0,
+        "by_length": {
+          "one_sign": {
+            "examples": 17,
+            "exact": 0.5882352941176471,
+            "wer": 0.4117647058823529
+          },
+          "multiple_signs": {
+            "examples": 6,
+            "exact": 0.0,
+            "wer": 0.7692307692307693
+          }
+        },
+        "cap_hits": 0
+      },
+      "seconds": 203.2578491000022
+    },
+    "validation": {
+      "examples": 23,
+      "exact": 0.43478260869565216,
+      "operation_wer": 0.5666666666666667,
+      "raw_token_wer": 0.5666666666666667,
+      "invalid": 0.0,
+      "by_length": {
+        "one_sign": {
+          "examples": 17,
+          "exact": 0.5882352941176471,
+          "wer": 0.4117647058823529
+        },
+        "multiple_signs": {
+          "examples": 6,
+          "exact": 0.0,
+          "wer": 0.7692307692307693
+        }
+      },
+      "cap_hits": 0,
+      "seen_vocabulary_subset": {
+        "examples": 23,
+        "exact": 0.43478260869565216,
+        "operation_wer": 0.5666666666666667,
+        "raw_token_wer": 0.5666666666666667,
+        "invalid": 0.0,
+        "by_length": {
+          "one_sign": {
+            "examples": 17,
+            "exact": 0.5882352941176471,
+            "wer": 0.4117647058823529
+          },
+          "multiple_signs": {
+            "examples": 6,
+            "exact": 0.0,
+            "wer": 0.7692307692307693
+          }
+        }
+      }
+    },
+    "seconds": 349.84639746100584,
+    "linguistically_validated": false
+  },
+  "current": {
+    "status": "complete",
+    "best": {
+      "epoch": 11,
+      "step": 209,
+      "train_sample": {
+        "examples": 32,
+        "exact": 0.28125,
+        "operation_wer": 0.6470588235294118,
+        "raw_token_wer": 0.6470588235294118,
+        "invalid": 0.0,
+        "by_length": {
+          "one_sign": {
+            "examples": 18,
+            "exact": 0.5,
+            "wer": 0.5
+          },
+          "multiple_signs": {
+            "examples": 14,
+            "exact": 0.0,
+            "wer": 0.7272727272727273
+          }
+        },
+        "cap_hits": 0
+      },
+      "val_selection": {
+        "examples": 23,
+        "exact": 0.5217391304347826,
+        "operation_wer": 0.4666666666666667,
+        "raw_token_wer": 0.4666666666666667,
+        "invalid": 0.0,
+        "by_length": {
+          "one_sign": {
+            "examples": 17,
+            "exact": 0.7058823529411765,
+            "wer": 0.29411764705882354
+          },
+          "multiple_signs": {
+            "examples": 6,
+            "exact": 0.0,
+            "wer": 0.6923076923076923
+          }
+        },
+        "cap_hits": 0
+      },
+      "seconds": 178.18260830000509
+    },
+    "validation": {
+      "examples": 23,
+      "exact": 0.5217391304347826,
+      "operation_wer": 0.4666666666666667,
+      "raw_token_wer": 0.4666666666666667,
+      "invalid": 0.0,
+      "by_length": {
+        "one_sign": {
+          "examples": 17,
+          "exact": 0.7058823529411765,
+          "wer": 0.29411764705882354
+        },
+        "multiple_signs": {
+          "examples": 6,
+          "exact": 0.0,
+          "wer": 0.6923076923076923
+        }
+      },
+      "cap_hits": 0,
+      "seen_vocabulary_subset": {
+        "examples": 23,
+        "exact": 0.5217391304347826,
+        "operation_wer": 0.4666666666666667,
+        "raw_token_wer": 0.4666666666666667,
+        "invalid": 0.0,
+        "by_length": {
+          "one_sign": {
+            "examples": 17,
+            "exact": 0.7058823529411765,
+            "wer": 0.29411764705882354
+          },
+          "multiple_signs": {
+            "examples": 6,
+            "exact": 0.0,
+            "wer": 0.6923076923076923
+          }
+        }
+      }
+    },
+    "seconds": 366.7567450330098,
+    "linguistically_validated": false
+  },
+  "retrieval": {
+    "current_french": {
+      "examples": 23,
+      "exact": 0.30434782608695654,
+      "operation_wer": 0.6333333333333333,
+      "raw_token_wer": 0.6333333333333333,
+      "invalid": 0.0,
+      "by_length": {
+        "one_sign": {
+          "examples": 17,
+          "exact": 0.4117647058823529,
+          "wer": 0.6470588235294118
+        },
+        "multiple_signs": {
+          "examples": 6,
+          "exact": 0.0,
+          "wer": 0.6153846153846154
+        }
+      }
+    },
+    "input": {
+      "examples": 23,
+      "exact": 0.08695652173913043,
+      "operation_wer": 1.2333333333333334,
+      "raw_token_wer": 1.2333333333333334,
+      "invalid": 0.0,
+      "by_length": {
+        "one_sign": {
+          "examples": 17,
+          "exact": 0.11764705882352941,
+          "wer": 1.4705882352941178
+        },
+        "multiple_signs": {
+          "examples": 6,
+          "exact": 0.0,
+          "wer": 0.9230769230769231
+        }
+      }
+    },
+    "empty_output": {
+      "examples": 23,
+      "exact": 0.0,
+      "operation_wer": 1.0,
+      "raw_token_wer": 1.0,
+      "invalid": 1.0,
+      "by_length": {
+        "one_sign": {
+          "examples": 17,
+          "exact": 0.0,
+          "wer": 1.0
+        },
+        "multiple_signs": {
+          "examples": 6,
+          "exact": 0.0,
+          "wer": 1.0
+        }
+      }
+    }
+  },
+  "paired_counts": {
+    "both_correct": 10,
+    "context_only_correct": 0,
+    "current_only_correct": 2,
+    "both_wrong": 11
+  },
+  "reviewed": false
+}

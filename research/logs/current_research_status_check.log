@@ -1,0 +1,52 @@
+{
+  "observed_at_utc": "2026-11-17T16:01:29.939974+00:00",
+  "objective_complete": false,
+  "scientific_gates": {
+    "qualified_linguistic_reviews_present": false,
+    "france_lsf_parallel_pairs_locally_reviewed": false,
+    "france_lsf_comparison_has_any_development_exact": false,
+    "belgian_seed_study_has_any_multisign_exact": false,
+    "validated_2d_to_3d_lifting_available": false,
+    "fluent_signer_comprehension_evaluation_available": false
+  },
+  "france_lsf": {
+    "manifest_counts": {
+      "train": 39,
+      "val": 28,
+      "test": 39
+    },
+    "local_reviewed_pairs": 0,
+    "completed_model_results": {
+      "mt5-small": {
+        "examples": 28,
+        "exact": 0.0,
+        "wer": 5.948453608247423,
+        "bleu": 0.0,
+        "chrf": 4.907014881651814,
+        "cap_hits": 28,
+        "peak_cuda_mb": 743.7900390625
+      },
+      "t5-base": {
+        "examples": 28,
+        "exact": 0.0,
+        "wer": 2.350515463917526,
+        "bleu": 0.24804850601308215,
+        "chrf": 14.442430000390324,
+        "cap_hits": 0,
+        "peak_cuda_mb": 942.25732421875
+      }
+    }
+  },
+  "belgian_lsfb": {
+    "seed_count": 3,
+    "development_examples": 23,
+    "mean_operation_wer": 0.5,
+    "independent_test": false
+  },
+  "catalog_review_records": 0,
+  "library_explicit_fsl_records": 1446,
+  "migration_snapshot_matches_current_library": true,
+  "unusable_mt5_base_partial_bytes": 1747976192,
+  "interpretation": "Artifact integrity and measured failures are verified; absence of human validation cannot be supplied by software tests.",
+  "next_required_external_input": "Qualified France-LSF/Belgian LSFB review of source alignment and representation, or a newly accessible appropriately licensed verified parallel corpus."
+}

@@ -1,0 +1,29 @@
+{
+  "status_code": 200,
+  "source_file": "data/public_examples/bonjour.webm",
+  "source_sha256": "f4f0830c5eec685b41096426cc2f3af188c20ab20e434e6daf526713d9821f60",
+  "source_duration_ms": 2430,
+  "http_elapsed_seconds": 3.224,
+  "transcription": {
+    "text": "Bonjour.",
+    "language": "fr",
+    "model_id": "Systran/faster-whisper-small",
+    "model_revision": "536b0662742c02347bc0e980a01041f333bce120",
+    "device": "cuda",
+    "compute_type": "float16",
+    "segments": [
+      {
+        "start_ms": 0,
+        "end_ms": 2000,
+        "text": "Bonjour."
+      }
+    ]
+  },
+  "model_version": "fft-autocorrelation-rms-v2 + faster-whisper-small",
+  "warnings": [
+    "La hauteur est une estimation acoustique ; une voix bruitée peut être mal suivie.",
+    "Analyse émotionnelle non demandée.",
+    "La transcription est forcée en français et doit être relue avant de composer."
+  ],
+  "evaluation_scope": "one short execution smoke sample; no gold transcript review or accuracy benchmark"
+}

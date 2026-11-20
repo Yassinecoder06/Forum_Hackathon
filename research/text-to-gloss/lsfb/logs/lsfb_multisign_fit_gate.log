@@ -1,0 +1,3 @@
+`torch_dtype` is deprecated! Use `dtype` instead!
+{"step": 0, "seconds": 2.438124656677246, "train_metrics": {"examples": 49, "exact": 0.061224489795918366, "operation_wer": 0.6776859504132231, "raw_token_wer": 0.6776859504132231, "invalid": 0.0, "by_length": {"multiple_signs": {"examples": 49, "exact": 0.061224489795918366, "wer": 0.6776859504132231}}}, "cap_hits": 0}
+{"step": 100, "seconds": 60.83232641220093, "train_metrics": {"examples": 49, "exact": 0.9795918367346939, "operation_wer": 0.008264462809917356, "raw_token_wer": 0.008264462809917356, "invalid": 0.0, "by_length": {"multiple_signs": {"examples": 49, "exact": 0.9795918367346939, "wer": 0.008264462809917356}}}, "cap_hits": 0}

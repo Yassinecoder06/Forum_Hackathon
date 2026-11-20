@@ -14,6 +14,6 @@ Vérification actuelle : 65 tests API/schémas/mouvement, 18 tests de recherche,
 
 ## Repaired player
 
-`SignaCulture_Repaired_Preview.mp4` and `browser/repaired-preview.webm` are actual recordings of two real captured signs with the new articulated Noa character and dedicated clip transitions. `browser/repaired-studio.png` shows the repaired rendering at a captured signing pose. Avatar provenance and pending publication/redistribution rights are in `docs/AVATAR_PROVENANCE.md`.
+`SignaCulture_Repaired_Preview.mp4` and `browser/repaired-preview.webm` are actual recordings of two real captured signs with the new articulated Noa character and dedicated clip transitions. `browser/repaired-studio.png` shows the repaired rendering at a captured signing pose. Avatar provenance and pending publication/redistribution rights are in `docs/avatar/AVATAR_PROVENANCE.md`.
 
 Current verification: 67 API/schema/motion tests, 24 research tests, one documented strict xfail for name detection, frontend motion/IK checks, lint/build, seven live API checks and the real browser workflow. The research tab separately shows the trained CGAN's intra-sign experiment; the player does not claim validated learned co-articulation.

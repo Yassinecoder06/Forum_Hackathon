@@ -1,0 +1,7 @@
+model: google/mt5-base
+sign_language: fsl
+status: blocked_pending_verified_parallel_supervision_and_baseline
+lora_rank: 16
+precision: bfloat16
+batch_size: 1
+gradient_accumulation: 8

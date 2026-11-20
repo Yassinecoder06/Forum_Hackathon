@@ -1,0 +1,27 @@
+`torch_dtype` is deprecated! Use `dtype` instead!
+{
+  "task": "development-only post-gate evaluation; no checkpoint selection",
+  "checkpoint_selection": "train-only >=95%exact gate, first pass at100steps",
+  "metrics": {
+    "examples": 23,
+    "exact": 0.17391304347826086,
+    "operation_wer": 1.4333333333333333,
+    "raw_token_wer": 1.4333333333333333,
+    "invalid": 0.0,
+    "by_length": {
+      "one_sign": {
+        "examples": 17,
+        "exact": 0.23529411764705882,
+        "wer": 1.7058823529411764
+      },
+      "multiple_signs": {
+        "examples": 6,
+        "exact": 0.0,
+        "wer": 1.0769230769230769
+      }
+    }
+  },
+  "cap_hits": 0,
+  "source_adapter_sha256": "680def9d84007350abff9d82eaa22b2f1dac9225587ce2eb45948ca11529b835",
+  "linguistically_validated": false
+}

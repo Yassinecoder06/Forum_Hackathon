@@ -1,0 +1,25 @@
+{
+  "best_epoch": 48,
+  "epochs": 50,
+  "best_validation_rmse": 0.26754821375276505,
+  "validation_baselines": {
+    "linear": {
+      "rmse": 0.28638737248687474,
+      "mae": 0.16191161400623585,
+      "inner_boundary_rmse": 0.18232241052074513,
+      "inner_boundary_mae": 0.09564324446249597,
+      "supplied_anchor_rmse": 0.0,
+      "supplied_anchor_note": "Outer anchors are copied exactly; zero is structural, not learned continuity evidence"
+    },
+    "quintic": {
+      "rmse": 0.29985307797102156,
+      "mae": 0.16174315775592588,
+      "inner_boundary_rmse": 0.19525408061878366,
+      "inner_boundary_mae": 0.09288722040278356,
+      "supplied_anchor_rmse": 0.0,
+      "supplied_anchor_note": "Outer anchors are copied exactly; zero is structural, not learned continuity evidence"
+    }
+  },
+  "selected_deterministic_baseline": "linear",
+  "test_opened": false
+}

@@ -4,6 +4,7 @@ import { stitchAnimationPlan, libraryPreview } from "../src/utils/planStitcher";
 import { HumanoidRetargeter } from "../src/utils/retargetHumanoid";
 import { browWeights, faceCalibration, sampleFace, stabilizeRotations, hasHand } from "../src/utils/avatarPlayback";
 import { handContact, segmentDistance } from "../src/utils/handContact";
+import { interpolateJointPositions } from "../src/utils/motionInterpolator";
 import type { AnimationPlan, MotionFile } from "../src/types/contract";
 const makeClip = (x: number): MotionFile => ({
   rig_version: "signaculture-v1",
@@ -16,6 +17,24 @@ const makeClip = (x: number): MotionFile => ({
     { time_ms: 100, joints: { hips: [x + 0.1, 1, 0] } },
   ],
 });
+const handClip = makeClip(0);
+handClip.frames[0].joints.right_wrist = [.4, 1.2, .3];
+handClip.frames[0].joints.right_index_1 = [.44, 1.22, .29];
+handClip.frames[0].joints.right_index_2 = [.46, 1.24, .28];
+const originalHand = interpolateJointPositions(handClip, 0);
+for (const energyFactor of [0, 1]) {
+  const shiftedHand = interpolateJointPositions(handClip, 0, {
+    expressiveModulation: true, energyFactor,
+  });
+  assert.notDeepEqual(shiftedHand.right_wrist, originalHand.right_wrist);
+  for (const name of ["right_index_1", "right_index_2"]) {
+    for (const axis of [0, 1, 2]) {
+      const before = originalHand[name][axis] - originalHand.right_wrist[axis];
+      const after = shiftedHand[name][axis] - shiftedHand.right_wrist[axis];
+      assert(Math.abs(before - after) < 1e-9, "Audio energy preserves wrist-relative finger positions");
+    }
+  }
+}
 const a = makeClip(0),
   b = makeClip(1),
   before = JSON.stringify([a, b]);

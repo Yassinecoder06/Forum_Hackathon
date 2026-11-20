@@ -1,0 +1,9 @@
+{
+  "examples": 6,
+  "identical_sequence_seen": 1,
+  "identical_sequence_unseen": 5,
+  "all_adjacent_pairs_seen": 1,
+  "minimum_training_label_frequency": 3,
+  "review_status": "pending",
+  "interpretation": "A lexical-support diagnostic only; sequence overlap does not establish semantic alignment."
+}

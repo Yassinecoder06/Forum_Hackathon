@@ -104,15 +104,16 @@ function applyModulation(
   const centerHips = joints['hips'] || [0, 1.0, 0];
 
   for (const [name, coords] of Object.entries(joints)) {
-    // Only wrists and elbows exhibit minor expressive energy amplitude changes
-    if (name.includes('wrist') || name.includes('elbow')) {
-      const dx = coords[0] - centerHips[0];
-      const dy = coords[1] - centerHips[1];
-      const dz = coords[2] - centerHips[2];
+    const finger = /^(left|right)_(thumb|index|middle|ring|pinky)_\d+$/.exec(name);
+    const anchor = finger
+      ? joints[`${finger[1]}_wrist`]
+      : /^(left|right)_(wrist|elbow)$/.test(name) ? coords : undefined;
+    if (anchor) {
+      // Move each finger by the same displacement as its wrist.
       modulated[name] = [
-        centerHips[0] + dx * scale,
-        centerHips[1] + dy * scale,
-        centerHips[2] + dz * scale,
+        coords[0] + (anchor[0] - centerHips[0]) * (scale - 1),
+        coords[1] + (anchor[1] - centerHips[1]) * (scale - 1),
+        coords[2] + (anchor[2] - centerHips[2]) * (scale - 1),
       ];
     } else {
       modulated[name] = [coords[0], coords[1], coords[2]];

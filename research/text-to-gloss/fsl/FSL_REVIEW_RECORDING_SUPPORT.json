@@ -1,0 +1,31 @@
+{
+  "combined_diagnostic_only": {
+    "rows": 61,
+    "recordings": 3,
+    "plain_occurrences": 339,
+    "distinct_labels": 231,
+    "labels_in_at_least_two_recordings": 15,
+    "distinct_adjacent_plain_pairs": 242,
+    "adjacent_pairs_in_at_least_two_recordings": 1
+  },
+  "by_convention": {
+    "SUD-FSL-STK-FORM": {
+      "rows": 22,
+      "recordings": 2,
+      "plain_occurrences": 171,
+      "distinct_labels": 125,
+      "labels_in_at_least_two_recordings": 7,
+      "distinct_adjacent_plain_pairs": 127,
+      "adjacent_pairs_in_at_least_two_recordings": 1
+    },
+    "UD-FSL-STK-FORM": {
+      "rows": 39,
+      "recordings": 1,
+      "plain_occurrences": 168,
+      "distinct_labels": 114,
+      "labels_in_at_least_two_recordings": 0,
+      "distinct_adjacent_plain_pairs": 115,
+      "adjacent_pairs_in_at_least_two_recordings": 0
+    }
+  }
+}

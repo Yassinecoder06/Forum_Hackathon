@@ -183,6 +183,17 @@ export class HumanoidRetargeter {
       const points = ["wrist", "index_1", "middle_1", "pinky_1"].map(
         (n) => joints[prefix + "_" + n],
       );
+      const trackedHand = points.every(Boolean);
+      if (!trackedHand) {
+        // Without a hand observation, continue the forearm instead of leaving
+        // the authored bind hand (often a clasp/fist) at the wrist. Straighten
+        // the four fingers so the fallback reads as a neutral hand, not a sign.
+        const handPosition = hand.getWorldPosition(new THREE.Vector3());
+        const forearm = handPosition.sub(lower.getWorldPosition(new THREE.Vector3()));
+        this.aim(side + "Hand", forearm);
+        for (const finger of fingers.slice(1)) for (let i = 1; i <= 3; i++)
+          this.aim(`${side}Hand${finger}${i}`, forearm);
+      }
       const palmBind = this.palms.get(side),
         handBind = this.binds.get(side + "Hand");
       if (points.every(Boolean) && palmBind && handBind) {
@@ -263,7 +274,10 @@ export class HumanoidRetargeter {
     for (const side of ["Left", "Right"]) {
       const indexes = names.flatMap((n, i) => n.startsWith(side + "Hand") ? [i] : []);
       const rest = indexes.map((i) => this.binds.get(names[i])!.local.clone());
-      const track = stabilizeRotations(all.map((f, i) => ({ time: f.time, rotations: indexes.map((j) => f.rotations[j]), valid: hasHand(motion.frames[i], side.toLowerCase()) })), rest);
+      // `all` already holds the forearm-aligned fallback for untracked frames.
+      // Use it as the per-frame neutral target instead of the authored bind pose.
+      const neutral = all.map((f) => indexes.map((j) => f.rotations[j].clone()));
+      const track = stabilizeRotations(all.map((f, i) => ({ time: f.time, rotations: indexes.map((j) => f.rotations[j]), valid: hasHand(motion.frames[i], side.toLowerCase()) })), rest, neutral);
       track.frames.forEach((f, i) => indexes.forEach((j, k) => { all[i].rotations[j] = f.rotations[k]; }));
       states[side] = track.states.map((state, i) => state === "observed" && motion.frames[i].playback_origin && motion.frames[i].playback_origin !== "source" ? "interpolated" : state);
       rejected += track.rejected;

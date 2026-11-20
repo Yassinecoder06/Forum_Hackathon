@@ -1,0 +1,47 @@
+{
+  "audit_date": "2026-11-17",
+  "scope": "bounded metadata and paper inspection, not an exhaustive census",
+  "sources": [
+    {
+      "source": "pedroodb/glosl-lsfb",
+      "url": "https://huggingface.co/datasets/pedroodb/glosl-lsfb",
+      "sign_language": "sfb",
+      "revision": "754fc076b3239c04dbaf8c63d0c8b6df92d0de5a",
+      "license_declaration": "cc-by-nc-sa-4.0",
+      "license_independently_validated": false,
+      "downloaded": "README, annotation CSV, card only via Colab",
+      "original_source": "LSFB-CONT",
+      "rows": 5436,
+      "nonempty_gloss_targets": 0,
+      "gold_pairs_admitted": 0,
+      "asset_downloaded": false
+    },
+    {
+      "source": "Matignon-LSF",
+      "url": "https://www.sign-lang.uni-hamburg.de/lrec/pub/24024.pdf",
+      "sign_language": "fsl",
+      "downloaded": "paper only via Colab",
+      "evidence": "2024 paper: subtitles aligned to speech, not yet signing",
+      "gold_pairs_admitted": 0,
+      "current_annotation_release_verified": false
+    },
+    {
+      "source": "STK LSF motion capture",
+      "url": "https://www.sign-lang.uni-hamburg.de/lrec/pub/24031.pdf",
+      "sign_language": "fsl",
+      "downloaded": "paper only via Colab",
+      "evidence": "2024 paper: linguistic annotation future work",
+      "gold_pairs_admitted": 0,
+      "current_annotation_release_verified": false
+    },
+    {
+      "source": "40breves",
+      "url": "https://www.sign-lang.uni-hamburg.de/lrec/data/40breves.html",
+      "sign_language": "fsl",
+      "downloaded": "no archive assets",
+      "representation": "video alignments / AZee leads, not verified flat gloss",
+      "gold_pairs_admitted": 0,
+      "current_annotation_release_verified": false
+    }
+  ]
+}

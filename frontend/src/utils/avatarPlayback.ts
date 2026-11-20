@@ -6,7 +6,12 @@ export type HandState = "observed" | "interpolated" | "held" | "untracked";
 export type RotationFrame = { time: number; rotations: THREE.Quaternion[]; valid: boolean };
 
 /** Native capture files remain immutable. These are derived, timestamp-based tracks. */
-export function stabilizeRotations(frames: RotationFrame[], rest: THREE.Quaternion[]) {
+export function stabilizeRotations(
+  frames: RotationFrame[],
+  rest: THREE.Quaternion[],
+  /** Per-frame neutral pose. Invalid frames fade to this instead of the authored bind pose. */
+  neutral?: (THREE.Quaternion[] | undefined)[],
+) {
   const observed = frames.map((f) => ({ ...f, rotations: f.rotations.map((q) => q.clone()) }));
   let rejected = 0;
   // Remove only isolated reversals with agreeing neighbours, never sustained gestures.
@@ -48,16 +53,22 @@ export function stabilizeRotations(frames: RotationFrame[], rest: THREE.Quaterni
       if (a && b && b.time - a.time <= HAND_GAP_MS) {
         rotations.forEach((q, j) => q.slerpQuaternions(a.rotations[j], b.rotations[j], (f.time - a.time) / (b.time - a.time)));
         states.push("interpolated");
-      } else {
-        // Bounded fade to bind rest; never claim a long occlusion was tracked.
-        const closest = !a ? b : !b ? a : f.time - a.time < b.time - f.time ? a : b;
-        const age = closest ? Math.abs(f.time - closest.time) : Infinity;
-        // Reach rest at the middle of a long gap. Switching the nearest observed
-        // neighbour must not create a discontinuity when the two poses differ.
-        const window = a && b ? Math.min(320, (b.time - a.time) / 2) : 320;
+      } else if (a) {
+        // Hold only a past observation, then fade to a per-frame neutral pose.
+        // Never borrow a future hand pose: that shows a sign before it happens.
+        const age = f.time - a.time;
+        const window = b ? Math.min(320, (b.time - a.time) / 2) : 320;
         const fade = THREE.MathUtils.smoothstep(age, Math.min(80, window / 4), window);
-        rotations.forEach((q, j) => q.copy(closest?.rotations[j] || rest[j]).slerp(rest[j], fade));
+        rotations.forEach((q, j) => {
+          const target = neutral?.[i]?.[j] ?? rest[j];
+          q.copy(a.rotations[j]).slerp(target, fade);
+        });
         states.push(fade < 1 ? "held" : "untracked");
+      } else {
+        // No past observation (start of clip or first appearance later):
+        // use the neutral hand rather than previewing the next observed pose.
+        rotations.forEach((q, j) => q.copy(neutral?.[i]?.[j] ?? rest[j]));
+        states.push("untracked");
       }
     }
     return { time: f.time, rotations, valid: f.valid };

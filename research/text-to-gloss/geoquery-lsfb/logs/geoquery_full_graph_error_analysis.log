@@ -1,0 +1,12 @@
+{
+  "examples": 37,
+  "error_categories": {
+    "Repeated articulation ID": 15,
+    "Dangling edge index": 21,
+    "valid": 1
+  },
+  "serialized_t5_subtoken_error": 0.7519569471624267,
+  "reference_subtokens": 12264,
+  "subtoken_edits": 9222,
+  "interpretation": "representation-level edit diagnostic,not glossWERor semantic accuracy; every malformed output retained"
+}

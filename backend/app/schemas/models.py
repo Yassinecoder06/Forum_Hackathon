@@ -81,6 +81,7 @@ class AudioFeatures(ContractModel):
     emotion_hypothesis: dict[str, Annotated[float, Field(ge=0, le=1, allow_inf_nan=False)]] | None
     model_version: str
     warnings: list[str]
+    transcription: "AudioTranscript | None" = None
 
 
     @model_validator(mode="after")
@@ -92,7 +93,36 @@ class AudioFeatures(ContractModel):
             if frame.end_ms > self.duration_ms:
                 raise ValueError("Audio frame exceeds audio duration_ms")
             previous_end = frame.end_ms
+        if self.transcription:
+            for segment in self.transcription.segments:
+                if segment.end_ms > self.duration_ms:
+                    raise ValueError("Transcript segment exceeds audio duration_ms")
         return self
+
+
+class TranscriptSegment(ContractModel):
+    start_ms: int = Field(ge=0)
+    end_ms: int = Field(gt=0)
+    text: str = Field(max_length=2000)
+
+    @model_validator(mode="after")
+    def validate_interval(self):
+        if self.start_ms >= self.end_ms:
+            raise ValueError("Transcript segment start_ms must precede end_ms")
+        return self
+
+
+class AudioTranscript(ContractModel):
+    text: str = Field(max_length=10000)
+    language: Literal["fr"]
+    model_id: str
+    model_revision: str
+    device: Literal["cuda", "cpu"]
+    compute_type: str
+    segments: list[TranscriptSegment]
+
+
+AudioFeatures.model_rebuild()
 
 
 class AnimationPlan(ContractModel):

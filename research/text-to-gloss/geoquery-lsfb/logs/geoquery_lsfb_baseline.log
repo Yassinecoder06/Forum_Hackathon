@@ -1,0 +1,190 @@
+{
+  "counts": {
+    "train": 203,
+    "val": 47
+  },
+  "sign_language": "LSFB",
+  "source_french": "DeepL translation from original English per sourceREADME",
+  "signed_originals": "human native signer recording and HamNoSys transcription per source",
+  "local_review": "pending",
+  "augmentation_used": false,
+  "split": "template-type disjoint; verified zero entity-normalizedFunQLstructure overlap",
+  "single_signer": "no signer-independent claim",
+  "train_hamnosys_types": 255,
+  "validation_articulation_occurrences": 564,
+  "validation_unseen_hamnosys_occurrences": 48,
+  "conflicting_french_groups": [
+    {
+      "split": "train",
+      "conflicting_input_groups": 14
+    },
+    {
+      "split": "val",
+      "conflicting_input_groups": 3
+    }
+  ],
+  "graphs_checked": 250,
+  "invalid_graphs": [
+    {
+      "split": "train",
+      "id": "34",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "train",
+      "id": "41",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "train",
+      "id": "48",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "train",
+      "id": "291",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "train",
+      "id": "346",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "train",
+      "id": "401",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "train",
+      "id": "464",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "train",
+      "id": "465",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "train",
+      "id": "466",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "train",
+      "id": "467",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "train",
+      "id": "469",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "train",
+      "id": "470",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "train",
+      "id": "471",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "train",
+      "id": "479",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "train",
+      "id": "489",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "train",
+      "id": "683",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "train",
+      "id": "780",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "val",
+      "id": "78",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "val",
+      "id": "85",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "val",
+      "id": "94",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "val",
+      "id": "474",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "val",
+      "id": "499",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "val",
+      "id": "513",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "val",
+      "id": "526",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "val",
+      "id": "531",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "val",
+      "id": "541",
+      "error": "Dangling temporal relation"
+    },
+    {
+      "split": "val",
+      "id": "550",
+      "error": "Dangling temporal relation"
+    }
+  ],
+  "graphs_validated": 223,
+  "metrics": {
+    "char_tfidf": {
+      "examples": 47,
+      "serialized_graph_exact": 0.0,
+      "triple_set_exact": 0.0,
+      "triple_micro_f1": 0.22498962224989622,
+      "articulation_micro_f1": 0.36663611365719523,
+      "invalid_reference_graphs": 10,
+      "invalid_prediction_graphs": 3,
+      "all_graphs_structurally_valid": false,
+      "interpretation": "lexical/graph overlap only; not signing comprehension"
+    },
+    "word_tfidf": {
+      "examples": 47,
+      "serialized_graph_exact": 0.0,
+      "triple_set_exact": 0.0,
+      "triple_micro_f1": 0.22673709874034945,
+      "articulation_micro_f1": 0.3534715960324617,
+      "invalid_reference_graphs": 10,
+      "invalid_prediction_graphs": 2,
+      "all_graphs_structurally_valid": false,
+      "interpretation": "lexical/graph overlap only; not signing comprehension"
+    }
+  },
+  "production_ready": false
+}

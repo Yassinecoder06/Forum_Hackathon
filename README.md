@@ -12,18 +12,35 @@ La vidéo ci-dessous montre la vidéo source et le squelette suivi. Cliquez sur 
 
 [Ouvrir ou télécharger la vidéo MP4](artifacts/demos/comparaison_video_squelette.mp4).
 
+## Organisation du dépôt
+
+| Dossier | Contenu |
+|---|---|
+| `backend/`, `frontend/`, `webcam/`, `site/` | Applications : API, Studio, webcam, vitrine |
+| `motion_worker/` | Worker GPU hôte (capture Sapiens + HaMeR, transitions apprises) |
+| `integration/`, `deployment/`, `scripts/`, `e2e/` | Pipeline gloses → poses, déploiement, outils, tests navigateur |
+| `data/` | Catalogue SQLite, inventaires de sources, exemples publics |
+| [`research/`](research/README.md) | **Toute la recherche** : code, expériences, résultats par piste, état actuel |
+| [`docs/`](docs/README.md) | Documentation produit et technique |
+
+Les sites de comparaison (ports 8094–8105) sont dans le dossier voisin `../Forum_Tests` ; leur documentation est dans [docs/test-sites](docs/test-sites/README.md).
+
 ## Essayer
+
+**Docker** : suivez le [guide Docker](deployment/DOCKER.md) pour lancer le Studio et l’API avec `docker compose up --build --detach --wait`, puis ouvrez **http://127.0.0.1:8088/studio/**.
 
 ```bash
 make setup
-python3 scripts/setup-avatar.py   # personnage local pour revue, voir docs/AVATAR_PROVENANCE.md
+python3 scripts/setup-avatar.py   # personnage local pour revue, voir docs/avatar/AVATAR_PROVENANCE.md
 bash scripts/setup-models.sh all   # capture MediaPipe et emotion2vec local, téléchargements explicites
 make dev
 ```
 
 Ouvrir **http://127.0.0.1:5173**. Dans Studio, essayer « Bonjour ». Bibliothèque permet de sélectionner un mouvement, de comparer sa vidéo source et de télécharger un aperçu WebM. Capturer accepte une vidéo autorisée, un JSON de mouvements ou un export de landmarks Animics. Recherche affiche les expériences terminées et permet d’interroger les checkpoints locaux.
 
-La session actuelle contient **1 447 mouvements réels** : 1 007 captures Dicta-Sign acceptées et les 440 mouvements précédents. **Les 1 025 vidéos LSF publiques du portail Dicta-Sign ont été téléchargées et capturées** ; 18 restent hors lookup pour revue du suivi. Le [pipeline Dicta-Sign → glosses → poses](docs/DICTASIGN_PIPELINE.md) fournit les commandes, les résultats vérifiés et le diagramme. Dans Studio, essayer **Bonjour merci**, puis ouvrir **Exporter la chaîne glosses → poses** pour obtenir un `.pose` standard et une vidéo squelette via le véritable moteur upstream.
+Pour ajouter la transcription française locale, téléchargez le modèle public dans Colab puis transférez-le au PC comme décrit dans [ASR_MODEL_SETUP.md](research/audio/ASR_MODEL_SETUP.md). Dans Studio, importer un audio/une vidéo affiche le texte reconnu comme brouillon ; le texte saisi ne change qu’après avoir choisi « Utiliser comme brouillon français ».
+
+La session actuelle contient **1 447 mouvements réels** : 1 007 captures Dicta-Sign acceptées et les 440 mouvements précédents. **Les 1 025 vidéos LSF publiques du portail Dicta-Sign ont été téléchargées et capturées** ; 18 restent hors lookup pour revue du suivi. Le [pipeline Dicta-Sign → glosses → poses](docs/data-pipeline/DICTASIGN_PIPELINE.md) fournit les commandes, les résultats vérifiés et le diagramme. Dans Studio, essayer **Bonjour merci**, puis ouvrir **Exporter la chaîne glosses → poses** pour obtenir un `.pose` standard et une vidéo squelette via le véritable moteur upstream.
 
 ## Voir la bibliothèque des mots et signes
 
@@ -51,8 +68,9 @@ L’inventaire contient 447 concepts France-LSF avec licences par fichier, créd
 
 - Indexation de concepts avec lemmatisation française spaCy lorsqu’installée, expressions les plus longues et inconnus explicites. Ce lookup ne traduit pas la grammaire LSF.
 - Extraction MediaPipe du corps, des doigts et de quelques mesures faciales. Les occultations restent visibles ; profondeur et retargeting sont approximatifs.
-- Avatar articulé Three.js : IK des bras, orientation des paumes, os des doigts, longueurs préservées. Liaisons quintiques de 333 ms entre clips, timeline, comparaison avec la source et vrai export WebM avec filigrane et attribution. Le modèle local de revue et ses limites sont décrits dans [la provenance](docs/AVATAR_PROVENANCE.md).
+- Avatar articulé Three.js : IK des bras, orientation des paumes, os des doigts, longueurs préservées. Liaisons quintiques de 333 ms entre clips, timeline, comparaison avec la source et vrai export WebM avec filigrane et attribution. Le modèle local de revue et ses limites sont décrits dans [la provenance](docs/avatar/AVATAR_PROVENANCE.md).
 - Décodage audio/vidéo FFmpeg, estimation F0, RMS et pauses. Synchronisation approximative aux portions voisées, sans alignement mot à mot.
+- Transcription française locale faster-whisper, proposée comme brouillon éditable avant la composition de la séquence.
 - Inférence locale emotion2vec, affichée comme hypothèse. Les signaux faciaux capturés priment sur la modulation expressive expérimentale.
 - Catalogue SQLite séparant vidéos lexicales, annotations et paires de recherche ; provenance, licences, splits et évaluations conservés.
 
@@ -67,15 +85,15 @@ make test
 CHROME_PATH=/chemin/vers/chrome npm --prefix e2e test
 CHROME_PATH=/chemin/vers/chrome npm --prefix e2e run test:dictasign
 # Environnement ML séparé, avec dépendances training installées :
-.worktrees/wt-codex2/training/.venv-train/bin/python -m pytest training/test_catalog.py training/test_adaptation.py
+.worktrees/wt-codex2/training/.venv-train/bin/python -m pytest research/code/training/test_catalog.py research/code/training/test_adaptation.py
 ```
 
-76 tests API/schémas/mouvement et 24 tests de recherche passent, avec des vérifications frontend des transitions et du rig. Les [améliorations mesurées de l’avatar](docs/AVATAR_PLAYBACK.md) stabilisent les doigts, corrigent l’échelle des sourcils et limitent certaines collisions ; les cas résiduels sont documentés. Un test strictement marqué xfail conserve le défaut connu de détection du prénom Alice. Le contrôle navigateur couvre composition, recherche temporelle, téléchargement réel, audio, import, persistance, mobile et erreurs réseau. Les [captures et aperçu vidéo](artifacts/README.md) documentent le logiciel exécuté.
+La vérification locale du 17 novembre 2026 : `make test` passe 25 tests de schéma, 76 tests API/backend (un ignoré), 15 tests de capture de mouvement, les checks frontend, ESLint et le build production. Le smoke Playwright complet passe également, y compris la chaîne parole française → brouillon modifiable → mouvement avatar et export WebM. Un avertissement de dépréciation Starlette et un avertissement Vite sur la taille du chunk restent visibles. Les [améliorations mesurées de l’avatar](docs/avatar/AVATAR_PLAYBACK.md) stabilisent les doigts, corrigent l’échelle des sourcils et limitent certaines collisions ; les cas résiduels sont documentés. Le test xfail conserve le défaut connu de détection du prénom Alice. Les [captures et aperçu vidéo](artifacts/README.md) documentent le logiciel exécuté.
 
 Les modèles `.models/`, environnements, checkpoints et captures `.runtime/` sont ignorés par Git. Aucun téléchargement automatique n’a lieu lors d’une requête API. Le modèle français optionnel se configure dans [backend/README.md](backend/README.md).
 
-Développement : exactement deux worktrees, racine `main` pour le lead et `.worktrees/wt-codex2` pour `codex2`, GPT-6.1 Sol medium. Voir [l’organisation](docs/team_worktree_organization.md). L’API reste locale : le système de revue n’est pas un service d’authentification. La publication d’une traduction reste bloquée sans validation réelle.
+Développement : exactement deux worktrees, racine `main` pour le lead et `.worktrees/wt-codex2` pour `codex2`, GPT-6.1 Sol medium. Voir [l’organisation](docs/planning/team_worktree_organization.md). L’API reste locale : le système de revue n’est pas un service d’authentification. La publication d’une traduction reste bloquée sans validation réelle.
 
 ## Réparation après revue du papier
 
-Le [diagnostic](research/FAILURE_ANALYSIS_AND_REPAIR.md) distingue les erreurs du prototype des composants manquants. Les fixtures synthétiques sont exclues du lookup normal ; les clips réels conservent leurs deux extrémités et disposent d’une liaison de 333 ms ; le personnage est articulé avec IK et doigts. Le [CGAN entraîné](research/TRANSITION_REPORT.md) améliore légèrement la reconstruction intra-signe, sans démontrer la coarticulation inter-signes. Les données originales du papier et la validation linguistique restent manquantes.
+Le [diagnostic](research/FAILURE_ANALYSIS_AND_REPAIR.md) distingue les erreurs du prototype des composants manquants. Les fixtures synthétiques sont exclues du lookup normal ; les clips réels conservent leurs deux extrémités et disposent d’une liaison de 333 ms ; le personnage est articulé avec IK et doigts. Le [CGAN entraîné](research/motion/TRANSITION_REPORT.md) améliore légèrement la reconstruction intra-signe, sans démontrer la coarticulation inter-signes. Les données originales du papier et la validation linguistique restent manquantes.

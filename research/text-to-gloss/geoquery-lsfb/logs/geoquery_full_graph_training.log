@@ -1,0 +1,98 @@
+`torch_dtype` is deprecated! Use `dtype` instead!
+training 1 20 0.9375
+training 1 40 0.97265625
+{"epoch": 1, "step": 47, "train_loss": 0.8265052713373656, "validation_token_loss": 2.1156216874592304, "seconds": 28.8566312789917}
+training 2 60 0.6640625
+training 2 80 0.365234375
+{"epoch": 2, "step": 94, "train_loss": 0.6201906922043011, "validation_token_loss": 2.1408922328563276, "seconds": 57.45114040374756}
+training 3 100 0.1552734375
+training 3 120 0.58984375
+training 3 140 1.03125
+{"epoch": 3, "step": 141, "train_loss": 0.5555485551075269, "validation_token_loss": 2.152498467949894, "seconds": 85.73140859603882}
+training 4 160 0.431640625
+training 4 180 0.2470703125
+{"epoch": 4, "step": 188, "train_loss": 0.5089596984206989, "validation_token_loss": 2.2346478864715835, "seconds": 113.76063680648804}
+decoded 1 valid False
+decoded 2 valid False
+decoded 3 valid False
+decoded 4 valid False
+decoded 5 valid False
+decoded 6 valid False
+decoded 7 valid False
+decoded 8 valid False
+decoded 9 valid False
+decoded 10 valid False
+decoded 11 valid False
+decoded 12 valid False
+decoded 13 valid False
+decoded 14 valid False
+decoded 15 valid False
+decoded 16 valid False
+decoded 17 valid False
+decoded 18 valid False
+decoded 19 valid False
+decoded 20 valid False
+decoded 21 valid False
+decoded 22 valid False
+decoded 23 valid False
+decoded 24 valid False
+decoded 25 valid False
+decoded 26 valid False
+decoded 27 valid False
+decoded 28 valid False
+decoded 29 valid False
+decoded 30 valid False
+decoded 31 valid False
+decoded 32 valid True
+decoded 33 valid False
+decoded 34 valid False
+decoded 35 valid False
+decoded 36 valid False
+decoded 37 valid False
+{
+  "status": "complete",
+  "metrics": {
+    "examples": 37,
+    "exact_graphs": 0,
+    "graph_exact": 0.0,
+    "valid_graphs": 1,
+    "invalid_graphs": 36,
+    "triple_micro_f1": 0.02490421455938697,
+    "invalid_outputs": "score as empty predicted triple set; kept in denominator and logs"
+  },
+  "cap_hits": 0,
+  "baselines_same_clean_split": {
+    "char_tfidf": {
+      "examples": 37,
+      "serialized_graph_exact": 0.0,
+      "triple_set_exact": 0.0,
+      "triple_micro_f1": 0.2296103896103896,
+      "articulation_micro_f1": 0.3652762119503946,
+      "invalid_reference_graphs": 0,
+      "invalid_prediction_graphs": 0,
+      "all_graphs_structurally_valid": true,
+      "interpretation": "lexical/graph overlap only; not signing comprehension"
+    },
+    "word_tfidf": {
+      "examples": 37,
+      "serialized_graph_exact": 0.0,
+      "triple_set_exact": 0.0,
+      "triple_micro_f1": 0.22035573122529645,
+      "articulation_micro_f1": 0.33514689880304677,
+      "invalid_reference_graphs": 0,
+      "invalid_prediction_graphs": 0,
+      "all_graphs_structurally_valid": true,
+      "interpretation": "lexical/graph overlap only; not signing comprehension"
+    }
+  },
+  "selected": {
+    "epoch": 1,
+    "step": 47,
+    "train_loss": 0.8265052713373656,
+    "validation_token_loss": 2.1156216874592304,
+    "seconds": 28.8566312789917
+  },
+  "seconds": 236.4754786491394,
+  "peak_cuda_mb": 772.462890625,
+  "linguistically_validated": false
+}

@@ -1,0 +1,37 @@
+{
+  "sign_language": "sfb",
+  "columns": [
+    "id",
+    "split",
+    "text",
+    "gloss",
+    "gloss_type",
+    "signer",
+    "start",
+    "end",
+    "fps",
+    "n_frames",
+    "video_ref",
+    "pose_file",
+    "video_file"
+  ],
+  "counts": {
+    "rows": 5436,
+    "nonempty_text": 5436,
+    "nonempty_gloss": 0,
+    "nonempty_pairs": 0
+  },
+  "split_counts": {
+    "test": 805,
+    "train": 4476,
+    "dev": 155
+  },
+  "gloss_types": {
+    "(empty)": 5436
+  },
+  "sha256": "e6906276c85eb6835daa11f9124da1a2647035cd94043cb5c38fea7e59a31596",
+  "language_evidence": "explicit source declaration; record labels checked when present",
+  "gold_supervision_verified": false,
+  "training_admission": "blocked pending provenance, annotation and alignment review",
+  "missing_gloss_column": false
+}

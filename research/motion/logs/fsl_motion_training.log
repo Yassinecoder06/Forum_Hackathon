@@ -1,0 +1,151 @@
+reconstruction 1 0.24682846665382385
+reconstruction 2 0.24701321125030518
+reconstruction 3 0.2470361739397049
+reconstruction 4 0.24692411720752716
+reconstruction 5 0.24663406610488892
+reconstruction 6 0.2468271404504776
+reconstruction 7 0.2468893975019455
+reconstruction 8 0.24668417870998383
+reconstruction 9 0.24729949235916138
+reconstruction 10 0.24765078723430634
+reconstruction 11 0.2470463216304779
+reconstruction 12 0.2486417144536972
+reconstruction 13 0.24770107865333557
+adversarial 1 0.24682874977588654
+adversarial 2 0.24704347550868988
+adversarial 3 0.247087299823761
+adversarial 4 0.24703902006149292
+adversarial 5 0.24682556092739105
+adversarial 6 0.247208371758461
+adversarial 7 0.24721844494342804
+adversarial 8 0.2472754567861557
+adversarial 9 0.24777384102344513
+adversarial 10 0.2481871396303177
+adversarial 11 0.24825222790241241
+adversarial 12 0.25016674399375916
+adversarial 13 0.24902522563934326
+full 1 0.24686868488788605
+full 2 0.24693506956100464
+full 3 0.24704597890377045
+full 4 0.24691951274871826
+full 5 0.2467418909072876
+full 6 0.24712568521499634
+full 7 0.2469022125005722
+full 8 0.24709448218345642
+full 9 0.24773260951042175
+full 10 0.24752604961395264
+full 11 0.24791055917739868
+full 12 0.24945731461048126
+full 13 0.24827787280082703
+{
+  "task": "2D continuous-signing masked-motion inbetweening; not lexical coarticulation",
+  "sign_language": "fsl",
+  "seed": 71,
+  "device": "cuda",
+  "peak_cuda_mb": 62.111328125,
+  "seconds": 3.969465970993042,
+  "counts": {
+    "train": 125,
+    "val": 224,
+    "test": 198
+  },
+  "metrics": {
+    "linear": {
+      "mpjpe_2d": 0.19520415365695953,
+      "wrist_error": 0.1832769215106964,
+      "fingertip_error": 0.3429886996746063,
+      "hand_joint_error": 0.32166653871536255,
+      "invalid_fraction": 0.16884173452854156,
+      "velocity_error": 1.0240689516067505,
+      "acceleration_error": 28.387283325195312,
+      "jerk_error": 1219.981201171875,
+      "boundary_velocity_error": 1.973685622215271,
+      "projected_bone_error": 0.07330121845006943
+    },
+    "hermite": {
+      "mpjpe_2d": 0.2671803832054138,
+      "wrist_error": 0.15193554759025574,
+      "fingertip_error": 0.37206342816352844,
+      "hand_joint_error": 0.35664036870002747,
+      "invalid_fraction": 0.16884173452854156,
+      "velocity_error": 1.3498504161834717,
+      "acceleration_error": 31.613277435302734,
+      "jerk_error": 1183.9942626953125,
+      "boundary_velocity_error": 2.3621866703033447,
+      "projected_bone_error": 0.1630173921585083
+    },
+    "reconstruction": {
+      "mpjpe_2d": 0.1943078637123108,
+      "wrist_error": 0.18374237418174744,
+      "fingertip_error": 0.34283745288848877,
+      "hand_joint_error": 0.3212873935699463,
+      "invalid_fraction": 0.16884173452854156,
+      "velocity_error": 1.0304142236709595,
+      "acceleration_error": 28.62151527404785,
+      "jerk_error": 1227.2808837890625,
+      "boundary_velocity_error": 1.9954376220703125,
+      "projected_bone_error": 0.07341185957193375
+    },
+    "adversarial": {
+      "mpjpe_2d": 0.194355309009552,
+      "wrist_error": 0.18397507071495056,
+      "fingertip_error": 0.34290242195129395,
+      "hand_joint_error": 0.3214823007583618,
+      "invalid_fraction": 0.16884173452854156,
+      "velocity_error": 1.0299683809280396,
+      "acceleration_error": 28.610862731933594,
+      "jerk_error": 1227.1231689453125,
+      "boundary_velocity_error": 1.9951257705688477,
+      "projected_bone_error": 0.07352560758590698
+    },
+    "full": {
+      "mpjpe_2d": 0.19427593052387238,
+      "wrist_error": 0.18400508165359497,
+      "fingertip_error": 0.3427146375179291,
+      "hand_joint_error": 0.3213893473148346,
+      "invalid_fraction": 0.16884173452854156,
+      "velocity_error": 1.0288751125335693,
+      "acceleration_error": 28.567359924316406,
+      "jerk_error": 1225.4141845703125,
+      "boundary_velocity_error": 1.9923094511032104,
+      "projected_bone_error": 0.07324107736349106
+    }
+  },
+  "signer_disjoint": "not established; source videos disjoint",
+  "test_tuning": false,
+  "data_manifest": {
+    "sign_language": "fsl",
+    "fps": 24,
+    "groups": {
+      "train": [
+        "RkcVPf-vUy0",
+        "S__4L14HOkw",
+        "WbhiW2FMl-g"
+      ],
+      "val": [
+        "5E7GtcKwDQM",
+        "NVNBYW2oKwA"
+      ],
+      "test": [
+        "CpTUAAwPC9k",
+        "WQErptFw21c"
+      ]
+    },
+    "counts": {
+      "train": 125,
+      "val": 224,
+      "test": 198
+    },
+    "sha256": {
+      "train": "e63fa43060e0d07f9ad87a8a39b7d2906fd6811cdba92870e7f4b4666c813dd0",
+      "val": "1409e4107e6d66b9fe32241b4e15d2cc28f563a03bf763e1a51a62bbec2eef74",
+      "test": "b2a9b590e85c5c9c3cdc2a4d0823fef4048e49172024d6fa9dabe9c86d4be2e4"
+    },
+    "limitations": [
+      "body availability substituted explicitly; no body confidence available",
+      "2D coordinates; unknown signer identity",
+      "only seven convenience-selected records; official source-video splits retained",
+      "missing embedded signing-language labels; metadata joins checked"
+    ]
+  }
+}

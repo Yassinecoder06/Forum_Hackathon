@@ -1,0 +1,20 @@
+{
+  "language": "LSFB",
+  "input_provenance": "DeepL machine translated French",
+  "target_provenance": "original author transcription of human signing; no local approval",
+  "label_type": "multilinear graph with HamNoSys; not flat gloss",
+  "synthetic_augmentation_used": false,
+  "source_commit": "879731568a5cd93177d11bf742740b187176c99a",
+  "license": "GPL-2.0 per original release",
+  "counts": {
+    "train": 186,
+    "val": 37,
+    "quarantine": 27
+  },
+  "files": {
+    "train.jsonl": "8e64c73e70718262fda95e2eda339631e2fd6451017eeb7c8688011661d6d547",
+    "val.jsonl": "d1a05884d2b3f184c0e103b3aa3b9348552e34d2c02844094d28a05920912535",
+    "quarantine.jsonl": "4a6177444dedd353c079f490aba5f3efd5a35b39f202705ea9a67c655d1ef436"
+  },
+  "no_automatic_repairs": true
+}

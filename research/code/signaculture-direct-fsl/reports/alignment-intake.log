@@ -1,0 +1,21 @@
+{
+  "by_split": {
+    "train": {
+      "items": 22,
+      "unreviewed": 22
+    },
+    "val": {
+      "items": 4,
+      "unreviewed": 4
+    },
+    "test": {
+      "items": 4,
+      "unreviewed": 4
+    },
+    "new_test": {
+      "items": 4,
+      "unreviewed": 4
+    }
+  },
+  "interval_candidates": 0
+}

@@ -105,6 +105,10 @@ def create_app(frontend=None, username=None, password=None):
     app.mount('/api', api)
     app.mount('/studio', SPAFiles(directory=frontend_dir, html=True), name='studio')
 
+    webcam_dir = ROOT / 'webcam/dist'
+    if (webcam_dir / 'index.html').is_file():
+        app.mount('/webcam', StaticFiles(directory=webcam_dir, html=True), name='webcam')
+
     diagrams_dir = ROOT / 'docs/diagrams'
     if diagrams_dir.is_dir():
         app.mount('/diagrams', StaticFiles(directory=diagrams_dir), name='diagrams')

@@ -1,0 +1,43 @@
+You are using the default legacy behaviour of the <class 'transformers.models.t5.tokenization_t5.T5Tokenizer'>. This is expected, and simply means that the `legacy` (previous) behavior will be used so nothing changes for you. If you want to use the new behaviour, set `legacy=False`. This should only be set if you understand what it means, and thoroughly read the reason why this was added as explained in https://github.com/huggingface/transformers/pull/24565
+`torch_dtype` is deprecated! Use `dtype` instead!
+{"epoch": 1, "step": 5, "train_loss": 28.552884615384617, "validation_loss": 18.566786779324055, "seconds": 8.740942478179932}
+{"epoch": 2, "step": 10, "train_loss": 25.4375, "validation_loss": 18.190357852882705, "seconds": 13.765591621398926}
+{"epoch": 3, "step": 15, "train_loss": 26.70673076923077, "validation_loss": 17.760623757455267, "seconds": 18.889864206314087}
+{"epoch": 4, "step": 20, "train_loss": 25.732371794871796, "validation_loss": 17.24782554671968, "seconds": 23.916133403778076}
+{"epoch": 5, "step": 25, "train_loss": 23.302884615384617, "validation_loss": 16.323558648111334, "seconds": 28.933747053146362}
+{"epoch": 6, "step": 30, "train_loss": 20.352564102564102, "validation_loss": 15.446259940357853, "seconds": 33.99261736869812}
+{"epoch": 7, "step": 35, "train_loss": 18.5625, "validation_loss": 14.65739935387674, "seconds": 38.933558225631714}
+{"epoch": 8, "step": 40, "train_loss": 16.65224358974359, "validation_loss": 13.477478876739562, "seconds": 43.90356802940369}
+{"epoch": 9, "step": 45, "train_loss": 16.802884615384617, "validation_loss": 12.43871148111332, "seconds": 48.96779656410217}
+{"epoch": 10, "step": 50, "train_loss": 14.096153846153847, "validation_loss": 11.643669234592446, "seconds": 53.95157432556152}
+{"epoch": 11, "step": 55, "train_loss": 13.386217948717949, "validation_loss": 10.722539761431412, "seconds": 59.07372498512268}
+{"epoch": 12, "step": 60, "train_loss": 11.51602564102564, "validation_loss": 9.789078031809145, "seconds": 64.05688118934631}
+{"epoch": 13, "step": 65, "train_loss": 10.471153846153847, "validation_loss": 8.813307654075548, "seconds": 69.03555083274841}
+{"epoch": 14, "step": 70, "train_loss": 9.780448717948717, "validation_loss": 7.2829895626242545, "seconds": 74.09823489189148}
+{"epoch": 15, "step": 75, "train_loss": 8.518429487179487, "validation_loss": 6.492451540755467, "seconds": 79.09414577484131}
+{"epoch": 16, "step": 80, "train_loss": 8.251602564102564, "validation_loss": 6.044048210735586, "seconds": 84.05751895904541}
+{"epoch": 17, "step": 85, "train_loss": 7.356570512820513, "validation_loss": 5.85701416500994, "seconds": 89.09149169921875}
+{"epoch": 18, "step": 90, "train_loss": 7.284455128205129, "validation_loss": 5.726702286282306, "seconds": 94.08057451248169}
+{"epoch": 19, "step": 95, "train_loss": 6.987179487179487, "validation_loss": 5.55653578528827, "seconds": 99.05470991134644}
+{"epoch": 20, "step": 100, "train_loss": 6.737179487179487, "validation_loss": 5.375497017892644, "seconds": 104.09547305107117}
+{"epoch": 21, "step": 105, "train_loss": 6.417467948717949, "validation_loss": 5.248602137176938, "seconds": 108.93948721885681}
+{"epoch": 22, "step": 110, "train_loss": 6.052884615384615, "validation_loss": 5.057498757455268, "seconds": 113.78704071044922}
+{"epoch": 23, "step": 115, "train_loss": 5.915865384615385, "validation_loss": 4.779386182902584, "seconds": 118.70891833305359}
+{"epoch": 24, "step": 120, "train_loss": 5.72676282051282, "validation_loss": 4.473813369781312, "seconds": 123.72366094589233}
+{"epoch": 25, "step": 125, "train_loss": 5.535657051282051, "validation_loss": 4.2421719681908545, "seconds": 128.7529809474945}
+{"epoch": 26, "step": 130, "train_loss": 5.236378205128205, "validation_loss": 4.101655690854871, "seconds": 133.81544709205627}
+{"epoch": 27, "step": 135, "train_loss": 4.983173076923077, "validation_loss": 4.000838717693837, "seconds": 138.81242561340332}
+{"epoch": 28, "step": 140, "train_loss": 4.795673076923077, "validation_loss": 3.928025596421471, "seconds": 143.88501691818237}
+{"epoch": 29, "step": 145, "train_loss": 4.674679487179487, "validation_loss": 3.897691973161034, "seconds": 148.92607879638672}
+{"epoch": 30, "step": 150, "train_loss": 4.425881410256411, "validation_loss": 3.879550820079523, "seconds": 153.92186784744263}
+{"epoch": 31, "step": 155, "train_loss": 4.395833333333333, "validation_loss": 3.8617824304174952, "seconds": 158.95270371437073}
+{"epoch": 32, "step": 160, "train_loss": 4.21875, "validation_loss": 3.847881461232604, "seconds": 163.92606377601624}
+{"epoch": 33, "step": 165, "train_loss": 4.203525641025641, "validation_loss": 3.821989935387674, "seconds": 168.98368501663208}
+{"epoch": 34, "step": 170, "train_loss": 4.097556089743589, "validation_loss": 3.7227727385685885, "seconds": 174.09089469909668}
+{"epoch": 35, "step": 175, "train_loss": 4.040464743589744, "validation_loss": 3.6901870029821073, "seconds": 179.07783818244934}
+{"epoch": 36, "step": 180, "train_loss": 3.9469150641025643, "validation_loss": 3.6450049701789267, "seconds": 184.0775077342987}
+{"epoch": 37, "step": 185, "train_loss": 3.7431891025641026, "validation_loss": 3.616830268389662, "seconds": 189.19677352905273}
+{"epoch": 38, "step": 190, "train_loss": 3.7477964743589745, "validation_loss": 3.605538643141153, "seconds": 194.18884181976318}
+{"epoch": 39, "step": 195, "train_loss": 3.660857371794872, "validation_loss": 3.5850521868787277, "seconds": 199.23292660713196}
+{"epoch": 40, "step": 200, "train_loss": 3.644230769230769, "validation_loss": 3.5671284791252487, "seconds": 204.2050907611847}
+{"status": "complete", "best": {"epoch": 40, "step": 200, "train_loss": 3.644230769230769, "validation_loss": 3.5671284791252487, "seconds": 204.2050907611847}, "examples": 28, "exact": 0.0, "wer": 5.948453608247423, "bleu": 0.0, "chrf": 4.907014881651814, "unknown_prediction_rate": 0.6, "cap_hits": 28, "seconds": 260.36155223846436, "peak_cuda_mb": 743.7900390625, "qualified_review": false}

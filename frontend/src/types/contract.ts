@@ -1,5 +1,5 @@
 /**
- * SignaCulture AI — Integration Contract Types (docs/INTEGRATION_CONTRACT.md)
+ * SignaCulture AI — Integration Contract Types (docs/architecture/INTEGRATION_CONTRACT.md)
  * Contract is authoritative for all integration schemas and field types.
  * All timestamps are in milliseconds (ms). Keys are snake_case.
  */
@@ -69,6 +69,15 @@ export interface AudioFeatures {
   emotion_hypothesis: null | Record<string, number | string>;
   model_version: string;
   warnings: string[];
+  transcription?: null | {
+    text: string;
+    language: "fr";
+    model_id: string;
+    model_revision: string;
+    device: "cuda" | "cpu";
+    compute_type: string;
+    segments: { start_ms: number; end_ms: number; text: string }[];
+  };
 }
 
 export interface AnimationPlan {
@@ -89,7 +98,7 @@ export interface AnimationPlan {
 
 export interface MotionFrame {
   playback_quality?: Record<string, boolean | string>;
-  playback_origin?: "source" | "transition" | "audio_sample";
+  playback_origin?: "source" | "transition" | "audio_sample" | "endpoint_hold";
   time_ms: number;
   joints: Record<string, [number, number, number]>;
   face?: Record<string, number> | null;

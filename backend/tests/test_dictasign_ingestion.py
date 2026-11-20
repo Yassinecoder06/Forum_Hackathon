@@ -25,7 +25,7 @@ def test_portal_preference_does_not_unregister_previous_motion(monkeypatch,tmp_p
     for name,source in [('OLD','CAPTURE_OLD'),('NEW','DICTASIGN_PORTAL_380')]:
         g=base.model_copy(update={'gloss_id':name,'motion_id':'CAPTURE_'+name,'source_id':source})
         m=asset.model_copy(update={'motion_id':'CAPTURE_'+name,'gloss_id':name})
-        records.append({'gloss':g.model_dump(),'motion':m.model_dump(),'quality':{},'source_id':source})
+        records.append({'gloss':g.model_dump(),'motion':m.model_dump(),'quality':{},'source_id':source,'sign_language':'fsl'})
     monkeypatch.setattr(capture_library,'library',lambda:records)
     client=TestClient(main.app)
     result=client.post('/gloss-lookup',json={'text':'bonjour'}).json()

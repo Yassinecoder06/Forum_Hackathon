@@ -1,0 +1,24 @@
+{
+  "revision": "0c7e956a8471acad3a9cebaeb66bb23bf5deaafa",
+  "metadata_rows": 39197,
+  "original_rows_headerless": 39197,
+  "fsl_videos": 900,
+  "splits": {
+    "train": 810,
+    "test": 45,
+    "val": 45
+  },
+  "mapped_videos": 860,
+  "missing_archive_videos": 40,
+  "duration_known": 0,
+  "subtitle_language_known": 0,
+  "pose_status": {
+    "": 900
+  },
+  "shard_count": 724,
+  "total_shard_bytes": 598541107200,
+  "fsl_shards": 52,
+  "schema_original": "headerless two-column video_id,sign_language; first row retained",
+  "segments": null,
+  "usable_duration_s": null
+}

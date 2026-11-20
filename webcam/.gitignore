@@ -1,0 +1,6 @@
+node_modules/
+dist/
+public/models/*.task
+public/models/manifest.json
+public/vendor/mediapipe/
+public/vendor/detector-worker.js

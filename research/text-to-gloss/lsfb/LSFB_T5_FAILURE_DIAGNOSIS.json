@@ -1,0 +1,64 @@
+{
+  "scope": "local frozen dataset and reported selected-checkpoint metrics; full remote predictions were not available locally",
+  "counts_before_length_filter": {
+    "pairs": 4396,
+    "target_tokens": 63323,
+    "target_types": 4103,
+    "output_inventory": 6743,
+    "inventory_units_never_in_train_targets": 2640,
+    "singleton_target_types": 1507,
+    "target_types_with_at_most_5_occurrences": 2748,
+    "event_types": {
+      "lexical": 50165,
+      "pointing": 8162,
+      "buoy": 297,
+      "palm-up": 1783,
+      "depictive": 2916
+    },
+    "distinct_inputs_with_multiple_targets": 21
+  },
+  "validation_generation": {
+    "mean_predicted_units": 45.303116147308785,
+    "mean_reference_units": 13.104815864022664,
+    "length_ratio": 3.456982274102897,
+    "wer_lower_bound_from_aggregate_length_alone": 2.456982274102897,
+    "reported_wer": 3.498378728923476,
+    "reference_oov_rate": 0.06431041936878512
+  },
+  "examples_requiring_source_video_and_context_review": [
+    {
+      "id": "CLSFBI0211A_S004_B:265166:270426",
+      "french": "Voilà la différence.",
+      "target": [
+        "lexical:france",
+        "lexical:pipi",
+        "lexical:pipi",
+        "lexical:pipi",
+        "lexical:france",
+        "lexical:pipi",
+        "pointing:pt:pro1",
+        "lexical:ah",
+        "lexical:pipi",
+        "lexical:ah",
+        "palm-up:palm-up-1h"
+      ]
+    },
+    {
+      "id": "CLSFBI1603A_S037_B:129292:129762",
+      "french": "D’accord.",
+      "target": [
+        "lexical:3",
+        "lexical:4",
+        "lexical:age"
+      ]
+    }
+  ],
+  "conclusion": "Strong evidence of sparse newly-added output inventory and supervision/task mismatch. Overgeneration is confirmed. Relative causal contributions require controlled validation ablations; source examples are not declared corpus errors without video/context review.",
+  "recommended_next_experiments": [
+    "Audit source alignment and discourse context before labeling pairs clean. Preserve raw annotations.",
+    "Define a lexical-only target task separately from full contextual signing, without claiming equivalent evaluation.",
+    "Compare readable gloss strings using existing subwords with atomic tokens on the same reviewed split.",
+    "Measure free-running training and validation WER, generation length, repetition and insertion/deletion/substitution counts.",
+    "Select changes on validation. Existing official test has been read; it is no longer an untouched development holdout."
+  ]
+}
