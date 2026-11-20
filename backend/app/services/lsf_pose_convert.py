@@ -192,6 +192,11 @@ def engine_poses_to_motion(poses: np.ndarray, *, fps_in: float = ENGINE_FPS, fps
         f = xyz[i]
         joints = {name: [round(float(v), 5) for v in f[idx]] for name, idx in POSE.items()}
         joints["hips"] = [0.0, 1.0, 0.0]
+        # outer eye corners (MediaPipe face mesh 263 = left, 33 = right): head tilt/turn for the body layer
+        for name, mesh_id in (("left_eye", 263), ("right_eye", 33)):
+            p = f[face_index(mesh_id)]
+            if np.isfinite(p).all():
+                joints[name] = [round(float(v), 5) for v in p]
         joints["neck"] = [round(float(v), 5) for v in (f[11] + f[12]) / 2]
         tracking = {}
         for side, start in (("left", LEFT_HAND), ("right", RIGHT_HAND)):

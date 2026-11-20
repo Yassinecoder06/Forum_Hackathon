@@ -4,7 +4,7 @@ All files live outside Git (they are trained on private interpreter footage). Po
 API at them either with one folder:
 
     SIGNACULTURE_LSF_MODEL_DIR=/path/to/lsf-models     (default: <storage>/lsf-models, i.e. .runtime/lsf-models)
-        c0/tok_d2_l2.pt  c0/gen_d2_l2.pt
+        c0/tok_d2_l2.pt  c0/gen_d2_l2_v3b_hold.pt
         b2/transition_lsf.pt  b2/prosody.json  b2/lexicon_union_corpus_fast.npz
 
 or file by file (each overrides the folder layout):
@@ -25,7 +25,7 @@ E5_ID = "intfloat/multilingual-e5-base"
 
 FILES = {
     "c0_tokenizer": ("SIGNACULTURE_LSF_C0_TOKENIZER", "c0/tok_d2_l2.pt"),
-    "c0_generator": ("SIGNACULTURE_LSF_C0_GENERATOR", "c0/gen_d2_l2.pt"),
+    "c0_generator": ("SIGNACULTURE_LSF_C0_GENERATOR", "c0/gen_d2_l2_v3b_hold.pt"),
     "b2_transitions": ("SIGNACULTURE_LSF_B2_TRANSITIONS", "b2/transition_lsf.pt"),
     "b2_prosody": ("SIGNACULTURE_LSF_B2_PROSODY", "b2/prosody.json"),
     "b2_lexicon": ("SIGNACULTURE_LSF_B2_LEXICON", "b2/lexicon_union_corpus_fast.npz"),

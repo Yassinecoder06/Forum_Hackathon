@@ -348,6 +348,29 @@ assert.equal(JSON.stringify(libraryClip),libraryRaw,"Preview windows never mutat
   mhRoot.traverse((o) => { if (o.name.endsWith("_correctiveRoot")) helpers.push(o); });
   assert(helpers.every((o) => o.quaternion.equals(new THREE.Quaternion())), "Corrective joints are never driven");
 
+  // Body layer: LSF-engine motions move the neck/head (and torso/clavicles when the rig has them) from the
+  // source's deviation from the clip's median pose; captured clips keep the original arms-and-hands behaviour.
+  {
+    const base = { ...motionJoints, head: [0, 1.62, 0.09] as [number, number, number] };
+    const nod = { ...base, neck: [0.03, 1.5, 0] as [number, number, number], head: [0.06, 1.58, 0.09] as [number, number, number] };
+    const clip = (engine: boolean): MotionFile => ({
+      rig_version: "signaculture-v1", fps: 25, duration_ms: 160, joints: ["neck", "head"], synthetic: true,
+      ...(engine ? { capture_method: "lsf-engine-c0-2d-bone-length-lift" } : {}),
+      frames: [0, 40, 80, 120, 160].map((t) => ({ time_ms: t, joints: t === 80 ? nod : base })),
+    } as MotionFile);
+    const headBone = mhRoot.getObjectByName("head")!, neckBone = mhRoot.getObjectByName("neck_01")!;
+    const bindHead = headBone.quaternion.clone(), bindNeck = neckBone.quaternion.clone();
+    const engineRig = new HumanoidRetargeter(mhRoot);
+    engineRig.applyMotion(clip(true), 80);
+    assert(headBone.quaternion.angleTo(bindHead) > 0.02 || neckBone.quaternion.angleTo(bindNeck) > 0.02, "Engine motion turns the neck/head");
+    engineRig.applyMotion(clip(true), 0);
+    assert(headBone.quaternion.angleTo(bindHead) < 1e-6 && neckBone.quaternion.angleTo(bindNeck) < 1e-6, "At the median pose the head is at rest");
+    const capturedRig = new HumanoidRetargeter(mhRoot);
+    capturedRig.applyMotion(clip(false), 80);
+    assert(headBone.quaternion.angleTo(bindHead) < 1e-6 && neckBone.quaternion.angleTo(bindNeck) < 1e-6, "Captured clips keep the head at bind (unchanged behaviour)");
+    console.log("Body layer checks passed: engine motions move the head, captured clips unchanged.");
+  }
+
   // Face joints: no blendshapes, the driver moves FACIAL_* joints and resets them every call.
   const face = new THREE.Group();
   const facial = (name: string, parent: THREE.Object3D, p: number[]) => { const b = new THREE.Bone(); b.name = name; b.position.fromArray(p); parent.add(b); return b; };

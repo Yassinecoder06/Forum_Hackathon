@@ -5,7 +5,7 @@
 | Engine | What it does | Strength | Weakness |
 |---|---|---|---|
 | `b2` | Splits the text into words and plays the per-word sign clip of each word found in a 942-word lexicon. Signs are joined with learned LSF transitions (an MLP trained on about 24 k real in-between movements), real prosody and a 6 Hz zero-phase low-pass filter. | Real signing clips with natural transitions. | Only lexicon words are signed, in French word order. Other words are skipped and listed as unknown. |
-| `c0` | Text-to-pose generator. Frozen multilingual-e5 text states feed a 6-layer transformer that predicts motion tokens of a VQ-VAE tokenizer (time ×2, 2-level residual VQ). Sampling uses classifier-free guidance 3.0, temperature [1.0, 0.6], no top-k and stop threshold 0.2. | Covers any sentence. On automatic proxies it reaches the score of real signing. | Too few holds, clips slightly long. Whether the signs are real LSF is unknown. |
+| `c0` | Text-to-pose generator. Frozen multilingual-e5 text states feed a 6-layer transformer that predicts motion tokens of a VQ-VAE tokenizer (time ×2, 2-level residual VQ). Sampling uses classifier-free guidance 3.0, temperature [1.0, 0.6], no top-k and stop threshold 0.2; a hold head adds pauses (×1.5). | Covers any sentence. On automatic proxies it reaches the score of real signing. | Clips about 10 % longer than real; pauses come from a hold head. Whether the signs are real LSF is unknown. |
 
 **No output has been checked by an LSF reader or a deaf signer.** The automatic scores are proxies (a text–motion matching model trained on the same data, and a sign-spotting check). Every generated MotionFile has `synthetic: true` and `generation.translation_validated: false`. It carries a French warning, and the Studio shows that the motion is not a validated translation.
 
@@ -17,7 +17,7 @@ Either use one folder (default `.runtime/lsf-models`, git-ignored):
 
 ```
 $SIGNACULTURE_LSF_MODEL_DIR/
-  c0/tok_d2_l2.pt  c0/gen_d2_l2.pt
+  c0/tok_d2_l2.pt  c0/gen_d2_l2_v3b_hold.pt
   b2/transition_lsf.pt  b2/prosody.json  b2/lexicon_union_corpus_fast.npz
 ```
 
@@ -26,7 +26,7 @@ or point to each file:
 | Variable | File |
 |---|---|
 | `SIGNACULTURE_LSF_C0_TOKENIZER` | C0 tokenizer checkpoint (`tok_d2_l2.pt`) |
-| `SIGNACULTURE_LSF_C0_GENERATOR` | C0 generator checkpoint (`gen_d2_l2.pt`) |
+| `SIGNACULTURE_LSF_C0_GENERATOR` | C0 generator checkpoint (`gen_d2_l2_v3b_hold.pt`: generator v2b + hold head; an older checkpoint without a hold head still loads and runs without holds) |
 | `SIGNACULTURE_LSF_B2_TRANSITIONS` | B2 transition model (`transition_lsf.pt`) |
 | `SIGNACULTURE_LSF_B2_PROSODY` | B2 prosody statistics (`prosody.json`) |
 | `SIGNACULTURE_LSF_B2_LEXICON` | B2 lexicon (`lexicon_union_corpus_fast.npz`, 942 words) |
@@ -66,10 +66,21 @@ POST /lsf/generate
 → 422 empty or > 400 characters, unknown engine;  503 model file / dependency missing
 ```
 
+## Body layer in the player
+
+The Studio retargeter originally drove only the arms (IK to the wrists), the hands and the fingers; spine, clavicles, neck and head stayed at rest. Engine poses move the whole upper body (torso sway, shoulder tilt, head nods and tilts), so for MotionFiles from the engines (`generation` present or `capture_method` starting with `lsf-engine`) `frontend/src/utils/retargetHumanoid.ts` adds a body layer:
+
+- **Torso:** sideways and forward sway of the neck, relative to the clip's median, becomes a roll/pitch spread over `Spine`, `Spine1`, `Spine2` (at most ±14° / ±11°).
+- **Shoulders:** each shoulder's height relative to the neck, relative to the median, raises or lowers its clavicle (−4 to +5 cm).
+- **Head:** the rotation from the median neck→nose direction to the current one, plus the eye-line tilt (`left_eye` / `right_eye` joints, outer eye corners), split 40 % neck / 60 % head, at most about 26°.
+- **Arms:** wrist targets are placed relative to the avatar's current neck, so the arms travel with the body.
+
+Captured clips keep the original arms-and-hands behaviour (tested in `frontend/tests/motion.test.ts`). Body yaw is not estimated, because 2D shoulders do not give its direction.
+
 ## Known limits
 
 - **Not a translation.** B2 signs the French words it knows, in French order: no LSF grammar, space, classifiers or role shift. C0's signs are unverified.
 - **Depth is a guess.** The always-towards-the-camera rule is wrong when a hand moves behind the body plane or when a palm faces away (fingers then bend the wrong way in depth). Hand-to-hand and hand-to-face contacts come from 2D proximity plus the player's contact solver, not from measured depth.
 - **Face:** only mouth opening and brow height reach the avatar. Lip shapes (mouthing), eye gaze and eye aperture from the engines are not used yet.
-- **C0:** clips are slightly long and contain too few holds. One sample per request (`seed` makes it reproducible).
+- **C0:** holds come from a hold head (probability per 0.16 s step that real signing is still there, ×1.5); predicted hold stretches are made still with a smooth move in and out. Clips are about 10 % longer than real signing and handshapes slightly less varied. One sample per request (`seed` makes it reproducible).
 - **B2:** words outside the 942-word lexicon are dropped, and some lexicon clips come from isolated-sign recordings with other proportions and framing.

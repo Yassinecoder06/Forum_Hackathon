@@ -1,10 +1,12 @@
-"""C0 v2 text-to-pose generator, inference only.
+"""C0 text-to-pose generator (v2b + hold head), inference only.
 
 Copied from sign-model/c0_tokenizer.py and c0_generator.py (training code, datasets and
 evaluation left out). Model: VQ-VAE tokenizer with two streams (body+face 230 values, both
 hands relative to their wrist 84 values), time downsampling x2, 2-level residual VQ; a
 6-layer transformer decoder over token steps conditioned on frozen multilingual-e5 token
-states, sampled with classifier-free guidance.
+states, sampled with classifier-free guidance. A small hold head predicts, per token step, the
+probability that real signing is still there (pauses, held signs); predicted hold stretches are
+made still in pose space at decode time (sign-model/c0_generator.apply_holds).
 """
 from __future__ import annotations
 
@@ -20,8 +22,9 @@ LH, RH = np.r_[23:44], np.r_[44:65]
 CB, CD = 512, 64              # codebook size, code dim
 D_MODEL = 384
 BOS = CB
-# Best settings of the 2026-11-20 diagnostic (sign-model/MASTER_STATUS.md).
+# Best settings of the 2026-11-20 diagnostic (sign-model/C0_BENCHMARKS.md, section "Holds").
 SAMPLING = dict(temp=(1.0, 0.6), topk=0, cfg=3.0, stop_thr=0.2)
+HOLD_SCALE = 1.5          # hold probabilities x1.5 matched real signing's moving share
 
 
 # ----------------------------------------------------------------------------- tokenizer
@@ -77,7 +80,7 @@ class VQVAE(nn.Module):
 
 # ----------------------------------------------------------------------------- generator
 class Gen(nn.Module):
-    def __init__(self, levels, maxs):
+    def __init__(self, levels, maxs, hold=False):
         super().__init__()
         self.L, self.maxs = levels, maxs
         self.mem = nn.Linear(768, D_MODEL)
@@ -88,6 +91,8 @@ class Gen(nn.Module):
         self.dec = nn.TransformerDecoder(lay, 6)
         self.norm = nn.LayerNorm(D_MODEL)
         self.hb, self.hh, self.hs = nn.Linear(D_MODEL, CB), nn.Linear(D_MODEL, CB), nn.Linear(D_MODEL, 1)
+        if hold:
+            self.hold_head = nn.Sequential(nn.Linear(D_MODEL, D_MODEL), nn.GELU(), nn.Linear(D_MODEL, 1))
         if self.L > 1:
             E = lambda n: nn.ModuleList([nn.Embedding(n, D_MODEL) for _ in range(self.L - 1)])  # noqa: E731
             self.ebx, self.ehx, self.cb, self.ch = E(CB + 1), E(CB + 1), E(CB), E(CB)
@@ -155,7 +160,7 @@ class C0Engine:
             m.to(dev).eval()
         gs = _load(config.path("c0_generator"))
         maxs = gs["pos"].shape[1] - 1
-        self.gen = Gen(self.levels, maxs)
+        self.gen = Gen(self.levels, maxs, hold=any(k.startswith("hold_head.") for k in gs))
         self.gen.load_state_dict(gs)
         self.gen.to(dev).eval()
         self.text = Text(dev)
@@ -172,6 +177,7 @@ class C0Engine:
         tb = torch.full((1, 1, L), BOS, dtype=torch.long, device=dev)
         th = tb.clone()
         length = g.maxs
+        holds = []
         temps = list(temp) if isinstance(temp, (list, tuple)) else [temp] * L
 
         def pick(lo, tp):
@@ -194,14 +200,17 @@ class C0Engine:
                 nb[:, l], nh[:, l] = pick(lb, temps[l]), pick(lh, temps[l])
             tb = torch.cat([tb, nb[:, None]], 1)
             th = torch.cat([th, nh[:, None]], 1)
+            if hasattr(g, "hold_head"):
+                holds.append(float(torch.sigmoid(g.hold_head(h)[0, 0])))
             if torch.sigmoid(g.hs(h)[:, 0]).item() > stop_thr:
                 length = t + 1
                 break
-        return tb[0, 1:length + 1].cpu().numpy(), th[0, 1:length + 1].cpu().numpy()
+        hold = np.array(holds[:length], dtype="float32") if holds else None
+        return tb[0, 1:length + 1].cpu().numpy(), th[0, 1:length + 1].cpu().numpy(), hold
 
     @torch.no_grad()
-    def decode(self, tb, th):
-        """Tokens -> (T, 157, 2) at 25 fps, normalised engine coordinates."""
+    def decode(self, tb, th, hold=None, seed=0):
+        """Tokens -> (T, 157, 2) at 25 fps, normalised engine coordinates. hold: per-step hold probability."""
         def ids(t):
             t = torch.from_numpy(np.asarray(t).astype("int64"))
             return (t[..., 0] if t.dim() == 2 and t.shape[1] == 1 else t)[None].to(self.dev)
@@ -217,8 +226,44 @@ class C0Engine:
         lo = np.floor(t).astype(int)
         hi = np.minimum(lo + 1, T - 1)
         w = (t - lo)[:, None, None]
-        return x[lo] * (1 - w) + x[hi] * w
+        x25 = x[lo] * (1 - w) + x[hi] * w
+        return apply_holds(x25, hold, np.random.default_rng(seed)) if hold is not None else x25
 
     def generate(self, text, seed=0):
-        tb, th = self.sample(text, seed=seed)
-        return self.decode(tb, th), {"tokens": int(len(tb)), "sampling": {**SAMPLING, "temp": list(SAMPLING["temp"]), "seed": seed}}
+        tb, th, hold = self.sample(text, seed=seed)
+        meta = {"tokens": int(len(tb)), "sampling": {**SAMPLING, "temp": list(SAMPLING["temp"]), "seed": seed}}
+        if hold is not None:
+            meta["holds"] = {"scale": HOLD_SCALE, "mean_probability": round(float(hold.mean()), 3)}
+        return self.decode(tb, th, hold, seed), meta
+
+
+def apply_holds(x25, hold, rng, scale=HOLD_SCALE, step=4):
+    """Make predicted hold steps still (1 token step = 4 frames at 25 fps). Each step is a hold with probability
+    min(1, scale * p); a run of hold frames becomes one smooth move (smoothstep) from the frame before it to the
+    frame after it, which removes the decoded wandering inside the run without any jump."""
+    flag = rng.random(len(hold)) < np.clip(np.asarray(hold) * scale, 0, 1)
+    fr = np.zeros(len(x25), bool)
+    for k in np.where(flag)[0]:
+        fr[step * k:step * k + step] = True
+    x = x25.copy()
+    n, i = len(x), 0
+    while i < n:
+        if not fr[i]:
+            i += 1
+            continue
+        j = i
+        while j < n and fr[j]:
+            j += 1
+        a, b = i - 1, j
+        if a < 0 and b >= n:
+            break
+        if a < 0:
+            x[:b] = x[b]
+        elif b >= n:
+            x[a + 1:] = x[a]
+        else:
+            u = (np.arange(a + 1, b) - a) / (b - a)
+            u = u * u * (3 - 2 * u)
+            x[a + 1:b] = x[a][None] * (1 - u)[:, None, None] + x[b][None] * u[:, None, None]
+        i = j
+    return x
