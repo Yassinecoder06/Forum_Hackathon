@@ -502,6 +502,13 @@ h1 em {
   font-size: 13px;
   line-height: 1.65;
 }
+.prosody-words .stressed {
+  font-weight: 700;
+  color: #8d553f;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
 .audio-transcript small {
   display: block;
   margin-bottom: 12px;

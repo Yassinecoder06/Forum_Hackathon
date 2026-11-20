@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" font-family="Segoe UI, system-ui, sans-serif">
+<rect width="100%" height="100%" fill="#fffdfb"/>
+<text x="20" y="34" font-size="22" font-weight="700" fill="#3b2a22">Pace: when each sign plays vs when the word is spoken</text>
+<text x="20" y="58" font-size="13" fill="#8a6f62">« Bonjour. Un cheval fou dans mon jardin. » at three speaking speeds · before = signs spread over the voiced audio · after = each sign starts on its word</text>
+<line x1="150.0" x2="150.0" y1="78" y2="690" stroke="#eee4db"/><text x="150.0" y="74" font-size="11" fill="#a0857a" text-anchor="middle">0 s</text>
+<line x1="278.8" x2="278.8" y1="78" y2="690" stroke="#eee4db"/><text x="278.8" y="74" font-size="11" fill="#a0857a" text-anchor="middle">1 s</text>
+<line x1="407.5" x2="407.5" y1="78" y2="690" stroke="#eee4db"/><text x="407.5" y="74" font-size="11" fill="#a0857a" text-anchor="middle">2 s</text>
+<line x1="536.2" x2="536.2" y1="78" y2="690" stroke="#eee4db"/><text x="536.2" y="74" font-size="11" fill="#a0857a" text-anchor="middle">3 s</text>
+<line x1="665.0" x2="665.0" y1="78" y2="690" stroke="#eee4db"/><text x="665.0" y="74" font-size="11" fill="#a0857a" text-anchor="middle">4 s</text>
+<line x1="793.8" x2="793.8" y1="78" y2="690" stroke="#eee4db"/><text x="793.8" y="74" font-size="11" fill="#a0857a" text-anchor="middle">5 s</text>
+<line x1="922.5" x2="922.5" y1="78" y2="690" stroke="#eee4db"/><text x="922.5" y="74" font-size="11" fill="#a0857a" text-anchor="middle">6 s</text>
+<line x1="1051.2" x2="1051.2" y1="78" y2="690" stroke="#eee4db"/><text x="1051.2" y="74" font-size="11" fill="#a0857a" text-anchor="middle">7 s</text>
+<line x1="1180.0" x2="1180.0" y1="78" y2="690" stroke="#eee4db"/><text x="1180.0" y="74" font-size="11" fill="#a0857a" text-anchor="middle">8 s</text>
+<text x="20" y="106" font-size="15" font-weight="700" fill="#3b2a22">Slow (0.8×)</text><text x="20" y="124" font-size="11" fill="#8a6f62">2.86 syll/s measured</text>
+<rect x="150.0" y="90" width="69.5" height="26" rx="4" fill="#e9e0d7"/>
+<text x="184.8" y="107" font-size="11" text-anchor="middle" fill="#6b5a50">Bonjour</text>
+<rect x="576.2" y="90" width="59.2" height="26" rx="4" fill="#e9e0d7"/>
+<text x="605.8" y="107" font-size="11" text-anchor="middle" fill="#6b5a50">Un</text>
+<rect x="635.4" y="90" width="74.7" height="26" rx="4" fill="#e9e0d7"/>
+<text x="672.7" y="107" font-size="11" text-anchor="middle" fill="#6b5a50">cheval</text>
+<rect x="710.1" y="90" width="54.1" height="26" rx="4" fill="#e9e0d7"/>
+<text x="737.1" y="107" font-size="11" text-anchor="middle" fill="#6b5a50">fou</text>
+<rect x="764.1" y="90" width="66.9" height="26" rx="4" fill="#e9e0d7"/>
+<text x="797.6" y="107" font-size="11" text-anchor="middle" fill="#6b5a50">dans</text>
+<rect x="831.1" y="90" width="36.1" height="26" rx="4" fill="#e9e0d7"/>
+<text x="849.1" y="107" font-size="11" text-anchor="middle" fill="#6b5a50">mon</text>
+<rect x="867.1" y="90" width="90.1" height="26" rx="4" fill="#e9e0d7"/>
+<text x="912.2" y="107" font-size="11" text-anchor="middle" fill="#6b5a50">jardin</text>
+<text x="140" y="141" font-size="12" font-weight="600" fill="#8a6f62" text-anchor="end">before</text>
+<rect x="165.4" y="124" width="446.6" height="26" rx="4" fill="#cdb9a8"/><text x="388.8" y="141" font-size="11" font-weight="700" text-anchor="middle" fill="#3b2a22">BONJOUR</text>
+<rect x="612.1" y="124" width="91.5" height="26" rx="4" fill="#cdb9a8"/><text x="657.9" y="141" font-size="11" font-weight="700" text-anchor="middle" fill="#3b2a22">DANS</text>
+<rect x="703.6" y="124" width="154.2" height="26" rx="4" fill="#cdb9a8"/><text x="780.7" y="141" font-size="11" font-weight="700" text-anchor="middle" fill="#3b2a22">MON</text>
+<rect x="857.9" y="124" width="114.2" height="26" rx="4" fill="#cdb9a8"/><text x="915.0" y="141" font-size="11" font-weight="700" text-anchor="middle" fill="#3b2a22">JARDIN</text>
+<text x="140" y="173" font-size="12" font-weight="600" fill="#8a6f62" text-anchor="end">after</text>
+<rect x="150.0" y="156" width="137.5" height="26" rx="4" fill="#e9a07c"/><text x="218.8" y="173" font-size="11" font-weight="700" text-anchor="middle" fill="#3b2a22">BONJOUR</text>
+<rect x="764.1" y="156" width="108.3" height="26" rx="4" fill="#e9a07c"/><text x="818.3" y="173" font-size="11" font-weight="700" text-anchor="middle" fill="#3b2a22">DANS</text>
+<rect x="898.2" y="156" width="101.8" height="26" rx="4" fill="#e9a07c"/><text x="949.1" y="173" font-size="11" font-weight="700" text-anchor="middle" fill="#3b2a22">MON</text>
+<rect x="1025.8" y="156" width="114.6" height="26" rx="4" fill="#e9a07c"/><text x="1083.1" y="173" font-size="11" font-weight="700" text-anchor="middle" fill="#3b2a22">JARDIN</text>
+<text x="20" y="311" font-size="15" font-weight="700" fill="#3b2a22">Normal</text><text x="20" y="329" font-size="11" fill="#8a6f62">3.45 syll/s measured</text>
+<rect x="150.0" y="295" width="59.2" height="26" rx="4" fill="#e9e0d7"/>
+<text x="179.6" y="312" font-size="11" text-anchor="middle" fill="#6b5a50">Bonjour</text>
+<rect x="484.8" y="295" width="54.1" height="26" rx="4" fill="#e9e0d7"/>
+<text x="511.8" y="312" font-size="11" text-anchor="middle" fill="#6b5a50">Un</text>
+<rect x="538.8" y="295" width="61.8" height="26" rx="4" fill="#e9e0d7"/>
+<text x="569.7" y="312" font-size="11" text-anchor="middle" fill="#6b5a50">cheval</text>
+<rect x="600.6" y="295" width="43.8" height="26" rx="4" fill="#e9e0d7"/>
+<text x="622.5" y="312" font-size="11" text-anchor="middle" fill="#6b5a50">fou</text>
+<rect x="644.4" y="295" width="51.5" height="26" rx="4" fill="#e9e0d7"/>
+<text x="670.1" y="312" font-size="11" text-anchor="middle" fill="#6b5a50">dans</text>
+<rect x="695.9" y="295" width="28.3" height="26" rx="4" fill="#e9e0d7"/>
+<rect x="724.2" y="295" width="74.7" height="26" rx="4" fill="#e9e0d7"/>
+<text x="761.6" y="312" font-size="11" text-anchor="middle" fill="#6b5a50">jardin</text>
+<text x="140" y="346" font-size="12" font-weight="600" fill="#8a6f62" text-anchor="end">before</text>
+<rect x="170.6" y="329" width="350.8" height="26" rx="4" fill="#cdb9a8"/><text x="346.0" y="346" font-size="11" font-weight="700" text-anchor="middle" fill="#3b2a22">BONJOUR</text>
+<rect x="521.4" y="329" width="74.0" height="26" rx="4" fill="#cdb9a8"/><text x="558.5" y="346" font-size="11" font-weight="700" text-anchor="middle" fill="#3b2a22">DANS</text>
+<rect x="595.5" y="329" width="122.2" height="26" rx="4" fill="#cdb9a8"/><text x="656.6" y="346" font-size="11" font-weight="700" text-anchor="middle" fill="#3b2a22">MON</text>
+<rect x="717.7" y="329" width="92.8" height="26" rx="4" fill="#cdb9a8"/><text x="764.1" y="346" font-size="11" font-weight="700" text-anchor="middle" fill="#3b2a22">JARDIN</text>
+<text x="140" y="378" font-size="12" font-weight="600" fill="#8a6f62" text-anchor="end">after</text>
+<rect x="150.0" y="361" width="137.5" height="26" rx="4" fill="#e9a07c"/><text x="218.8" y="378" font-size="11" font-weight="700" text-anchor="middle" fill="#3b2a22">BONJOUR</text>
+<rect x="644.4" y="361" width="108.3" height="26" rx="4" fill="#e9a07c"/><text x="698.5" y="378" font-size="11" font-weight="700" text-anchor="middle" fill="#3b2a22">DANS</text>
+<rect x="778.4" y="361" width="101.8" height="26" rx="4" fill="#e9a07c"/><text x="829.3" y="378" font-size="11" font-weight="700" text-anchor="middle" fill="#3b2a22">MON</text>
+<rect x="906.0" y="361" width="114.6" height="26" rx="4" fill="#e9a07c"/><text x="963.3" y="378" font-size="11" font-weight="700" text-anchor="middle" fill="#3b2a22">JARDIN</text>
+<text x="20" y="516" font-size="15" font-weight="700" fill="#3b2a22">Fast (1.25×)</text><text x="20" y="534" font-size="11" fill="#8a6f62">3.55 syll/s measured</text>
+<rect x="150.0" y="500" width="46.3" height="26" rx="4" fill="#e9e0d7"/>
+<text x="173.2" y="517" font-size="11" text-anchor="middle" fill="#6b5a50">Bonjour</text>
+<rect x="358.6" y="500" width="100.4" height="26" rx="4" fill="#e9e0d7"/>
+<text x="408.8" y="517" font-size="11" text-anchor="middle" fill="#6b5a50">Un</text>
+<rect x="459.0" y="500" width="54.1" height="26" rx="4" fill="#e9e0d7"/>
+<text x="486.0" y="517" font-size="11" text-anchor="middle" fill="#6b5a50">cheval</text>
+<rect x="513.1" y="500" width="33.5" height="26" rx="4" fill="#e9e0d7"/>
+<text x="529.8" y="517" font-size="11" text-anchor="middle" fill="#6b5a50">fou</text>
+<rect x="546.5" y="500" width="41.2" height="26" rx="4" fill="#e9e0d7"/>
+<text x="567.1" y="517" font-size="11" text-anchor="middle" fill="#6b5a50">dans</text>
+<rect x="587.8" y="500" width="23.2" height="26" rx="4" fill="#e9e0d7"/>
+<rect x="610.9" y="500" width="64.4" height="26" rx="4" fill="#e9e0d7"/>
+<text x="643.1" y="517" font-size="11" text-anchor="middle" fill="#6b5a50">jardin</text>
+<text x="140" y="551" font-size="12" font-weight="600" fill="#8a6f62" text-anchor="end">before</text>
+<rect x="165.4" y="534" width="278.9" height="26" rx="4" fill="#cdb9a8"/><text x="304.9" y="551" font-size="11" font-weight="700" text-anchor="middle" fill="#3b2a22">BONJOUR</text>
+<rect x="444.3" y="534" width="61.0" height="26" rx="4" fill="#cdb9a8"/><text x="474.8" y="551" font-size="11" font-weight="700" text-anchor="middle" fill="#3b2a22">DANS</text>
+<rect x="505.4" y="534" width="99.4" height="26" rx="4" fill="#cdb9a8"/><text x="555.0" y="551" font-size="11" font-weight="700" text-anchor="middle" fill="#3b2a22">MON</text>
+<rect x="604.7" y="534" width="74.7" height="26" rx="4" fill="#cdb9a8"/><text x="642.1" y="551" font-size="11" font-weight="700" text-anchor="middle" fill="#3b2a22">JARDIN</text>
+<text x="140" y="583" font-size="12" font-weight="600" fill="#8a6f62" text-anchor="end">after</text>
+<rect x="150.0" y="566" width="137.5" height="26" rx="4" fill="#e9a07c"/><text x="218.8" y="583" font-size="11" font-weight="700" text-anchor="middle" fill="#3b2a22">BONJOUR</text>
+<rect x="546.5" y="566" width="108.3" height="26" rx="4" fill="#e9a07c"/><text x="600.7" y="583" font-size="11" font-weight="700" text-anchor="middle" fill="#3b2a22">DANS</text>
+<rect x="680.6" y="566" width="101.8" height="26" rx="4" fill="#e9a07c"/><text x="731.5" y="583" font-size="11" font-weight="700" text-anchor="middle" fill="#3b2a22">MON</text>
+<rect x="808.2" y="566" width="114.6" height="26" rx="4" fill="#e9a07c"/><text x="865.5" y="583" font-size="11" font-weight="700" text-anchor="middle" fill="#3b2a22">JARDIN</text>
+</svg>

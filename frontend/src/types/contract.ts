@@ -53,6 +53,12 @@ export interface AnimationPlanSegment {
   /** Part of the source clip to play (its signing core, on captured frame times); absent = whole clip. */
   clip_start_ms?: number;
   clip_end_ms?: number;
+  /** Voice prosody for this sign (timing_mode "audio_words"); acoustic estimates. */
+  emphasis?: number | null;
+  liveliness?: number | null;
+  hold_ms?: number | null;
+  word_start_ms?: number | null;
+  word_end_ms?: number | null;
 }
 
 export interface AudioFrame {
@@ -69,10 +75,22 @@ export interface EmotionWindow {
   scores: Record<string, number>;
 }
 
+export interface ProsodyWord {
+  text: string;
+  start_ms: number;
+  end_ms: number;
+  prominence: number;
+  emphasized: boolean;
+  syl_per_s: number;
+  liveliness: number;
+}
+
 export interface AudioFeatures {
   duration_ms: number;
   frames: AudioFrame[];
   emotion_hypothesis: null | Record<string, number | string>;
+  /** Word-level prominence, pace and pitch liveliness (needs transcript word timings). */
+  prosody?: null | { pace_syl_per_s: number; words: ProsodyWord[] };
   /** Overlapping ~2 s windows of emotion2vec hypotheses, ordered by start_ms. */
   emotion_timeline?: null | EmotionWindow[];
   model_version: string;
@@ -84,13 +102,18 @@ export interface AudioFeatures {
     model_revision: string;
     device: "cuda" | "cpu";
     compute_type: string;
-    segments: { start_ms: number; end_ms: number; text: string }[];
+    segments: {
+      start_ms: number;
+      end_ms: number;
+      text: string;
+      words?: { start_ms: number; end_ms: number; text: string; probability: number }[] | null;
+    }[];
   };
 }
 
 export interface AnimationPlan {
   transition_ms?: number;
-  timing_mode?: "original" | "audio_voiced";
+  timing_mode?: "original" | "audio_voiced" | "audio_words";
   plan_id: string;
   source_text: string;
   target_language: "LSF";
@@ -111,6 +134,8 @@ export interface MotionFrame {
   joints: Record<string, [number, number, number]>;
   face?: Record<string, number> | null;
   hand_tracking?: Record<string, { observed: boolean; source: string }>;
+  /** Head-nod curve (0..1) on emphasised signs; drives an additive head pitch. */
+  nod?: number;
 }
 
 export interface MotionAttribution {

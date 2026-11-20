@@ -34,3 +34,14 @@ The studio offers the action “Utiliser comme brouillon français”; it never 
 The existing public example data/public_examples/bonjour.webm contains a short French greeting. Local RTX 4060 inference returned “Bonjour.” in one segment (0–2,000 ms), with French forced and 0.53 seconds model decode time. The latest API request completed in 3.22 seconds including worker startup, decoding and acoustic analysis. This is an execution smoke check on one short example, not a French ASR accuracy benchmark. No broad speech evaluation set or human transcript review was run.
 
 Verification after integration: 41 backend schema/API tests passed; the frontend motion/avatar checks passed; the TypeScript/Vite production build passed; and the full Playwright smoke passed, including uploading the greeting video, displaying the draft, retaining the existing typed text until the user explicitly inserts the transcript, and then using “Bonjour.” as the text draft.
+
+## Direct download and word timestamps (feat/voice-emotion-face)
+
+On a machine where the Hugging Face Hub is reachable, the same pinned files can be fetched directly and checked against `configs/asr_model.json`:
+
+```bash
+.venv-audio/bin/pip install -r backend/requirements-audio-asr.txt
+hf download Systran/faster-whisper-small --revision 536b0662742c02347bc0e980a01041f333bce120 config.json model.bin tokenizer.json vocabulary.txt README.md --local-dir .models/faster-whisper-small
+```
+
+The worker now requests `word_timestamps=True`; each transcript segment carries `words` with start/end times and a probability. Word timings drive the prosody analysis (emphasis, pace) used for word-aligned signing. They are model estimates and can drift by tens of milliseconds.

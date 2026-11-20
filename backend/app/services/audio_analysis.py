@@ -7,6 +7,7 @@ import tempfile
 import wave
 import numpy as np
 from .capture_library import ROOT,runtime_python,storage
+from .prosody import analyse_prosody
 
 def analyse(raw, filename, include_emotion=False, include_transcription=False):
     with tempfile.TemporaryDirectory(prefix='signaculture-audio-') as temp:
@@ -70,8 +71,15 @@ def analyse(raw, filename, include_emotion=False, include_transcription=False):
                     for segment in transcription['segments']:
                         segment['start_ms']=min(segment['start_ms'],max(0,duration_ms-1))
                         segment['end_ms']=min(max(segment['start_ms']+1,segment['end_ms']),duration_ms)
+                        for word in segment.get('words') or []:
+                            word['start_ms']=min(word['start_ms'],max(0,duration_ms-1))
+                            word['end_ms']=min(max(word['start_ms']+1,word['end_ms']),duration_ms)
                     warnings.append('La transcription est forcée en français et doit être relue avant de composer.')
                     version+=' + faster-whisper-small'
         else:
             warnings.append('Transcription non demandée.')
-        return {'duration_ms':duration_ms,'frames':frames,'emotion_hypothesis':emotion,'emotion_timeline':emotion_timeline,'model_version':version,'warnings':warnings,'transcription':transcription}
+        words=[w for s in (transcription or {}).get('segments',[]) for w in s.get('words') or []]
+        prosody=analyse_prosody(frames,words) if words else None
+        if prosody:
+            warnings.append('L’accentuation et le débit sont des estimations acoustiques par mot, pas une annotation linguistique.')
+        return {'duration_ms':duration_ms,'frames':frames,'emotion_hypothesis':emotion,'emotion_timeline':emotion_timeline,'model_version':version,'warnings':warnings,'transcription':transcription,'prosody':prosody}

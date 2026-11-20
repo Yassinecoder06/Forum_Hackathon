@@ -5,11 +5,13 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import type { MotionFile } from "../../types/contract";
 import { interpolateJointPositions } from "../../utils/motionInterpolator";
 import { HumanoidRetargeter } from "../../utils/retargetHumanoid";
-import { browWeights, faceCalibration, sampleFace } from "../../utils/avatarPlayback";
+import { browWeights, faceCalibration, frameInterval, sampleFace } from "../../utils/avatarPlayback";
 import { IdleLife } from "../../utils/idleLife";
 import { createCafeBackdrop } from "../../utils/stageBackdrop";
 import { EMOTION_KEYS, emotionToBlendshapes, sampleEmotion, smoothWeights } from "../../utils/emotionFace";
 import type { EmotionWindow } from "../../types/contract";
+/** Largest head nod on a fully emphasised sign; small, because head movement is LSF grammar. */
+const NOD_MAX_DEG = 6;
 type Props = {
   avatarCredit?: string;
   fitNarrowViewport?: boolean;
@@ -298,7 +300,25 @@ export function AvatarCanvas(props: Props) {
         head.quaternion.copy(bindHead).premultiply(delta);
         head.updateWorldMatrix(false, true);
       }
+      // Emphasis nod: additive head pitch on stressed signs (<= NOD_MAX_DEG), undone after the
+      // draw so it never accumulates into the retargeted pose.
+      let nodRestore: THREE.Quaternion | undefined;
+      if (expressiveModulation && motion?.frames.length && head?.parent) {
+        const { lo, next, alpha } = frameInterval(motion.frames, currentTimeMs);
+        const nod = (motion.frames[lo].nod ?? 0) * (1 - alpha) + (motion.frames[next].nod ?? 0) * alpha;
+        if (nod > 1e-3) {
+          nodRestore = head.quaternion.clone();
+          const parent = head.parent.getWorldQuaternion(new THREE.Quaternion());
+          const lateral = new THREE.Vector3(1, 0, 0).applyQuaternion(parent.invert());
+          head.quaternion.premultiply(new THREE.Quaternion().setFromAxisAngle(lateral, THREE.MathUtils.degToRad(NOD_MAX_DEG) * Math.min(1, nod)));
+          head.updateWorldMatrix(false, true);
+        }
+      }
       renderer.render(scene, camera);
+      if (nodRestore && head) {
+        head.quaternion.copy(nodRestore);
+        head.updateWorldMatrix(false, true);
+      }
     }
     render();
     return () => {

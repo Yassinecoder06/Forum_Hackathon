@@ -329,3 +329,64 @@ assert.equal(JSON.stringify(libraryClip),libraryRaw,"Preview windows never mutat
   assert.equal(dominantEmotion(sampled), "fearful", "sampleEmotion anchors windows to the clip score");
   console.log("Emotion face checks passed: neutral gating, signing caps, timeline interpolation, easing, clip anchoring.");
 }
+
+// Voice pace, tonality and emphasis on signing.
+{
+  const { scalePath, nodAt, signScale, NOD_MS, EMPHASIS_SCALE } = await import("../src/utils/planStitcher");
+  type V = [number, number, number];
+  const centre: Record<string, V> = { right_wrist: [0.3, 1.2, 0.2], right_elbow: [0.25, 1.1, 0.05] };
+  const pose: Record<string, V> = { right_wrist: [0.4, 1.3, 0.2], right_elbow: [0.25, 1.1, 0.05], right_index_1: [0.42, 1.33, 0.19], hips: [0, 1, 0] };
+  const big = scalePath(pose, centre, 1.2);
+  assert(Math.abs(big.right_wrist[0] - 0.42) < 1e-9 && Math.abs(big.right_wrist[1] - 1.32) < 1e-9, "Path widens around the sign's centre");
+  assert.deepEqual(big.hips, pose.hips, "Body is untouched");
+  const handBefore = pose.right_index_1.map((v, i) => v - pose.right_wrist[i]);
+  const handAfter = big.right_index_1.map((v, i) => v - big.right_wrist[i]);
+  assert(handBefore.every((v, i) => Math.abs(v - handAfter[i]) < 1e-9), "Handshape moves rigidly with the wrist");
+  assert.deepEqual(scalePath(centre, centre, 1.5).right_wrist, centre.right_wrist, "A sign's location (its centre) never moves");
+  const atChin: Record<string, V> = { head: [0, 1.6, 0.1], right_wrist: [0.02, 1.5, 0.15], right_elbow: [0.2, 1.2, 0.1] };
+  const kept = scalePath(atChin, { right_wrist: [0.2, 1.2, 0.2], right_elbow: [0.25, 1.1, 0.05] }, 1.3, { right: 0.12 }).right_wrist;
+  assert(kept.every((v, i) => Math.abs(v - atChin.right_wrist[i]) < 1e-9), "A hand touching the face is never moved");
+  assert.equal(nodAt(-1, 1), 0); assert.equal(nodAt(NOD_MS + 1, 1), 0); assert.equal(nodAt(100, 0), 0);
+  assert(Math.abs(nodAt(NOD_MS / 2, 0.8) - 1) < 1e-9, "Clear stress gets the full nod mid-way");
+  assert(Math.abs(nodAt(NOD_MS / 2, 0.2) - 0.7) < 1e-9, "Weaker stress still nods visibly");
+  assert(Math.abs(signScale({ emphasis: 1, liveliness: null } as never) - (1 + EMPHASIS_SCALE)) < 1e-9);
+  assert(signScale({ emphasis: 0, liveliness: 0 } as never) < 1 && signScale({ emphasis: 0, liveliness: 1 } as never) > 1);
+
+  // Word-timed plan: the sign starts at its word, holds at its end, nods at onset.
+  const wristClip: MotionFile = {
+    rig_version: "signaculture-v1", fps: 25, duration_ms: 400, joints: ["right_wrist"], synthetic: true,
+    frames: [0, 100, 200, 300, 400].map((t) => ({ time_ms: t, joints: { right_wrist: [0.3 + t / 2000, 1.2, 0.2] as V } })),
+  };
+  const wordPlan = {
+    plan_id: "p", source_text: "Bonjour", target_language: "LSF", unknowns: [], linguistic_review: "pending",
+    animation_review: "pending", rights_status: "pending", render_allowed_for_publication: false,
+    transition_ms: 0, timing_mode: "audio_words", duration_ms: 2000,
+    segments: [{ gloss_id: "g", motion_id: "m", start_ms: 600, duration_ms: 800, hold_ms: 160, emphasis: 1, liveliness: 0.5 }],
+  } as unknown as AnimationPlan;
+  const timed = stitchAnimationPlan(wordPlan, new Map([["m", wristClip]]));
+  const at = (t: number) => timed.frames.find((f) => f.time_ms === t)!;
+  assert.equal(timed.duration_ms, 2000);
+  assert.deepEqual(at(0).joints.right_wrist, at(560).joints.right_wrist, "Rest before the word starts");
+  assert((at(760).nod ?? 0) > 0.9 && !at(1200).nod, "Nod at the onset of the stressed sign only");
+  const mid = at(1000).joints.right_wrist, rest = stitchAnimationPlan({ ...wordPlan, segments: [{ ...wordPlan.segments[0], emphasis: 0, liveliness: null }] } as AnimationPlan, new Map([["m", wristClip]])).frames.find((f) => f.time_ms === 1000)!.joints.right_wrist;
+  assert(Math.abs(mid[0] - 0.4) > Math.abs(rest[0] - 0.4) * 1.25, "Mid-sign path is clearly enlarged around the sign's centre");
+  const holdOnly = { ...wordPlan, segments: [{ ...wordPlan.segments[0], emphasis: 0, liveliness: null }] } as AnimationPlan;
+  const held = stitchAnimationPlan(holdOnly, new Map([["m", wristClip]]));
+  const hAt = (t: number) => held.frames.find((f) => f.time_ms === t)!.joints.right_wrist;
+  assert.deepEqual(hAt(1280), hAt(1400), "Source time is frozen during the end hold");
+  assert(hAt(1000)[0] < hAt(1200)[0], "The sign itself still plays before the hold");
+  // Retimed playback keeps hand-tracking gaps: a hand missing in either neighbouring frame is
+  // flagged missing and its fingers are not blended in from the other frame.
+  const { resampleFrame } = await import("../src/utils/planStitcher");
+  const fingers = (x: number) => Object.fromEntries(["thumb", "index", "middle", "ring", "pinky"].flatMap((f) => [1, 2, 3, 4].map((i) => [`left_${f}_${i}`, [x, 1.2, 0.1] as V])));
+  const gappy: MotionFile = { rig_version: "signaculture-v1", fps: 25, duration_ms: 80, joints: ["left_wrist"], synthetic: true, frames: [
+    { time_ms: 0, joints: { left_wrist: [0, 1.2, 0.1], ...fingers(0) }, hand_tracking: { left: { observed: true, source: "holistic" } } },
+    { time_ms: 40, joints: { left_wrist: [0.1, 1.2, 0.1] }, hand_tracking: { left: { observed: false, source: "missing" } } },
+    { time_ms: 80, joints: { left_wrist: [0.2, 1.2, 0.1], ...fingers(0.2) }, hand_tracking: { left: { observed: true, source: "holistic" } } }] };
+  const gapMid = resampleFrame(gappy, 20);
+  assert.equal(gapMid.hand_tracking?.left?.observed, false, "A gap in either neighbour flags the hand missing");
+  assert(!Object.keys(gapMid.joints).some((k) => k.startsWith("left_index")), "No one-sided fingers detached from the wrist");
+  const solid = { ...gappy, frames: [gappy.frames[0], { ...gappy.frames[2], time_ms: 40 }] };
+  assert.equal(resampleFrame(solid, 20).hand_tracking?.left?.observed, true, "A hand tracked on both sides stays tracked");
+  console.log("Prosody checks passed: path scaling keeps location and handshape, nod envelope, word-timed holds, hand-gap resampling.");
+}

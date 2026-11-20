@@ -132,7 +132,7 @@ export default function App() {
   const [audioName, setAudioName] = useState("");
   const [audioBusy, setAudioBusy] = useState(false);
   const [expressive, setExpressive] = useState(false);
-  const [emotionIntensity, setEmotionIntensity] = useState(0.8);
+  const [emotionIntensity, setEmotionIntensity] = useState(1);
   const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
   const [recording, setRecording] = useState(false);
   const [sourceUrl, setSourceUrl] = useState("");
@@ -885,13 +885,34 @@ export default function App() {
                             <span className="section-label">
                               TRANSCRIPTION LOCALE · À RELIRE
                             </span>
-                            <p>
-                              {audio.transcription.text ||
-                                "Aucune parole française détectée."}
-                            </p>
+                            {audio.prosody?.words.length ? (
+                              <p className="prosody-words" aria-label="Transcription avec mots accentués">
+                                {audio.prosody.words.map((word, index) => (
+                                  <span
+                                    key={`${word.start_ms}-${index}`}
+                                    className={word.emphasized ? "stressed" : undefined}
+                                    title={`${(word.start_ms / 1000).toFixed(2)} s · ${word.syl_per_s.toFixed(1)} syll/s · proéminence ${word.prominence.toFixed(2)}`}
+                                  >
+                                    {word.text}{" "}
+                                  </span>
+                                ))}
+                              </p>
+                            ) : (
+                              <p>
+                                {audio.transcription.text ||
+                                  "Aucune parole française détectée."}
+                              </p>
+                            )}
                             <small>
                               Whisper small · {audio.transcription.device} ·{" "}
                               {audio.transcription.segments.length} segment(s)
+                              {audio.prosody && (
+                                <>
+                                  {" "}· débit {audio.prosody.pace_syl_per_s.toFixed(1)} syll/s ·{" "}
+                                  {audio.prosody.words.filter((w) => w.emphasized).length} mot(s)
+                                  accentué(s), estimation acoustique
+                                </>
+                              )}
                             </small>
                             <button
                               className="secondary-button"

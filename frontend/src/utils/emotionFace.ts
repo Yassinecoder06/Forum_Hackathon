@@ -6,12 +6,14 @@ import type { EmotionWindow } from "../types/contract";
 export type EmotionScores = Record<string, number>;
 export type FaceMode = "rest" | "signing";
 
-/** Lower-face cap while signing, so lexical mouthing stays readable. */
-export const SIGNING_FACE_CAP = 0.35;
+/** Eyes/cheeks/mouth-corner cap while signing (jaw and head are never touched; brows are only nudged). */
+export const SIGNING_FACE_CAP = 0.6;
 /** Additive brow nudge cap while signing; captured grammatical brows stay dominant. */
 export const SIGNING_BROW_CAP = 0.1;
 /** Probability floor ignored as noise, so near-neutral voices give a neutral face. */
 export const NOISE_FLOOR = 0.15;
+/** Perceptual curve: a clear but not overwhelming score (e.g. 0.5) should read clearly on the face. */
+export const STRENGTH_GAMMA = 0.6;
 /** Exponential smoothing time constant for expression changes. */
 export const SMOOTHING_MS = 300;
 
@@ -22,9 +24,10 @@ export const EMOTION_RECIPES: Record<string, Record<string, number>> = {
   // sad and disgust raised because their mouth/nose shapes are subtle on this mesh.
   happy: { ...pair("mouthSmile", 0.75), ...pair("cheekSquint", 0.45), ...pair("eyeSquint", 0.1), ...pair("browOuterUp", 0.15) },
   sad: { ...pair("mouthFrown", 0.95), mouthShrugLower: 0.35, ...pair("mouthPress", 0.2), browInnerUp: 0.9, ...pair("browDown", 0.15), ...pair("eyeSquint", 0.2) },
-  angry: { ...pair("browDown", 0.65), ...pair("noseSneer", 0.35), ...pair("mouthPress", 0.45), ...pair("eyeSquint", 0.3) },
-  surprised: { browInnerUp: 0.6, ...pair("browOuterUp", 0.6), ...pair("eyeWide", 0.55), jawOpen: 0.25 },
-  fearful: { browInnerUp: 0.7, ...pair("eyeWide", 0.5), ...pair("mouthStretch", 0.45), ...pair("browDown", 0.1) },
+  angry: { ...pair("browDown", 0.65), ...pair("noseSneer", 0.45), ...pair("mouthPress", 0.5), ...pair("eyeSquint", 0.5) },
+  // Eyes carry surprise/fear while signing, when brows are only nudged and the jaw is left to mouthing.
+  surprised: { browInnerUp: 0.6, ...pair("browOuterUp", 0.6), ...pair("eyeWide", 0.9), jawOpen: 0.25 },
+  fearful: { browInnerUp: 0.7, ...pair("eyeWide", 0.85), ...pair("mouthStretch", 0.6), ...pair("browDown", 0.1) },
   disgusted: { ...pair("noseSneer", 1), ...pair("mouthUpperUp", 0.75), ...pair("browDown", 0.5), ...pair("mouthFrown", 0.5), ...pair("cheekSquint", 0.35), ...pair("eyeSquint", 0.3) },
 };
 
@@ -98,7 +101,7 @@ export function emotionToBlendshapes(
   if (!scores) return weights;
   const gain = clamp01(intensity);
   for (const [emotion, recipe] of Object.entries(EMOTION_RECIPES)) {
-    const strength = Math.max(0, (scores[emotion] ?? 0) - NOISE_FLOOR) / (1 - NOISE_FLOOR);
+    const strength = (Math.max(0, (scores[emotion] ?? 0) - NOISE_FLOOR) / (1 - NOISE_FLOOR)) ** STRENGTH_GAMMA;
     if (!strength) continue;
     for (const [name, w] of Object.entries(recipe)) weights[name] = (weights[name] ?? 0) + strength * w * gain;
   }
