@@ -8,6 +8,8 @@ import { HumanoidRetargeter } from "../../utils/retargetHumanoid";
 import { browWeights, faceCalibration, sampleFace } from "../../utils/avatarPlayback";
 import { IdleLife } from "../../utils/idleLife";
 import { createCafeBackdrop } from "../../utils/stageBackdrop";
+import { EMOTION_KEYS, emotionToBlendshapes, sampleEmotion, smoothWeights } from "../../utils/emotionFace";
+import type { EmotionWindow } from "../../types/contract";
 type Props = {
   avatarCredit?: string;
   fitNarrowViewport?: boolean;
@@ -19,6 +21,12 @@ type Props = {
   expressiveModulation?: boolean;
   showSkeletonDebug?: boolean;
   emotion?: Record<string, number | string> | null;
+  /** Time-varying emotion2vec windows; falls back to `emotion` when absent. */
+  emotionTimeline?: EmotionWindow[] | null;
+  /** 0–1 multiplier for the voice-emotion face layer. */
+  emotionIntensity?: number;
+  /** Audio time (ms) used to sample the emotion timeline; defaults to currentTimeMs. */
+  emotionClock?: () => number;
   onCanvasReady?: (canvas: HTMLCanvasElement) => void;
 };
 export function AvatarCanvas(props: Props) {
@@ -163,7 +171,12 @@ export function AvatarCanvas(props: Props) {
           );
       },
     );
+    // Values set this frame, so the emotion layer can add on top of captured/base weights.
+    const applied = new Map<string, number>();
+    let emotionWeights: Record<string, number> = {};
+    let lastEmotionAt: number | undefined;
     function morph(name: string, value: number) {
+      applied.set(name, THREE.MathUtils.clamp(value, 0, 1));
       for (const mesh of morphs) {
         const i = mesh.morphTargetDictionary?.[name];
         if (i !== undefined && mesh.morphTargetInfluences)
@@ -180,8 +193,12 @@ export function AvatarCanvas(props: Props) {
         faceBlendshapes,
         headRotation,
         emotion,
+        emotionTimeline,
+        emotionIntensity,
+        emotionClock,
         renderOnChange,
       } = latest.current;
+      applied.clear();
       const cameraMoved = controls.update();
       if (renderOnChange && !redraw && !cameraMoved && lastMotion === motion && lastTime === currentTimeMs && lastFace === faceBlendshapes && lastHead === headRotation) return;
       redraw = false;
@@ -229,10 +246,20 @@ export function AvatarCanvas(props: Props) {
       const face = sampleFace(motion, currentTimeMs);
       const calibration = motion ? faceCalibration(motion) : undefined;
       const browLimit = .18 + .47 * THREE.MathUtils.clamp(face?.brow_reference_blend ?? (calibration ? 1 : 0), 0, 1);
-      const useEmotionMorphs = expressiveModulation && !motion;
-      const joy = useEmotionMorphs ? Number(emotion?.happy || 0) : 0,
-        sad = useEmotionMorphs ? Number(emotion?.sad || 0) : 0,
-        angry = useEmotionMorphs ? Number(emotion?.angry || 0) : 0;
+      // Voice-emotion layer: full face at rest, capped (brows only nudged) while signing.
+      const now = performance.now();
+      const emotionTarget = expressiveModulation
+        ? emotionToBlendshapes(
+            sampleEmotion(emotionTimeline, emotion, emotionClock ? emotionClock() : currentTimeMs),
+            motion ? "signing" : "rest",
+            emotionIntensity ?? 1,
+          )
+        : {};
+      emotionWeights = smoothWeights(emotionWeights, emotionTarget, lastEmotionAt === undefined ? 1e6 : now - lastEmotionAt);
+      lastEmotionAt = now;
+      const negative = ["mouthFrownLeft", "mouthPressLeft", "noseSneerLeft", "mouthStretchLeft"]
+        .reduce((sum, key) => sum + (emotionWeights[key] ?? 0), 0);
+      const restSmile = 0.22 * (1 - THREE.MathUtils.clamp(negative * 2, 0, 1));
       morph(
         "jawOpen",
         face && Number.isFinite(face.mouth_open) ? face.mouth_open * 2 : 0,
@@ -243,14 +270,16 @@ export function AvatarCanvas(props: Props) {
         const weights = browWeights(brow, face?.[`${key}_neutral`] ?? calibration?.[key], browLimit);
         morph(
           `browOuterUp${side}`,
-          brow !== undefined ? weights.up : joy * 0.15,
+          brow !== undefined ? weights.up : 0,
         );
-        morph(`browDown${side}`, brow !== undefined ? weights.down : angry * 0.2);
+        morph(`browDown${side}`, brow !== undefined ? weights.down : 0);
         // A soft welcoming smile only at rest; never added over signed content.
-        morph(`mouthSmile${side}`, face ? 0 : Math.max(joy * 0.2, motion ? 0 : 0.22));
-        morph(`mouthFrown${side}`, face ? 0 : sad * 0.15);
+        morph(`mouthSmile${side}`, face || motion ? 0 : restSmile);
+        morph(`mouthFrown${side}`, 0);
       }
       morph("browInnerUp", face ? (browWeights(face.brow_left, face.brow_left_neutral ?? calibration?.brow_left, browLimit).up + browWeights(face.brow_right, face.brow_right_neutral ?? calibration?.brow_right, browLimit).up) * .2 : 0);
+      // Additive on top of captured/base values; every emotion key is rewritten each frame.
+      for (const key of EMOTION_KEYS) morph(key, (applied.get(key) ?? 0) + (emotionWeights[key] ?? 0));
       if (faceBlendshapes) {
         for (const name of [
           "jawOpen", "eyeBlinkLeft", "eyeBlinkRight", "browInnerUp",

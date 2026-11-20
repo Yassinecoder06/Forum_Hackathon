@@ -38,7 +38,8 @@ flowchart TD
   - **Énergie RMS :** Détection de l'intensité vocale et des pauses silencieuses.
   - **Fréquence fondamentale (F0) :** Estimation de la hauteur vocale (testée sur des tons purs 220 Hz et 440 Hz).
   - **Horodatage temporel :** Mesures fournies en millisecondes pour un alignement précis avec les segments gestuels.
-- **Couche Affective (Prospective) :** Intégration prévue d'un checkpoint `emotion2vec+`. Dans le MVP actuel, `emotion_hypothesis` demeure strictement `null` tant qu'un modèle local vérifié n'est pas exécuté.
+- **Couche Affective (expérimentale) :** le checkpoint local `emotion2vec_plus_seed` (poids vérifiés, voir `research/audio/EMOTION2VEC_WEIGHT_AUDIT.md`) produit sur demande `emotion_hypothesis` (9 catégories pour tout le clip) et `emotion_timeline` (fenêtres de 2 s, pas de 1 s, fenêtres silencieuses ignorées). Ces scores sont des hypothèses du modèle, sans mesure d'exactitude ni calibration en français ; `null` lorsque le modèle est absent ou non demandé.
+- **Visage de l'avatar :** `frontend/src/utils/emotionFace.ts` convertit les scores en blendshapes ARKit (joie → sourire, pommettes ; tristesse → coins de bouche abaissés, `browInnerUp` ; colère → `browDown`, `noseSneer` ; surprise, peur, dégoût), avec un seuil de bruit (15 %), un lissage (~300 ms) et une intensité réglable. Au repos, visage complet. Pendant les signes, bas du visage plafonné à 0,35, `jawOpen` laissé aux données capturées, et sourcils seulement nuancés de façon additive (≤ 0,1) au-dessus des sourcils grammaticaux capturés ; la rotation de la tête n'est jamais modifiée.
 
 ### 2.3 Bibliothèque de Mouvements et Rig `signaculture-v1`
 - **Spécification du Rig :** Hiérarchie squelettique normalisée :

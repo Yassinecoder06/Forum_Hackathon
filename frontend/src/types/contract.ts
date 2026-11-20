@@ -63,10 +63,18 @@ export interface AudioFrame {
   is_pause: boolean;
 }
 
+export interface EmotionWindow {
+  start_ms: number;
+  end_ms: number;
+  scores: Record<string, number>;
+}
+
 export interface AudioFeatures {
   duration_ms: number;
   frames: AudioFrame[];
   emotion_hypothesis: null | Record<string, number | string>;
+  /** Overlapping ~2 s windows of emotion2vec hypotheses, ordered by start_ms. */
+  emotion_timeline?: null | EmotionWindow[];
   model_version: string;
   warnings: string[];
   transcription?: null | {

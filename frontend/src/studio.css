@@ -547,6 +547,46 @@ h1 em {
   min-width: 30px;
   text-align: right;
 }
+.emotion-strip {
+  position: relative;
+  height: 8px;
+  margin-top: 12px;
+  border-radius: 4px;
+  background: #f4efe8;
+  overflow: hidden;
+}
+.emotion-strip span {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  opacity: 0.55;
+}
+.emotion-strip .emotion-neutral,
+.emotion-strip .emotion-other,
+.emotion-strip .emotion-unknown { background: #d9cfc4; }
+.emotion-strip .emotion-happy { background: #e2a33b; }
+.emotion-strip .emotion-sad { background: #5d7fa8; }
+.emotion-strip .emotion-angry { background: #b8432f; }
+.emotion-strip .emotion-surprised { background: #8a6bb5; }
+.emotion-strip .emotion-fearful { background: #4f8a7c; }
+.emotion-strip .emotion-disgusted { background: #7d8a3a; }
+.intensity-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 10px;
+  font-size: 11px;
+  color: #925841;
+}
+.intensity-row input {
+  flex: 1;
+  accent-color: #8d553f;
+}
+.intensity-row b {
+  min-width: 34px;
+  text-align: right;
+  font-weight: 500;
+}
 .switch-row {
   display: flex;
   gap: 10px;

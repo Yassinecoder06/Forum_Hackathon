@@ -74,11 +74,28 @@ class AudioFrame(ContractModel):
         return self
 
 
+EmotionScores = dict[str, Annotated[float, Field(ge=0, le=1, allow_inf_nan=False)]]
+
+
+class EmotionWindow(ContractModel):
+    """One overlapping emotion2vec window; scores are model hypotheses."""
+    start_ms: int = Field(ge=0)
+    end_ms: int = Field(gt=0)
+    scores: EmotionScores
+
+    @model_validator(mode="after")
+    def validate_interval(self):
+        if self.start_ms >= self.end_ms:
+            raise ValueError("Emotion window start_ms must precede end_ms")
+        return self
+
+
 class AudioFeatures(ContractModel):
     """Positive-duration audio; empty frames and null unvoiced pitch are valid."""
     duration_ms: int = Field(gt=0)
     frames: list[AudioFrame]
-    emotion_hypothesis: dict[str, Annotated[float, Field(ge=0, le=1, allow_inf_nan=False)]] | None
+    emotion_hypothesis: EmotionScores | None
+    emotion_timeline: list[EmotionWindow] | None = None
     model_version: str
     warnings: list[str]
     transcription: "AudioTranscript | None" = None
@@ -93,6 +110,13 @@ class AudioFeatures(ContractModel):
             if frame.end_ms > self.duration_ms:
                 raise ValueError("Audio frame exceeds audio duration_ms")
             previous_end = frame.end_ms
+        previous_start = -1
+        for window in self.emotion_timeline or []:
+            if window.start_ms <= previous_start:
+                raise ValueError("Emotion windows must be ordered by start_ms")
+            if window.end_ms > self.duration_ms:
+                raise ValueError("Emotion window exceeds audio duration_ms")
+            previous_start = window.start_ms
         if self.transcription:
             for segment in self.transcription.segments:
                 if segment.end_ms > self.duration_ms:

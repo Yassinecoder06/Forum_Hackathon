@@ -281,3 +281,40 @@ assert(hasHand({...rejectedHand,playback_quality:undefined},"left"),"Keep the or
 const libraryClip={...a,playback_window:{start_ms:0,end_ms:100}};
 const libraryRaw=JSON.stringify(libraryClip);libraryPreview(libraryClip);
 assert.equal(JSON.stringify(libraryClip),libraryRaw,"Preview windows never mutate original source data");
+
+// Voice emotion -> ARKit blendshapes.
+{
+  const { emotionToBlendshapes, sampleEmotion, smoothWeights, SIGNING_BROW_CAP, SIGNING_FACE_CAP } =
+    await import("../src/utils/emotionFace");
+  const base = { angry: 0, disgusted: 0, fearful: 0, happy: 0, neutral: 0, other: 0, sad: 0, surprised: 0, unknown: 0 };
+  const neutral = emotionToBlendshapes({ ...base, neutral: 0.95, happy: 0.05 }, "rest");
+  assert(Object.values(neutral).every((w) => w === 0), "A near-neutral voice gives a neutral face");
+  const happy = emotionToBlendshapes({ ...base, happy: 0.9, neutral: 0.1 }, "rest");
+  assert(happy.mouthSmileLeft > 0.5 && happy.cheekSquintRight > 0, "Happy voice smiles at rest");
+  for (const emotion of ["happy", "sad", "angry", "surprised", "fearful", "disgusted"]) {
+    const scores = { ...base, [emotion]: 1 };
+    const rest = emotionToBlendshapes(scores, "rest");
+    const signing = emotionToBlendshapes(scores, "signing");
+    assert(Object.keys(rest).length > 0, `${emotion} drives the face at rest`);
+    for (const [name, w] of Object.entries({ ...rest, ...signing })) assert(w >= 0 && w <= 1, `${name} in [0,1]`);
+    for (const [name, w] of Object.entries(signing)) {
+      const cap = name.startsWith("brow") ? SIGNING_BROW_CAP : SIGNING_FACE_CAP;
+      assert(w <= cap + 1e-9, `${emotion}: ${name} capped while signing`);
+    }
+    assert.equal(signing.jawOpen ?? 0, 0, "Mouthing jaw stays with captured data while signing");
+  }
+  assert.equal(emotionToBlendshapes({ ...base, happy: 1 }, "rest", 0).mouthSmileLeft, 0, "Intensity 0 disables");
+  const timeline = [
+    { start_ms: 0, end_ms: 2000, scores: { ...base, neutral: 1 } },
+    { start_ms: 1000, end_ms: 3000, scores: { ...base, happy: 1 } },
+  ];
+  assert.equal(sampleEmotion(timeline, null, 0)!.neutral, 1);
+  const mid = sampleEmotion(timeline, null, 1500)!;
+  assert(Math.abs(mid.happy - 0.5) < 1e-9 && Math.abs(mid.neutral - 0.5) < 1e-9, "Interpolates between window centres");
+  assert.equal(sampleEmotion(timeline, null, 9000)!.happy, 1);
+  assert.equal(sampleEmotion(null, { ...base, sad: 0.7 }, 500)!.sad, 0.7, "Utterance score is the fallback");
+  const eased = smoothWeights({}, { mouthSmileLeft: 1 }, 100);
+  assert(eased.mouthSmileLeft > 0 && eased.mouthSmileLeft < 1, "Expression eases in");
+  assert(smoothWeights({ mouthSmileLeft: 1 }, {}, 10000).mouthSmileLeft === undefined, "Expression fades out fully");
+  console.log("Emotion face checks passed: neutral gating, signing caps, timeline interpolation, easing.");
+}
