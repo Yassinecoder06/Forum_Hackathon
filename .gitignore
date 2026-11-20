@@ -39,3 +39,6 @@ site/media/
 /data/poses/private/
 /research/private/
 /research/motion/*preview*.html
+
+# Third-party research papers: keep local copies only (copyright)
+/research/paper-b/*.pdf
