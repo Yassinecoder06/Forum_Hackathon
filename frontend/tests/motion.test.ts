@@ -316,5 +316,16 @@ assert.equal(JSON.stringify(libraryClip),libraryRaw,"Preview windows never mutat
   const eased = smoothWeights({}, { mouthSmileLeft: 1 }, 100);
   assert(eased.mouthSmileLeft > 0 && eased.mouthSmileLeft < 1, "Expression eases in");
   assert(smoothWeights({ mouthSmileLeft: 1 }, {}, 10000).mouthSmileLeft === undefined, "Expression fades out fully");
-  console.log("Emotion face checks passed: neutral gating, signing caps, timeline interpolation, easing.");
+  // Anchoring: a noisy window cannot flip the clip's emotion (CaFE fear clip, windows said happy).
+  const { anchorToClip, dominantEmotion } = await import("../src/utils/emotionFace");
+  const fearClip = { ...base, fearful: 0.77, happy: 0.22, sad: 0.01 };
+  const happyWindow = { ...base, happy: 1 };
+  assert.equal(dominantEmotion(anchorToClip(happyWindow, fearClip)), "fearful", "Disagreeing window keeps the clip emotion");
+  const lone = anchorToClip({ ...base, sad: 1 }, { ...base, happy: 1 });
+  assert(Math.abs(lone.happy - 0.5) < 1e-9 && lone.sad === 0, "Fully disagreeing window halves, never flips");
+  const agree = anchorToClip({ ...base, happy: 1 }, { ...base, happy: 1 });
+  assert.equal(agree.happy, 1, "Agreeing window keeps full strength");
+  const sampled = sampleEmotion([{ start_ms: 0, end_ms: 2000, scores: happyWindow }], fearClip, 1000)!;
+  assert.equal(dominantEmotion(sampled), "fearful", "sampleEmotion anchors windows to the clip score");
+  console.log("Emotion face checks passed: neutral gating, signing caps, timeline interpolation, easing, clip anchoring.");
 }

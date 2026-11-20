@@ -10,6 +10,26 @@ HOP_S = 1.0
 PAUSE_RMS = 0.01  # Same pause threshold as the acoustic frames in audio_analysis.
 
 
+FRAME_S = 0.05
+PAD_S = 0.1
+
+
+def voiced_span(frame_rms, rate, n_samples, frame_s=FRAME_S, pad_s=PAD_S, threshold=PAUSE_RMS):
+    """Sample range from the first to the last voiced 50 ms frame, padded by 100 ms.
+
+    Leading/trailing silence would otherwise fill whole windows with background noise.
+    Returns None when nothing is voiced.
+    """
+    voiced = [i for i, value in enumerate(frame_rms) if value >= threshold]
+    if not voiced:
+        return None
+    frame = round(frame_s * rate)
+    pad = round(pad_s * rate)
+    start = max(0, voiced[0] * frame - pad)
+    end = min(n_samples, (voiced[-1] + 1) * frame + pad)
+    return start, end
+
+
 def window_bounds(n_samples, rate, window_s=WINDOW_S, hop_s=HOP_S):
     """Sample ranges of overlapping windows; the last window always reaches the end."""
     if n_samples <= 0 or rate <= 0:

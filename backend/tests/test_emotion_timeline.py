@@ -1,7 +1,7 @@
 """Windowing and contract checks for the time-varying emotion layer (no Torch needed)."""
 import pytest
 from pydantic import ValidationError
-from backend.app.workers.emotion_timeline import build_timeline, window_bounds
+from backend.app.workers.emotion_timeline import build_timeline, voiced_span, window_bounds
 from backend.app.schemas.models import AudioFeatures
 
 SCORES = {'angry': 0, 'disgusted': 0, 'fearful': 0, 'happy': .7, 'neutral': .3,
@@ -14,6 +14,15 @@ def test_windows_overlap_and_reach_the_end():
     assert all(b[0] - a[0] == 16000 for a, b in zip(bounds, bounds[1:-1]))
     assert bounds[-1][1] == 16000 * 5 + 300
     assert all(end - start == 32000 for start, end in bounds)
+
+
+def test_voiced_span_trims_padded_silence():
+    # 50 ms frames at 16 kHz = 800 samples; speech in frames 28..63 of 85 (CaFE-like padding).
+    rms = [0.0] * 28 + [0.05] * 36 + [0.0] * 21
+    start, end = voiced_span(rms, 16000, 85 * 800)
+    assert start == 28 * 800 - 1600 and end == 64 * 800 + 1600
+    assert voiced_span([0.0, 0.005], 16000, 1600) is None
+    assert voiced_span([0.05], 16000, 500) == (0, 500)
 
 
 def test_short_audio_is_a_single_window_and_empty_has_none():
