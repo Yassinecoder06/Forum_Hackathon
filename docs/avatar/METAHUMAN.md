@@ -2,7 +2,7 @@
 
 The Studio can render a MetaHuman character instead of Ready Eva / Noa. The character file is **not in Git**: it is converted locally from a MetaHuman FBX export and served from `.runtime/avatar-candidates/MetaHuman.glb`, like the other review avatars.
 
-**Licence status: pending.** The use of a MetaHuman outside Unreal Engine (here: a GLB rendered by Three.js in a browser) must be checked against the current MetaHuman / Unreal Engine licence terms before the file is published, committed, or deployed. Until then, it is a local review asset only, like Noa (see [AVATAR_PROVENANCE.md](AVATAR_PROVENANCE.md)). Output is not a validated LSF translation.
+**Licence status: confirmed by the project owner (2026-11-20)** for use outside Unreal Engine, i.e. this GLB rendered by Three.js in the web Studio. The GLB is still built locally and kept out of Git; whether the raw character file may also be redistributed in this public repository is a separate decision (see [AVATAR_PROVENANCE.md](AVATAR_PROVENANCE.md)). Output is not a validated LSF translation.
 
 ## Build the GLB
 
@@ -56,7 +56,7 @@ These amplitudes are display approximations, not a facial-expression model. Mout
 
 ## Known limits
 
-- **Licence** pending (see above). Nothing derived from the MetaHuman is committed.
+- **Distribution**: web use is licensed (see above), but the GLB is not committed; it is rebuilt locally from the export.
 - **Hair** is rigid on the head (no secondary motion). The hair colour is a fixed dark brown, because the groom colour is not in the export. Card sorting uses alpha-test, so strand edges are hard.
 - **Clothing** is the exported outfit mesh with flat colours (no textures in the export).
 - **Mesh penetration**: the torso envelope and hand-contact solver of the retargeter were tuned on Ready Player Me bodies. With MetaHuman, B2 test sentences showed 6 mm maximum residual hand-to-hand penetration after correction. Hand-to-body contact (hands on the chest/face) is not solved against the actual MetaHuman mesh.
