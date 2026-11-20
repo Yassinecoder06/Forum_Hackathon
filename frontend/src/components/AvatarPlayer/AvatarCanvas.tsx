@@ -10,6 +10,7 @@ import { IdleLife } from "../../utils/idleLife";
 import { createCafeBackdrop } from "../../utils/stageBackdrop";
 import { RPM_PROFILE, rigBoneName } from "../../utils/rigProfiles";
 import { MetaHumanFaceDriver } from "../../utils/metahumanFace";
+import { engineFace, turnHead } from "../../utils/engineFace";
 type Props = {
   avatarCredit?: string;
   fitNarrowViewport?: boolean;
@@ -22,6 +23,10 @@ type Props = {
   showSkeletonDebug?: boolean;
   emotion?: Record<string, number | string> | null;
   onCanvasReady?: (canvas: HTMLCanvasElement) => void;
+  /** Motions to derive ahead of playback (film mode), one per animation frame while idle. */
+  prewarm?: MotionFile[];
+  /** Called after each prewarmed motion with the number of prewarm motions ready. */
+  onPrewarmed?: (ready: number) => void;
 };
 export function AvatarCanvas(props: Props) {
   const mount = useRef<HTMLDivElement>(null),
@@ -194,6 +199,16 @@ export function AvatarCanvas(props: Props) {
         emotion,
         renderOnChange,
       } = latest.current;
+      // Film mode: derive upcoming motions now, so playback never stalls on a first use.
+      const queue = latest.current.prewarm;
+      if (retarget && queue?.length) {
+        const pending = queue.find((m) => !retarget!.isPrepared(m));
+        if (pending) {
+          retarget.prime(pending);
+          redraw = true;
+          latest.current.onPrewarmed?.(queue.filter((m) => retarget!.isPrepared(m)).length);
+        }
+      }
       const cameraMoved = controls.update();
       if (renderOnChange && !redraw && !cameraMoved && lastMotion === motion && lastTime === currentTimeMs && lastFace === faceBlendshapes && lastHead === headRotation) return;
       redraw = false;
@@ -263,6 +278,21 @@ export function AvatarCanvas(props: Props) {
         morph(`mouthFrown${side}`, face ? 0 : sad * 0.15);
       }
       morph("browInnerUp", face ? (browWeights(face.brow_left, face.brow_left_neutral ?? calibration?.brow_left, browLimit).up + browWeights(face.brow_right, face.brow_right_neutral ?? calibration?.brow_right, browLimit).up) * .2 : 0);
+      // LSF engines: lip shape, lip corners and eye opening relative to the clip's neutral, plus the
+      // grammatical non-manual layer (question brows, negation head shake), which emotion never writes.
+      const engine = motion?.generation ? engineFace(face, calibration) : null;
+      if (engine) {
+        for (const [name, value] of Object.entries(engine.weights))
+          morph(name, name.startsWith("eyeBlink") ? Math.max(value, faceWeights[name] ?? 0) : value);
+        const nm = engine.nonmanual;
+        if (nm.browRaise || nm.browFurrow) {
+          morph("browInnerUp", Math.max(faceWeights.browInnerUp ?? 0, nm.browRaise * 0.9));
+          for (const side of ["Left", "Right"]) {
+            morph(`browOuterUp${side}`, Math.max(faceWeights[`browOuterUp${side}`] ?? 0, nm.browRaise * 0.7));
+            morph(`browDown${side}`, Math.max(faceWeights[`browDown${side}`] ?? 0, nm.browFurrow * 0.8));
+          }
+        }
+      }
       if (faceBlendshapes) {
         for (const name of [
           "jawOpen", "eyeBlinkLeft", "eyeBlinkRight", "browInnerUp",
@@ -274,6 +304,8 @@ export function AvatarCanvas(props: Props) {
         }
       }
       faceDriver?.apply(faceWeights);
+      if (engine && head && (engine.nonmanual.headYaw || engine.nonmanual.headPitch))
+        turnHead(head, engine.nonmanual.headYaw, engine.nonmanual.headPitch);
       if (head?.parent && bindHead && headRotation?.length === 9 && headRotation.every(Number.isFinite)) {
         const [xx, xy, xz, yx, yy, yz, zx, zy, zz] = headRotation;
         const rotation = new THREE.Matrix4().set(xx, xy, xz, 0, yx, yy, yz, 0, zx, zy, zz, 0, 0, 0, 0, 1);

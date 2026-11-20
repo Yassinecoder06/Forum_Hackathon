@@ -6,6 +6,7 @@ import {
   Check,
   ChevronRight,
   CircleHelp,
+  Clapperboard,
   Film,
   FlaskConical,
   Hand,
@@ -25,6 +26,7 @@ import { LexicalPipelinePanel } from "./components/LexicalPipelinePanel";
 import { LsfEnginePanel } from "./components/LsfEnginePanel";
 import { ConceptComposer } from "./components/ConceptComposer";
 import { ResearchPanel } from "./components/ResearchPanel";
+import { FilmMode } from "./components/FilmMode";
 import { AvatarCanvas } from "./components/AvatarPlayer/AvatarCanvas";
 import { stitchAnimationPlan, libraryPreview } from "./utils/planStitcher";
 import type {
@@ -35,7 +37,7 @@ import type {
 } from "./types/contract";
 import "./studio.css";
 
-type Page = "studio" | "library" | "capture" | "research";
+type Page = "studio" | "film" | "library" | "capture" | "research";
 type Capabilities = {
   cv_corrected_count?: number;
   dictasign?: {
@@ -590,6 +592,13 @@ export default function App() {
             <span>Studio</span>
           </button>
           <button
+            className={page === "film" ? "nav-item active" : "nav-item"}
+            onClick={() => setPage("film")}
+          >
+            <Clapperboard />
+            <span>Film</span>
+          </button>
+          <button
             className={page === "library" ? "nav-item active" : "nav-item"}
             onClick={() => setPage("library")}
           >
@@ -633,7 +642,9 @@ export default function App() {
             <strong>
               {page === "studio"
                 ? "Nouveau récit"
-                : page === "capture"
+                : page === "film"
+                  ? "Film signé"
+                  : page === "capture"
                   ? "Nouvelle capture"
                   : page === "research"
                     ? "Données & modèles"
@@ -654,6 +665,10 @@ export default function App() {
                   <>
                     Vos mots prennent <em>vie.</em>
                   </>
+                ) : page === "film" ? (
+                  <>
+                    Le film, en <em>signes.</em>
+                  </>
                 ) : page === "capture" ? (
                   <>
                     Du geste à la <em>matière.</em>
@@ -671,7 +686,9 @@ export default function App() {
               <p>
                 {page === "studio"
                   ? "Composez un récit visuel, enrichissez-le de votre voix et explorez le mouvement."
-                  : page === "capture"
+                  : page === "film"
+                    ? "Un film et ses sous-titres français : l’avatar signe chaque réplique, en synchronie, à côté de l’image."
+                    : page === "capture"
                     ? "Transformez vos vidéos en mouvements réutilisables, du corps jusqu’aux doigts."
                     : page === "research"
                       ? "Des sources identifiées, des expériences reproductibles et des résultats mesurés."
@@ -691,6 +708,9 @@ export default function App() {
               </button>
             </div>
           )}
+          {page === "film" ? (
+            <FilmMode avatarCredit={avatarCredit} engines={caps?.lsf_engines} transcription={caps?.transcription} emotion={caps?.emotion} />
+          ) : (
           <div className="studio-layout">
             <section className="editor-column">
               {page === "research" && <ResearchPanel />}
@@ -770,6 +790,7 @@ export default function App() {
                   <div className="card">
                     <LsfEnginePanel
                       text={text}
+                      voiceEmotion={audio?.emotion_hypothesis}
                       available={caps?.lsf_engines}
                       disabled={busy || recording}
                       onMotion={(generated, name) => {
@@ -1556,6 +1577,7 @@ export default function App() {
               </div>
             </aside>
           </div>
+          )}
           <footer className="studio-footer">
             <span>La culture se partage. Dans toutes ses langues.</span>
             <span>

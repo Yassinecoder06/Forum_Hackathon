@@ -156,7 +156,8 @@ def lowpass(x, cutoff=6.0, fps=FPS):
     return filtfilt(b, a, x, axis=0).astype("float32")
 
 
-def compose_b2(lex, lemmas, tm, prosody):
+def compose_b2(lex, lemmas, tm, prosody, spans=None):
+    """spans: optional list filled with (start_frame, end_frame, lemma) of each sign clip in the output."""
     rest = lex.rest
     gap = int(np.clip(round(prosody["gap_s_p75"] * FPS), 3, 15))
     min_len = int(max(4, round(prosody["sign_s_p10"] * FPS)))
@@ -168,6 +169,9 @@ def compose_b2(lex, lemmas, tm, prosody):
         if len(c) < min_len:
             c = retime(c, len(c) / min_len)
         parts.append(tm.transition(prev_clip, c, gap) if prev_clip is not None else blend(prev, c[0], 8))
+        if spans is not None:
+            start = sum(len(p) for p in parts)
+            spans.append((start, start + len(c), lem))
         parts.append(c)
         prev, prev_clip = c[-1], c
     parts.append(blend(prev, rest, 8))
@@ -187,10 +191,24 @@ class B2Engine:
         self.tm = TransitionModel(config.path("b2_transitions"))
         self.prosody = json.loads(config.path("b2_prosody").read_text(encoding="utf-8"))
 
-    def generate(self, text):
-        lemmas, unknown = text_to_lemmas(text, self.lex)
+    def generate(self, text, groups=None):
+        """groups: optional list of gloss lists, one per clause (LSF order). Without it the French words are
+        signed in text order. Returns the poses and metadata with each sign's frame span and clause index."""
+        if groups:
+            lemmas, unknown, clause = [], [], []
+            for k, glosses in enumerate(groups):
+                found, missing = text_to_lemmas(" ".join(g.lower() for g in glosses), self.lex)
+                lemmas += found
+                unknown += missing
+                clause += [k] * len(found)
+        else:
+            lemmas, unknown = text_to_lemmas(text, self.lex)
+            clause = [0] * len(lemmas)
+        spans = []
         if lemmas:
-            x = compose_b2(self.lex, lemmas, self.tm, self.prosody)
+            x = compose_b2(self.lex, lemmas, self.tm, self.prosody, spans)
         else:
             x = np.repeat(self.lex.rest[None], int(FPS), 0)
-        return x, {"lemmas": lemmas, "unknown": unknown, "lexicon_size": len(self.lex)}
+        return x, {"lemmas": lemmas, "unknown": unknown, "lexicon_size": len(self.lex),
+                   "sign_spans": [{"start_frame": int(a), "end_frame": int(b), "lemma": lem, "clause": int(c)}
+                                  for (a, b, lem), c in zip(spans, clause)]}

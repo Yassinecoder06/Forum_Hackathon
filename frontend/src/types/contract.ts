@@ -119,14 +119,38 @@ export interface MotionGeneration {
   lemmas?: string[];
   unknown?: string[];
   seconds?: number;
+  /** B2 word order: French text order, rule-based LSF order, or a gloss sequence edited by the user. */
+  order?: "french" | "lsf" | "edited";
+  gloss_analysis?: GlossAnalysis;
+  /** Voice emotion applied to the speed and size of the manual signing (never the face). Heuristic. */
+  emotion?: { label: string; confidence: number; speed: number; amplitude: number };
   translation_validated: false;
   linguistic_review: string;
+}
+
+/** Rule-based LSF word order (POST /lsf/order): simplified rules, not checked by an LSF reader. */
+export type NonManualType = "question_yn" | "question_wh" | "negation";
+export interface GlossClause {
+  text: string;
+  glosses: string[];
+  markers: NonManualType[];
+  rules: string[];
+}
+export interface GlossAnalysis {
+  clauses: GlossClause[];
+  glosses: string[];
+  gloss_text: string;
+  method: string;
+  validated: false;
 }
 
 export interface MotionFile {
   generation?: MotionGeneration;
   playback_window?: { start_ms: number; end_ms: number; method?: string };
-  face_calibration?: { brow_left: number; brow_right: number };
+  /** Neutral face channels (brows; engines also give mouth_width, mouth_corner, eye_open_left/right). */
+  face_calibration?: { brow_left: number; brow_right: number; [channel: string]: number };
+  /** Grammatical non-manual markers baked into the face channels (nm_*) of each frame. */
+  nonmanual?: { start_ms: number; end_ms: number; type: NonManualType }[];
   synthetic?: boolean;
   attribution?: MotionAttribution;
   attributions?: MotionAttribution[];

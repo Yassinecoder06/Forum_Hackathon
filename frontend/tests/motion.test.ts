@@ -395,3 +395,44 @@ assert.equal(JSON.stringify(libraryClip),libraryRaw,"Preview windows never mutat
   assert(at(chin).distanceTo(chin0) < 1e-9 && at(lidEdge).distanceTo(lid0) < 1e-9 && at(brow).distanceTo(brow0) < 1e-9, "Zero weights restore the bind face");
   console.log("MetaHuman checks passed: profile detection, explicit limb chains, same IK as RPM, deterministic seeking, facial joint driver.");
 }
+
+// Film mode: subtitle parsing (SRT and WebVTT), placement of one motion per cue, active motion at a time.
+{
+  const { parseSubtitles, placeMotions, activeAt } = await import("../src/utils/subtitles");
+  const srt = "1\r\n00:00:01,000 --> 00:00:03,500\r\n<i>Bonjour</i> à tous.\r\n\r\n2\r\n00:00:04,000 --> 00:00:06,000\r\nLe musée\r\nest fermé.\r\n";
+  const vtt = "WEBVTT\n\n00:01.000 --> 00:03.500 align:center\nBonjour à tous.\n\nnote\n00:04.000 --> 00:06.000\nLe musée est fermé.\n";
+  for (const raw of [srt, vtt]) {
+    const cues = parseSubtitles(raw);
+    assert.deepEqual(cues, [
+      { start_ms: 1000, end_ms: 3500, text: "Bonjour à tous." },
+      { start_ms: 4000, end_ms: 6000, text: "Le musée est fermé." },
+    ], "SRT and VTT give the same cues, tags removed, lines joined");
+  }
+  const cues = parseSubtitles(srt);
+  const placed = placeMotions(cues, [4000, 1000]);
+  assert.equal(placed[0].start_ms, 1000);
+  assert.equal(placed[1].start_ms, 5150, "a motion still playing delays the next one (150 ms rest)");
+  assert.equal(placed[1].delay_ms, 1150, "the delay is reported");
+  assert.deepEqual(activeAt(placed, [true, true], 500), { index: 0, local_ms: 0 }, "before the first cue: first motion at rest");
+  assert.deepEqual(activeAt(placed, [true, true], 4500), { index: 0, local_ms: 3500 });
+  assert.deepEqual(activeAt(placed, [true, true], 9000), { index: 1, local_ms: 1000 }, "after a motion: its last pose is held");
+  assert.equal(activeAt(placed, [false, false], 2000), null);
+  console.log("Film mode checks passed: SRT/VTT parsing, cue placement with reported delay, active motion.");
+}
+
+// Engine face channels -> ARKit weights relative to the clip's neutral; grammatical markers kept separate.
+{
+  const { engineFace } = await import("../src/utils/engineFace");
+  const neutral = { brow_left: .43, brow_right: .42, mouth_width: .57, mouth_corner: -.024, eye_open_left: .07, eye_open_right: .07 };
+  const rest = engineFace({ mouth_width: .57, mouth_corner: -.024, eye_open_left: .07, eye_open_right: .07, mouth_open: .01 }, neutral);
+  assert(Object.values(rest.weights).every((w) => w < 1e-9), "the neutral face gives no expression");
+  const round = engineFace({ mouth_width: .45, mouth_open: .1, mouth_corner: -.024 }, neutral);
+  assert(round.weights.mouthPucker > .3 && round.weights.mouthFunnel > .3, "narrow, open lips -> rounded");
+  const spread = engineFace({ mouth_width: .7, mouth_corner: .05 }, neutral);
+  assert(spread.weights.mouthStretchLeft > .3 && spread.weights.mouthSmileLeft > .3, "wide lips, raised corners -> spread, smile");
+  const squint = engineFace({ eye_open_left: .03, eye_open_right: .07 }, neutral);
+  assert(squint.weights.eyeSquintLeft > .3 && squint.weights.eyeSquintRight < 1e-9, "eyes are measured per side");
+  const nm = engineFace({ nm_brow_raise: .65, nm_head_yaw: .9, nm_head_pitch: .1 }, neutral).nonmanual;
+  assert(nm.browRaise === .65 && nm.headYaw === .4 && nm.headPitch === .1, "markers pass through, head motion bounded");
+  console.log("Engine face checks passed: neutral, rounded/spread lips, per-eye squint, bounded grammatical markers.");
+}

@@ -50,16 +50,41 @@ def library():
 
 def runtime_python(kind):
     override=os.getenv(f'SIGNACULTURE_{kind.upper()}_PYTHON')
-    return Path(override) if override else ROOT/f'.venv-{kind}'/'bin/python'
+    if override: return Path(override)
+    posix,windows=ROOT/f'.venv-{kind}'/'bin/python',ROOT/f'.venv-{kind}'/'Scripts/python.exe'
+    return windows if windows.is_file() and not posix.is_file() else posix
+
+# Local speech and emotion models. Defaults are the pinned small models in .models/; the env vars point to
+# any other local copy (e.g. faster-whisper-large-v3-turbo, emotion2vec_plus_large). Nothing is downloaded.
+DEFAULT_ASR_ID,DEFAULT_EMOTION_ID='Systran/faster-whisper-small','emotion2vec_plus_seed'
+
+def asr_model_dir():
+    return Path(os.getenv('SIGNACULTURE_ASR_MODEL_DIR') or ROOT/'.models/faster-whisper-small')
+
+def asr_model_ready(path=None):
+    p=path or asr_model_dir()
+    return all((p/n).is_file() for n in ('config.json','model.bin','tokenizer.json')) and any((p/n).is_file() for n in ('vocabulary.txt','vocabulary.json'))
+
+def asr_model_id():
+    return os.getenv('SIGNACULTURE_ASR_MODEL_ID') or (DEFAULT_ASR_ID if not os.getenv('SIGNACULTURE_ASR_MODEL_DIR') else asr_model_dir().name)
+
+def emotion_model_dir():
+    return Path(os.getenv('SIGNACULTURE_EMOTION_MODEL_DIR') or ROOT/'.models/emotion2vec-seed')
+
+def emotion_model_ready(path=None):
+    return ((path or emotion_model_dir())/'model.pt').is_file()
+
+def emotion_model_id():
+    return os.getenv('SIGNACULTURE_EMOTION_MODEL_ID') or (DEFAULT_EMOTION_ID if not os.getenv('SIGNACULTURE_EMOTION_MODEL_DIR') else emotion_model_dir().name)
 
 def capabilities():
     entries=library()
     audio_python=runtime_python('audio')
     return {'capture':runtime_python('motion').is_file(),
-        'emotion':audio_python.is_file() and (ROOT/'.models/emotion2vec-seed/model.pt').is_file(),
-        'transcription':audio_python.is_file() and all((ROOT/'.models/faster-whisper-small'/name).is_file() for name in ('config.json','model.bin','tokenizer.json','vocabulary.txt')),
-        'motion_model':'Sapiens 0.3B + HaMeR' if motion_inference.available() else 'MediaPipe Holistic','emotion_model':'emotion2vec+ seed',
-        'transcription_model':'Systran/faster-whisper-small',
+        'emotion':audio_python.is_file() and emotion_model_ready(),
+        'transcription':audio_python.is_file() and asr_model_ready(),
+        'motion_model':'Sapiens 0.3B + HaMeR' if motion_inference.available() else 'MediaPipe Holistic','emotion_model':emotion_model_id(),
+        'transcription_model':asr_model_id(),
         'library_count':len(entries),'cv_corrected_count':sum(bool(r.get('cv_generation')) for r in entries),
         'corpus':corpus_status(),'dictasign':dictasign_status()}
 

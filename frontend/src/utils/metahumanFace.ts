@@ -11,11 +11,14 @@ import * as THREE from "three";
  * - jawOpen        -> FACIAL_C_Jaw + FACIAL_C_LowerLipRotation rotate about the jaw pivot;
  * - brow*          -> FACIAL_[LR]_ForeheadIn/Mid/Out translate up (raise) or down (frown);
  * - eyeLook*       -> FACIAL_[LR]_Eye yaw/pitch (gaze);
- * - mouthSmile/Frown* -> FACIAL_[LR]_LipCorner translate up-out / down.
+ * - mouthSmile/Frown* -> FACIAL_[LR]_LipCorner translate up-out / down;
+ * - mouthPucker / mouthFunnel -> lip corners inward, lips forward (funnel also parts the lips);
+ * - mouthStretch*  -> lip corners outward;
+ * - eyeWide*       -> upper lids up; eyeSquint* -> lower lids up, lower cheeks up.
  *
  * Every call starts from the bind pose, so nothing accumulates and seeking stays
- * deterministic. Amplitudes are display approximations, not a facial-expression model;
- * cheeks, lip shapes and mouthings are not driven.
+ * deterministic. Amplitudes are display approximations, not a facial-expression model; they
+ * give the broad lip shapes of mouthing (rounded / spread / open), not exact visemes.
  */
 type Joint = { bone: THREE.Object3D; local: THREE.Quaternion; position: THREE.Vector3; world: THREE.Quaternion; parent: THREE.Quaternion };
 
@@ -48,7 +51,9 @@ export class MetaHumanFaceDriver {
     const names = ["FACIAL_C_Jaw", "FACIAL_C_LowerLipRotation"];
     for (const s of ["L", "R"])
       names.push(`FACIAL_${s}_EyelidUpperA`, `FACIAL_${s}_EyelidUpperB`, `FACIAL_${s}_EyelidLowerA`, `FACIAL_${s}_EyelidLowerB`,
-        `FACIAL_${s}_ForeheadIn`, `FACIAL_${s}_ForeheadMid`, `FACIAL_${s}_ForeheadOut`, `FACIAL_${s}_Eye`, `FACIAL_${s}_LipCorner`);
+        `FACIAL_${s}_ForeheadIn`, `FACIAL_${s}_ForeheadMid`, `FACIAL_${s}_ForeheadOut`, `FACIAL_${s}_Eye`, `FACIAL_${s}_LipCorner`,
+        `FACIAL_${s}_LipUpper`, `FACIAL_${s}_LipLower`, `FACIAL_${s}_CheekLower`);
+    names.push("FACIAL_C_LipUpper", "FACIAL_C_LipLower");
     const driver = new MetaHumanFaceDriver(root, names);
     return driver.joints.has("FACIAL_C_Jaw") ? driver : null;
   }
@@ -102,8 +107,21 @@ export class MetaHumanFaceDriver {
       this.rotate(`FACIAL_${s}_Eye`, Y, yaw);
       this.rotate(`FACIAL_${s}_Eye`, X, pitch);
       const smile = w(`mouthSmile${side}`), frown = w(`mouthFrown${side}`);
-      this.move(`FACIAL_${s}_LipCorner`, sign * smile * 0.004, smile * 0.004 - frown * 0.003, -smile * 0.002);
+      const pucker = Math.max(w("mouthPucker"), w("mouthFunnel")), stretch = w(`mouthStretch${side}`);
+      this.move(`FACIAL_${s}_LipCorner`, sign * (smile * 0.004 + stretch * 0.005 - pucker * 0.006),
+        smile * 0.004 - frown * 0.003 - stretch * 0.001, -smile * 0.002 + pucker * 0.004);
+      this.move(`FACIAL_${s}_LipUpper`, -sign * pucker * 0.002, w("mouthFunnel") * 0.0015, pucker * 0.004);
+      this.move(`FACIAL_${s}_LipLower`, -sign * pucker * 0.002, -w("mouthFunnel") * 0.002, pucker * 0.004);
+      const wide = w(`eyeWide${side}`), squint = w(`eyeSquint${side}`);
+      this.rotate(`FACIAL_${s}_EyelidUpperA`, X, -wide * 0.22);
+      this.rotate(`FACIAL_${s}_EyelidUpperB`, X, -wide * 0.22);
+      this.rotate(`FACIAL_${s}_EyelidLowerA`, X, -squint * 0.28);
+      this.rotate(`FACIAL_${s}_EyelidLowerB`, X, -squint * 0.28);
+      this.move(`FACIAL_${s}_CheekLower`, 0, squint * 0.002, 0);
     }
+    const pucker = Math.max(w("mouthPucker"), w("mouthFunnel"));
+    this.move("FACIAL_C_LipUpper", 0, w("mouthFunnel") * 0.0015, pucker * 0.004);
+    this.move("FACIAL_C_LipLower", 0, -w("mouthFunnel") * 0.002, pucker * 0.004);
     for (const j of this.joints.values()) j.bone.updateMatrixWorld(true);
   }
 }

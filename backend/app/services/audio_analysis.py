@@ -6,7 +6,7 @@ import subprocess
 import tempfile
 import wave
 import numpy as np
-from .capture_library import ROOT,runtime_python,storage
+from .capture_library import ROOT,runtime_python,storage,asr_model_dir,asr_model_ready,asr_model_id,emotion_model_dir,emotion_model_ready,emotion_model_id
 
 def analyse(raw, filename, include_emotion=False, include_transcription=False):
     with tempfile.TemporaryDirectory(prefix='signaculture-audio-') as temp:
@@ -35,8 +35,8 @@ def analyse(raw, filename, include_emotion=False, include_transcription=False):
         emotion=None;transcription=None;warnings=['La hauteur est une estimation acoustique ; une voix bruitée peut être mal suivie.']
         version='fft-autocorrelation-rms-v2'
         if include_emotion:
-            model=ROOT/'.models/emotion2vec-seed'
-            if not (model/'model.pt').is_file() or not runtime_python('audio').is_file():
+            model=emotion_model_dir()
+            if not emotion_model_ready(model) or not runtime_python('audio').is_file():
                 warnings.append('Le modèle émotionnel local est absent ; les mesures acoustiques restent disponibles.')
             elif all(frame['is_pause'] for frame in frames):
                 warnings.append('Signal trop faible pour estimer une émotion.')
@@ -51,13 +51,13 @@ def analyse(raw, filename, include_emotion=False, include_transcription=False):
                         warnings.append('Le modèle émotionnel a échoué ; les mesures acoustiques restent disponibles.')
                         log=storage();(log/'emotion-error.log').write_text(result.stderr[-10000:])
                     else:
-                        emotion=json.loads(output.read_text())['scores'];version+=' + emotion2vec_plus_seed'
+                        emotion=json.loads(output.read_text())['scores'];version+=' + '+emotion_model_id()
                         warnings.append('Les catégories émotionnelles sont des hypothèses du modèle, pas une mesure de l’état intérieur.')
         else: warnings.append('Analyse émotionnelle non demandée.')
         duration_ms=max(1,round(n/rate*1000))
         if include_transcription:
-            model=ROOT/'.models/faster-whisper-small'
-            if not (model/'model.bin').is_file() or not runtime_python('audio').is_file():
+            model=asr_model_dir()
+            if not asr_model_ready(model) or not runtime_python('audio').is_file():
                 warnings.append('Le modèle de transcription locale est absent ; le texte français doit être saisi manuellement.')
             else:
                 output=temp/'transcription.json'
@@ -71,7 +71,7 @@ def analyse(raw, filename, include_emotion=False, include_transcription=False):
                         segment['start_ms']=min(segment['start_ms'],max(0,duration_ms-1))
                         segment['end_ms']=min(max(segment['start_ms']+1,segment['end_ms']),duration_ms)
                     warnings.append('La transcription est forcée en français et doit être relue avant de composer.')
-                    version+=' + faster-whisper-small'
+                    version+=' + '+asr_model_id()
         else:
             warnings.append('Transcription non demandée.')
         return {'duration_ms':duration_ms,'frames':frames,'emotion_hypothesis':emotion,'model_version':version,'warnings':warnings,'transcription':transcription}

@@ -536,6 +536,15 @@ export class HumanoidRetargeter {
     return { all: dense, names, states: denseStates, diagnostics };
   }
 
+  /** True when the motion's offline derivation is cached (applyMotion will not block). */
+  isPrepared(motion: MotionFile) {
+    return this.tracks.has(motion);
+  }
+  /** Derive and cache a motion ahead of playback (blocks for about 0.25 s per second of motion). Leaves the
+   * rig in an arbitrary pose: the caller re-applies the current motion afterwards. */
+  prime(motion: MotionFile) {
+    if (!this.tracks.has(motion)) this.tracks.set(motion, this.prepare(motion));
+  }
   /** Cached offline derivation; seeking never depends on past render calls. */
   applyMotion(motion: MotionFile, time: number) {
     let track = this.tracks.get(motion);

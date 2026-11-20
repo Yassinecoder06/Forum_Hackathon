@@ -10,6 +10,7 @@ from datetime import datetime, timezone
 
 import numpy as np
 import subprocess
+import tempfile
 from fastapi import FastAPI, HTTPException, UploadFile, File, Form, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
@@ -349,6 +350,67 @@ async def audio(file: UploadFile = File(...), include_emotion: bool = Query(Fals
     except FileNotFoundError: raise HTTPException(503,'FFmpeg est nécessaire pour décoder les médias.')
 
 
+@app.post('/analyze-audio/emotion-segments')
+async def audio_emotion_segments(file: UploadFile = File(...), cues: str = Form(...)):
+    """Film mode: emotion2vec scores of the voice for each subtitle line (one model load for all lines).
+    cues: JSON list of {start_ms, end_ms}. Up to 30 min and 300 lines; the audio stays on this machine."""
+    from starlette.concurrency import run_in_threadpool
+    from .services.capture_library import emotion_model_dir, emotion_model_id, emotion_model_ready
+    try:
+        windows = [(int(c['start_ms']), int(c['end_ms'])) for c in json.loads(cues)][:300]
+    except (ValueError, TypeError, KeyError):
+        raise HTTPException(422, 'Liste de répliques invalide.')
+    if not windows:
+        raise HTTPException(422, 'Aucune réplique.')
+    if not emotion_model_ready() or not capture_library.runtime_python('audio').is_file():
+        raise HTTPException(503, 'Le modèle émotionnel local est absent.')
+    raw = await file.read(500 * 1024 * 1024 + 1)
+    if len(raw) > 500 * 1024 * 1024:
+        raise HTTPException(413, 'Fichier limité à 500 Mo.')
+
+    def work():
+        with tempfile.TemporaryDirectory(prefix='signaculture-emotion-') as temp:
+            temp = Path(temp)
+            source = temp / ('film' + Path(file.filename or 'film.mp4').suffix.lower())
+            source.write_bytes(raw)
+            clips, index = [], []
+            for k, (a, b) in enumerate(windows):
+                if b - a < 300 or a > 30 * 60 * 1000:
+                    continue
+                wav = temp / f'cue{k:04d}.wav'
+                done = subprocess.run(['ffmpeg', '-nostdin', '-hide_banner', '-loglevel', 'error', '-y', '-ss', f'{a / 1000:.3f}', '-to',
+                                       f'{min(b, a + 30000) / 1000:.3f}', '-i', str(source), '-vn', '-ac', '1', '-ar', '16000',
+                                       '-c:a', 'pcm_s16le', str(wav)], capture_output=True, timeout=60)
+                if not done.returncode and wav.is_file() and wav.stat().st_size > 2000:
+                    clips.append(str(wav)); index.append(k)
+            if not clips:
+                raise ValueError('Aucune piste audio exploitable dans les répliques.')
+            listing, output = temp / 'clips.json', temp / 'emotion.json'
+            listing.write_text(json.dumps(clips))
+            result = subprocess.run([str(capture_library.runtime_python('audio')), str(capture_library.ROOT / 'backend/app/workers/emotion.py'),
+                                     str(listing), str(emotion_model_dir()), str(output), '--batch'],
+                                    capture_output=True, text=True, timeout=120 + 5 * len(clips), cwd=capture_library.ROOT)
+            if result.returncode:
+                (capture_library.storage() / 'emotion-error.log').write_text(result.stderr[-10000:])
+                raise RuntimeError('Le modèle émotionnel a échoué.')
+            items = json.loads(output.read_text())['items']
+            scores = [None] * len(windows)
+            for k, sc in zip(index, items):
+                scores[k] = sc
+            return {'items': scores, 'model': emotion_model_id(), 'validated': False,
+                    'note': "Hypothèses du modèle sur la voix, pas une mesure de l'état intérieur."}
+    try:
+        return await run_in_threadpool(work)
+    except ValueError as exc:
+        raise HTTPException(422, str(exc))
+    except FileNotFoundError:
+        raise HTTPException(503, 'FFmpeg est nécessaire pour décoder les médias.')
+    except subprocess.TimeoutExpired:
+        raise HTTPException(504, 'Le traitement audio a dépassé le délai autorisé.')
+    except RuntimeError as exc:
+        raise HTTPException(503, str(exc))
+
+
 @app.get('/research/status')
 def research_status():
     from .services.research_status import status
@@ -422,21 +484,97 @@ class LsfGenerateRequest(BaseModel):
     text: str = Field(min_length=1, max_length=400)
     engine: Literal['c0', 'b2'] = 'b2'
     seed: int = Field(default=0, ge=0, le=2**31 - 1)
+    # B2 only: 'lsf' signs the glosses of the rule-based LSF word order (services/lsf_order.py), 'french' the text order.
+    order: Literal['french', 'lsf'] = 'french'
+    # B2 only: an edited gloss sequence (one list per clause) replaces the automatic order.
+    glosses: list[list[str]] | None = Field(default=None, max_length=12)
+    # Grammatical non-manual markers (questions: brows and head tilt; negation: head shake), from the French text.
+    nonmanual: bool = True
+    # Voice emotion (emotion2vec scores, e.g. AudioFeatures.emotion_hypothesis or one label at 1.0): changes the speed
+    # and size of the manual signing only, never the face (services/lsf_emotion.py). Heuristic, not validated.
+    emotion: dict[str, float] | None = Field(default=None, max_length=12)
+    emotion_strength: float = Field(default=1.0, ge=0.0, le=1.0)
+
+
+class LsfOrderRequest(BaseModel):
+    text: str = Field(min_length=1, max_length=400)
+
+
+@app.post('/lsf/order')
+def lsf_order_preview(body: LsfOrderRequest):
+    """French text -> LSF-ordered gloss sequence by simplified rules (time, place, subject, object, verb, negation,
+    question word) with the clause markers. Editable draft for B2; not checked by an LSF reader."""
+    from .services.lsf_order import order
+    text = ' '.join(body.text.split())
+    if not text:
+        raise HTTPException(422, 'Saisissez une phrase en français.')
+    return order(text)
+
+
+def _nonmanual_spans(analysis: dict, meta: dict, n_frames: int, fps: float = 25.0) -> list[dict]:
+    """Clause markers -> time spans. B2: from the clause's first to last sign; otherwise the clip is split
+    between clauses in proportion to their text length (C0 has no sign boundaries)."""
+    clauses = analysis.get('clauses') or []
+    if not any(c['markers'] for c in clauses):
+        return []
+    total_ms = (n_frames - 1) / fps * 1000.0
+    spans, signs = [], meta.get('sign_spans') or []
+    if signs:
+        for k, c in enumerate(clauses):
+            mine = [sp for sp in signs if sp['clause'] == k]
+            if mine and c['markers']:
+                a, b = mine[0]['start_frame'] / fps * 1000.0, mine[-1]['end_frame'] / fps * 1000.0
+                spans += [{'start_ms': round(a), 'end_ms': round(b), 'type': m} for m in c['markers']]
+        return spans
+    lengths = [max(1, len(c['text'])) for c in clauses]
+    head, tail = min(300.0, 0.1 * total_ms), min(300.0, 0.1 * total_ms)
+    usable, t = max(1.0, total_ms - head - tail), head
+    for c, n in zip(clauses, lengths):
+        d = usable * n / sum(lengths)
+        spans += [{'start_ms': round(t), 'end_ms': round(t + d), 'type': m} for m in c['markers']]
+        t += d
+    return spans
+
 
 @app.post('/lsf/generate')
 def lsf_generate(body: LsfGenerateRequest):
     """French text -> generated MotionFile (C0 generator or B2 stitching). Automatic proxy output:
     never a validated LSF translation. Models are local, private files; nothing is downloaded here."""
+    from .services.lsf_order import order
     text = ' '.join(body.text.split())
     if not text:
         raise HTTPException(422, 'Saisissez une phrase en français.')
+    analysis = order(text)
+    groups = None
+    if body.engine == 'b2':
+        if body.glosses:
+            groups = [[g.strip()[:40] for g in clause if g.strip()][:40] for clause in body.glosses]
+            # keep the text's markers when the edited clauses line up with them, else drop them
+            if len(groups) != len(analysis['clauses']):
+                analysis = {**analysis, 'clauses': [{'text': ' '.join(g), 'glosses': g, 'markers': [], 'rules': []} for g in groups]}
+        elif body.order == 'lsf':
+            groups = [c['glosses'] for c in analysis['clauses']]
     try:
-        poses, meta = lsf_engines.generate(text, body.engine, seed=body.seed)
-        motion = engine_poses_to_motion(poses, engine=body.engine, text=text, face_calibration=meta.pop('face_neutral', None))
+        poses, meta = lsf_engines.generate(text, body.engine, seed=body.seed, groups=groups)
+        from .services.lsf_emotion import apply_emotion, emotion_params
+        feeling = emotion_params(body.emotion, body.emotion_strength)
+        if feeling and (abs(feeling['speed'] - 1) > 1e-3 or abs(feeling['amplitude'] - 1) > 1e-3):
+            poses = apply_emotion(poses, feeling)
+            for sp in meta.get('sign_spans') or []:            # sign boundaries follow the retiming
+                sp['start_frame'] = int(round(sp['start_frame'] / feeling['speed']))
+                sp['end_frame'] = int(round(sp['end_frame'] / feeling['speed']))
+        if feeling:
+            meta['emotion'] = {**feeling, 'applies_to': 'speed and size of manual signing only', 'validated': False}
+        spans = _nonmanual_spans(analysis, meta, len(poses)) if body.nonmanual else []
+        motion = engine_poses_to_motion(poses, engine=body.engine, text=text, face_calibration=meta.pop('face_neutral', None),
+                                        nonmanual=spans)
     except lsf_engines.EngineUnavailable as exc:
         raise HTTPException(503, str(exc))
     except ValueError as exc:
         raise HTTPException(422, str(exc))
+    meta.pop('sign_spans', None)
+    meta['order'] = 'edited' if (body.engine == 'b2' and body.glosses) else (body.order if body.engine == 'b2' else 'french')
+    meta['gloss_analysis'] = analysis
     motion['generation'] = {**meta, 'translation_validated': False, 'linguistic_review': 'pending'}
     return motion
 

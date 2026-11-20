@@ -1,10 +1,30 @@
-"""Local French speech recognition using the pinned faster-whisper model."""
+"""Local French speech recognition with a local faster-whisper model (default: the pinned small model;
+SIGNACULTURE_ASR_MODEL_DIR / _ID / _REVISION describe another local copy, e.g. large-v3-turbo)."""
 import argparse
 import json
+import os
 from pathlib import Path
 
-MODEL_REVISION = "536b0662742c02347bc0e980a01041f333bce120"
-MODEL_ID = "Systran/faster-whisper-small"
+_CUSTOM = bool(os.getenv("SIGNACULTURE_ASR_MODEL_DIR"))
+MODEL_REVISION = os.getenv("SIGNACULTURE_ASR_MODEL_REVISION") or ("local" if _CUSTOM else "536b0662742c02347bc0e980a01041f333bce120")
+MODEL_ID = os.getenv("SIGNACULTURE_ASR_MODEL_ID") or (Path(os.environ["SIGNACULTURE_ASR_MODEL_DIR"]).name if _CUSTOM else "Systran/faster-whisper-small")
+
+
+def _samples(audio: Path):
+    """The API always passes 16 kHz mono 16-bit PCM WAV (ffmpeg): read it directly as float32 samples, so
+    transcription does not depend on PyAV's decoder (whose API changes between versions). Other files fall
+    back to faster-whisper's own decoding."""
+    import wave
+
+    import numpy as np
+
+    try:
+        with wave.open(str(audio)) as stream:
+            if stream.getframerate() == 16000 and stream.getnchannels() == 1 and stream.getsampwidth() == 2:
+                return np.frombuffer(stream.readframes(stream.getnframes()), dtype="<i2").astype("float32") / 32768.0
+    except (wave.Error, EOFError):
+        pass
+    return str(audio.resolve())
 
 
 def run(audio: Path, model_path: Path, output: Path) -> dict:
@@ -12,8 +32,10 @@ def run(audio: Path, model_path: Path, output: Path) -> dict:
     from faster_whisper import WhisperModel
 
     model_path = model_path.resolve()
-    required = ("config.json", "model.bin", "tokenizer.json", "vocabulary.txt")
+    required = ("config.json", "model.bin", "tokenizer.json")
     missing = [name for name in required if not (model_path / name).is_file()]
+    if not any((model_path / name).is_file() for name in ("vocabulary.txt", "vocabulary.json")):
+        missing.append("vocabulary.txt or vocabulary.json")
     if missing:
         raise FileNotFoundError("ASR model files are missing: " + ", ".join(missing))
 
@@ -34,7 +56,7 @@ def run(audio: Path, model_path: Path, output: Path) -> dict:
         )
 
     generated, _ = model.transcribe(
-        str(audio.resolve()),
+        _samples(audio),
         language="fr",
         task="transcribe",
         beam_size=3,

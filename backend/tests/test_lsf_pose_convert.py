@@ -130,7 +130,8 @@ def test_face_ratios_match_capture_measure():
     assert face["brow_left"] == pytest.approx(0.24 * C.FACE_ASPECT, rel=1e-3)
     assert face["brow_right"] == pytest.approx(0.24 * C.FACE_ASPECT, rel=1e-3)
     assert face["mouth_open"] == pytest.approx(0.03 * C.FACE_ASPECT, rel=1e-3)
-    assert m["face_calibration"] == {"brow_left": 0.4, "brow_right": 0.41}
+    assert {k: m["face_calibration"][k] for k in ("brow_left", "brow_right")} == {"brow_left": 0.4, "brow_right": 0.41}
+    assert m["face_calibration"]["mouth_width"] == C.FACE_NEUTRAL_DEFAULT["mouth_width"]   # unspecified channels keep the lexicon neutral
 
 
 def test_three_dimensional_input_ignores_engine_depth():

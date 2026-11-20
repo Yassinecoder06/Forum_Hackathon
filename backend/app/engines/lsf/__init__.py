@@ -17,9 +17,9 @@ _cache: dict[str, object] = {}
 _lock = threading.Lock()
 _run = threading.Lock()          # one generation at a time (seeded sampling, shared model state)
 
-# Neutral brow ratios (face_features.measure_face scale) of the B2 lexicon rest pose; used by
-# C0, which has no rest frame of its own. Engineering reference, not a linguistic neutral.
-DEFAULT_FACE_NEUTRAL = {"brow_left": 0.428, "brow_right": 0.424}
+# Neutral face channels of the B2 lexicon rest pose; used by C0, which has no rest frame of its own.
+# Engineering reference, not a linguistic neutral.
+from ...services.lsf_pose_convert import FACE_NEUTRAL_DEFAULT as DEFAULT_FACE_NEUTRAL  # noqa: E402
 
 
 def _engine(name: str):
@@ -40,25 +40,26 @@ def _engine(name: str):
         return _cache[name]
 
 
-def generate(text: str, engine: str, seed: int = 0):
-    """-> (poses (T,157,2|3) at 25 fps in normalised engine coordinates, metadata dict)."""
+def generate(text: str, engine: str, seed: int = 0, groups=None):
+    """-> (poses (T,157,2|3) at 25 fps in normalised engine coordinates, metadata dict).
+    groups: B2 only, gloss lists per clause in LSF order (lsf_order); ignored by C0, which reads French text."""
     if engine not in ENGINES:
         raise ValueError(f"unknown engine {engine!r}")
     start = time.perf_counter()
     model = _engine(engine)
     with _run:
-        return _generate(model, text, engine, seed, start)
+        return _generate(model, text, engine, seed, start, groups)
 
 
-def _generate(model, text, engine, seed, start):
+def _generate(model, text, engine, seed, start, groups=None):
     if engine == "c0":
         poses, meta = model.generate(text, seed=seed)
         meta["face_neutral"] = DEFAULT_FACE_NEUTRAL
     else:
-        poses, meta = model.generate(text)
+        poses, meta = model.generate(text, groups)
         from ...services.lsf_pose_convert import face_ratios
         rest = face_ratios(model.lex.rest[:, :2])
-        meta["face_neutral"] = {k: rest[k] for k in ("brow_left", "brow_right")} if rest else DEFAULT_FACE_NEUTRAL
+        meta["face_neutral"] = {k: rest.get(k, v) for k, v in DEFAULT_FACE_NEUTRAL.items()} if rest else DEFAULT_FACE_NEUTRAL
     meta["engine"] = engine
     meta["seconds"] = round(time.perf_counter() - start, 3)
     return poses, meta

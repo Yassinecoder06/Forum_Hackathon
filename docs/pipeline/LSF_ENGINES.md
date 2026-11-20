@@ -77,6 +77,71 @@ The Studio retargeter originally drove only the arms (IK to the wrists), the han
 
 Captured clips keep the original arms-and-hands behaviour (tested in `frontend/tests/motion.test.ts`). Body yaw is not estimated, because 2D shoulders do not give its direction.
 
+## LSF word order (rule-based, B2)
+
+`backend/app/services/lsf_order.py` (`POST /lsf/order`) puts the French words in an order closer to LSF before B2 looks the signs up. The rules are the textbook tendencies of LSF, applied without a parser:
+- time first;
+- then place;
+- subject and object before the verb (modal verbs after the main verb);
+- negation after the verb;
+- question words at the end;
+- no articles, copula or auxiliary;
+- FINI for a completed action without a time word;
+- subject pronouns become MOI / TOI / NOUS…
+
+`POST /lsf/generate` takes `order: "lsf" | "french"` and `glosses` (one edited list per clause). The Studio panel shows the proposed glosses per clause, editable, with the rules that were applied. These are simplified rules; **no LSF reader has checked them**.
+
+## Grammatical face and mouth (both engines)
+
+- **Face channels:** `lsf_pose_convert.face_ratios` adds `mouth_width`, `mouth_corner`, `eye_open_left/right` to `mouth_open` and the brows. The avatar reads them relative to `face_calibration` (the lexicon's rest face) in `frontend/src/utils/engineFace.ts`:
+  - narrow lips → pucker or funnel;
+  - wide lips → stretch;
+  - raised corners → smile;
+  - less open eyes → squint or blink;
+  - wide eyes → eyeWide.
+
+  The MetaHuman face driver moves lip, eyelid and cheek joints for these.
+- **Non-manual markers:** from the French text: yes/no question, wh-question, negation. They become time spans (B2: from the clause's first sign to its last; C0: proportional to the text) and per-frame channels `nm_brow_raise`, `nm_brow_furrow`, `nm_head_yaw` (a 2.2 Hz head shake for negation) and `nm_head_pitch`, with 160 ms ramps.
+
+  They are a separate layer: emotion never writes them, and they override the measured brows. `nonmanual: false` switches them off.
+
+## Film mode and live mode (Studio, page "Film")
+
+- **Film:** a film plus French subtitles (SRT/VTT; or Whisper when it is installed) → one `/lsf/generate` per line. Each motion starts with its line, or right after the previous motion if that one is still playing; the avatar's delay is shown per line.
+  - Motions are prepared for the avatar in the background as they arrive (`HumanoidRetargeter.prime`, about 0.25 s per second of motion), so playback does not stall.
+  - The avatar plays beside the film, synced to the video clock, with the current line highlighted.
+  - Export: film plus avatar recorded to WebM, with a "not validated" watermark.
+- **Live:** microphone → 5 s recordings → Whisper → engine → avatar queue, with the measured delay shown. It needs the local Whisper model (`research/audio/ASR_MODEL_SETUP.md`); without it the button is disabled.
+
+## Voice: transcription, emotion, and emotion-modulated signing
+
+- **Local models, chosen by env vars** (nothing is downloaded at request time):
+
+| Variable | Use |
+|---|---|
+| `SIGNACULTURE_AUDIO_PYTHON` | the Python with funasr + faster-whisper (default `.venv-audio`, `bin/python` or `Scripts/python.exe`) |
+| `SIGNACULTURE_ASR_MODEL_DIR` / `_ID` / `_REVISION` | any local faster-whisper model; `vocabulary.txt` or `vocabulary.json` (default: the pinned `.models/faster-whisper-small`). Tested with `mobiuslabsgmbh/faster-whisper-large-v3-turbo` on CUDA |
+| `SIGNACULTURE_EMOTION_MODEL_DIR` / `_ID` | any local emotion2vec+ checkpoint (default `.models/emotion2vec-seed`). Tested with `emotion2vec_plus_large`, which scored 85.8 % on CaFE French acted speech in our earlier test (acted speech, so an upper bound) |
+
+- **Transcription** reads the API's 16 kHz WAV directly, so it no longer depends on PyAV's decoder version.
+- **Emotion per subtitle line:** `POST /analyze-audio/emotion-segments` (film + cue list) cuts each line's audio and scores all lines with one model load (`workers/emotion.py --batch`). Per line matters: on a two-voice test (angry, then sad) the whole-file score was "angry", while per line it was angry, then sad.
+- **Emotion → signing (`services/lsf_emotion.py`):** `/lsf/generate` accepts `emotion` (emotion2vec scores). The dominant label and its confidence set a speed factor (the clip is retimed, and the marker spans follow) and an arm/hand amplitude factor:
+
+| Emotion | Speed | Amplitude |
+|---|---|---|
+| angry | ×1.15 | ×1.20 |
+| happy | ×1.10 | ×1.10 |
+| sad | ×0.85 | ×0.85 |
+| surprised | ×1.10 | ×1.15 |
+| fearful | ×1.10 | ×0.95 |
+| disgusted | ×0.95 | ×1.00 |
+
+  **The face is never changed**, because in LSF the eyebrows and head carry grammar. The values are the heuristic starting points of the research `signlib.EMOTIONS`, not learnt from deaf signers.
+- **Where it appears:**
+  - Studio panel: "Émotion de la signature" (neutral, the imported voice, or a demonstration emotion);
+  - film mode: "Émotion de la voix par réplique";
+  - live mode: each 5 s window's emotion.
+
 ## Known limits
 
 - **Not a translation.** B2 signs the French words it knows, in French order: no LSF grammar, space, classifiers or role shift. C0's signs are unverified.

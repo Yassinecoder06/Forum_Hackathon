@@ -124,7 +124,42 @@ def face_ratios(frame2d: np.ndarray) -> dict[str, float] | None:
     n = np.array([-e[1], e[0]]) / distance
     gap = lambda a, b: abs(float((p(a) - p(b)) @ n)) / distance * FACE_ASPECT  # noqa: E731
     result = {"mouth_open": gap(13, 14), "brow_left": gap(105, 159), "brow_right": gap(334, 386)}
+    # Lip shape and eye opening, in eye-corner distances (isotropic engine units; y up). Relative to the
+    # clip's neutral (face_calibration) they drive lip rounding/spreading, lip corners and eye opening.
+    dist = lambda a, b: float(np.hypot(*(p(a) - p(b)))) / distance  # noqa: E731
+    result.update(mouth_width=dist(61, 291), mouth_corner=float((p(61)[1] + p(291)[1]) / 2 - (p(13)[1] + p(14)[1]) / 2) / distance,
+                  eye_open_left=dist(386, 374), eye_open_right=dist(159, 145))
     return result if all(math.isfinite(v) for v in result.values()) else None
+
+
+# Neutral face channels of the B2 lexicon rest pose (engineering reference, not a linguistic neutral).
+FACE_NEUTRAL_DEFAULT = {"brow_left": 0.428, "brow_right": 0.424, "mouth_width": 0.572, "mouth_corner": -0.024,
+                        "eye_open_left": 0.070, "eye_open_right": 0.069}
+NONMANUAL_TYPES = ("question_yn", "question_wh", "negation")
+RAMP_MS = 160.0
+
+
+def nonmanual_channels(t_ms: float, spans: list[dict]) -> dict[str, float]:
+    """Grammatical non-manual markers at time t: brow raise (yes/no question), brow furrow (wh-question),
+    head shake (negation) and a slight forward head tilt for questions. Smooth ramps in and out; kept as
+    separate channels so emotion can never overwrite them. Simplified textbook markers, not validated."""
+    out = {"nm_brow_raise": 0.0, "nm_brow_furrow": 0.0, "nm_head_yaw": 0.0, "nm_head_pitch": 0.0}
+    for sp in spans:
+        a, b, kind = float(sp["start_ms"]), float(sp["end_ms"]), sp["type"]
+        if not a - RAMP_MS < t_ms < b + RAMP_MS:
+            continue
+        ramp = min(1.0, (t_ms - (a - RAMP_MS)) / RAMP_MS, ((b + RAMP_MS) - t_ms) / RAMP_MS)
+        ramp = ramp * ramp * (3 - 2 * ramp)
+        if kind == "question_yn":
+            out["nm_brow_raise"] = max(out["nm_brow_raise"], 0.65 * ramp)
+            out["nm_head_pitch"] += 0.10 * ramp
+        elif kind == "question_wh":
+            out["nm_brow_furrow"] = max(out["nm_brow_furrow"], 0.6 * ramp)
+            out["nm_head_pitch"] += 0.06 * ramp
+        elif kind == "negation":
+            out["nm_head_yaw"] += 0.17 * ramp * math.sin(2 * math.pi * 2.2 * (t_ms - a) / 1000.0)
+            out["nm_brow_furrow"] = max(out["nm_brow_furrow"], 0.25 * ramp)
+    return {k: round(v, 5) for k, v in out.items()}
 
 
 def lift_to_3d(x2d: np.ndarray) -> np.ndarray:
@@ -168,8 +203,12 @@ def lift_to_3d(x2d: np.ndarray) -> np.ndarray:
 
 
 def engine_poses_to_motion(poses: np.ndarray, *, fps_in: float = ENGINE_FPS, fps_out: float = ENGINE_FPS,
-                           engine: str = "", text: str = "", face_calibration: dict[str, float] | None = None) -> dict[str, Any]:
-    """(T, 157, 2|3) engine poses -> MotionFile dict (signaculture-v1)."""
+                           engine: str = "", text: str = "", face_calibration: dict[str, float] | None = None,
+                           nonmanual: list[dict] | None = None) -> dict[str, Any]:
+    """(T, 157, 2|3) engine poses -> MotionFile dict (signaculture-v1).
+
+    nonmanual: [{"start_ms", "end_ms", "type": question_yn | question_wh | negation}] grammatical markers baked into
+    each frame's face channels (nm_*), see nonmanual_channels."""
     x = np.asarray(poses, dtype=np.float64)
     if x.ndim != 3 or x.shape[1] != N_POINTS or x.shape[2] < 2:
         raise ValueError(f"expected (T, {N_POINTS}, 2|3) engine poses, got {x.shape}")
@@ -212,6 +251,8 @@ def engine_poses_to_motion(poses: np.ndarray, *, fps_in: float = ENGINE_FPS, fps
         face = face_ratios(x2d[i])
         if face:
             frame["face"] = {k: round(v, 5) for k, v in face.items()}
+            if nonmanual:
+                frame["face"].update(nonmanual_channels(frame["time_ms"], nonmanual))
         frames.append(frame)
     motion: dict[str, Any] = {
         "rig_version": "signaculture-v1",
@@ -236,5 +277,7 @@ def engine_poses_to_motion(poses: np.ndarray, *, fps_in: float = ENGINE_FPS, fps
     if text:
         motion["source_text"] = text
     if face_calibration:
-        motion["face_calibration"] = {k: float(face_calibration[k]) for k in ("brow_left", "brow_right")}
+        motion["face_calibration"] = {k: float(face_calibration.get(k, FACE_NEUTRAL_DEFAULT[k])) for k in FACE_NEUTRAL_DEFAULT}
+    if nonmanual:
+        motion["nonmanual"] = [dict(sp) for sp in nonmanual]
     return motion

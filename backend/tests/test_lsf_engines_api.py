@@ -41,7 +41,7 @@ def test_request_validation():
 def test_generate_returns_motion_file(monkeypatch):
     calls = []
 
-    def fake_generate(text, engine, seed=0):
+    def fake_generate(text, engine, seed=0, groups=None):
         calls.append((text, engine, seed))
         return fixture(T=30), {"engine": engine, "lemmas": ["bonjour"], "unknown": [], "face_neutral": {"brow_left": 0.43, "brow_right": 0.42}}
 
@@ -53,7 +53,8 @@ def test_generate_returns_motion_file(monkeypatch):
     assert m["rig_version"] == "signaculture-v1" and m["fps"] == 25
     assert m["frames"][-1]["time_ms"] == m["duration_ms"]
     assert set(m["joints"]).issubset(m["frames"][0]["joints"])
-    assert m["face_calibration"] == {"brow_left": 0.43, "brow_right": 0.42}
+    assert {k: m["face_calibration"][k] for k in ("brow_left", "brow_right")} == {"brow_left": 0.43, "brow_right": 0.42}
+    assert set(m["face_calibration"]) >= {"mouth_width", "mouth_corner", "eye_open_left", "eye_open_right"}
     assert m["generation"]["translation_validated"] is False
     assert "face_neutral" not in m["generation"]
     assert np.isclose(np.linalg.norm(np.subtract(m["frames"][0]["joints"]["left_shoulder"], m["frames"][0]["joints"]["right_shoulder"])), 0.36)
