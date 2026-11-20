@@ -3,6 +3,7 @@ import { interpolateJointPositions, type InterpolatedJoints } from "./motionInte
 import type { MotionFile } from "../types/contract";
 import { frameInterval, hasHand, stabilizeRotations, type HandState } from "./avatarPlayback";
 import { handContact, type Capsule } from "./handContact";
+import { detectRigProfile, rigBoneName, type RigProfile } from "./rigProfiles";
 const fingers = ["Thumb", "Index", "Middle", "Ring", "Pinky"];
 type Bind = {
   bone: THREE.Bone;
@@ -37,19 +38,37 @@ export class HumanoidRetargeter {
   private shoulderWidth = 0.36;
   private tracks = new WeakMap<MotionFile, ReturnType<HumanoidRetargeter["prepare"]>>();
   diagnostics = { preparedMs: 0, rejectedSpikes: 0, correctedFrames: 0, contactFrames: 0, maxCorrection: 0, maxPenetration: 0 };
-  constructor(private root: THREE.Object3D) {
+  /** Bind segment lengths for explicitly mapped rigs (RPM keeps local translations). */
+  private lengths = new Map<string, number>();
+  constructor(private root: THREE.Object3D, readonly profile: RigProfile = detectRigProfile(root)) {
     root.updateMatrixWorld(true);
+    // Bones are keyed by canonical (Ready Player Me) names. RPM rigs keep every bone
+    // (identity mapping, original behaviour); mapped rigs only expose their mapped joints,
+    // so MetaHuman's corrective/facial joints are never touched by the retargeter.
+    const canonical = new Map<string, string>();
+    if (profile.bones) for (const [name, rig] of Object.entries(profile.bones)) canonical.set(rig, name);
+    const rigBones = new Map<string, THREE.Bone>();
+    root.traverse((o) => { if (o instanceof THREE.Bone) rigBones.set(o.name, o); });
+    const position = (o: THREE.Object3D) => o.getWorldPosition(new THREE.Vector3());
     root.traverse((o) => {
       if (o instanceof THREE.Bone) {
-        const child = o.children.find((c) => c instanceof THREE.Bone);
+        const name = profile.bones ? canonical.get(o.name) : o.name;
+        if (!name) return;
         const world = o.getWorldQuaternion(new THREE.Quaternion());
-        const direction = child
-          ? child
-              .getWorldPosition(new THREE.Vector3())
-              .sub(o.getWorldPosition(new THREE.Vector3()))
-              .normalize()
-          : new THREE.Vector3(0, 1, 0).applyQuaternion(world);
-        this.binds.set(o.name, {
+        let direction: THREE.Vector3;
+        if (profile.chain) {
+          const next = profile.chain[name] ? rigBones.get(rigBoneName(profile, profile.chain[name])) : undefined;
+          if (next) direction = position(next).sub(position(o)).normalize();
+          else if (o.parent instanceof THREE.Bone) direction = position(o).sub(position(o.parent)).normalize();
+          else direction = new THREE.Vector3(0, 1, 0).applyQuaternion(world);
+          if (o.parent instanceof THREE.Bone) this.lengths.set(name, position(o).distanceTo(position(o.parent)));
+        } else {
+          const child = o.children.find((c) => c instanceof THREE.Bone);
+          direction = child
+            ? position(child).sub(position(o)).normalize()
+            : new THREE.Vector3(0, 1, 0).applyQuaternion(world);
+        }
+        this.binds.set(name, {
           bone: o,
           local: o.quaternion.clone(),
           world,
@@ -115,7 +134,8 @@ export class HumanoidRetargeter {
     const upper = this.bone(side + "Arm")!, lower = this.bone(side + "ForeArm")!, hand = this.bone(side + "Hand")!;
     const palm = hand.getWorldQuaternion(new THREE.Quaternion());
     const shoulder = upper.getWorldPosition(new THREE.Vector3());
-    const l1 = lower.position.length(), l2 = hand.position.length();
+    const l1 = this.lengths.get(side + "ForeArm") ?? lower.position.length(),
+      l2 = this.lengths.get(side + "Hand") ?? hand.position.length();
     const axis = target.clone().sub(shoulder);
     const d = THREE.MathUtils.clamp(axis.length(), Math.abs(l1 - l2) + .005, l1 + l2 - .005);
     axis.normalize();

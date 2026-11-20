@@ -113,7 +113,18 @@ export interface MotionAttribution {
   changes?: string;
 }
 
+/** Present on motions produced by POST /lsf/generate (experimental engines). */
+export interface MotionGeneration {
+  engine: "c0" | "b2" | string;
+  lemmas?: string[];
+  unknown?: string[];
+  seconds?: number;
+  translation_validated: false;
+  linguistic_review: string;
+}
+
 export interface MotionFile {
+  generation?: MotionGeneration;
   playback_window?: { start_ms: number; end_ms: number; method?: string };
   face_calibration?: { brow_left: number; brow_right: number };
   synthetic?: boolean;

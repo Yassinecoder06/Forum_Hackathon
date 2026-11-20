@@ -8,6 +8,8 @@ import { HumanoidRetargeter } from "../../utils/retargetHumanoid";
 import { browWeights, faceCalibration, sampleFace } from "../../utils/avatarPlayback";
 import { IdleLife } from "../../utils/idleLife";
 import { createCafeBackdrop } from "../../utils/stageBackdrop";
+import { RPM_PROFILE, rigBoneName } from "../../utils/rigProfiles";
+import { MetaHumanFaceDriver } from "../../utils/metahumanFace";
 type Props = {
   avatarCredit?: string;
   fitNarrowViewport?: boolean;
@@ -26,7 +28,8 @@ export function AvatarCanvas(props: Props) {
     latest = useRef(props);
   latest.current = props;
   const [status, setStatus] = useState("Chargement du personnage articulé…"),
-    [ready, setReady] = useState(false);
+    [ready, setReady] = useState(false),
+    [rigCredit, setRigCredit] = useState(RPM_PROFILE.credit);
   useEffect(() => {
     const host = mount.current;
     if (!host) return;
@@ -34,7 +37,10 @@ export function AvatarCanvas(props: Props) {
       frameId = 0,
       model: THREE.Object3D | null = null,
       retarget: HumanoidRetargeter | null = null,
-      idle: IdleLife | null = null;
+      idle: IdleLife | null = null,
+      faceDriver: MetaHumanFaceDriver | null = null;
+    // Channel values in ARKit names; rigs without blendshapes read them via faceDriver.
+    const faceWeights: Record<string, number> = {};
     const morphs: THREE.Mesh[] = [];
     let head: THREE.Bone | undefined;
     let bindHead: THREE.Quaternion | undefined;
@@ -139,9 +145,14 @@ export function AvatarCanvas(props: Props) {
           );
           return;
         }
-        idle = new IdleLife(model);
+        const profile = retarget.profile;
+        idle = new IdleLife(model, profile);
+        // MetaHuman: no ARKit blendshapes; drive jaw/lids/brows/gaze through FACIAL_* joints.
+        faceDriver = MetaHumanFaceDriver.create(model);
+        setRigCredit(profile.credit);
+        const headName = rigBoneName(profile, "Head");
         model.traverse((o) => {
-          if (o instanceof THREE.Bone && o.name === "Head") {
+          if (o instanceof THREE.Bone && o.name === headName) {
             head = o;
             bindHead = o.quaternion.clone();
           }
@@ -164,6 +175,7 @@ export function AvatarCanvas(props: Props) {
       },
     );
     function morph(name: string, value: number) {
+      faceWeights[name] = THREE.MathUtils.clamp(value, 0, 1);
       for (const mesh of morphs) {
         const i = mesh.morphTargetDictionary?.[name];
         if (i !== undefined && mesh.morphTargetInfluences)
@@ -261,6 +273,7 @@ export function AvatarCanvas(props: Props) {
           if (Number.isFinite(weight)) morph(name, THREE.MathUtils.clamp(weight, 0, 1));
         }
       }
+      faceDriver?.apply(faceWeights);
       if (head?.parent && bindHead && headRotation?.length === 9 && headRotation.every(Number.isFinite)) {
         const [xx, xy, xz, yx, yy, yz, zx, zy, zz] = headRotation;
         const rotation = new THREE.Matrix4().set(xx, xy, xz, 0, yx, yy, yz, 0, zx, zy, zz, 0, 0, 0, 0, 1);
@@ -294,7 +307,7 @@ export function AvatarCanvas(props: Props) {
         <span className="hand-tracking-note" aria-live="off" />
       </div>
       <span className="avatar-view-note">
-        {props.avatarCredit ?? "Avatar"} · UPF-GTI / Ready Player Me
+        {props.avatarCredit ?? "Avatar"} · {rigCredit}
       </span>
     </div>
   );

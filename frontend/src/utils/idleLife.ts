@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { findRigBone, RPM_PROFILE, type RigProfile } from "./rigProfiles";
 
 /**
  * Display-only "aliveness" layer: breathing, blinking, gaze saccades and a slow
@@ -30,11 +31,11 @@ export class IdleLife {
   private euler = new THREE.Euler();
   private delta = new THREE.Quaternion();
 
-  constructor(root: THREE.Object3D) {
-    this.spine1 = root.getObjectByName("Spine1");
-    this.spine2 = root.getObjectByName("Spine2");
-    this.neck = root.getObjectByName("Neck");
-    this.head = root.getObjectByName("Head");
+  constructor(root: THREE.Object3D, profile: RigProfile = RPM_PROFILE) {
+    this.spine1 = findRigBone(root, profile, "Spine1");
+    this.spine2 = findRigBone(root, profile, "Spine2");
+    this.neck = findRigBone(root, profile, "Neck");
+    this.head = findRigBone(root, profile, "Head");
   }
 
   private rotate(bone: THREE.Object3D | undefined, x: number, y: number, z: number) {

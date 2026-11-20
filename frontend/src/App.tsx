@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { request } from "./services/api";
 import { LexicalPipelinePanel } from "./components/LexicalPipelinePanel";
+import { LsfEnginePanel } from "./components/LsfEnginePanel";
 import { ConceptComposer } from "./components/ConceptComposer";
 import { ResearchPanel } from "./components/ResearchPanel";
 import { AvatarCanvas } from "./components/AvatarPlayer/AvatarCanvas";
@@ -57,7 +58,8 @@ type Capabilities = {
   capture: boolean;
   emotion: boolean;
   transcription?: boolean;
-  avatar?: "ReadyEva" | "Noa" | null;
+  avatar?: "ReadyEva" | "Noa" | "MetaHuman" | null;
+  lsf_engines?: { c0: boolean; b2: boolean };
   nlp: string;
   library_count: number;
 };
@@ -177,7 +179,7 @@ export default function App() {
   const meanPitch = pitches.length ? Math.round(pitches.reduce((sum, hz) => sum + hz, 0) / pitches.length) : null;
   const pauseMs = audio?.frames.reduce((sum, frame) =>
     sum + (frame.is_pause ? frame.end_ms - frame.start_ms : 0), 0) ?? 0;
-  const avatarCredit = caps?.avatar === "ReadyEva" ? "Avatar Eva" : caps?.avatar === "Noa" ? "Avatar Noa" : "Avatar";
+  const avatarCredit = caps?.avatar === "ReadyEva" ? "Avatar Eva" : caps?.avatar === "Noa" ? "Avatar Noa" : caps?.avatar === "MetaHuman" ? "Avatar MetaHuman" : "Avatar";
 
   const refresh = useCallback(async () => {
     try {
@@ -764,6 +766,22 @@ export default function App() {
                   </div>
                   <div className="card">
                     <LexicalPipelinePanel text={text} />
+                  </div>
+                  <div className="card">
+                    <LsfEnginePanel
+                      text={text}
+                      available={caps?.lsf_engines}
+                      disabled={busy || recording}
+                      onMotion={(generated, name) => {
+                        ++generation.current;
+                        setPlan(null);
+                        setReferenceUrl("");
+                        setMotion(generated);
+                        setLabel(name);
+                        setTime(0);
+                        setPlaying(true);
+                      }}
+                    />
                   </div>
                   <div className="card audio-card">
                     <div className="card-heading">
@@ -1485,7 +1503,9 @@ export default function App() {
                 <p>
                   {page === "capture"
                     ? "Les points absents lors d’une occultation ne sont pas recréés. Vérifiez les mains avant de conserver le mouvement."
-                    : motion?.synthetic
+                    : motion?.generation
+                      ? "Mouvement généré automatiquement par un moteur expérimental. Ce n’est pas une traduction LSF validée : une revue par des personnes sourdes ou des interprètes reste nécessaire."
+                      : motion?.synthetic
                       ? "Cette séquence contient des mouvements de test synthétiques. Ils ne représentent pas des signes LSF validés."
                       : "Reconstruction à partir de captures. Une revue LSF reste nécessaire avant une diffusion comme traduction."}
                 </p>

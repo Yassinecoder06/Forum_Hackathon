@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import * as THREE from "three";
 import { stitchAnimationPlan, libraryPreview } from "../src/utils/planStitcher";
 import { HumanoidRetargeter } from "../src/utils/retargetHumanoid";
+import { detectRigProfile } from "../src/utils/rigProfiles";
+import { MetaHumanFaceDriver } from "../src/utils/metahumanFace";
 import { browWeights, faceCalibration, sampleFace, stabilizeRotations, hasHand } from "../src/utils/avatarPlayback";
 import { handContact, segmentDistance } from "../src/utils/handContact";
 import { interpolateJointPositions } from "../src/utils/motionInterpolator";
@@ -281,3 +283,92 @@ assert(hasHand({...rejectedHand,playback_quality:undefined},"left"),"Keep the or
 const libraryClip={...a,playback_window:{start_ms:0,end_ms:100}};
 const libraryRaw=JSON.stringify(libraryClip);libraryPreview(libraryClip);
 assert.equal(JSON.stringify(libraryClip),libraryRaw,"Preview windows never mutate original source data");
+
+// MetaHuman profile: same geometry as the synthetic RPM rig above, UE5 joint names, corrective
+// joints inserted as FIRST children (so "first child" would aim at the wrong bone), tip joints
+// named <finger>_04_<side>. Authored software checks, not signed-language ground truth.
+{
+  const names: Record<string, string> = { Neck: "neck_01", Head: "head" };
+  for (const [side, s] of [["Left", "l"], ["Right", "r"]] as const) {
+    Object.assign(names, { [side + "Arm"]: `upperarm_${s}`, [side + "ForeArm"]: `lowerarm_${s}`, [side + "Hand"]: `hand_${s}` });
+    for (const f of ["Thumb", "Index", "Middle", "Ring", "Pinky"])
+      for (let i = 1; i <= 4; i++) names[`${side}Hand${f}${i}`] = `${f.toLowerCase()}_0${i}_${s}`;
+  }
+  const mhRoot = new THREE.Group(), mhBones: THREE.Bone[] = [];
+  const clone = (src: THREE.Object3D, parent: THREE.Object3D) => {
+    for (const child of src.children) {
+      if (!(child instanceof THREE.Bone)) continue;
+      const helper = new THREE.Bone();
+      helper.name = names[child.name] + "_correctiveRoot";
+      helper.position.set(0.02, 0.01, 0.03);
+      const b = new THREE.Bone();
+      b.name = names[child.name];
+      b.position.copy(child.position);
+      parent.add(helper);
+      parent.add(b);
+      mhBones.push(b);
+      clone(child, b);
+    }
+  };
+  // fresh RPM rig at bind pose for comparison
+  const rpmRoot = new THREE.Group();
+  const rpmNeck = new THREE.Bone(); rpmNeck.name = "Neck"; rpmNeck.position.set(0, 1.5, 0); rpmRoot.add(rpmNeck);
+  const rpmHead = new THREE.Bone(); rpmHead.name = "Head"; rpmHead.position.set(0, 0.12, 0); rpmNeck.add(rpmHead);
+  for (const b of bones.filter((x) => x.parent === root && x.name !== "Neck")) {
+    const copy = b.clone(true);
+    copy.traverse((o) => o.quaternion.identity());
+    rpmRoot.add(copy);
+  }
+  clone(rpmRoot, mhRoot);
+  const mh = new HumanoidRetargeter(mhRoot);
+  assert.equal(mh.profile.id, "metahuman");
+  assert.equal(detectRigProfile(rpmRoot).id, "rpm");
+  const rpm = new HumanoidRetargeter(rpmRoot);
+  const mhLengths = mhBones.map((b) => b.position.length());
+  const motionJoints = { ...joints, ...Object.fromEntries(["left", "right"].flatMap((side) => {
+    const w = joints[`${side}_wrist`];
+    return ["thumb", "index", "middle", "ring", "pinky"].flatMap((f, k) => [1, 2, 3, 4].map((i) =>
+      [`${side}_${f}_${i}`, [w[0] + (k - 2) * 0.015, w[1] - 0.05 - 0.02 * i, w[2] + 0.01 * i] as [number, number, number]]));
+  })) } as Record<string, [number, number, number]>;
+  rpm.apply(motionJoints);
+  mh.apply(motionJoints);
+  rpmRoot.updateMatrixWorld(true);
+  mhRoot.updateMatrixWorld(true);
+  for (const canonical of ["LeftHand", "RightHand", "LeftForeArm", "LeftHandIndex4", "RightHandThumb4"]) {
+    const a = rpmRoot.getObjectByName(canonical)!.getWorldPosition(new THREE.Vector3());
+    const b = mhRoot.getObjectByName(names[canonical])!.getWorldPosition(new THREE.Vector3());
+    assert(a.distanceTo(b) < 1e-6, `MetaHuman ${names[canonical]} follows the same IK as ${canonical}`);
+  }
+  const pose = mhBones.map((b) => b.quaternion.toArray());
+  mh.apply({ ...motionJoints, left_wrist: [0.4, 1.3, 0.2] });
+  mh.apply(motionJoints);
+  assert.deepEqual(mhBones.map((b) => b.quaternion.toArray()), pose, "MetaHuman seeking is deterministic");
+  assert.deepEqual(mhBones.map((b) => b.position.length()), mhLengths, "MetaHuman retargeting cannot stretch bones");
+  const helpers: THREE.Object3D[] = [];
+  mhRoot.traverse((o) => { if (o.name.endsWith("_correctiveRoot")) helpers.push(o); });
+  assert(helpers.every((o) => o.quaternion.equals(new THREE.Quaternion())), "Corrective joints are never driven");
+
+  // Face joints: no blendshapes, the driver moves FACIAL_* joints and resets them every call.
+  const face = new THREE.Group();
+  const facial = (name: string, parent: THREE.Object3D, p: number[]) => { const b = new THREE.Bone(); b.name = name; b.position.fromArray(p); parent.add(b); return b; };
+  const jaw = facial("FACIAL_C_Jaw", face, [0, 1.62, 0.03]);
+  const chin = facial("FACIAL_C_Chin", jaw, [0, -0.07, 0.06]);
+  const lowerLip = facial("FACIAL_C_LowerLipRotation", face, [0, 1.62, 0.03]);
+  const lid = facial("FACIAL_L_EyelidUpperA", face, [0.03, 1.666, 0.09]);
+  const lidEdge = facial("FACIAL_L_EyelidUpperA1", lid, [0, 0.003, 0.012]);
+  const brow = facial("FACIAL_L_ForeheadIn", face, [0.016, 1.688, 0.11]);
+  face.updateMatrixWorld(true);
+  const driver = MetaHumanFaceDriver.create(face)!;
+  assert(driver, "MetaHuman facial joints are detected");
+  assert.equal(MetaHumanFaceDriver.create(rpmRoot), null, "RPM rigs keep their blendshapes");
+  const at = (o: THREE.Object3D) => { face.updateMatrixWorld(true); return o.getWorldPosition(new THREE.Vector3()); };
+  const chin0 = at(chin), lid0 = at(lidEdge), brow0 = at(brow);
+  driver.apply({ jawOpen: 1, eyeBlinkLeft: 1, browInnerUp: 1 });
+  assert(at(chin).y < chin0.y - 0.01, "jawOpen lowers the chin");
+  assert(at(lidEdge).y < lid0.y - 0.004, "blink lowers the upper lid");
+  assert(at(brow).y > brow0.y + 0.004, "browInnerUp raises the inner brow");
+  assert(!lowerLip.quaternion.equals(new THREE.Quaternion()), "the lower lip follows the jaw");
+  driver.apply({});
+  assert(at(chin).distanceTo(chin0) < 1e-9 && at(lidEdge).distanceTo(lid0) < 1e-9 && at(brow).distanceTo(brow0) < 1e-9, "Zero weights restore the bind face");
+  console.log("MetaHuman checks passed: profile detection, explicit limb chains, same IK as RPM, deterministic seeking, facial joint driver.");
+}

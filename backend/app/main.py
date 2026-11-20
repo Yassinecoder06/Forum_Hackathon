@@ -19,6 +19,8 @@ from .schemas import GlossEntry, MotionAsset, TranslationDraft, AnimationPlan, A
 
 from .services.text_lookup import lookup_text, mode
 from .services import capture_library
+from .services.lsf_pose_convert import engine_poses_to_motion
+from .engines import lsf as lsf_engines
 
 ROOT = Path(__file__).resolve().parents[2]
 app = FastAPI(title='SignaCulture experimental API')
@@ -101,7 +103,8 @@ def health(): return {'status': 'ok'}
 @app.get('/capabilities')
 def capabilities():
     name, path = local_avatar()
-    return {**capture_library.capabilities(), 'nlp': mode(), 'avatar': name if path else None}
+    engines={k:v['available'] for k,v in lsf_engines.status().items()}
+    return {**capture_library.capabilities(), 'nlp': mode(), 'avatar': name if path else None, 'lsf_engines': engines}
 
 @app.get('/library')
 def captured_library():
@@ -388,12 +391,15 @@ def compose_concepts(body: ConceptSequenceRequest):
     return compose_draft({'source_text':body.text,'gloss_sequence':[allowed[i] for i in body.concept_ids],
         'unknowns':body.unsupported},body.audio_features)
 
+# MetaHuman is opt-in (SIGNACULTURE_AVATAR=MetaHuman): local conversion, web-use licence unconfirmed.
+AVATARS = ('ReadyEva', 'Noa', 'MetaHuman')
+
 def local_avatar():
     configured = os.getenv('SIGNACULTURE_AVATAR')
     names = (configured,) if configured else ('ReadyEva', 'Noa')
     folder = Path(os.environ['SIGNACULTURE_AVATAR_DIR']) if os.getenv('SIGNACULTURE_AVATAR_DIR') else capture_library.storage() / 'avatar-candidates'
     for name in names:
-        if name in ('ReadyEva', 'Noa'):
+        if name in AVATARS:
             path = folder / f'{name}.glb'
             if path.is_file():
                 return name, path
@@ -404,12 +410,35 @@ def local_avatar():
 def avatar_model():
     name, path = local_avatar()
     if path is None:
-        if name and name not in ('ReadyEva', 'Noa'):
+        if name and name not in AVATARS:
             raise HTTPException(503, f'Avatar inconnu : {name}')
         detail = f'Le modèle 3D local {name} est absent.' if name else 'Aucun personnage 3D local trouvé.'
         raise HTTPException(503, f'{detail} Exécutez scripts/setup-avatar.py.')
     # Revalidate on every load (ETag) so switching avatars is never masked by cache.
     return FileResponse(path,media_type='model/gltf-binary',headers={'Cache-Control':'no-cache'})
+
+
+class LsfGenerateRequest(BaseModel):
+    text: str = Field(min_length=1, max_length=400)
+    engine: Literal['c0', 'b2'] = 'b2'
+    seed: int = Field(default=0, ge=0, le=2**31 - 1)
+
+@app.post('/lsf/generate')
+def lsf_generate(body: LsfGenerateRequest):
+    """French text -> generated MotionFile (C0 generator or B2 stitching). Automatic proxy output:
+    never a validated LSF translation. Models are local, private files; nothing is downloaded here."""
+    text = ' '.join(body.text.split())
+    if not text:
+        raise HTTPException(422, 'Saisissez une phrase en français.')
+    try:
+        poses, meta = lsf_engines.generate(text, body.engine, seed=body.seed)
+        motion = engine_poses_to_motion(poses, engine=body.engine, text=text, face_calibration=meta.pop('face_neutral', None))
+    except lsf_engines.EngineUnavailable as exc:
+        raise HTTPException(503, str(exc))
+    except ValueError as exc:
+        raise HTTPException(422, str(exc))
+    motion['generation'] = {**meta, 'translation_validated': False, 'linguistic_review': 'pending'}
+    return motion
 
 
 @app.get('/captures/{job_id}/landmarks')
