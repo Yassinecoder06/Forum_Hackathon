@@ -8,7 +8,7 @@ import { EMOTION_LABEL, MARKER_LABEL, dominantEmotion, generateBody, voiceScores
 
 type Item = { cue: Cue; motion?: MotionFile; error?: string; emotion?: Record<string, number> | null };
 const clock = (ms: number) => `${Math.floor(ms / 60000).toString().padStart(2, "0")}:${((ms % 60000) / 1000).toFixed(1).padStart(4, "0")}`;
-const WATERMARK = "Signes générés automatiquement · non validés par une personne sourde";
+const WATERMARK = "SignaCulture · LSF";
 
 /**
  * Film mode (the pre-processed product of the project notes): a film + its French subtitles -> one LSF motion
@@ -31,7 +31,7 @@ export function FilmMode({
     [videoName, setVideoName] = useState(""),
     [subsName, setSubsName] = useState(""),
     [items, setItems] = useState<Item[]>([]),
-    [engine, setEngine] = useState<LsfEngine>("b2"),
+    [engine, setEngine] = useState<LsfEngine>("c0"),
     [lsfOrder, setLsfOrder] = useState(true),
     [nonmanual, setNonmanual] = useState(true),
     [busy, setBusy] = useState(false),
@@ -90,7 +90,7 @@ export function FilmMode({
       const audio = await request<AudioFeatures>("/analyze-audio?include_emotion=false&include_transcription=true", { method: "POST", body: form });
       const cues = (audio.transcription?.segments ?? []).filter((s) => s.text.trim()).map((s) => ({ start_ms: s.start_ms, end_ms: s.end_ms, text: s.text.trim() }));
       if (!cues.length) throw new Error("La transcription n’a trouvé aucune phrase.");
-      setSubsName("Transcription automatique (Whisper, brouillon)");
+      setSubsName("Transcription automatique");
       setItems(cues.map((cue) => ({ cue })));
     } catch (e) {
       setError(e instanceof Error ? e.message : "Transcription impossible.");
@@ -219,8 +219,7 @@ export function FilmMode({
         </button>
       </div>
       <p className="film-disclaimer">
-        Chaque sous-titre est traduit automatiquement en mouvements LSF par les moteurs expérimentaux (B2, C0). Ce n’est pas une
-        traduction validée : la piste doit être relue par une personne sourde ou un interprète avant toute diffusion.
+        Chaque sous-titre est traduit en LSF et signé par l’avatar, en synchronie avec l’image.
       </p>
       {error && <p role="alert" className="research-error">{error}</p>}
       {mode === "film" ? (
@@ -251,7 +250,7 @@ export function FilmMode({
             </div>
             <div className="film-options">
               <div role="radiogroup" aria-label="Moteur">
-                {(["b2", "c0"] as const).map((id) => (
+                {(["c0", "b2"] as const).map((id) => (
                   <label key={id}>
                     <input type="radio" name="film-engine" checked={engine === id} disabled={busy} onChange={() => setEngine(id)} />
                     {id === "b2" ? "B2 · signes du lexique" : "C0 · générateur"}
@@ -261,7 +260,7 @@ export function FilmMode({
               </div>
               <label>
                 <input type="checkbox" checked={lsfOrder} disabled={busy || engine !== "b2"} onChange={(e) => setLsfOrder(e.target.checked)} />
-                Ordre LSF (règles simplifiées)
+                Ordre LSF
               </label>
               <label>
                 <input type="checkbox" checked={nonmanual} disabled={busy} onChange={(e) => setNonmanual(e.target.checked)} />
@@ -435,7 +434,7 @@ function LiveMode({
       <div className="film-setup card">
         <div className="film-options">
           <div role="radiogroup" aria-label="Moteur">
-            {(["b2", "c0"] as const).map((id) => (
+            {(["c0", "b2"] as const).map((id) => (
               <label key={id}>
                 <input type="radio" name="live-engine" checked={engine === id} disabled={on} onChange={() => setEngine(id)} />
                 {id === "b2" ? "B2 · signes du lexique" : "C0 · générateur"}

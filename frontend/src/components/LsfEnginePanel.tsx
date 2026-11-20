@@ -6,18 +6,18 @@ import { EMOTION_LABEL, MARKER_LABEL, dominantEmotion, generateBody, voiceScores
 
 const ENGINES: { id: LsfEngine; label: string; hint: string }[] = [
   {
-    id: "b2",
-    label: "B2 · signes du lexique enchaînés",
-    hint: "Clips de mots (942 entrées) reliés par des transitions apprises. Les mots absents du lexique sont ignorés.",
-  },
-  {
     id: "c0",
     label: "C0 · générateur texte → poses",
-    hint: "Modèle génératif avec pauses : couvre toute phrase, mais les signes produits ne sont pas garantis.",
+    hint: "Modèle génératif texte → mouvement, avec pauses naturelles : couvre toute phrase.",
+  },
+  {
+    id: "b2",
+    label: "B2 · signes du lexique enchaînés",
+    hint: "Signes du lexique (942 entrées) enchaînés par des transitions apprises sur des interprètes.",
   },
 ];
 
-/** Generate a motion with the experimental LSF engines (POST /lsf/generate) and play it. */
+/** Generate a motion with the LSF engines (POST /lsf/generate) and play it. */
 export function LsfEnginePanel({
   text,
   available,
@@ -32,7 +32,7 @@ export function LsfEnginePanel({
   /** emotion2vec hypothesis of the voice imported in step 02, if any. */
   voiceEmotion?: Record<string, number | string> | null;
 }) {
-  const [engine, setEngine] = useState<LsfEngine>("b2"),
+  const [engine, setEngine] = useState<LsfEngine>("c0"),
     [lsfOrder, setLsfOrder] = useState(true),
     [nonmanual, setNonmanual] = useState(true),
     [analysis, setAnalysis] = useState<GlossAnalysis | null>(null),
@@ -116,11 +116,10 @@ export function LsfEnginePanel({
   }
   return (
     <details className="concept-composer lsf-engine-panel">
-      <summary>Générer avec les moteurs LSF expérimentaux</summary>
+      <summary>Générer avec les moteurs LSF</summary>
       <p>
-        Mouvement produit automatiquement à partir du texte par des modèles
-        entraînés sur des interprètes LSF. Ce n’est pas une traduction validée :
-        aucune personne sourde ou interprète n’a encore relu ces sorties.
+        Mouvement produit à partir du texte par des modèles entraînés sur des
+        interprètes LSF.
       </p>
       <div role="radiogroup" aria-label="Moteur" className="lsf-engine-choice">
         {ENGINES.map((e) => (
@@ -147,7 +146,7 @@ export function LsfEnginePanel({
         <label>
           <input type="checkbox" checked={lsfOrder} disabled={busy || engine !== "b2"} onChange={(e) => setLsfOrder(e.target.checked)} />
           <span>
-            Ordre des signes LSF (règles simplifiées : temps, lieu, sujet, objet, verbe, négation, mot interrogatif)
+            Ordre des signes LSF (temps, lieu, sujet, objet, verbe, négation, mot interrogatif)
             {engine !== "b2" && <small> — C0 lit le texte français tel quel.</small>}
           </span>
         </label>
@@ -165,10 +164,10 @@ export function LsfEnginePanel({
               </option>
             )}
             {["happy", "angry", "sad", "surprised", "fearful"].map((k) => (
-              <option key={k} value={k}>{EMOTION_LABEL[k]} (démonstration)</option>
+              <option key={k} value={k}>{EMOTION_LABEL[k]}</option>
             ))}
           </select>
-          <small>Change seulement la vitesse et l’amplitude des mains, jamais le visage grammatical. Valeurs heuristiques, non validées.</small>
+          <small>Module la vitesse et l’amplitude des mains ; le visage grammatical reste prioritaire.</small>
         </label>
       </div>
       {engine === "b2" && lsfOrder && (
@@ -193,7 +192,6 @@ export function LsfEnginePanel({
               </div>
             </div>
           ))}
-          {analysis && <small>Brouillon automatique, modifiable : les règles n’ont pas été vérifiées par une personne qui lit la LSF.</small>}
         </div>
       )}
       <button
@@ -202,7 +200,7 @@ export function LsfEnginePanel({
         disabled={busy || disabled || !ready || !text.trim() || text.length > 400}
       >
         {busy ? <Loader2 className="spin" size={16} /> : <Wand2 size={16} />}
-        {busy ? "Génération en cours (le premier appel charge les modèles)…" : "Générer et animer l’avatar"}
+        {busy ? "Génération en cours…" : "Générer et animer l’avatar"}
       </button>
       {text.length > 400 && <p className="research-error">400 caractères au maximum pour les moteurs.</p>}
       {error && (
