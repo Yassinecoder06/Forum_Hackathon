@@ -1,4 +1,6 @@
 """POST /lsf/generate and MetaHuman avatar selection, without the private model files."""
+import importlib.util
+
 import numpy as np
 from fastapi.testclient import TestClient
 
@@ -17,7 +19,10 @@ def test_missing_model_files_give_clear_503(monkeypatch, tmp_path):
         r = client.post("/lsf/generate", json={"text": "Bonjour à tous", "engine": engine})
         assert r.status_code == 503
         detail = r.json()["detail"]
-        assert engine.upper() in detail and "LSF_ENGINES.md" in detail
+        if importlib.util.find_spec("torch") is None:      # CI installs no PyTorch: that is reported first
+            assert "PyTorch" in detail
+        else:
+            assert engine.upper() in detail and "LSF_ENGINES.md" in detail
     caps = client.get("/capabilities").json()
     assert caps["lsf_engines"] == {"c0": False, "b2": False}
 
