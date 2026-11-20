@@ -55,23 +55,18 @@ def run(audio: Path, model_path: Path, output: Path) -> dict:
             str(model_path), device=device, compute_type=compute_type, cpu_threads=4
         )
 
-    generated, _ = model.transcribe(
-        _samples(audio),
-        language="fr",
-        task="transcribe",
-        beam_size=3,
-        vad_filter=True,
-        condition_on_previous_text=False,
-    )
-    segments = [
-        {
-            "start_ms": max(0, round(segment.start * 1000)),
-            "end_ms": max(1, round(segment.end * 1000)),
-            "text": segment.text.strip(),
-        }
-        for segment in generated
-        if segment.text.strip()
-    ]
+    try:
+        segments = _decode(model, audio)
+    except RuntimeError:
+        if device != "cuda":
+            raise
+        # CUDA can be visible while its runtime libraries (e.g. cuBLAS) are missing; that only
+        # fails at inference time. Retry the whole decode on CPU.
+        device, compute_type = "cpu", "int8"
+        model = WhisperModel(
+            str(model_path), device=device, compute_type=compute_type, cpu_threads=4
+        )
+        segments = _decode(model, audio)
     result = {
         "text": " ".join(segment["text"] for segment in segments).strip(),
         "language": "fr",
@@ -83,6 +78,41 @@ def run(audio: Path, model_path: Path, output: Path) -> dict:
     }
     output.write_text(json.dumps(result, ensure_ascii=False, allow_nan=False))
     return result
+
+
+def _decode(model, audio: Path) -> list:
+    generated, _ = model.transcribe(
+        _samples(audio),  # decoded here: some faster-whisper/PyAV pairs fail to open files themselves
+        language="fr",
+        task="transcribe",
+        beam_size=3,
+        vad_filter=True,
+        condition_on_previous_text=False,
+        word_timestamps=True,
+    )
+    segments = []
+    for segment in generated:
+        if not segment.text.strip():
+            continue
+        words = []
+        for word in segment.words or []:
+            text = word.word.strip()
+            if not text:
+                continue
+            start = max(0, round(word.start * 1000))
+            words.append({
+                "start_ms": start,
+                "end_ms": max(start + 1, round(word.end * 1000)),
+                "text": text,
+                "probability": round(min(1.0, max(0.0, float(word.probability))), 4),
+            })
+        segments.append({
+            "start_ms": max(0, round(segment.start * 1000)),
+            "end_ms": max(1, round(segment.end * 1000)),
+            "text": segment.text.strip(),
+            "words": words,
+        })
+    return segments
 
 
 if __name__ == "__main__":

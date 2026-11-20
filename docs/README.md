@@ -6,6 +6,7 @@ their results live in [`research/`](../research/README.md).
 | Folder | Contents |
 |---|---|
 | [architecture/](architecture/) | System architecture, integration contract, methodology, semantic approach |
+| [architecture/voice-expression/](architecture/voice-expression/) | Voice emotion, stress and pace driving the avatar: architecture and benchmarks |
 | [avatar/](avatar/) | Avatar playback, provenance, hand collisions, motion quality and phrase reviews; [MetaHuman avatar](avatar/METAHUMAN.md) |
 | [data-pipeline/](data-pipeline/) | Dicta-Sign ingestion and the gloss → pose export pipeline |
 | [verification/](verification/) | Studio engineering rechecks: capture language, ingestion, playback, Research panel (raw logs in `verification/logs/`) |
