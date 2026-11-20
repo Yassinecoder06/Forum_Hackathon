@@ -44,6 +44,15 @@ export class IdleLife {
     bone.quaternion.multiply(this.delta.setFromEuler(this.euler));
   }
 
+  /** Phrase-aware blink (interpreters blink at clause ends and when the hands return to rest): starts a blink
+   * now unless one is running or happened in the last 0.8 s. */
+  requestBlink(time: number) {
+    if (this.blinkStart >= 0 || time - this.lastBlinkAt < 0.8) return;
+    this.blinkStart = time;
+    this.doubleBlink = false;
+  }
+  private lastBlinkAt = -10;
+
   update(time: number, signing: boolean): IdleSample {
     const dt = this.last < 0 ? 0 : Math.min(0.1, time - this.last);
     this.last = time;
@@ -85,6 +94,7 @@ export class IdleLife {
           this.blinkStart = time + 0.08;
         } else {
           this.blinkStart = -1;
+          this.lastBlinkAt = time;
           this.nextBlink = time + random(2.5, 5.5);
         }
       } else if (u >= 0) blink = Math.sin(Math.PI * u);

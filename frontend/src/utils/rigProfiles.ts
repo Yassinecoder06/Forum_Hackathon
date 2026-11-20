@@ -6,8 +6,10 @@ import * as THREE from "three";
  *
  * - `rpm`: Ready Player Me rigs (ReadyEva, Noa). Identity mapping, unchanged behaviour.
  * - `metahuman`: Epic MetaHuman / UE5 skeleton converted by scripts/metahuman/convert_metahuman.py
- *   (adds `<finger>_04_<side>` tip joints). No ARKit blendshapes: the face is driven
- *   through a few FACIAL_* joints instead (see metahumanFace.ts).
+ *   (adds `<finger>_04_<side>` tip joints). v1 conversions have no ARKit blendshapes: the face is driven through a
+ *   few FACIAL_* joints (see metahumanFace.ts). v2 conversions (convert_metahuman_v2.py) carry the 51 ARKit poses
+ *   baked from Epic's ARKit animation; those poses are anatomical extremes, so `morphGain` scales them down to the
+ *   range the other avatars show at the same weight.
  */
 export type RigProfileId = "rpm" | "metahuman";
 
@@ -19,6 +21,8 @@ export type RigProfile = {
    * first child joint is used (the original RPM behaviour). */
   chain: Record<string, string> | null;
   credit: string;
+  /** ARKit morph name -> display gain for this rig's shapes (missing = 1). */
+  morphGain?: Record<string, number>;
 };
 
 const FINGERS = ["Thumb", "Index", "Middle", "Ring", "Pinky"];
@@ -72,7 +76,23 @@ export const METAHUMAN_PROFILE: RigProfile = {
   bones: metahumanBones(),
   chain: metahumanChain(),
   credit: "Epic Games MetaHuman",
+  morphGain: metahumanMorphGain(),
 };
+
+function metahumanMorphGain() {
+  // Tuned by eye in the Studio on the F01 conversion (engine face + grammatical markers + emotion presets).
+  // Blinks and gaze stay at 1: a blink must close the lids, and gaze weights are already small.
+  const gain: Record<string, number> = { jawOpen: 0.45, mouthFunnel: 0.5, mouthPucker: 0.6, browInnerUp: 0.75, cheekPuff: 0.6, mouthClose: 0.6 };
+  for (const side of ["Left", "Right"]) {
+    Object.assign(gain, {
+      [`eyeWide${side}`]: 0.35, [`eyeSquint${side}`]: 0.6, [`cheekSquint${side}`]: 0.6, [`browOuterUp${side}`]: 0.75,
+      [`browDown${side}`]: 0.8, [`mouthSmile${side}`]: 0.8, [`mouthFrown${side}`]: 0.7, [`mouthStretch${side}`]: 0.5,
+      [`noseSneer${side}`]: 0.5, [`mouthPress${side}`]: 0.6, [`mouthUpperUp${side}`]: 0.5, [`mouthLowerDown${side}`]: 0.5,
+      [`mouthDimple${side}`]: 0.6,
+    });
+  }
+  return gain;
+}
 
 /** Detect the profile from the loaded skeleton (no configuration needed). */
 export function detectRigProfile(root: THREE.Object3D): RigProfile {

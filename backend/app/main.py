@@ -480,6 +480,29 @@ def avatar_model():
     return FileResponse(path,media_type='model/gltf-binary',headers={'Cache-Control':'no-cache'})
 
 
+EMOTION_IDLES = ('neutral', 'happy', 'sad', 'angry', 'fearful', 'surprised', 'disgusted')
+
+
+def _emotion_idle_dir():
+    return capture_library.storage() / 'emotion-idles'
+
+
+@app.get('/avatar/emotion-idles')
+def emotion_idles():
+    """Mixamo idle clips per emotion (downloaded manually into .runtime/emotion-idles/<label>.fbx, not in Git).
+    The Studio blends them as additive torso/neck/head/clavicle postures; missing ones use procedural postures."""
+    folder = _emotion_idle_dir()
+    return [{'label': label, 'url': f'/avatar/emotion-idles/{label}'} for label in EMOTION_IDLES if (folder / f'{label}.fbx').is_file()]
+
+
+@app.get('/avatar/emotion-idles/{label}')
+def emotion_idle(label: str):
+    path = _emotion_idle_dir() / f'{label}.fbx'
+    if label not in EMOTION_IDLES or not path.is_file():
+        raise HTTPException(404, 'Animation inconnue.')
+    return FileResponse(path, media_type='application/octet-stream', headers={'Cache-Control': 'no-cache'})
+
+
 class LsfGenerateRequest(BaseModel):
     text: str = Field(min_length=1, max_length=400)
     engine: Literal['c0', 'b2'] = 'b2'

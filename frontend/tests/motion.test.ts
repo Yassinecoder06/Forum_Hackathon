@@ -436,3 +436,76 @@ assert.equal(JSON.stringify(libraryClip),libraryRaw,"Preview windows never mutat
   assert(nm.browRaise === .65 && nm.headYaw === .4 && nm.headPitch === .1, "markers pass through, head motion bounded");
   console.log("Engine face checks passed: neutral, rounded/spread lips, per-eye squint, bounded grammatical markers.");
 }
+
+// Interpreter performance layer: forearm twist sharing, springs driven by the motion clock (deterministic on seek),
+// emotion face below grammar, procedural emotion posture.
+{
+  const { PerformanceLayer } = await import("../src/utils/performanceLayer");
+  const { EmotionStyle, emotionFace } = await import("../src/utils/emotionStyle");
+  const { RPM_PROFILE } = await import("../src/utils/rigProfiles");
+  const make = (name: string, parent: THREE.Object3D, p: number[]) => { const b = new THREE.Bone(); b.name = name; b.position.fromArray(p); parent.add(b); return b; };
+  const root = new THREE.Group();
+  const spine = make("Spine", root, [0, 1.1, 0]), spine1 = make("Spine1", spine, [0, 0.1, 0]), spine2 = make("Spine2", spine1, [0, 0.1, 0]);
+  const neck = make("Neck", spine2, [0, 0.2, 0]), headB = make("Head", neck, [0, 0.1, 0]);
+  const shoulder = make("LeftShoulder", spine2, [0.03, 0.15, 0]);
+  const arm = make("LeftArm", shoulder, [0.12, 0, 0]), fore = make("LeftForeArm", arm, [0.28, 0, 0]);
+  const hand = make("LeftHand", fore, [0.25, 0, 0]);
+  const tw1 = make("lowerarm_twist_01_l", fore, [0.17, 0, 0]), tw2 = make("lowerarm_twist_02_l", fore, [0.08, 0, 0]);
+  root.updateMatrixWorld(true);
+  const layer = new PerformanceLayer(root, RPM_PROFILE);
+  // twist: hand rolled 90 degrees about the forearm axis (+x here) -> twist bones get 60 and 30 degrees
+  hand.quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, 0), Math.PI / 2);
+  layer.update(undefined, false);
+  assert(Math.abs(2 * Math.acos(Math.min(1, tw1.quaternion.w)) - Math.PI / 3) < 1e-3, "twist_01 carries 2/3 of the roll");
+  assert(Math.abs(2 * Math.acos(Math.min(1, tw2.quaternion.w)) - Math.PI / 6) < 1e-3, "twist_02 carries 1/3 of the roll");
+  // springs: during playback the arm lags a sudden change, then settles; a seek gives the exact target at once
+  hand.quaternion.identity();
+  arm.quaternion.identity();
+  layer.update(0, true);
+  const target = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 0, 1), 0.8);
+  arm.quaternion.copy(target);
+  layer.update(40, true);
+  const lag = arm.quaternion.angleTo(target);
+  assert(lag > 0.1, "the spring lags a sudden 0.8 rad change during playback");
+  for (let t = 80; t <= 1200; t += 40) { arm.quaternion.copy(target); layer.update(t, true); }
+  assert(arm.quaternion.angleTo(target) < 0.01, "and settles on the target");
+  arm.quaternion.identity();
+  layer.update(5000, true);                                   // seek: no simulation, exact pose
+  assert(arm.quaternion.angleTo(new THREE.Quaternion()) < 1e-9, "a seek shows the retargeted pose exactly");
+  // emotion face: presets, and brows cut to 30 % under a grammatical marker
+  const happy = emotionFace("happy", 1, false);
+  assert(happy.mouthSmileLeft > 0.4 && happy.cheekSquintLeft > 0.3, "happy = smile + cheek raise");
+  assert(Math.abs(emotionFace("angry", 1, true).browDownLeft - 0.3 * emotionFace("angry", 1, false).browDownLeft) < 1e-9, "grammar wins over emotional brows");
+  assert(Object.keys(emotionFace("neutral", 1, false)).length === 0, "neutral adds nothing");
+  // procedural posture: sad tilts the head forward (world +x rotation moves the face down/forward)
+  const style = new EmotionStyle(root, RPM_PROFILE);
+  root.updateMatrixWorld(true);
+  const before = headB.getWorldQuaternion(new THREE.Quaternion());
+  const rest = [spine, spine1, spine2, neck, headB, shoulder].map((b) => b.quaternion.clone());
+  for (let i = 0; i < 60; i++) {
+    // the retargeter resets every bone each frame before the posture is added; do the same here
+    [spine, spine1, spine2, neck, headB, shoulder].forEach((b, k) => b.quaternion.copy(rest[k]));
+    root.updateMatrixWorld(true);
+    style.apply(i / 30, "sad", 1, 1 / 30);
+  }
+  root.updateMatrixWorld(true);
+  const tilt = new THREE.Euler().setFromQuaternion(headB.getWorldQuaternion(new THREE.Quaternion()).multiply(before.invert()));
+  assert(tilt.x > 0.03, "sad posture lowers the head");
+  // ponytail chain: lags a head turn, bounded per link, exact again after a seek
+  const tailRoot = new THREE.Group();
+  const tHead = make("Head", tailRoot, [0, 1.6, 0]);
+  const links = [1, 2, 3, 4].map((i) => i).reduce<THREE.Bone[]>((acc, i) => [...acc, make(`hair_ponytail_0${i}`, acc[acc.length - 1] ?? tHead, [0, -0.025, 0.02])], []);
+  tailRoot.updateMatrixWorld(true);
+  const tail = new PerformanceLayer(tailRoot, RPM_PROFILE);
+  const turn = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), 0.6);
+  const resetTail = () => links.forEach((b) => b.quaternion.identity());
+  resetTail(); tail.update(0, true);
+  tHead.quaternion.copy(turn);
+  resetTail(); tail.update(33, true);
+  const swing = links.map((b) => b.quaternion.angleTo(new THREE.Quaternion()));
+  assert(swing[0] > 0.05, "the ponytail lags a quick head turn");
+  assert(swing.every((a, i) => a <= THREE.MathUtils.degToRad(10 + 3 * i) + 1e-6), "each link stays within its angle limit");
+  resetTail(); tail.update(9000, true);
+  assert(links.every((b) => b.quaternion.angleTo(new THREE.Quaternion()) < 1e-9), "a seek shows the ponytail at rest under the head");
+  console.log("Performance checks passed: forearm twist 2/3-1/3, springs lag/settle/seek-exact, emotion face below grammar, sad posture, ponytail chain.");
+}

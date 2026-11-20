@@ -4,6 +4,17 @@ The Studio can render a MetaHuman character instead of Ready Eva / Noa. The char
 
 **Licence status: confirmed by the project owner (2026-11-20)** for use outside Unreal Engine, i.e. this GLB rendered by Three.js in the web Studio. The GLB is still built locally and kept out of Git; whether the raw character file may also be redistributed in this public repository is a separate decision (see [AVATAR_PROVENANCE.md](AVATAR_PROVENANCE.md)). Output is not a validated LSF translation.
 
+## v2 export (UE 5.7 "Optimized" FBX + DCC textures): `convert_metahuman_v2.py`
+
+```bash
+blender -b --factory-startup --python scripts/metahuman/convert_metahuman_v2.py --     --src /path/to/MetaHuman_Export_v2/F01 --out .runtime/avatar-candidates/MetaHuman.glb
+```
+
+- **ARKit face:** 51 ARKit morph targets on the detailed LOD0 face. Each pose of the export's `<ID>_Face_ARKit.fbx` animation is played on the LOD0 face skeleton and stored as a shape key. The Studio then drives the face with these shapes (scaled by the MetaHuman `morphGain` in `rigProfiles.ts`) instead of the `FACIAL_*` joints.
+- **Eyebrows:** the brow cards are baked as a mask into the skin texture (only the skin slot receives the bake). Procedural hair strokes are painted inside that mask, so the brows move with every brow shape.
+- **Ponytail:** a 4-bone chain, `hair_ponytail_01..04`, with smooth weights. `performanceLayer.ts` swings it as a chain of springs.
+- **Outfit:** a dark navy shirt and charcoal shorts, using the garment's own normal and AO maps.
+
 ## Build the GLB
 
 Requirements: Blender 4.x or 5.x (tested with 5.1.1 in background mode). Input: a MetaHuman Creator FBX export with baked textures:

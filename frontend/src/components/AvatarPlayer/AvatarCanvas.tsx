@@ -8,9 +8,12 @@ import { HumanoidRetargeter } from "../../utils/retargetHumanoid";
 import { browWeights, faceCalibration, sampleFace } from "../../utils/avatarPlayback";
 import { IdleLife } from "../../utils/idleLife";
 import { createCafeBackdrop } from "../../utils/stageBackdrop";
-import { RPM_PROFILE, rigBoneName } from "../../utils/rigProfiles";
+import { rigBoneName } from "../../utils/rigProfiles";
 import { MetaHumanFaceDriver } from "../../utils/metahumanFace";
 import { engineFace, turnHead } from "../../utils/engineFace";
+import { PerformanceLayer } from "../../utils/performanceLayer";
+import { EmotionStyle, emotionFace } from "../../utils/emotionStyle";
+import { createComposer, enableSoftShadows, polishMaterials } from "../../utils/renderPolish";
 type Props = {
   avatarCredit?: string;
   fitNarrowViewport?: boolean;
@@ -33,8 +36,7 @@ export function AvatarCanvas(props: Props) {
     latest = useRef(props);
   latest.current = props;
   const [status, setStatus] = useState("Chargement du personnage articulé…"),
-    [ready, setReady] = useState(false),
-    [rigCredit, setRigCredit] = useState(RPM_PROFILE.credit);
+    [ready, setReady] = useState(false);
   useEffect(() => {
     const host = mount.current;
     if (!host) return;
@@ -43,10 +45,15 @@ export function AvatarCanvas(props: Props) {
       model: THREE.Object3D | null = null,
       retarget: HumanoidRetargeter | null = null,
       idle: IdleLife | null = null,
-      faceDriver: MetaHumanFaceDriver | null = null;
+      faceDriver: MetaHumanFaceDriver | null = null,
+      performer: PerformanceLayer | null = null,
+      style: EmotionStyle | null = null;
+    // Interpreter-style layers: wall clock for presentation easing, motion clock for phrase-aware blinks.
+    let lastWall = -1, lastMotionTime = -1, emotionLevel = 0, emotionLabel: string | undefined;
     // Channel values in ARKit names; rigs without blendshapes read them via faceDriver.
     const faceWeights: Record<string, number> = {};
     const morphs: THREE.Mesh[] = [];
+    let morphGain: Record<string, number> | undefined;
     let head: THREE.Bone | undefined;
     let bindHead: THREE.Quaternion | undefined;
     let redraw = true;
@@ -88,6 +95,7 @@ export function AvatarCanvas(props: Props) {
     // Café lighting: warm tungsten key, soft fill, amber rims to lift hair and
     // shoulders off the wall. Faces and hands stay evenly lit for legibility.
     scene.add(new THREE.HemisphereLight(0xffe8d2, 0x4a2c20, 1.7));
+    let keyLight: THREE.DirectionalLight | undefined;
     for (const [x, y, z, power, color] of [
       [-1.8, 2.6, 3.2, 3.1, 0xffd9b0],
       [2.2, 1.6, 2.2, 1.2, 0xfff0e2],
@@ -97,10 +105,16 @@ export function AvatarCanvas(props: Props) {
       const light = new THREE.DirectionalLight(color, power);
       light.position.set(x, y, z);
       scene.add(light);
+      keyLight ??= light;
+      if (light === keyLight) scene.add(light.target);
     }
+    // Rendering polish: soft key-light shadows, ambient occlusion, light bloom, SMAA (renderPolish.ts).
+    enableSoftShadows(renderer, keyLight!);
+    const polished = createComposer(renderer, scene, camera);
     const resize = () => {
       if (!host.clientWidth || !host.clientHeight) return;
       renderer.setSize(host.clientWidth, host.clientHeight);
+      polished.setSize(host.clientWidth, host.clientHeight);
       camera.aspect = host.clientWidth / host.clientHeight;
       if (latest.current.fitNarrowViewport) {
         const halfFov = THREE.MathUtils.degToRad(15);
@@ -140,6 +154,7 @@ export function AvatarCanvas(props: Props) {
           return;
         }
         model = gltf.scene;
+        polishMaterials(model);
         scene.add(model);
         model.updateMatrixWorld(true);
         try {
@@ -151,10 +166,16 @@ export function AvatarCanvas(props: Props) {
           return;
         }
         const profile = retarget.profile;
+        morphGain = profile.morphGain;
         idle = new IdleLife(model, profile);
-        // MetaHuman: no ARKit blendshapes; drive jaw/lids/brows/gaze through FACIAL_* joints.
-        faceDriver = MetaHumanFaceDriver.create(model);
-        setRigCredit(profile.credit);
+        // Interpreter performance (twist bones, springs, moving holds, hair) and emotion style (posture blendspace).
+        performer = new PerformanceLayer(model, profile);
+        style = new EmotionStyle(model, profile);
+        const currentStyle = style;
+        fetch("/api/avatar/emotion-idles")
+          .then((r) => (r.ok ? r.json() : []))
+          .then((list: { label: string; url: string }[]) => currentStyle.loadIdles(list.map((i) => ({ ...i, url: "/api" + i.url }))))
+          .catch(() => undefined);
         const headName = rigBoneName(profile, "Head");
         model.traverse((o) => {
           if (o instanceof THREE.Bone && o.name === headName) {
@@ -166,6 +187,9 @@ export function AvatarCanvas(props: Props) {
             if (o.morphTargetDictionary) morphs.push(o);
           }
         });
+        // MetaHuman without ARKit shapes (v1 conversion): drive jaw/lids/brows/gaze through FACIAL_* joints instead.
+        // With baked ARKit shapes (v2) the joints stay at rest, else every expression would be applied twice.
+        faceDriver = morphs.some((m) => m.morphTargetDictionary?.jawOpen !== undefined) ? null : MetaHumanFaceDriver.create(model);
         setReady(true);
         redraw = true;
         setStatus("");
@@ -181,10 +205,12 @@ export function AvatarCanvas(props: Props) {
     );
     function morph(name: string, value: number) {
       faceWeights[name] = THREE.MathUtils.clamp(value, 0, 1);
+      // faceWeights keep the requested weight (the v1 joint driver reads them); the mesh gets the rig's display gain.
+      const shown = THREE.MathUtils.clamp(value, 0, 1) * (morphGain?.[name] ?? 1);
       for (const mesh of morphs) {
         const i = mesh.morphTargetDictionary?.[name];
         if (i !== undefined && mesh.morphTargetInfluences)
-          mesh.morphTargetInfluences[i] = THREE.MathUtils.clamp(value, 0, 1);
+          mesh.morphTargetInfluences[i] = shown;
       }
     }
     function render() {
@@ -232,16 +258,24 @@ export function AvatarCanvas(props: Props) {
         const tracking = retarget?.applyMotion(motion, currentTimeMs);
         host.dataset.handTracking = JSON.stringify(tracking);
         host.dataset.rigDiagnostics = JSON.stringify(retarget?.diagnostics);
-        const note = host.querySelector<HTMLElement>(".hand-tracking-note");
-        if (note) {
-          // Warn only for real tracking gaps (hand held or faded to rest), not for the planned
-          // bridges between signs or sub-180 ms interpolation, which would make it flicker constantly.
-          const uncertain = tracking && Object.values(tracking).some((s) => s === "held" || s === "untracked");
-          note.textContent = uncertain ? "Suivi des mains incomplet · pose estimée à vérifier" : "";
-        }
       }
+      // Interpreter style on top of the retargeted pose: emotion posture, then springs / twist / holds / hair.
+      const nowSec = performance.now() / 1000;
+      const wallDt = lastWall < 0 ? 0 : Math.min(0.1, nowSec - lastWall);
+      lastWall = nowSec;
+      const feeling = motion?.generation?.emotion;
+      if (feeling && feeling.label !== "neutral") emotionLabel = feeling.label;
+      emotionLevel += ((feeling && feeling.label !== "neutral" ? feeling.confidence : 0) - emotionLevel) * Math.min(1, wallDt * 2);
+      if (model) {
+        style?.apply(nowSec, emotionLabel, emotionLevel, wallDt);
+        performer?.update(motion ? currentTimeMs : undefined, Boolean(motion));
+      }
+      // Phrase-aware blinks: at the end of each grammatical clause span, during normal playback.
+      if (motion?.nonmanual && lastMotionTime >= 0 && currentTimeMs > lastMotionTime && currentTimeMs - lastMotionTime < 250)
+        for (const span of motion.nonmanual) if (span.end_ms > lastMotionTime && span.end_ms <= currentTimeMs) idle?.requestBlink(nowSec);
+      lastMotionTime = motion ? currentTimeMs : -1;
       // Display-only life layer on top of the reset-every-frame retargeted pose.
-      const life = renderOnChange ? undefined : idle?.update(performance.now() / 1000, Boolean(motion));
+      const life = renderOnChange ? undefined : idle?.update(nowSec, Boolean(motion));
       morph("eyeBlinkLeft", life?.blink ?? 0);
       morph("eyeBlinkRight", life?.blink ?? 0);
       const gx = life?.gaze.x ?? 0, gy = life?.gaze.y ?? 0;
@@ -293,6 +327,10 @@ export function AvatarCanvas(props: Props) {
           }
         }
       }
+      // Emotion face (FACS presets), additive and below grammar: emotional brows are cut while a marker is active.
+      const grammar = Boolean(engine && (engine.nonmanual.browRaise > 0.05 || engine.nonmanual.browFurrow > 0.05));
+      for (const [name, value] of Object.entries(emotionFace(emotionLabel, emotionLevel, grammar)))
+        morph(name, Math.min(1, (faceWeights[name] ?? 0) + value));
       if (faceBlendshapes) {
         for (const name of [
           "jawOpen", "eyeBlinkLeft", "eyeBlinkRight", "browInnerUp",
@@ -314,7 +352,7 @@ export function AvatarCanvas(props: Props) {
         head.quaternion.copy(bindHead).premultiply(delta);
         head.updateWorldMatrix(false, true);
       }
-      renderer.render(scene, camera);
+      polished.composer.render();
     }
     render();
     return () => {
@@ -324,6 +362,7 @@ export function AvatarCanvas(props: Props) {
       controls.dispose();
       if (model) disposeModel(model);
       backdrop.dispose();
+      polished.dispose();
       renderer.dispose();
       renderer.domElement.remove();
     };
@@ -338,9 +377,6 @@ export function AvatarCanvas(props: Props) {
       <div ref={mount} aria-label="Avatar 3D articulé">
         <span className="hand-tracking-note" aria-live="off" />
       </div>
-      <span className="avatar-view-note">
-        {props.avatarCredit ?? "Avatar"} · {rigCredit}
-      </span>
     </div>
   );
 }

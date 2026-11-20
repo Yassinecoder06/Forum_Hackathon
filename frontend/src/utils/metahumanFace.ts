@@ -54,6 +54,7 @@ export class MetaHumanFaceDriver {
         `FACIAL_${s}_ForeheadIn`, `FACIAL_${s}_ForeheadMid`, `FACIAL_${s}_ForeheadOut`, `FACIAL_${s}_Eye`, `FACIAL_${s}_LipCorner`,
         `FACIAL_${s}_LipUpper`, `FACIAL_${s}_LipLower`, `FACIAL_${s}_CheekLower`);
     names.push("FACIAL_C_LipUpper", "FACIAL_C_LipLower");
+    for (const s of ["L", "R"]) names.push(`FACIAL_${s}_CheekOuter`, `FACIAL_${s}_NoseUpper`);
     const driver = new MetaHumanFaceDriver(root, names);
     return driver.joints.has("FACIAL_C_Jaw") ? driver : null;
   }
@@ -122,6 +123,17 @@ export class MetaHumanFaceDriver {
     const pucker = Math.max(w("mouthPucker"), w("mouthFunnel"));
     this.move("FACIAL_C_LipUpper", 0, w("mouthFunnel") * 0.0015, pucker * 0.004);
     this.move("FACIAL_C_LipLower", 0, -w("mouthFunnel") * 0.002, pucker * 0.004);
+    // emotion presets (FACS): cheek raise, nose wrinkle, lip press, raised upper lip
+    const press = w("mouthPressLeft") * 0.5 + w("mouthPressRight") * 0.5;
+    this.move("FACIAL_C_LipUpper", 0, -press * 0.001, 0);
+    this.move("FACIAL_C_LipLower", 0, press * 0.0012, 0);
+    for (const [s, side] of [["L", "Left"], ["R", "Right"]] as const) {
+      const cheek = w(`cheekSquint${side}`), sneer = w(`noseSneer${side}`), upper = w(`mouthUpperUp${side}`);
+      this.move(`FACIAL_${s}_CheekLower`, 0, cheek * 0.0025, cheek * 0.0008);
+      this.move(`FACIAL_${s}_CheekOuter`, 0, cheek * 0.002, 0);
+      this.move(`FACIAL_${s}_NoseUpper`, 0, sneer * 0.0015, 0);
+      this.move(`FACIAL_${s}_LipUpper`, 0, upper * 0.002 - w(`mouthPress${side}`) * 0.001, 0);
+    }
     for (const j of this.joints.values()) j.bone.updateMatrixWorld(true);
   }
 }
