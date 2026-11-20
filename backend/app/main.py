@@ -298,6 +298,17 @@ def compose_draft(draft, audio=None):
     timing,t,timing_mode=segment_timing(selected,audio,transition_ms)
     for segment,(start,length) in zip(segments,timing):
         segment.update(start_ms=start,duration_ms=length)
+    # Word-level pace and emphasis when the transcript's words align with the text.
+    if audio is not None and audio.prosody and draft.get('gloss_token_spans'):
+        from .services.prosody import segment_prosody
+        from .services.animation_timing import word_timing
+        per_sign=segment_prosody(draft['gloss_token_spans'],draft['tokens'],audio.prosody)
+        timed=word_timing(selected,per_sign,audio)
+        if timed:
+            word_slots,t=timed;timing_mode='audio_words'
+            for segment,(start,length,hold),p in zip(segments,word_slots,per_sign):
+                segment.update(start_ms=start,duration_ms=length,hold_ms=hold)
+                if p: segment.update(emphasis=p['emphasis'],liveliness=p['liveliness'],word_start_ms=p['word_start_ms'],word_end_ms=p['word_end_ms'])
     plan = AnimationPlan(transition_ms=transition_ms,timing_mode=timing_mode,plan_id=str(uuid.uuid4()), source_text=draft['source_text'], target_language='LSF', segments=segments, unknowns=draft['unknowns'], duration_ms=t, linguistic_review='pending', animation_review=('approved' if selected and all(m.animation_review == 'approved' for m in selected) else 'pending'), rights_status=('cleared' if selected and all(m.rights_status == 'cleared' for m in selected) else 'pending'), render_allowed_for_publication=False, audio_features=audio)
     with db() as c: c.execute('INSERT INTO plans VALUES (?,?)', (plan.plan_id, plan.model_dump_json()))
     return plan

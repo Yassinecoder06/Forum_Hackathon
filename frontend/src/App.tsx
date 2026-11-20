@@ -26,6 +26,7 @@ import { ConceptComposer } from "./components/ConceptComposer";
 import { ResearchPanel } from "./components/ResearchPanel";
 import { AvatarCanvas } from "./components/AvatarPlayer/AvatarCanvas";
 import { stitchAnimationPlan, libraryPreview } from "./utils/planStitcher";
+import { dominantEmotion } from "./utils/emotionFace";
 import type {
   AnimationPlan,
   AudioFeatures,
@@ -92,6 +93,17 @@ const json = (body: unknown) => ({
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify(body),
 });
+const EMOTION_LABELS: Record<string, string> = {
+  happy: "Joie",
+  neutral: "Neutre",
+  sad: "Tristesse",
+  angry: "Colère",
+  surprised: "Surprise",
+  fearful: "Peur",
+  disgusted: "Dégoût",
+  other: "Autre",
+  unknown: "Inconnu",
+};
 const seconds = (ms: number) => `${(ms / 1000).toFixed(1)} s`;
 const clock = (ms: number) =>
   `${Math.floor(ms / 60000)
@@ -120,6 +132,7 @@ export default function App() {
   const [audioName, setAudioName] = useState("");
   const [audioBusy, setAudioBusy] = useState(false);
   const [expressive, setExpressive] = useState(false);
+  const [emotionIntensity, setEmotionIntensity] = useState(1);
   const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
   const [recording, setRecording] = useState(false);
   const [sourceUrl, setSourceUrl] = useState("");
@@ -173,6 +186,7 @@ export default function App() {
     (s) => time >= s.start_ms && time < s.start_ms + s.duration_ms,
   );
   const emotion = audio?.emotion_hypothesis || null;
+  const emotionTimeline = audio?.emotion_timeline || null;
   const pitches = audio?.frames.flatMap(({ pitch_hz }) => pitch_hz == null ? [] : [pitch_hz]) ?? [];
   const meanPitch = pitches.length ? Math.round(pitches.reduce((sum, hz) => sum + hz, 0) / pitches.length) : null;
   const pauseMs = audio?.frames.reduce((sum, frame) =>
@@ -871,13 +885,34 @@ export default function App() {
                             <span className="section-label">
                               TRANSCRIPTION LOCALE · À RELIRE
                             </span>
-                            <p>
-                              {audio.transcription.text ||
-                                "Aucune parole française détectée."}
-                            </p>
+                            {audio.prosody?.words.length ? (
+                              <p className="prosody-words" aria-label="Transcription avec mots accentués">
+                                {audio.prosody.words.map((word, index) => (
+                                  <span
+                                    key={`${word.start_ms}-${index}`}
+                                    className={word.emphasized ? "stressed" : undefined}
+                                    title={`${(word.start_ms / 1000).toFixed(2)} s · ${word.syl_per_s.toFixed(1)} syll/s · proéminence ${word.prominence.toFixed(2)}`}
+                                  >
+                                    {word.text}{" "}
+                                  </span>
+                                ))}
+                              </p>
+                            ) : (
+                              <p>
+                                {audio.transcription.text ||
+                                  "Aucune parole française détectée."}
+                              </p>
+                            )}
                             <small>
                               Whisper small · {audio.transcription.device} ·{" "}
                               {audio.transcription.segments.length} segment(s)
+                              {audio.prosody && (
+                                <>
+                                  {" "}· débit {audio.prosody.pace_syl_per_s.toFixed(1)} syll/s ·{" "}
+                                  {audio.prosody.words.filter((w) => w.emphasized).length} mot(s)
+                                  accentué(s), estimation acoustique
+                                </>
+                              )}
                             </small>
                             <button
                               className="secondary-button"
@@ -900,19 +935,7 @@ export default function App() {
                               .map(([name, score]) => (
                                 <div key={name}>
                                   <span>
-                                    {(
-                                      {
-                                        happy: "Joie",
-                                        neutral: "Neutre",
-                                        sad: "Tristesse",
-                                        angry: "Colère",
-                                        surprised: "Surprise",
-                                        fearful: "Peur",
-                                        disgusted: "Dégoût",
-                                        other: "Autre",
-                                        unknown: "Inconnu",
-                                      } as Record<string, string>
-                                    )[name] || name}
+                                    {EMOTION_LABELS[name] || name}
                                   </span>
                                   <meter
                                     min={0}
@@ -924,6 +947,27 @@ export default function App() {
                               ))}
                           </div>
                         )}
+                        {emotionTimeline && emotionTimeline.length > 1 && audio && (
+                          <div
+                            className="emotion-strip"
+                            aria-label="Émotion dominante estimée au fil de l’audio"
+                          >
+                            {emotionTimeline.map((window) => {
+                              const top = dominantEmotion(window.scores) || "neutral";
+                              return (
+                                <span
+                                  key={window.start_ms}
+                                  className={`emotion-${top}`}
+                                  style={{
+                                    left: `${(window.start_ms / audio.duration_ms) * 100}%`,
+                                    width: `${((window.end_ms - window.start_ms) / audio.duration_ms) * 100}%`,
+                                  }}
+                                  title={`${(window.start_ms / 1000).toFixed(1)}–${(window.end_ms / 1000).toFixed(1)} s · ${EMOTION_LABELS[top] || top} ${Math.round((window.scores[top] ?? 0) * 100)} %`}
+                                />
+                              );
+                            })}
+                          </div>
+                        )}
                         {emotion && <label className="switch-row">
                           <input
                             type="checkbox"
@@ -931,13 +975,29 @@ export default function App() {
                             onChange={(e) => setExpressive(e.target.checked)}
                           />
                           <span>
-                            Prévisualiser l’émotion de la voix au repos
+                            Expression émotionnelle de la voix
                             <small>
-                              L’aperçu émotionnel s’affiche quand aucune séquence
-                              signée n’est chargée.
+                              Hypothèse du modèle, pas l’état intérieur de la personne.
+                              Visage complet au repos ; pendant les signes, la bouche
+                              est plafonnée et les sourcils grammaticaux ne reçoivent
+                              qu’une légère nuance.
                             </small>
                           </span>
                         </label>}
+                        {emotion && expressive && (
+                          <label className="intensity-row">
+                            <span>Intensité</span>
+                            <input
+                              type="range"
+                              min={0}
+                              max={1}
+                              step={0.05}
+                              value={emotionIntensity}
+                              onChange={(e) => setEmotionIntensity(Number(e.target.value))}
+                            />
+                            <b>{Math.round(emotionIntensity * 100)} %</b>
+                          </label>
+                        )}
                         {audio.warnings.length > 0 && (
                           <details open={!emotion && Boolean(caps?.emotion)}>
                             <summary>Notes de l’analyse audio</summary>
@@ -1395,6 +1455,11 @@ export default function App() {
                   currentTimeMs={time}
                   expressiveModulation={expressive}
                   emotion={expressive ? emotion : null}
+                  emotionTimeline={expressive ? emotionTimeline : null}
+                  emotionIntensity={emotionIntensity}
+                  emotionClock={() =>
+                    motion ? time : (audioPlayer.current?.currentTime ?? 0) * 1000
+                  }
                   onCanvasReady={setCanvas}
                 />
                 <div className="preview-caption">

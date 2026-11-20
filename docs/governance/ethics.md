@@ -36,12 +36,12 @@ graph TD
 
 ### Pilier 4 — Cultures et Langues LSF
 - **Primauté grammaticale :** Les marqueurs non manuels (sourcils, inclinaison de la tête, direction du regard, rythme) constituent des éléments grammaticaux fondamentaux en LSF.
-- **Contrainte sur l'expressivité :** L'analyse vocale (prosodie, intonation) ne peut en aucun cas modifier un mouvement de manière à en corrompre la signification lexicale ou la structure syntaxique LSF. En cas de conflit, la contrainte linguistique prévaut systématiquement.
+- **Contrainte sur l'expressivité :** L'analyse vocale (prosodie, intonation) ne peut en aucun cas modifier un mouvement de manière à en corrompre la signification lexicale ou la structure syntaxique LSF. En cas de conflit, la contrainte linguistique prévaut systématiquement. Concrètement, pendant les signes, l'émotion vocale ne fait qu'ajouter une nuance plafonnée (≤ 0,1) aux sourcils capturés et ne touche ni la tête ni l'ouverture de la mâchoire. Seule exception : sur un signe dont le mot a été détecté comme accentué dans la voix, un hochement de tête additif d'au plus 6° est appliqué au début du signe. L'inclinaison de la tête étant grammaticale en LSF, ce hochement est volontairement faible, désactivable avec la modulation expressive, et doit être validé par des signants avant tout usage public.
 - **Reconnaissance des limites :** La lemmatisation mot-à-mot (Text-to-Gloss) est explicitement documentée comme une approximation limitée, incapable de rendre compte de la spatialité complexe de la LSF.
 
 ### Pilier 5 — Transparence & Vérité Scientifique
 - **Labellisation visible :** Tout asset de test est formellement marqué `synthetic: true` et `review_status: pending`.
-- **Honnêteté des résultats :** Le système refuse les prédictions d'émotion fallacieuses (`emotion_hypothesis: null`) tant qu'un modèle local vérifié et calibré n'est pas intégré.
+- **Honnêteté des résultats :** Les scores emotion2vec+ sont présentés comme des hypothèses du modèle, jamais comme l'état intérieur d'une personne ; `emotion_hypothesis`/`emotion_timeline` restent `null` si le modèle local vérifié est absent. Leur exactitude et leur calibration en français ne sont pas mesurées.
 - **Traçabilité logicielle :** Les versions de rigs (`signaculture-v1`), les modèles de signal et les horodatages sont conservés dans les payloads API.
 
 ### Pilier 6 — Planète & Sobriété Numérique

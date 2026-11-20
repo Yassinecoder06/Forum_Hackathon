@@ -59,7 +59,7 @@ def lookup_text(text, entries):
             ts, ls = phrase_tokens(phrase, os.getenv('SIGNACULTURE_SPACY_MODEL', 'fr_core_news_sm'))
             if ts:
                 candidates.append(([t.casefold() for t in ts], ls, entry))
-    sequence, unknowns, i = [], [], 0
+    sequence, spans, unknowns, i = [], [], [], 0
     while i < len(tokens):
         matches = [(len(ts), entry) for ts, ls, entry in candidates
                    if surfaces[i:i+len(ts)] == ts or tuple(lemmas[i:i+len(ls)]) == ls]
@@ -73,9 +73,10 @@ def lookup_text(text, entries):
             best = {g.gloss_id:g for n,g in matches if n == size}
             if len(best) == 1:
                 sequence.append(next(iter(best.values())))
+                spans.append((i, i + size))
                 i += size
                 continue
         unknowns.append(tokens[i])
         i += 1
     return dict(source_text=text, tokens=tokens, lemmas=lemmas, gloss_sequence=sequence,
-                unknowns=unknowns, linguistic_review='pending', translation_validated=False)
+                gloss_token_spans=spans, unknowns=unknowns, linguistic_review='pending', translation_validated=False)

@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" font-family="Segoe UI, system-ui, sans-serif" role="img" aria-label="Architecture of the voice emotion, stress and pace update">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8a6f62"/></marker>
+    <style>
+      .zone{fill:#faf7f3;stroke:#e3d7cd;stroke-width:1.5}
+      .zt{font-size:13px;font-weight:700;fill:#8a6f62;letter-spacing:.08em}
+      .box{fill:#ffffff;stroke:#cdb9a8;stroke-width:1.5}
+      .new{fill:#fdf0e8;stroke:#b5562f;stroke-width:2}
+      .t{font-size:15px;font-weight:700;fill:#3b2a22}
+      .s{font-size:12px;fill:#6b5a50}
+      .f{font-size:11px;fill:#a0857a;font-family:Consolas, monospace}
+      .a{stroke:#8a6f62;stroke-width:1.6;fill:none;marker-end:url(#arrow)}
+      .lbl{font-size:11px;fill:#8a6f62}
+    </style>
+  </defs>
+  <rect width="1200" height="760" fill="#fffdfb"/>
+  <text x="24" y="34" font-size="22" font-weight="700" fill="#3b2a22">Voice → avatar: emotion, stress and pace</text>
+  <g transform="translate(830,18)"><rect width="16" height="16" rx="3" class="new"/><text x="22" y="13" class="s">new or changed in this update</text>
+    <rect x="200" width="16" height="16" rx="3" class="box"/><text x="222" y="13" class="s">existing</text></g>
+
+  <!-- Zones -->
+  <rect x="16" y="54" width="268" height="690" rx="14" class="zone"/><text x="30" y="78" class="zt">INPUT</text>
+  <rect x="300" y="54" width="430" height="690" rx="14" class="zone"/><text x="314" y="78" class="zt">BACKEND · FastAPI (local)</text>
+  <rect x="746" y="54" width="438" height="690" rx="14" class="zone"/><text x="760" y="78" class="zt">FRONTEND · Studio (React + Three.js)</text>
+
+  <!-- Input -->
+  <rect x="32" y="96" width="236" height="74" rx="10" class="box"/><text x="46" y="122" class="t">Voice recording</text><text x="46" y="142" class="s">audio or video, ≤ 60 s</text><text x="46" y="160" class="s">POST /analyze-audio</text>
+  <rect x="32" y="190" width="236" height="74" rx="10" class="box"/><text x="46" y="216" class="t">FFmpeg decode</text><text x="46" y="236" class="s">16 kHz mono PCM</text><text x="46" y="254" class="f">audio_analysis.py</text>
+  <rect x="32" y="560" width="236" height="74" rx="10" class="box"/><text x="46" y="586" class="t">French text</text><text x="46" y="606" class="s">typed, or the transcript draft</text><text x="46" y="624" class="s">POST /compose-animation</text>
+  <rect x="32" y="654" width="236" height="74" rx="10" class="box"/><text x="46" y="680" class="t">LSF sign library</text><text x="46" y="700" class="s">Dicta-Sign captures (MediaPipe)</text><text x="46" y="718" class="f">.runtime/library.json</text>
+  <path d="M150 170 V188" class="a"/>
+
+  <!-- Backend analysis -->
+  <rect x="316" y="96" width="398" height="62" rx="10" class="box"/><text x="330" y="120" class="t">Acoustic frames</text><text x="330" y="140" class="s">every 40 ms: loudness (RMS), pitch (F0), pauses</text>
+  <rect x="316" y="170" width="398" height="86" rx="10" class="new"/><text x="330" y="194" class="t">Emotion · emotion2vec+ (CPU)</text><text x="330" y="214" class="s">verified checkpoint → 9-class clip score</text><text x="330" y="232" class="s">+ 2 s windows over trimmed speech (timeline)</text><text x="330" y="249" class="f">workers/emotion.py · emotion_timeline.py</text>
+  <rect x="316" y="268" width="398" height="70" rx="10" class="new"/><text x="330" y="292" class="t">Speech recognition · Whisper small</text><text x="330" y="312" class="s">French transcript + per-word timestamps, CPU fallback</text><text x="330" y="330" class="f">workers/transcribe.py</text>
+  <rect x="316" y="350" width="398" height="100" rx="10" class="new"/><text x="330" y="374" class="t">Prosody · stress, pace, tone</text><text x="330" y="394" class="s">per word: loudness, pitch, voiced length vs the</text><text x="330" y="410" class="s">expected value in its phrase (declination removed)</text><text x="330" y="426" class="s">→ prominence, stressed words (≤ ¼), syll/s, liveliness</text><text x="330" y="443" class="f">services/prosody.py</text>
+  <path d="M268 227 H292 V127 H314" class="a"/><path d="M292 213 H314" class="a"/><path d="M292 227 V303 H314" class="a"/>
+  <path d="M515 158 V166" class="a"/><path d="M700 338 V348" class="a"/><path d="M330 158 V164" class="a" opacity="0"/>
+  <path d="M322 127 C300 127 300 400 314 400" class="a" stroke-dasharray="4 3"/>
+
+  <rect x="316" y="470" width="398" height="56" rx="10" class="box"/><text x="330" y="494" class="t">AudioFeatures</text><text x="330" y="514" class="s">frames · emotion + timeline · words · prosody</text>
+  <path d="M515 450 V468" class="a"/>
+
+  <rect x="316" y="548" width="398" height="62" rx="10" class="box"/><text x="330" y="572" class="t">Text → gloss lookup</text><text x="330" y="592" class="s">+ which words each sign came from (token spans)</text>
+  <rect x="316" y="624" width="398" height="104" rx="10" class="new"/><text x="330" y="648" class="t">Compose plan · word timing</text><text x="330" y="668" class="s">align transcript words ↔ signs; each sign starts at</text><text x="330" y="684" class="s">its word (rate 0.75–1.35×); stressed sign: slower,</text><text x="330" y="700" class="s">end hold, emphasis value → AnimationPlan "audio_words"</text><text x="330" y="718" class="f">main.py · animation_timing.py</text>
+  <path d="M268 597 H314" class="a"/><path d="M268 690 H292 V600" class="a"/><path d="M515 610 V622" class="a"/>
+  <path d="M714 498 H730 V676 H716" class="a"/>
+
+  <!-- Frontend -->
+  <rect x="762" y="96" width="406" height="90" rx="10" class="new"/><text x="776" y="120" class="t">Studio UI</text><text x="776" y="140" class="s">transcript with stressed words underlined, pace,</text><text x="776" y="156" class="s">emotion bars + timeline strip, toggle + intensity</text><text x="776" y="176" class="f">App.tsx</text>
+  <rect x="762" y="206" width="406" height="132" rx="10" class="new"/><text x="776" y="230" class="t">Emotion → face</text><text x="776" y="250" class="s">windows anchored to clip score (can't flip it), noise</text><text x="776" y="266" class="s">floor, perceptual curve, ~300 ms easing → ARKit shapes</text><text x="776" y="282" class="s">at rest: full face · while signing: eyes/cheeks/mouth</text><text x="776" y="298" class="s">≤ 0.6, brows nudged ≤ 0.1, jaw + head untouched</text><text x="776" y="328" class="f">emotionFace.ts</text>
+  <rect x="762" y="358" width="406" height="150" rx="10" class="new"/><text x="776" y="382" class="t">Plan stitcher · signing timeline</text><text x="776" y="402" class="s">word-anchored time warp with end holds;</text><text x="776" y="418" class="s">stressed sign: path up to +30% around its own centre,</text><text x="776" y="434" class="s">fades out near face contact; head-nod curve;</text><text x="776" y="450" class="s">tone (pitch liveliness) ±5% amplitude;</text><text x="776" y="466" class="s">hand-tracking gaps kept when resampling</text><text x="776" y="496" class="f">planStitcher.ts</text>
+  <rect x="762" y="528" width="406" height="102" rx="10" class="new"/><text x="776" y="552" class="t">Avatar renderer</text><text x="776" y="572" class="s">retargeted pose + additive emotion blendshapes</text><text x="776" y="588" class="s">on top of captured face; head nod ≤ 6°</text><text x="776" y="620" class="f">AvatarCanvas.tsx · ReadyEva (Three.js)</text>
+  <rect x="762" y="650" width="406" height="78" rx="10" class="box"/><text x="776" y="674" class="t">3D avatar output</text><text x="776" y="694" class="s">live preview + WebM export</text>
+
+  <path d="M714 498 H746 V140 H760" class="a"/><path d="M746 270 H760" class="a"/>
+  <path d="M714 676 H738 V433 H760" class="a"/>
+  <path d="M1168 272 H1178 V579 H1170" class="a"/><path d="M965 508 V526" class="a"/>
+  <path d="M965 630 V648" class="a"/>
+  <text x="560" y="540" class="lbl"> </text>
+</svg>

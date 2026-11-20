@@ -29,6 +29,7 @@ def test_real_tone_and_invalid_wav():
     assert r.status_code == 200
     assert abs(r.json()['frames'][0]['pitch_hz']-200)<5
     assert r.json()['emotion_hypothesis'] is None
+    assert r.json()['emotion_timeline'] is None
     assert client.post('/analyze-audio',files={'file':('bad.wav',b'bad')}).status_code == 422
 
 def test_missing_asset_and_empty_text():
