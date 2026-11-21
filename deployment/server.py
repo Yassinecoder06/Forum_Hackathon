@@ -91,7 +91,16 @@ def create_app(frontend=None, username=None, password=None):
                 )
         response = await call_next(request)
         response.headers['X-Content-Type-Options'] = 'nosniff'
-        response.headers['Cache-Control'] = 'no-store'
+        path = request.url.path
+        if path.startswith('/studio/assets/'):
+            # Vite build output: file names carry a content hash, so they never change in place.
+            response.headers['Cache-Control'] = 'public, max-age=31536000, immutable'
+        elif path.startswith('/assets/') or 'cache-control' in response.headers:
+            # Landing media, and API files that set their own policy (the avatar: no-cache + ETag, so a
+            # repeat visit revalidates with a 304 instead of downloading 12 MB again).
+            response.headers.setdefault('Cache-Control', 'public, max-age=3600')
+        else:
+            response.headers['Cache-Control'] = 'no-store'
         return response
 
     @app.get('/healthz')
