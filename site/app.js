@@ -7,11 +7,10 @@ const el = (tag, props = {}, children = []) => {
 };
 
 const SENTENCES = [
-  "Bonjour, comment ça va ?",
-  "Je ne veux pas boire de l'eau.",
-  "Je visite Paris avec ma famille.",
-  "Le musée est fermé demain.",
-  "Je veux apprendre la langue des signes.",
+  "Je vous dis à la semaine prochaine.",
+  "Qu'est-ce qui a changé aujourd'hui ?",
+  "S'il n'y a pas d'autre question, je vous remercie.",
+  "Bonnes fêtes de fin d'année à tous.",
 ];
 
 const DIAGRAMS = [

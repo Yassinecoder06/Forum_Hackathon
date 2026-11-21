@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { request } from "./services/api";
 import { LsfEnginePanel } from "./components/LsfEnginePanel";
+import { generateBody } from "./utils/lsfRequest";
 import { FilmMode } from "./components/FilmMode";
 import { AvatarCanvas } from "./components/AvatarPlayer/AvatarCanvas";
 import { stitchAnimationPlan, libraryPreview } from "./utils/planStitcher";
@@ -226,12 +227,39 @@ export default function App() {
     [sourceUrl],
   );
 
-  // Compose the linked sentence once, after the library has loaded.
+  // Sign a sentence with the C0 generator, in LSF order with the grammatical face (example chips, landing links).
+  function signWithC0(sentence: string) {
+    const token = ++generation.current;
+    setBusy(true);
+    setError("");
+    request<MotionFile>("/lsf/generate", json(generateBody(sentence, "c0", true, true)))
+      .then((generated) => {
+        if (token !== generation.current) return;
+        setPlan(null);
+        setReferenceUrl("");
+        setMotion(generated);
+        setLabel("Moteur C0");
+        setTime(0);
+        setPlaying(true);
+      })
+      .catch((err) => setError(err instanceof Error ? err.message : "Moteur indisponible."))
+      .finally(() => setBusy(false));
+  }
+
+  // A sentence linked from the landing page (?text=) is signed by C0; without C0 on this server it falls back
+  // to the dictionary pipeline.
   useEffect(() => {
-    if (!linkedText.current || !connected || !library.length) return;
+    if (!linkedText.current || !connected || !caps) return;
+    if (!caps.lsf_engines?.c0) {
+      if (!library.length) return;
+      linkedText.current = null;
+      void compose();
+      return;
+    }
+    const sentence = linkedText.current;
     linkedText.current = null;
-    void compose();
-  }, [connected, library.length]); // eslint-disable-line react-hooks/exhaustive-deps
+    signWithC0(sentence);
+  }, [connected, caps, library.length]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!playing || !duration) return;
@@ -679,18 +707,20 @@ export default function App() {
                     </div>
                     <div className="suggestions">
                       <span>Essayez</span>
-                      {/* Each phrase resolves every content word to a real captured sign. */}
+                      {/* Demo sentences: C0's take of each was checked against the real interpreter (curated.npz). */}
                       {[
-                        "Bonjour, comment ça va ?",
-                        "Je veux boire de l'eau.",
-                        "Je visite Paris avec ma famille.",
-                        "Le musée est fermé demain.",
-                        "Je veux apprendre la langue des signes.",
+                        "Je vous dis à la semaine prochaine.",
+                        "Qu'est-ce qui a changé aujourd'hui ?",
+                        "S'il n'y a pas d'autre question, je vous remercie.",
+                        "Bonnes fêtes de fin d'année à tous.",
                       ].map((phrase) => (
                         <button
                           key={phrase}
                           disabled={busy}
-                          onClick={() => setText(phrase)}
+                          onClick={() => {
+                            setText(phrase);
+                            if (caps?.lsf_engines?.c0) signWithC0(phrase);
+                          }}
                         >
                           {phrase}
                           <ArrowRight size={12} />

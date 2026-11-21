@@ -197,7 +197,7 @@ const scenes: Scene[] = [
     id: "question",
     run: async () => {
       await say("1 · TEXTE → LSF", "Une phrase française devient une phrase signée", "« Bonjour, comment ça va ? »");
-      await click(byText("button", "Bonjour, comment ça va") ?? null, 400);
+      await typeInto(textArea(), "Bonjour, comment ça va ?");   // typed: example chips now sign at once with C0
       const panel = enginePanel();
       if (!panel.open) await click(panel.querySelector("summary"), 500);
       // C0 is the default engine; the word-order and lexicon scenes use B2, the generator scene switches to C0
@@ -224,7 +224,7 @@ const scenes: Scene[] = [
     id: "emotion",
     run: async () => {
       await say("3 · ÉMOTION", "La même phrase, signée avec joie", "Gestes plus amples et plus vifs, sourire — la grammaire du visage reste prioritaire");
-      await click(byText("button", "Je visite Paris avec ma famille") ?? null, 300);
+      await typeInto(textArea(), "Je visite Paris avec ma famille.");
       await chooseEmotion("happy");
       await generateAndWatch(600);
       await chooseEmotion("none");
