@@ -23,7 +23,7 @@ def test_curated_take_wins_for_its_sentence_only(monkeypatch, tmp_path):
     monkeypatch.setattr(lsf, "_curated", None)
     model = FakeC0()
     poses, meta = lsf._generate(model, "  je vous dis à la semaine prochaine ", "c0", 0, 0.0)
-    assert meta["curated"] and np.array_equal(poses, take) and not model.calls
+    assert meta["curated"] and meta["source"] == "c0" and np.array_equal(poses, take) and not model.calls
     poses, meta = lsf._generate(model, "Je vous dis à demain.", "c0", 0, 0.0)
     assert "curated" not in meta and model.calls == ["Je vous dis à demain."]
     lsf._generate(model, "Je vous dis à la semaine prochaine.", "c0", 7, 0.0)      # another seed: live sampling
@@ -32,3 +32,13 @@ def test_curated_take_wins_for_its_sentence_only(monkeypatch, tmp_path):
 
 def test_text_key_ignores_case_spacing_apostrophes_and_final_punctuation():
     assert lsf.text_key("Qu’est-ce qui a changé  aujourd'hui ?") == lsf.text_key("qu'est-ce qui a changé aujourd'hui")
+
+
+def test_recorded_take_is_reported_as_recorded(monkeypatch, tmp_path):
+    (tmp_path / "c0").mkdir()
+    np.savez(tmp_path / "c0" / "curated.npz", texts=json.dumps(["Bonjour à tous."]), sources=json.dumps(["recorded"]),
+             poses_0=np.zeros((5, 157, 2), np.float32))
+    monkeypatch.setenv("SIGNACULTURE_LSF_MODEL_DIR", str(tmp_path))
+    monkeypatch.setattr(lsf, "_curated", None)
+    _, meta = lsf._generate(FakeC0(), "Bonjour à tous", "c0", 0, 0.0)
+    assert meta["source"] == "recorded"

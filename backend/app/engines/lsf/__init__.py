@@ -53,9 +53,10 @@ _curated: dict[str, object] | None = None
 
 
 def curated_c0() -> dict:
-    """Curated C0 takes (<model dir>/c0/curated.npz): for the demo sentences, the seed-0 sample that was checked
-    against the real interpreter. Sampling depends on the CPU and PyTorch build, so another machine would otherwise
-    draw a different take of the same sentence."""
+    """Curated takes (<model dir>/c0/curated.npz) for the demo sentences: the seed-0 C0 sample that was checked
+    against the real interpreter (sampling depends on the CPU and PyTorch build, so another machine would otherwise
+    draw a different take), or, when the corpus holds a clean isolated recording of the sentence, the interpreter's
+    cleaned motion. `sources` (optional) says which: "c0" or "recorded"."""
     global _curated
     if _curated is None:
         found: dict[str, object] = {}
@@ -63,8 +64,10 @@ def curated_c0() -> dict:
         if p.is_file():
             import numpy as np
             z = np.load(p, allow_pickle=False)
-            for i, text in enumerate(json.loads(str(z["texts"]))):
-                found[text_key(text)] = z[f"poses_{i}"]
+            texts = json.loads(str(z["texts"]))
+            sources = json.loads(str(z["sources"])) if "sources" in z.files else ["c0"] * len(texts)
+            for i, text in enumerate(texts):
+                found[text_key(text)] = (z[f"poses_{i}"], sources[i])
         _curated = found
     return _curated
 
@@ -83,7 +86,7 @@ def generate(text: str, engine: str, seed: int = 0, groups=None):
 def _generate(model, text, engine, seed, start, groups=None):
     take = curated_c0().get(text_key(text)) if engine == "c0" and seed == 0 else None
     if take is not None:
-        poses, meta = take, {"curated": True, "sampling": {"seed": 0}}
+        poses, meta = take[0], {"curated": True, "source": take[1], "sampling": {"seed": 0}}
         meta["face_neutral"] = DEFAULT_FACE_NEUTRAL
     elif engine == "c0":
         poses, meta = model.generate(text, seed=seed)

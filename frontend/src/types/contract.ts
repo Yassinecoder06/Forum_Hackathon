@@ -157,6 +157,9 @@ export interface MotionGeneration {
   gloss_analysis?: GlossAnalysis;
   /** Voice emotion applied to the speed and size of the manual signing (never the face). Heuristic. */
   emotion?: { label: string; confidence: number; speed: number; amplitude: number };
+  /** Demo sentences: a checked take served as is; "recorded" = the interpreter's cleaned motion, "c0" = a C0 sample. */
+  curated?: boolean;
+  source?: "c0" | "recorded";
   translation_validated: false;
   linguistic_review: string;
 }

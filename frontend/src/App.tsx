@@ -238,7 +238,7 @@ export default function App() {
         setPlan(null);
         setReferenceUrl("");
         setMotion(generated);
-        setLabel("Moteur C0");
+        setLabel(generated.generation?.source === "recorded" ? "Signature enregistrée" : "Moteur C0");
         setTime(0);
         setPlaying(true);
       })
