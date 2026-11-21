@@ -11,9 +11,9 @@ from datetime import datetime, timezone
 import numpy as np
 import subprocess
 import tempfile
-from fastapi import FastAPI, HTTPException, UploadFile, File, Form, Query
+from fastapi import FastAPI, HTTPException, UploadFile, File, Form, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, JSONResponse, Response
 from pydantic import BaseModel, Field
 from typing import Literal
 from .schemas import GlossEntry, MotionAsset, TranslationDraft, AnimationPlan, AudioFeatures, ReviewRecord
@@ -480,15 +480,22 @@ def local_avatar():
 
 
 @app.get('/avatar/model')
-def avatar_model():
+def avatar_model(request: Request):
     name, path = local_avatar()
     if path is None:
         if name and name not in AVATARS:
             raise HTTPException(503, f'Avatar inconnu : {name}')
         detail = f'Le modèle 3D local {name} est absent.' if name else 'Aucun personnage 3D local trouvé.'
         raise HTTPException(503, f'{detail} Exécutez scripts/setup-avatar.py.')
-    # Revalidate on every load (ETag) so switching avatars is never masked by cache.
-    return FileResponse(path,media_type='model/gltf-binary',headers={'Cache-Control':'no-cache'})
+    # Revalidate on every load (ETag) so switching avatars is never masked by cache; an unchanged file
+    # answers 304, so a repeat visit does not download the model again (12 MB for the MetaHuman).
+    st = path.stat()
+    tag = f'"{name}-{st.st_size:x}-{st.st_mtime_ns:x}"'
+    sent = {t.strip().removeprefix('W/') for t in request.headers.get('if-none-match', '').split(',') if t.strip()}
+    headers = {'Cache-Control': 'no-cache', 'ETag': tag}
+    if tag in sent:
+        return Response(status_code=304, headers=headers)
+    return FileResponse(path, media_type='model/gltf-binary', headers=headers)
 
 
 EMOTION_IDLES = ('neutral', 'happy', 'sad', 'angry', 'fearful', 'surprised', 'disgusted')
