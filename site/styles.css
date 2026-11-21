@@ -56,7 +56,7 @@ section > * { max-width: 1180px; margin-left: auto; margin-right: auto; }
 .stats dd { margin: 2px 0 0; font-size: 13px; color: var(--muted); }
 .hero-media { justify-self: start; width: min(100%, 620px); margin: 0; background: var(--espresso); border-radius: 24px; overflow: hidden; box-shadow: var(--shadow); }
 .hero-frame { background: var(--espresso); }
-.hero-frame video { width: 100%; height: auto; aspect-ratio: 1080 / 884; object-fit: cover; }
+.hero-frame video { width: 100%; height: auto; aspect-ratio: 1080 / 854; object-fit: cover; }
 .hero-media figcaption { display: flex; flex-direction: column; gap: 10px; padding: 16px 20px 20px; color: #f6e8dc; }
 #hero-text { font: italic 500 20px "Playfair Display", serif; }
 
