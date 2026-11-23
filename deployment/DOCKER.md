@@ -6,7 +6,7 @@ API, FFmpeg, MediaPipe, and CPU runtimes for emotion2vec and French ASR.
 The browser renders the avatar with WebGL.
 
 ```bash
-mkdir -p .runtime/docker-state .runtime/avatar-candidates .models
+mkdir -p .runtime/docker-state .runtime/avatar-candidates .runtime/lsf-models .models
 docker compose up --build --detach --wait
 ```
 
@@ -30,6 +30,13 @@ It uses read-only mounts for avatar files and audio model weights.
   private recordings, training checkpoints and workspace files.
 - Use `SIGNACULTURE_DOCKER_TARGET=runtime` on the Compose command to build
   the smaller variant without the emotion and ASR dependencies.
+- Use `SIGNACULTURE_DOCKER_TARGET=engines` to add CPU PyTorch, transformers and
+  scipy for the experimental LSF engines (C0, B2; `POST /api/lsf/generate`). Put the
+  private weights in `.runtime/lsf-models/` (mounted read-only at `/lsf-models`) and
+  the public `intfloat/multilingual-e5-base` files in `.models/e5-base/`. Override
+  with `SIGNACULTURE_DOCKER_LSF_MODELS` and `SIGNACULTURE_DOCKER_LSF_TEXT_ENCODER`.
+  See [LSF engines](../docs/pipeline/LSF_ENGINES.md). Without this target the
+  endpoint answers 503 and the capability endpoint reports the engines as absent.
 - Override `SIGNACULTURE_DOCKER_PORT` if 8088 is occupied. On Linux, set
   `SIGNACULTURE_DOCKER_UID=$(id -u)` and `SIGNACULTURE_DOCKER_GID=$(id -g)`
   if your writable state directory uses IDs other than 1000:1000.

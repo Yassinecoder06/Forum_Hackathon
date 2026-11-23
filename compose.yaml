@@ -15,6 +15,9 @@ services:
       SIGNACULTURE_INFERENCE_SOCKET: /inference/motion.sock
       SIGNACULTURE_AVATAR_DIR: /avatars
       SIGNACULTURE_AVATAR: ${SIGNACULTURE_AVATAR:-}
+      SIGNACULTURE_LSF_MODEL_DIR: /lsf-models
+      SIGNACULTURE_LSF_TEXT_ENCODER: ${SIGNACULTURE_DOCKER_LSF_TEXT_ENCODER:-/app/.models/e5-base}
+      SIGNACULTURE_LSF_DEVICE: cpu
     volumes:
       - type: bind
         source: ./.runtime/motion-inference
@@ -34,6 +37,10 @@ services:
       - type: bind
         source: ${SIGNACULTURE_DOCKER_AVATARS:-./.runtime/avatar-candidates}
         target: /avatars
+        read_only: true
+      - type: bind
+        source: ${SIGNACULTURE_DOCKER_LSF_MODELS:-./.runtime/lsf-models}
+        target: /lsf-models
         read_only: true
 
   webcam:
