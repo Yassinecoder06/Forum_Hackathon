@@ -707,12 +707,12 @@ export default function App() {
                     </div>
                     <div className="suggestions">
                       <span>Essayez</span>
-                      {/* Demo sentences: C0's take of each was checked against the real interpreter (curated.npz). */}
+                      {/* Demo sentences: C0's take of each was checked for lively, human hands, body and face (curated.npz). */}
                       {[
-                        "Je vous dis à la semaine prochaine.",
-                        "Qu'est-ce qui a changé aujourd'hui ?",
-                        "S'il n'y a pas d'autre question, je vous remercie.",
-                        "Bonnes fêtes de fin d'année à tous.",
+                        "Je peux vous le redire une troisième fois, si vous le souhaitez.",
+                        "C'est évidemment un signe extrêmement encourageant.",
+                        "C'est une réussite concrète dont bénéficient chaque jour des millions d'enfants.",
+                        "Néanmoins, nous ne baissons pas la garde.",
                       ].map((phrase) => (
                         <button
                           key={phrase}
