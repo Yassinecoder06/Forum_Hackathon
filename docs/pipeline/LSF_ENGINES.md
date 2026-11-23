@@ -40,7 +40,7 @@ pip install -r backend/requirements-lsf-engines.txt        # torch, transformers
 python -c "from transformers import AutoModel, AutoTokenizer as T; m='intfloat/multilingual-e5-base'; T.from_pretrained(m); AutoModel.from_pretrained(m)"
 ```
 
-The Docker image does not install PyTorch. There, the endpoint answers 503 unless an image with the extras and a private model mount is built.
+The default Docker image does not install PyTorch, so the endpoint answers 503. Build the `engines` target instead (`SIGNACULTURE_DOCKER_TARGET=engines docker compose up --build`): it adds the CPU extras, mounts `.runtime/lsf-models/` read-only and reads the encoder from `.models/e5-base/` (see [Docker](../../deployment/DOCKER.md)).
 
 Measured on the development PC (12 CPU threads, models loaded from a local disk): the first request loads the models in **about 55 s** on CPU (60 s with CUDA). After that, a C0 sentence takes **2–5 s on CPU**. Generations are serialised, one at a time.
 

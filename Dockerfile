@@ -65,3 +65,11 @@ FROM ${SIGNACULTURE_AUDIO_DEPS_IMAGE} AS audio-source
 FROM runtime AS full
 ENV SIGNACULTURE_AUDIO_PYTHON=/opt/audio/bin/python
 COPY --from=audio-source /opt/audio /opt/audio
+
+# Optional: the experimental LSF engines (C0, B2) run inside the API process and need PyTorch,
+# transformers and scipy there. CPU wheels only. The private weights and the public text encoder
+# are mounted at run time (compose.yaml), never copied into the image.
+FROM full AS engines
+COPY backend/requirements-lsf-engines.txt backend/requirements.txt /tmp/engines/
+RUN pip install --index-url https://download.pytorch.org/whl/cpu "torch>=2.2" \
+    && pip install -r /tmp/engines/requirements-lsf-engines.txt
