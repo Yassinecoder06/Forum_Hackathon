@@ -61,7 +61,7 @@ def apply_emotion(poses: np.ndarray, params: dict | None) -> np.ndarray:
     x = retime(np.asarray(poses, dtype=np.float32), params["speed"]).copy()
     amp = params["amplitude"]
     if abs(amp - 1.0) > 1e-3:
-        arm = x[:, ARM_HAND]
+        arm = x[:, ARM_HAND, :2]                       # image plane only (a third channel is finger depth)
         mean = np.nanmean(arm, axis=0, keepdims=True)
-        x[:, ARM_HAND] = mean + amp * (arm - mean)
+        x[:, ARM_HAND, :2] = mean + amp * (arm - mean)
     return x

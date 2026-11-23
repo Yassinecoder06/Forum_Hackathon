@@ -5,11 +5,13 @@ API at them either with one folder:
 
     SIGNACULTURE_LSF_MODEL_DIR=/path/to/lsf-models     (default: <storage>/lsf-models, i.e. .runtime/lsf-models)
         c0/tok_d2_l2.pt  c0/gen_d2_l2_v3b_hold.pt
+        c0/handdec_reg.pt  c0/facedec_fm.pt         (optional C0 refiners: finger depth, face detail)
         b2/transition_lsf.pt  b2/prosody.json  b2/lexicon_union_corpus_fast.npz
 
 or file by file (each overrides the folder layout):
 
     SIGNACULTURE_LSF_C0_TOKENIZER, SIGNACULTURE_LSF_C0_GENERATOR,
+    SIGNACULTURE_LSF_C0_HANDDEC, SIGNACULTURE_LSF_C0_FACEDEC     (optional: when absent, C0 decodes as before)
     SIGNACULTURE_LSF_B2_TRANSITIONS, SIGNACULTURE_LSF_B2_PROSODY, SIGNACULTURE_LSF_B2_LEXICON
 
 The C0 text encoder is the public `intfloat/multilingual-e5-base`; it is loaded from the local
@@ -26,6 +28,9 @@ E5_ID = "intfloat/multilingual-e5-base"
 FILES = {
     "c0_tokenizer": ("SIGNACULTURE_LSF_C0_TOKENIZER", "c0/tok_d2_l2.pt"),
     "c0_generator": ("SIGNACULTURE_LSF_C0_GENERATOR", "c0/gen_d2_l2_v3b_hold.pt"),
+    # Optional refinement decoders on the C0 tokens; not in ENGINE_FILES, C0 works without them.
+    "c0_handdec": ("SIGNACULTURE_LSF_C0_HANDDEC", "c0/handdec_reg.pt"),
+    "c0_facedec": ("SIGNACULTURE_LSF_C0_FACEDEC", "c0/facedec_fm.pt"),
     "b2_transitions": ("SIGNACULTURE_LSF_B2_TRANSITIONS", "b2/transition_lsf.pt"),
     "b2_prosody": ("SIGNACULTURE_LSF_B2_PROSODY", "b2/prosody.json"),
     "b2_lexicon": ("SIGNACULTURE_LSF_B2_LEXICON", "b2/lexicon_union_corpus_fast.npz"),
@@ -47,6 +52,12 @@ def model_dir() -> Path:
 def path(key: str) -> Path:
     env, relative = FILES[key]
     return Path(os.environ[env]) if os.getenv(env) else model_dir() / relative
+
+
+def optional(key: str) -> Path | None:
+    """Path of an optional model file (C0 refiners), or None when it is not there."""
+    p = path(key)
+    return p if p.is_file() else None
 
 
 def missing(engine: str) -> list[str]:

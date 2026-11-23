@@ -7,6 +7,9 @@ hands relative to their wrist 84 values), time downsampling x2, 2-level residual
 states, sampled with classifier-free guidance. A small hold head predicts, per token step, the
 probability that real signing is still there (pauses, held signs); predicted hold stretches are
 made still in pose space at decode time (sign-model/c0_generator.apply_holds).
+
+Optional refiners (c0_refine.py, files c0_handdec / c0_facedec in config.py) replace the tokenizer decode with a
+refined one on the same tokens: finger depth for the hands, restored face detail. Without them nothing changes.
 """
 from __future__ import annotations
 
@@ -165,6 +168,18 @@ class C0Engine:
         self.gen.to(dev).eval()
         self.text = Text(dev)
         self.fps_tokens = 12.5
+        self.refiner = self._load_refiner(dev)
+
+    def _load_refiner(self, dev):
+        """Optional refinement decoders (c0_refine.py). Without the hand refiner file, decode is the tokenizer decode
+        exactly as before; the face refiner is only used together with the hand refiner."""
+        hand = config.optional("c0_handdec")
+        if hand is None or self.levels < 2:            # refiners read residual-VQ codes
+            return None
+        from .c0_refine import C0Refiner
+        face = config.optional("c0_facedec")
+        self.refiner_files = {"hand": hand.name, "face": face.name if face else None}
+        return C0Refiner(str(hand), face=str(face) if face else None, dev=dev)
 
     @torch.no_grad()
     def sample(self, text, seed=0, temp=SAMPLING["temp"], topk=SAMPLING["topk"], cfg=SAMPLING["cfg"], stop_thr=SAMPLING["stop_thr"]):
@@ -210,7 +225,13 @@ class C0Engine:
 
     @torch.no_grad()
     def decode(self, tb, th, hold=None, seed=0):
-        """Tokens -> (T, 157, 2) at 25 fps, normalised engine coordinates. hold: per-step hold probability."""
+        """Tokens -> (T, 157, 2) at 25 fps, normalised engine coordinates. hold: per-step hold probability.
+        With the refiners: (T, 157, 3), channel 2 = finger depth relative to the wrist, towards the camera, in shoulder
+        widths (zero elsewhere)."""
+        if self.refiner is not None:
+            x25 = self.refiner.decode(self.models, tb, th, seed)
+            return apply_holds(x25, hold, np.random.default_rng(seed)) if hold is not None else x25
+
         def ids(t):
             t = torch.from_numpy(np.asarray(t).astype("int64"))
             return (t[..., 0] if t.dim() == 2 and t.shape[1] == 1 else t)[None].to(self.dev)
@@ -234,6 +255,9 @@ class C0Engine:
         meta = {"tokens": int(len(tb)), "sampling": {**SAMPLING, "temp": list(SAMPLING["temp"]), "seed": seed}}
         if hold is not None:
             meta["holds"] = {"scale": HOLD_SCALE, "mean_probability": round(float(hold.mean()), 3)}
+        if self.refiner is not None:
+            meta["refiners"] = dict(self.refiner_files)
+            meta["hand_depth"] = True                   # channel 2 carries the learned finger depth
         return self.decode(tb, th, hold, seed), meta
 
 
