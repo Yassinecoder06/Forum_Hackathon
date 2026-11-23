@@ -4,6 +4,7 @@ import type { MotionFile } from "../types/contract";
 import { frameInterval, hasHand, stabilizeRotations, type HandState } from "./avatarPlayback";
 import { handContact, type Capsule } from "./handContact";
 import { detectRigProfile, rigBoneName, type RigProfile } from "./rigProfiles";
+import { HandConstraints, softClamp } from "./handConstraints";
 const fingers = ["Thumb", "Index", "Middle", "Ring", "Pinky"];
 type Bind = {
   bone: THREE.Bone;
@@ -55,16 +56,22 @@ function basis(
 export class HumanoidRetargeter {
   private binds = new Map<string, Bind>();
   private palms = new Map<string, THREE.Quaternion>();
+  /** Elbow hinge axis per side, in the upper arm's local frame (from the bind pose). */
+  private hinges = new Map<string, THREE.Vector3>();
   private neckOrigin = new THREE.Vector3();
   private shoulderWidth = 0.36;
   private tracks = new WeakMap<MotionFile, ReturnType<HumanoidRetargeter["prepare"]>>();
   /** Set while preparing an engine motion; null = arms/hands only (original behaviour). */
   private bodyRef: BodyRef | null = null;
-  diagnostics = { preparedMs: 0, rejectedSpikes: 0, correctedFrames: 0, contactFrames: 0, maxCorrection: 0, maxPenetration: 0 };
+  diagnostics = { preparedMs: 0, rejectedSpikes: 0, correctedFrames: 0, contactFrames: 0, maxCorrection: 0, maxPenetration: 0, handLimited: 0 };
+  /** Anatomical wrist/finger limits and finger smoothing (handConstraints.ts); null when disabled. */
+  readonly hands: HandConstraints | null;
   /** Bind segment lengths for explicitly mapped rigs (RPM keeps local translations). */
   private lengths = new Map<string, number>();
-  constructor(private root: THREE.Object3D, readonly profile: RigProfile = detectRigProfile(root)) {
+  constructor(private root: THREE.Object3D, readonly profile: RigProfile = detectRigProfile(root), options: { handConstraints?: boolean } = {}) {
     root.updateMatrixWorld(true);
+    // Built from the bind pose, before any bone moves.
+    this.hands = options.handConstraints === false ? null : new HandConstraints(root, profile);
     // Bones are keyed by canonical (Ready Player Me) names. RPM rigs keep every bone
     // (identity mapping, original behaviour); mapped rigs only expose their mapped joints,
     // so MetaHuman's corrective/facial joints are never touched by the retargeter.
@@ -136,6 +143,17 @@ export class HumanoidRetargeter {
         );
         if (q) this.palms.set(side, q);
       }
+      // Elbow hinge: the bind arm's bend plane (shoulder -> elbow -> wrist), or, for a straight bind arm, the axis
+      // that flexes the forearm forward (+z, the avatar's facing direction).
+      const [s, e, w] = ["Arm", "ForeArm", "Hand"].map((n) => this.bone(side + n)?.getWorldPosition(new THREE.Vector3()));
+      const upperBone = this.bone(side + "Arm");
+      if (s && e && w && upperBone) {
+        const u = e.clone().sub(s).normalize(), f = w.clone().sub(e).normalize();
+        const hinge = u.clone().cross(f);
+        if (hinge.length() < Math.sin(THREE.MathUtils.degToRad(5))) hinge.copy(u).cross(new THREE.Vector3(0, 0, 1));
+        if (hinge.lengthSq() > 1e-8)
+          this.hinges.set(side, hinge.normalize().applyQuaternion(upperBone.getWorldQuaternion(new THREE.Quaternion()).invert()));
+      }
     }
   }
   private bone(name: string) {
@@ -170,8 +188,34 @@ export class HumanoidRetargeter {
     const along = (l1 * l1 - l2 * l2 + d * d) / (2 * d), height = Math.sqrt(Math.max(0, l1 * l1 - along * along));
     const bend = shoulder.clone().addScaledVector(axis, along).addScaledVector(pole, height);
     const reachable = shoulder.clone().addScaledVector(axis, d);
-    this.aim(side + "Arm", bend.sub(shoulder));
-    this.aim(side + "ForeArm", reachable.sub(lower.getWorldPosition(new THREE.Vector3())));
+    const upperDir = bend.clone().sub(shoulder).normalize();
+    this.aim(side + "Arm", upperDir);
+    const hinge = this.hinges.get(side), lowerBind = this.binds.get(side + "ForeArm");
+    if (hinge && lowerBind) {
+      // The elbow is a hinge (as in a UE5 IK rig): roll the upper arm about its own axis so that its elbow axis lies
+      // in the bend plane, then turn the forearm from its bind pose under the upper arm about that axis only. The
+      // forearm never twists or bends sideways at the elbow, so the hand's roll about the forearm is a true
+      // pronation/supination angle. Nearly straight arms have no reliable bend plane: the roll fades out there.
+      const carried = hinge.clone().applyQuaternion(upper.getWorldQuaternion(new THREE.Quaternion()));
+      const wanted = pole.clone().cross(axis);
+      carried.addScaledVector(upperDir, -carried.dot(upperDir));
+      wanted.addScaledVector(upperDir, -wanted.dot(upperDir));
+      if (carried.lengthSq() > 1e-8 && wanted.lengthSq() > 1e-8) {
+        carried.normalize(); wanted.normalize();
+        const roll = Math.atan2(upperDir.dot(carried.clone().cross(wanted)), carried.dot(wanted));
+        const bent = THREE.MathUtils.smoothstep(Math.asin(THREE.MathUtils.clamp(height / l1, 0, 1)), 0.1, 0.45);
+        // The humerus turns at most ~50 degrees from the aimed pose: beyond, MetaHuman's shoulder skinning (no
+        // corrective joints driven) shows the body through the sleeve; the rest stays as a small elbow twist.
+        const limit = THREE.MathUtils.degToRad(50);
+        this.turn(side + "Arm", new THREE.Quaternion().setFromAxisAngle(upperDir, softClamp(roll * bent, -limit, limit, THREE.MathUtils.degToRad(15))));
+      }
+      lower.quaternion.copy(lowerBind.local);
+      lower.updateWorldMatrix(false, true);
+      const lowerWorld = lower.getWorldQuaternion(new THREE.Quaternion());
+      const current = lowerBind.direction.clone().applyQuaternion(lowerBind.world.clone().invert()).applyQuaternion(lowerWorld);
+      const target = reachable.sub(lower.getWorldPosition(new THREE.Vector3())).normalize();
+      this.turn(side + "ForeArm", new THREE.Quaternion().setFromUnitVectors(current, target));
+    } else this.aim(side + "ForeArm", reachable.sub(lower.getWorldPosition(new THREE.Vector3())));
     if (preservePalm) {
       hand.quaternion.copy(hand.parent!.getWorldQuaternion(new THREE.Quaternion()).invert().multiply(palm));
       hand.updateWorldMatrix(false, true);
@@ -340,13 +384,15 @@ export class HumanoidRetargeter {
           const flexAxis = curlWorld.clone().applyQuaternion(bind.world.clone().invert());
           const spreadAxis = normal.clone().applyQuaternion(bind.world.clone().invert());
           const observedBind = direction.clone().applyQuaternion(palmBind);
-          let flex = Math.atan2(curlWorld.dot(bind.direction.clone().cross(observedBind)), bind.direction.dot(observedBind)), spread = 0;
+          let flex = Math.atan2(curlWorld.dot(bind.direction.clone().cross(observedBind)), bind.direction.dot(observedBind)), spread = 0, straight = 0;
           if (i > 1) {
             const previous = joints[`${prefix}_${finger.toLowerCase()}_${i - 1}`];
             if (!previous) continue;
             const before = vec(a).sub(vec(previous)).normalize().applyQuaternion(sourcePalm.clone().invert());
             const previousBind = this.binds.get(`${side}Hand${finger}${i - 1}`)!;
-            flex = before.angleTo(direction) - previousBind.direction.angleTo(bind.direction);
+            // relative to the bind curl; a straight source finger may straighten the (slightly curled) bind finger
+            straight = previousBind.direction.angleTo(bind.direction);
+            flex = before.angleTo(direction) - straight;
           } else if (finger === "Thumb") {
             // Thumb CMC has a distinct opposition axis; retain bounded 3D swing.
             const observedBind = direction.clone().applyQuaternion(palmBind);
@@ -357,7 +403,7 @@ export class HumanoidRetargeter {
             bind.bone.updateWorldMatrix(false, true);
             continue;
           } else spread = THREE.MathUtils.clamp(-Math.atan2(direction.x, direction.y), -.45, .45);
-          flex = THREE.MathUtils.clamp(flex, i === 1 ? -.2 : 0, finger === "Thumb" ? 1.4 : i === 2 ? 1.9 : 1.65);
+          flex = THREE.MathUtils.clamp(flex, i === 1 ? -.2 : -straight, finger === "Thumb" ? 1.4 : i === 2 ? 1.9 : 1.65);
           bind.bone.quaternion.copy(bind.local)
             .multiply(new THREE.Quaternion().setFromAxisAngle(spreadAxis, spread))
             .multiply(new THREE.Quaternion().setFromAxisAngle(flexAxis, flex));
@@ -388,6 +434,9 @@ export class HumanoidRetargeter {
       states[side] = track.states.map((state, i) => state === "observed" && motion.frames[i].playback_origin && motion.frames[i].playback_origin !== "source" ? "interpolated" : state);
       rejected += track.rejected;
     }
+    // Hand realism: anatomical limits and zero-phase finger smoothing on the keyframe track, BEFORE contacts are
+    // resolved, so the contact pass sees the final hand shapes. Local rotations only; a pure function of the motion.
+    const handLimited = this.hands ? this.hands.constrainTrack(all, names) : 0;
     // Resolve contacts AFTER rotation filtering. Densify to 100 Hz so a collision
     // between source keyframes is also checked; runtime only samples this cache.
     const dense = [], denseStates: Record<string, HandState[]> = { Left: [], Right: [] };
@@ -534,13 +583,15 @@ export class HumanoidRetargeter {
       if (chosen) { frame.rotations=chosen; trajectoryRefinedFrames++; }
       setPose(frame.rotations); acceptedWrists[i]=wrists();
     }
+    // Contacts move the arms with the palm kept in place, which changes the wrist angle: limit the wrists again.
+    if (this.hands) this.hands.constrainTrack(dense.map((f) => ({ time: f.time_ms, rotations: f.rotations })), names, null, ["wrist"]);
     maxPenetration=0;
     dense.forEach((frame,i) => {
       setPose(frame.rotations);
       maxPenetration=Math.max(maxPenetration,handContact(geometry[i].capsules("Left"),geometry[i].capsules("Right")).maxPenetration);
       for (const side of ["Left", "Right"]) maxCorrection=Math.max(maxCorrection,this.bone(side+"Hand")!.getWorldPosition(new THREE.Vector3()).distanceTo(geometry[i].original[side]));
     });
-    const diagnostics = { preparedMs: performance.now() - start, rejectedSpikes: rejected, correctedFrames, contactFrames, maxCorrection, maxPenetration, trajectoryRefinedFrames };
+    const diagnostics = { preparedMs: performance.now() - start, rejectedSpikes: rejected, correctedFrames, contactFrames, maxCorrection, maxPenetration, trajectoryRefinedFrames, handLimited };
     return { all: dense, names, states: denseStates, diagnostics };
   }
 

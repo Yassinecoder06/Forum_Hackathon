@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { findRigBone, type RigProfile } from "./rigProfiles";
+import type { HandConstraints } from "./handConstraints";
 
 /**
  * "Interpreter performance" layer: game-animation techniques applied AFTER retargeting, every frame, on top of the
@@ -12,13 +13,17 @@ import { findRigBone, type RigProfile } from "./rigProfiles";
  *   removed). They are driven by the MOTION clock: paused or seeking = no simulation (pose = target), so a
  *   frame-stepped export is deterministic.
  * - Moving holds: during held signs, a very small smooth drift of forearms and hands (people are never still).
+ * - Hand limits: after the springs (which can overshoot by a few degrees), the wrist and finger joints are clamped
+ *   back inside their anatomical ranges (handConstraints.ts), before the forearm twist is shared out.
  * - Hair spring: a ponytail chain (hair_ponytail_01..) swings as a chain of world-space springs, softer towards the
  *   tip; without a chain, the hair cards get one spring bone under the head (pivot near the crown, 6 degrees max).
  */
 
 type ChainLink = { bone: THREE.Object3D; bind: THREE.Quaternion; q: THREE.Quaternion; w: THREE.Vector3; freq: number; zeta: number; maxAngle: number };
 type SpringBone = { bone: THREE.Object3D; q: THREE.Quaternion; w: THREE.Vector3; freq: number; zeta: number; init: boolean };
-type Twist = { hand: THREE.Object3D; lower: THREE.Object3D; parts: { bone: THREE.Object3D; weight: number; local: THREE.Quaternion }[]; handBind: THREE.Quaternion; axis: THREE.Vector3 };
+/** `hand` is the twisting bone (hand, or the upper arm), `axis` its twist axis in its parent's frame, `local` the same
+ * axis in the frame of the bones that carry the twist (default: `axis`). */
+type Twist = { hand: THREE.Object3D; lower: THREE.Object3D; parts: { bone: THREE.Object3D; weight: number; local: THREE.Quaternion }[]; handBind: THREE.Quaternion; axis: THREE.Vector3; local?: THREE.Vector3 };
 
 const FINGERS = ["Thumb", "Index", "Middle", "Ring", "Pinky"];
 const tmpQ = new THREE.Quaternion(), tmpQ2 = new THREE.Quaternion(), tmpV = new THREE.Vector3(), tmpV2 = new THREE.Vector3();
@@ -58,7 +63,7 @@ export class PerformanceLayer {
   /** false disables the whole layer (tests, before/after comparisons). */
   enabled = true;
 
-  constructor(private root: THREE.Object3D, profile: RigProfile) {
+  constructor(private root: THREE.Object3D, profile: RigProfile, private hands: HandConstraints | null = null) {
     const find = (name: string) => findRigBone(root, profile, name);
     const add = (name: string, freq: number, zeta: number) => {
       const bone = find(name);
@@ -88,6 +93,19 @@ export class PerformanceLayer {
           // forearm axis in the forearm's local frame = direction to the hand joint
           const axis = hand.position.clone().normalize();
           this.twists.push({ hand, lower, parts, handBind: hand.quaternion.clone(), axis });
+        }
+        // Upper arm: the roll the elbow hinge gives the humerus is taken off again toward the shoulder
+        // (upperarm_twist_01 = -2/3, _02 = -1/3), so the shoulder and sleeve keep their shape while the elbow turns.
+        const upper = find(side + "Arm");
+        const upperParts = [["upperarm_twist_01_" + s, -2 / 3], ["upperarm_twist_02_" + s, -1 / 3]]
+          .map(([n, weight]) => ({ bone: root.getObjectByName(n as string), weight: weight as number }))
+          .filter((p): p is { bone: THREE.Object3D; weight: number } => Boolean(p.bone))
+          .map((p) => ({ ...p, local: p.bone.quaternion.clone() }));
+        if (upper && upperParts.length) {
+          // twist is measured in the clavicle frame about the bind upper-arm axis; the parts turn about the same
+          // axis expressed in the upper arm's own frame
+          this.twists.push({ hand: upper, lower: upper, parts: upperParts, handBind: upper.quaternion.clone(),
+            axis: lower.position.clone().applyQuaternion(upper.quaternion).normalize(), local: lower.position.clone().normalize() });
         }
       }
     }
@@ -133,7 +151,7 @@ export class PerformanceLayer {
       const angle = 2 * Math.acos(THREE.MathUtils.clamp(twist.w, -1, 1));
       const sign = Math.sign(tmpV2.set(twist.x, twist.y, twist.z).dot(t.axis)) || 1;
       for (const part of t.parts) {
-        part.bone.quaternion.copy(part.local).premultiply(tmpQ.setFromAxisAngle(t.axis, sign * angle * part.weight));
+        part.bone.quaternion.copy(part.local).premultiply(tmpQ.setFromAxisAngle(t.local ?? t.axis, sign * angle * part.weight));
         part.bone.updateMatrixWorld(true);
       }
     }
@@ -147,7 +165,7 @@ export class PerformanceLayer {
     const dt = motionTimeMs === undefined || this.lastTime < 0 ? 0 : (motionTimeMs - this.lastTime) / 1000;
     this.lastTime = motionTimeMs ?? -1;
     const simulate = this.enabled && dt > 0 && dt <= 0.25;
-    if (!this.enabled) return;
+    if (!this.enabled) { this.hands?.constrain("hard"); return; }
     // Moving holds: when the wrists barely move, add a tiny smooth drift (additive, below a degree).
     if (signing && motionTimeMs !== undefined) {
       let speed = 0;
@@ -183,6 +201,7 @@ export class PerformanceLayer {
       }
       s.bone.quaternion.copy(s.q);
     }
+    this.hands?.constrain("hard");
     this.distributeTwist();
     // Ponytail chain: each link chases its rest orientation under the (already moved) parent, in world space.
     if (this.chain.length) {

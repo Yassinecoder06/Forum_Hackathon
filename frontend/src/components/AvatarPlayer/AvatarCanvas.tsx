@@ -179,7 +179,8 @@ export function AvatarCanvas(props: Props) {
         morphGain = profile.morphGain;
         idle = new IdleLife(model, profile);
         // Interpreter performance (twist bones, springs, moving holds, hair) and emotion style (posture blendspace).
-        performer = new PerformanceLayer(model, profile);
+        // The retargeter's hand limits are re-applied after the springs, so no layer can bend a finger out of range.
+        performer = new PerformanceLayer(model, profile, retarget.hands);
         style = new EmotionStyle(model, profile);
         const currentStyle = style;
         fetch("/api/avatar/emotion-idles")

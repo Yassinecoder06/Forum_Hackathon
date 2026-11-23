@@ -642,3 +642,160 @@ assert.equal(JSON.stringify(libraryClip),libraryRaw,"Preview windows never mutat
   assert.equal(wav.getUint32(40, true), 32000, "1 s of 16-bit mono at 16 kHz");
   console.log("Live mode checks passed: pause-cut phrases with pre-roll, clicks ignored, 8 s cut, 16 kHz WAV.");
 }
+
+// Hand realism: anatomical joint limits (swing-twist in each bone's bind-relative frame), soft clamping that keeps
+// real handshapes, zero-phase finger smoothing on the motion clock, springs kept inside the limits.
+{
+  const { HandConstraints, smoothRotations, softClamp } = await import("../src/utils/handConstraints");
+  const { PerformanceLayer } = await import("../src/utils/performanceLayer");
+  const { RPM_PROFILE } = await import("../src/utils/rigProfiles");
+  const D = Math.PI / 180;
+  const make = (name: string, parent: THREE.Object3D, p: number[]) => { const b = new THREE.Bone(); b.name = name; b.position.fromArray(p); parent.add(b); return b; };
+  // Two mirrored hands, forearms along +y, palms facing +z; positions only (identity bind rotations).
+  const handRoot = new THREE.Group();
+  for (const side of ["Right", "Left"]) {
+    const m = side === "Right" ? 1 : -1;
+    const fore = make(side + "ForeArm", handRoot, [0.2 * m, 0, 0]), hand = make(side + "Hand", fore, [0, 0.25, 0]);
+    const knuckles: Record<string, number[]> = { Thumb: [0.03, 0.025, 0.015], Index: [0.025, 0.09, 0], Middle: [0.005, 0.095, 0], Ring: [-0.015, 0.09, 0], Pinky: [-0.033, 0.08, 0] };
+    for (const [finger, k] of Object.entries(knuckles)) {
+      const segs = finger === "Thumb" ? [[0.025, 0.03, 0.012], [0.02, 0.022, 0.006], [0.014, 0.018, 0.003]] : [[0, 0.045, 0], [0, 0.027, 0], [0, 0.02, 0]];
+      let parent = make(`${side}Hand${finger}1`, hand, [k[0] * m, k[1], k[2]]);
+      segs.forEach((s, i) => { parent = make(`${side}Hand${finger}${i + 2}`, parent, [s[0] * m, s[1], s[2]]); });
+    }
+  }
+  handRoot.updateMatrixWorld(true);
+  const hands = new HandConstraints(handRoot, RPM_PROFILE);
+  assert.equal(hands.joints.length, 32, "wrist + 15 finger joints per hand");
+  const joint = (name: string) => hands.joints.find((j) => j.name === name)!;
+  const reset = () => hands.joints.forEach((j) => j.bone.quaternion.copy(j.bindLocal));
+  type Shape = { fingers: Record<string, number[]>; abd?: Record<string, number>; thumb: number[] };
+  // fingers: [MCP, PIP, DIP] flexion; thumb: [CMC flexion, CMC abduction, MCP, IP]; degrees
+  const curl = [88, 100, 70];
+  const shapes: Record<string, Shape> = {
+    fist: { fingers: { Index: curl, Middle: curl, Ring: curl, Pinky: curl }, thumb: [40, 10, 45, 30] },
+    flat: { fingers: { Index: [0, 0, 0], Middle: [0, 0, 0], Ring: [0, 0, 0], Pinky: [0, 0, 0] }, thumb: [0, 0, 0, 0] },
+    indexPoint: { fingers: { Index: [0, 0, 0], Middle: curl, Ring: curl, Pinky: curl }, thumb: [35, 5, 40, 25] },
+    pinch: { fingers: { Index: [45, 60, 35], Middle: [10, 10, 5], Ring: [10, 10, 5], Pinky: [10, 10, 5] }, thumb: [35, 30, 25, 20] },
+    thumbUp: { fingers: { Index: curl, Middle: curl, Ring: curl, Pinky: curl }, thumb: [-20, 35, 0, -10] },
+    spread5: { fingers: { Index: [0, 0, 0], Middle: [0, 0, 0], Ring: [0, 0, 0], Pinky: [0, 0, 0] }, abd: { Index: 18, Middle: 0, Ring: -12, Pinky: -18 }, thumb: [-25, 40, 0, 0] },
+  };
+  const pose = (shape: Shape, side: string) => {
+    reset();
+    for (const [finger, [mcp, pip, dip]] of Object.entries(shape.fingers)) {
+      const abd = shape.abd?.[finger] ?? 0;
+      [[1, mcp, abd], [2, pip, 0], [3, dip, 0]].forEach(([i, flex, ab]) => {
+        const j = joint(`${side}Hand${finger}${i}`);
+        j.bone.quaternion.copy(hands.compose(j, { flex: flex * D, abd: ab * D, twist: 0 }));
+      });
+    }
+    const [cf, ca, mcp, ip] = shape.thumb;
+    for (const [i, flex, abd] of [[1, cf, ca], [2, mcp, 0], [3, ip, 0]]) {
+      const j = joint(`${side}HandThumb${i}`);
+      j.bone.quaternion.copy(hands.compose(j, { flex: flex * D, abd: abd * D, twist: 0 }));
+    }
+  };
+  const tip = (name: string) => { handRoot.updateMatrixWorld(true); return handRoot.getObjectByName(name)!.getWorldPosition(new THREE.Vector3()); };
+  for (const [label, shape] of Object.entries(shapes)) for (const side of ["Right", "Left"]) {
+    pose(shape, side);
+    const before = hands.joints.map((j) => hands.angles(j, j.bone.quaternion));
+    const tips = ["Thumb", "Index", "Middle", "Ring", "Pinky"].map((f) => tip(`${side}Hand${f}4`));
+    hands.constrain("soft");
+    hands.joints.forEach((j, k) => {
+      const a = hands.angles(j, j.bone.quaternion), b = before[k];
+      for (const key of ["flex", "abd", "twist"] as const)
+        assert(Math.abs(a[key] - b[key]) < 3 * D, `${label}: ${j.name} ${key} kept within 3 degrees (${(b[key] / D).toFixed(1)} -> ${(a[key] / D).toFixed(1)})`);
+    });
+    ["Thumb", "Index", "Middle", "Ring", "Pinky"].forEach((f, k) => assert(tip(`${side}Hand${f}4`).distanceTo(tips[k]) < 0.004, `${label}: ${side} ${f} tip moves less than 4 mm`));
+  }
+  // Mirrored hands: the same anatomical angles give mirrored fingertips (axes come from geometry, not axis letters).
+  pose(shapes.pinch, "Right"); const rightTip = tip("RightHandIndex4").sub(tip("RightHand"));
+  pose(shapes.pinch, "Left"); const leftTip = tip("LeftHandIndex4").sub(tip("LeftHand"));
+  assert(rightTip.distanceTo(leftTip.clone().setX(-leftTip.x)) < 1e-6, "left and right hands are exact mirrors");
+  assert(rightTip.z > 0.02, "flexion closes the fingers toward the palm side (+z)");
+  // Impossible poses are brought back inside the limits, close to the limit that was crossed.
+  const impossible: [string, number, number, number][] = [
+    ["RightHandIndex1", -70, 45, 40], ["RightHandMiddle2", -50, 30, 0], ["RightHandRing3", 140, 0, 0],
+    ["RightHandPinky1", 90, 25, 0], ["RightHandThumb1", -80, 0, 0], ["RightHandThumb3", 30, 0, 60], ["RightHand", 130, 60, 160],
+    ["LeftHandIndex2", -40, -25, -30], ["LeftHand", -120, -50, 0],
+  ];
+  reset();
+  for (const [name, flex, abd, twist] of impossible) { const j = joint(name); j.bone.quaternion.copy(hands.compose(j, { flex: flex * D, abd: abd * D, twist: twist * D })); }
+  assert(hands.joints.some((j) => hands.violations(j, j.bone.quaternion).length), "the test poses are out of range");
+  hands.constrain("soft");
+  for (const j of hands.joints) assert.deepEqual(hands.violations(j, j.bone.quaternion, 0.01), [], `${j.name} is inside its limits after clamping`);
+  const near = (name: string, key: "flex" | "abd" | "twist", deg: number, tol = 2.5) => {
+    const j = joint(name), a = hands.angles(j, j.bone.quaternion)[key] / D;
+    assert(Math.abs(a - deg) < tol, `${name} ${key} ${a.toFixed(1)} close to ${deg}`);
+  };
+  near("RightHandIndex1", "flex", -20); near("RightHandIndex1", "twist", 10); near("RightHandMiddle2", "flex", -5);
+  near("RightHandRing3", "flex", 85); near("RightHandThumb1", "flex", -30); near("RightHand", "flex", 80); near("RightHand", "twist", 100);
+  near("RightHandPinky1", "abd", 22 * 0.35, 1.5);
+  // Soft limits: identity inside, never beyond the limit, continuous.
+  assert.equal(softClamp(10, 0, 90, 8), 10);
+  assert(softClamp(500, 0, 90, 8) <= 90 && softClamp(500, 0, 90, 8) > 89.9 && softClamp(-500, 0, 90, 8) >= 0);
+  assert(Math.abs(softClamp(82.0001, 0, 90, 8) - softClamp(81.9999, 0, 90, 8)) < 1e-3);
+  // A valid pose is returned untouched (same object: no numerical drift on valid frames).
+  reset();
+  const j0 = joint("RightHandIndex2"), valid = hands.compose(j0, { flex: 40 * D, abd: 0, twist: 0 });
+  assert.equal(hands.limitRotation(j0, valid, "soft"), valid);
+  // A track that keeps turning past 180 degrees stays on the limit instead of flipping to the other side.
+  const wristJ = joint("RightHand");
+  const turning = [150, 170, 185, 200, 185].map((deg, i) => ({ time: i * 40, rotations: [hands.compose(wristJ, { flex: 0, abd: 0, twist: deg * D })] }));
+  hands.constrainTrack(turning, ["RightHand"], null);
+  const turned = turning.map((f) => hands.angles(wristJ, f.rotations[0]).twist / D);
+  assert(turned.every((deg) => deg > 90 && deg <= 100), `continuous twist stays at the limit (${turned.map((d) => d.toFixed(0))})`);
+
+  // Smoothing: jitter on a hold is removed, a fast handshape change keeps its timing (zero phase), deterministic.
+  const times = Array.from({ length: 50 }, (_, i) => i * 40);
+  const hinge = (deg: number) => new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), deg * D);
+  const noisy = times.map((_, i) => hinge(30 + (i % 2 ? 6 : -6)));
+  const calm = smoothRotations(times, noisy);
+  const spread = (qs: THREE.Quaternion[]) => Math.max(...qs.slice(5, -5).map((q) => Math.abs(2 * Math.atan2(q.x, q.w) / D - 30)));
+  assert(spread(calm) < 0.5 * spread(noisy), `hold jitter is at least halved (${spread(noisy).toFixed(1)} -> ${spread(calm).toFixed(1)} degrees)`);
+  const step = times.map((t) => hinge(t < 1000 ? 0 : 80));
+  const stepped = smoothRotations(times, step).map((q) => 2 * Math.atan2(q.x, q.w) / D);
+  assert(stepped[27] > 70 && stepped[22] < 10, `a fast closing keeps its timing (${stepped[22].toFixed(1)} at -120 ms, ${stepped[27].toFixed(1)} at +80 ms)`);
+  assert.deepEqual(smoothRotations(times, noisy).map((q) => q.toArray()), calm.map((q) => q.toArray()), "smoothing is a pure function of the track");
+  // Through the retargeter: a noisy captured hand, seeking in any order gives the same pose; fingers stay in range.
+  const noisyClip: MotionFile = { ...a, duration_ms: 960, frames: Array.from({ length: 25 }, (_, i) => {
+    const jitter = (k: number) => 0.004 * Math.sin(i * 2.7 + k * 1.3);
+    const frame = Object.fromEntries(Object.entries(fullHand).map(([name, p], k) => [name, /_(thumb|index|middle|ring|pinky)_/.test(name) ? [p[0] + jitter(k), p[1] + jitter(k + 7), p[2] + jitter(k + 3)] : p])) as Record<string, [number, number, number]>;
+    return { time_ms: i * 40, joints: frame };
+  }) };
+  const seen = new Map<number, number[][]>();
+  for (const t of [500, 20, 960, 333, 500, 0, 741, 20]) {
+    retarget.applyMotion(noisyClip, t);
+    const now = bones.map((b) => b.quaternion.toArray());
+    if (seen.has(t)) assert.deepEqual(now, seen.get(t), `seeking to ${t} ms gives the same hand pose`);
+    seen.set(t, now);
+    for (const j of retarget.hands!.joints) assert.deepEqual(retarget.hands!.violations(j, j.bone.quaternion, 0.5), [], `${j.name} stays inside its limits at ${t} ms`);
+  }
+  // Hinge elbow: the forearm turns about one axis relative to the upper arm (no twist, no sideways bend).
+  for (const wrist of [[0.1, 1.55, 0.3], [0.3, 1.2, 0.35]]) {
+    retarget.apply({ ...joints, left_wrist: wrist as [number, number, number] });
+    const fore = bones.find((x) => x.name === "LeftForeArm")!, q = fore.quaternion;   // bind local = identity
+    const axis = new THREE.Vector3(0, -1, 0), along = q.x * axis.x + q.y * axis.y + q.z * axis.z;
+    const twist = Math.abs(2 * Math.atan2(along, q.w)) / D;
+    const swingAxis = new THREE.Vector3(q.x, q.y, q.z).addScaledVector(axis, -along);
+    const hinge = new THREE.Vector3(0, -1, 0).cross(new THREE.Vector3(0, 0, 1));          // straight bind arm: flex forward
+    const sideways = swingAxis.length() > 1e-6 ? swingAxis.normalize().angleTo(hinge) / D : 0;
+    assert(twist < 1 && (sideways < 2 || sideways > 178), `elbow stays a hinge (twist ${twist.toFixed(2)}, axis off by ${sideways.toFixed(1)} degrees)`);
+  }
+  // Springs: a sudden wrist flexion near the limit overshoots without the guard, never with it.
+  const springRun = (guard: boolean) => {
+    reset();
+    const layer = new PerformanceLayer(handRoot, RPM_PROFILE, guard ? hands : null), wrist = joint("RightHand");
+    let worst = -Infinity;
+    for (let t = 0; t <= 600; t += 1000 / 60) {
+      reset();
+      wrist.bone.quaternion.copy(hands.compose(wrist, { flex: (t > 50 ? 79.9 : -60) * D, abd: 0, twist: 0 }));
+      layer.update(t, true);
+      worst = Math.max(worst, hands.angles(wrist, wrist.bone.quaternion).flex / D);
+    }
+    return worst;
+  };
+  const free = springRun(false);
+  assert(free > 80, `the wrist spring overshoots the limit on its own (${free.toFixed(1)} degrees)`);
+  assert(springRun(true) <= 80 + 1e-6, "the guard after the springs keeps the wrist inside its limit");
+  console.log("Hand realism checks passed: 6 handshapes kept (both hands, mirrored), impossible poses clamped, soft limits, unwrapped twist, zero-phase smoothing, seek-deterministic retargeting, hinge elbow, springs in range.");
+}
