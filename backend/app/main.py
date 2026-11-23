@@ -574,6 +574,12 @@ def emotion_idle(label: str):
     return FileResponse(path, media_type='application/octet-stream', headers={'Cache-Control': 'no-cache'})
 
 
+class SpeakerRef(BaseModel):
+    """[film-speakers] A speaker of the film cast sheet: name and locus in signing space (viewer's frame)."""
+    label: str = Field(min_length=1, max_length=40)
+    locus: Literal['L', 'C', 'R'] | None = None
+
+
 class LsfGenerateRequest(BaseModel):
     text: str = Field(min_length=1, max_length=400)
     engine: Literal['c0', 'b2'] = 'b2'
@@ -588,10 +594,18 @@ class LsfGenerateRequest(BaseModel):
     # and size of the manual signing only, never the face (services/lsf_emotion.py). Heuristic, not validated.
     emotion: dict[str, float] | None = Field(default=None, max_length=12)
     emotion_strength: float = Field(default=1.0, ge=0.0, le=1.0)
+    # [film-speakers] who says the text (film cast sheet) and the scene's referent table from the previous subtitles.
+    speaker: SpeakerRef | None = None
+    addressee: SpeakerRef | None = None
+    referents: list[dict] | None = Field(default=None, max_length=64)
 
 
 class LsfOrderRequest(BaseModel):
     text: str = Field(min_length=1, max_length=400)
+    # [film-speakers] see LsfGenerateRequest
+    speaker: SpeakerRef | None = None
+    addressee: SpeakerRef | None = None
+    referents: list[dict] | None = Field(default=None, max_length=64)
 
 
 @app.post('/lsf/order')
@@ -602,7 +616,13 @@ def lsf_order_preview(body: LsfOrderRequest):
     text = ' '.join(body.text.split())
     if not text:
         raise HTTPException(422, 'Saisissez une phrase en français.')
-    return order(text)
+    return order(text, **_order_context(body))  # [film-speakers]
+
+
+def _order_context(body) -> dict:
+    """[film-speakers] speaker / addressee / scene referents of a request -> keyword arguments of lsf_order.order."""
+    return {'scene': body.referents, 'speaker': body.speaker.model_dump() if body.speaker else None,
+            'addressee': body.addressee.model_dump() if body.addressee else None}
 
 
 def _nonmanual_spans(analysis: dict, meta: dict, n_frames: int, fps: float = 25.0) -> list[dict]:
@@ -638,7 +658,7 @@ def lsf_generate(body: LsfGenerateRequest):
     text = ' '.join(body.text.split())
     if not text:
         raise HTTPException(422, 'Saisissez une phrase en français.')
-    analysis = order(text)
+    analysis = order(text, **_order_context(body))  # [film-speakers]
     groups = None
     if body.engine == 'b2':
         if body.glosses:
@@ -660,8 +680,12 @@ def lsf_generate(body: LsfGenerateRequest):
         if feeling:
             meta['emotion'] = {**feeling, 'applies_to': 'speed and size of manual signing only', 'validated': False}
         spans = _nonmanual_spans(analysis, meta, len(poses)) if body.nonmanual else []
+        from .services.lsf_order import role_shift_spans  # [film-speakers]
+        shifts = role_shift_spans(analysis, meta.get('sign_spans'), len(poses))
         motion = engine_poses_to_motion(poses, engine=body.engine, text=text, face_calibration=meta.pop('face_neutral', None),
                                         nonmanual=spans)
+        if shifts:
+            motion['role_shift'] = shifts  # [film-speakers] quoted / reported speech: the avatar takes the speaker's role
     except lsf_engines.EngineUnavailable as exc:
         raise HTTPException(503, str(exc))
     except ValueError as exc:
