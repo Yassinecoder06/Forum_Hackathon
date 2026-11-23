@@ -6,8 +6,11 @@ they are signed by the avatar right after: concrete words, no lists, no emojis, 
 
 Contract (POST /brain/respond):
     in   {messages: [{role: "user"|"assistant", text}], image_b64?: str, mode: "conversation"|"companion"}
-    out  {text, model, mode, ms}
+    out  {text, model, mode, ms, focus}
 The image (JPEG/PNG, base64, no data: prefix needed) is attached to the last user message (companion: what the phone sees).
+Companion with an image: the reply is constrained to JSON {reponse, regard} (Ollama structured output), so the brain
+also says where in the picture the thing it talks about is: focus "left" | "centre" | "right" | null. The avatar turns
+its head and eyes that way while signing (the minimal start of pointing). Same single model, same single call.
 
 VRAM: the GPU (8 GB) is shared with Whisper (about 1.6 GB) and the signing engines, so the context is kept small
 (num_ctx 2048) and the model is unloaded after SIGNACULTURE_LLM_KEEP_ALIVE of inactivity (default 10 min).
@@ -43,9 +46,37 @@ SYSTEM_PROMPTS = {
         "Ta réponse sera signée en langue des signes française (LSF) par un avatar, puis affichée en texte. "
         "Réponds en français simple, en une ou deux phrases courtes (moins de 25 mots en tout), avec des mots concrets "
         "(objets, couleurs, lieux, personnes que tu vois). Pas de liste, pas d'emoji, pas de mise en forme. "
+        "Pour situer une chose, dis simplement où elle est dans l'image : à gauche, à droite ou au milieu. "
         "Ne décris que ce que tu vois vraiment ; si tu ne sais pas, dis-le simplement."
     ),
 }
+
+
+# Companion + image: the answer and the side of the picture where the thing it talks about is.
+FOCUS_FORMAT = {
+    "type": "object",
+    "properties": {
+        "reponse": {"type": "string"},
+        "regard": {"type": "string", "enum": ["gauche", "centre", "droite", "aucun"]},
+    },
+    "required": ["reponse", "regard"],
+}
+FOCUS_PROMPT = (
+    " Réponds en JSON : {\"reponse\": ta réponse, \"regard\": où se trouve dans l'image la chose dont tu parles, "
+    "\"gauche\", \"centre\" ou \"droite\", ou \"aucun\" si ta réponse ne parle d'aucune chose visible}."
+)
+FOCUS_SIDES = {"gauche": "left", "centre": "centre", "droite": "right"}
+
+
+def parse_focus_reply(content: str) -> tuple[str, str | None]:
+    """Structured companion output -> (reply text, focus side); plain text (model ignored the format) -> (text, None)."""
+    try:
+        data = json.loads(content)
+    except (TypeError, ValueError):
+        return content, None
+    if not isinstance(data, dict) or not isinstance(data.get("reponse"), str):
+        return content, None
+    return data["reponse"], FOCUS_SIDES.get(str(data.get("regard", "")).strip().lower())
 
 
 class BrainUnavailable(RuntimeError):
@@ -133,18 +164,22 @@ def build_payload(messages: list[dict], image_b64: str | None, mode: str) -> dic
         turns = turns[1:]
     if not turns or turns[-1]["role"] != "user":
         raise ValueError("Le dernier message doit venir de la personne.")
-    chat = [{"role": "system", "content": SYSTEM_PROMPTS[mode]}]
+    focus = bool(image_b64) and mode == "companion"
+    chat = [{"role": "system", "content": SYSTEM_PROMPTS[mode] + (FOCUS_PROMPT if focus else "")}]
     chat += [{"role": m["role"], "content": m["text"].strip()[:1000]} for m in turns]
     if image_b64:
         chat[-1]["images"] = [image_b64.split(",", 1)[-1] if image_b64.startswith("data:") else image_b64]
-    return {
+    payload = {
         "model": model_name(),
         "messages": chat,
         "stream": False,
         "keep_alive": keep_alive(),
         # small context and short answers: little KV-cache VRAM next to Whisper and the engines, fast replies
-        "options": {"temperature": 0.6, "top_p": 0.9, "num_ctx": 2048, "num_predict": 90},
+        "options": {"temperature": 0.6, "top_p": 0.9, "num_ctx": 2048, "num_predict": 120 if focus else 90},
     }
+    if focus:
+        payload["format"] = FOCUS_FORMAT
+    return payload
 
 
 class Brain:
@@ -158,10 +193,15 @@ class Brain:
         payload = build_payload(messages, image_b64, mode)
         t0 = time.perf_counter()
         out = self.client.chat(payload, timeout)
-        text = clean_reply(((out or {}).get("message") or {}).get("content", ""))
+        content = ((out or {}).get("message") or {}).get("content", "")
+        focus = None
+        if "format" in payload:
+            content, focus = parse_focus_reply(content)
+        text = clean_reply(content)
         if not text:
             raise BrainUnavailable("Le modèle de langage n'a rien répondu.")
-        return {"text": text, "model": payload["model"], "mode": mode, "ms": round((time.perf_counter() - t0) * 1000)}
+        return {"text": text, "model": payload["model"], "mode": mode, "ms": round((time.perf_counter() - t0) * 1000),
+                "focus": focus}
 
     def warm(self) -> dict:
         """Load the model in VRAM before the first question (an empty chat loads it without generating)."""

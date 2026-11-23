@@ -120,3 +120,36 @@ export const CAPTURE_WORKLET = `class Capture extends AudioWorkletProcessor {
   process(inputs) { const c = inputs[0] && inputs[0][0]; if (c) this.port.postMessage(c.slice(0)); return true; }
 }
 registerProcessor("signaculture-capture", Capture);`;
+
+/**
+ * Open the microphone and cut it into phrases at pauses (the live / conversation / companion path): each phrase
+ * arrives as samples + sample rate. Returns the detector (level, speaking) and a stop function that flushes the
+ * phrase in progress and releases the microphone. Rejects when the microphone is refused.
+ */
+export async function openPhraseMic(onPhrase: (samples: Float32Array, rate: number) => void, options: Partial<DetectorOptions> = {}) {
+  const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } });
+  const context = new AudioContext();
+  try {
+    const url = URL.createObjectURL(new Blob([CAPTURE_WORKLET], { type: "application/javascript" }));
+    await context.audioWorklet.addModule(url);
+    URL.revokeObjectURL(url);
+  } catch (e) {
+    stream.getTracks().forEach((t) => t.stop());
+    void context.close();
+    throw e;
+  }
+  const source = context.createMediaStreamSource(stream);
+  const node = new AudioWorkletNode(context, "signaculture-capture");
+  const rate = context.sampleRate;
+  const detector = new PhraseDetector({ ...options, sampleRate: rate }, (samples) => onPhrase(samples, rate));
+  node.port.onmessage = (e: MessageEvent<Float32Array>) => detector.push(e.data);
+  source.connect(node);
+  const stop = () => {
+    detector.flush();
+    node.port.onmessage = null;
+    source.disconnect();
+    stream.getTracks().forEach((t) => t.stop());
+    void context.close();
+  };
+  return { detector, stop };
+}

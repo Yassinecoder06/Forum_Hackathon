@@ -60,6 +60,30 @@ def test_history_and_companion_image(monkeypatch):
     assert sent[-1]["images"] == ["QUJD"]                                         # data: prefix removed
 
 
+def test_companion_image_asks_where_the_thing_is(monkeypatch):
+    fake = use(monkeypatch, FakeOllama(reply='{"reponse": "Je vois une tasse rouge à gauche, sur la table.", "regard": "gauche"}'))
+    r = client.post("/brain/respond", json={"messages": [{"role": "user", "text": "Que vois-tu ?"}], "mode": "companion",
+                                            "image_b64": "QUJD"})
+    body = r.json()
+    assert r.status_code == 200 and body["text"] == "Je vois une tasse rouge à gauche, sur la table." and body["focus"] == "left"
+    sent = fake.calls[0]
+    assert sent["format"]["properties"]["regard"]["enum"] == ["gauche", "centre", "droite", "aucun"]
+    assert "JSON" in sent["messages"][0]["content"]
+    # nothing visible -> no focus; without an image (or in conversation mode) no structured output at all
+    use(monkeypatch, FakeOllama(reply='{"reponse": "Bonjour !", "regard": "aucun"}'))
+    r = client.post("/brain/respond", json={"messages": [{"role": "user", "text": "Salut"}], "mode": "companion", "image_b64": "QUJD"})
+    assert r.json()["text"] == "Bonjour !" and r.json()["focus"] is None
+    fake = use(monkeypatch, FakeOllama(reply="Bonjour !"))
+    r = client.post("/brain/respond", json={"messages": [{"role": "user", "text": "Salut"}], "mode": "companion"})
+    assert "format" not in fake.calls[0] and r.json()["focus"] is None
+
+
+def test_parse_focus_reply_tolerates_plain_text():
+    assert B.parse_focus_reply("Je vois une lampe.") == ("Je vois une lampe.", None)
+    assert B.parse_focus_reply('{"reponse": "La lampe est là.", "regard": "Droite"}') == ("La lampe est là.", "right")
+    assert B.parse_focus_reply('["x"]') == ('["x"]', None)
+
+
 def test_ollama_down_gives_clear_503(monkeypatch):
     use(monkeypatch, FakeOllama(fail=B.BrainUnavailable("Modèle de langage local indisponible : démarrez Ollama")))
     r = client.post("/brain/respond", json={"messages": [{"role": "user", "text": "Bonjour"}]})

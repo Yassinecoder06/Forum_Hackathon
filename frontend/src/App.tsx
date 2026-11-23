@@ -16,6 +16,7 @@ import {
   Play,
   Plus,
   RotateCcw,
+  ScanEye,
   Sparkles,
   Upload,
   Waves,
@@ -26,6 +27,7 @@ import { LsfEnginePanel } from "./components/LsfEnginePanel";
 import { generateBody } from "./utils/lsfRequest";
 import { FilmMode } from "./components/FilmMode";
 import { ConversationMode } from "./components/ConversationMode";
+import { CompanionMode } from "./components/Companion/CompanionMode";
 import { AvatarCanvas } from "./components/AvatarPlayer/AvatarCanvas";
 import { stitchAnimationPlan, libraryPreview } from "./utils/planStitcher";
 import { dominantEmotion } from "./utils/emotionFace";
@@ -37,7 +39,7 @@ import type {
 } from "./types/contract";
 import "./studio.css";
 
-type Page = "studio" | "film" | "conversation" | "library" | "capture";
+type Page = "studio" | "film" | "conversation" | "compagnon" | "library" | "capture";
 type Capabilities = {
   cv_corrected_count?: number;
   dictasign?: {
@@ -116,7 +118,8 @@ const clock = (ms: number) =>
     .padStart(2, "0")}:${((ms % 60000) / 1000).toFixed(1).padStart(4, "0")}`;
 
 export default function App() {
-  const [page, setPage] = useState<Page>("studio");
+  // The AR companion has its own address (#compagnon), so a phone can open it directly.
+  const [page, setPage] = useState<Page>(() => (window.location.hash === "#compagnon" ? "compagnon" : "studio"));
   const [connected, setConnected] = useState(false);
   const [caps, setCaps] = useState<Capabilities | null>(null);
   const [glossary, setGlossary] = useState<GlossEntry[]>([]);
@@ -572,6 +575,22 @@ export default function App() {
     }, duration + 200);
   }
 
+  function openCompanion() {
+    window.history.replaceState(null, "", "#compagnon");
+    setPage("compagnon");
+  }
+
+  function closeCompanion() {
+    window.history.replaceState(null, "", window.location.pathname + window.location.search);
+    setPage("studio");
+  }
+
+  if (page === "compagnon")
+    return (
+      <CompanionMode onExit={closeCompanion} transcription={caps?.transcription} signRecognition={caps?.sign_recognition}
+        brainReady={caps?.brain?.available} />
+    );
+
   return (
     <div className="app-shell">
       <aside className="sidebar">
@@ -603,6 +622,13 @@ export default function App() {
           >
             <MessagesSquare />
             <span>Conversation</span>
+          </button>
+          <button
+            className="nav-item"
+            onClick={() => openCompanion()}
+          >
+            <ScanEye />
+            <span>Compagnon</span>
           </button>
           <button
             className={page === "library" ? "nav-item active" : "nav-item"}
