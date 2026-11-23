@@ -4,7 +4,8 @@ import { request } from "../services/api";
 import type { AudioFeatures, MotionFile } from "../types/contract";
 import { AvatarCanvas } from "./AvatarPlayer/AvatarCanvas";
 import { activeAt, parseSubtitles, placeMotions, type Cue } from "../utils/subtitles";
-import { EMOTION_LABEL, MARKER_LABEL, dominantEmotion, generateBody, voiceScores, type LsfEngine } from "../utils/lsfRequest";
+import { EMOTION_LABEL, MARKER_LABEL, generateBody, voiceScores, type LsfEngine } from "../utils/lsfRequest";
+import { PhraseDetector, encodeWav } from "../utils/phraseDetector";
 
 type Item = { cue: Cue; motion?: MotionFile; error?: string; emotion?: Record<string, number> | null };
 const clock = (ms: number) => `${Math.floor(ms / 60000).toString().padStart(2, "0")}:${((ms % 60000) / 1000).toFixed(1).padStart(4, "0")}`;
@@ -348,11 +349,17 @@ export function FilmMode({
   );
 }
 
-type LiveLine = { text: string; heard_ms: number; shown_ms?: number; motion?: MotionFile; feeling?: string };
+type LiveLine = { text: string; heard_ms: number; shown_ms?: number; motion?: MotionFile; dropped?: boolean };
 
-/** Microphone -> Whisper (5 s windows, each a complete recording) -> engine -> avatar, one line after another. */
+/** Captures raw microphone samples (AudioWorklet), whatever the browser's sample rate. */
+const CAPTURE_WORKLET = `class Capture extends AudioWorkletProcessor {
+  process(inputs) { const c = inputs[0] && inputs[0][0]; if (c) this.port.postMessage(c.slice(0)); return true; }
+}
+registerProcessor("signaculture-capture", Capture);`;
+
+/** Microphone -> phrases cut at pauses -> persistent local Whisper -> engine -> avatar, in speaking order. */
 function LiveMode({
-  avatarCredit, engine, setEngine, lsfOrder, nonmanual, transcription, engines, emotion,
+  avatarCredit, engine, setEngine, lsfOrder, nonmanual, transcription, engines,
 }: {
   avatarCredit?: string; engine: LsfEngine; setEngine: (e: LsfEngine) => void; lsfOrder: boolean; nonmanual: boolean;
   transcription?: boolean; engines?: Partial<Record<LsfEngine, boolean>>; emotion?: boolean;
@@ -361,14 +368,26 @@ function LiveMode({
     [lines, setLines] = useState<LiveLine[]>([]),
     [playing, setPlaying] = useState<{ index: number; started: number } | null>(null),
     [now, setNow] = useState(0),
+    [ready, setReady] = useState<"loading" | "ready" | "off">(transcription ? "loading" : "off"),
     [error, setError] = useState("");
   const stop = useRef<() => void>(() => {});
+  const detector = useRef<PhraseDetector | null>(null);
+  const chain = useRef<Promise<void>>(Promise.resolve());
+  const count = useRef(0);
+  const options = useRef({ engine, lsfOrder, nonmanual });
+  options.current = { engine, lsfOrder, nonmanual };
   useEffect(() => {
     let id = 0;
     const tick = () => { setNow(performance.now()); id = requestAnimationFrame(tick); };
     id = requestAnimationFrame(tick);
     return () => { cancelAnimationFrame(id); stop.current(); };
   }, []);
+  // Load the speech model and the signing engine while the user gets ready, so the first phrase is as fast as the next.
+  useEffect(() => {
+    if (!transcription) return;
+    setReady("loading");
+    request(`/live/warmup?engine=${engine}`, { method: "POST" }).then(() => setReady("ready")).catch(() => setReady("off"));
+  }, [transcription, engine]);
   // Play the queue: next line as soon as the current one is finished.
   useEffect(() => {
     const current = playing ? lines[playing.index] : undefined;
@@ -381,54 +400,74 @@ function LiveMode({
     }
   }, [now, lines, playing]);
 
+  function onPhrase(samples: Float32Array, rate: number) {
+    const heard = performance.now();
+    const index = count.current++;
+    setLines((prev) => [...prev, { text: "…", heard_ms: heard }]);
+    const wav = encodeWav(samples, rate);
+    const update = (patch: Partial<LiveLine>) => setLines((prev) => prev.map((l, i) => (i === index ? { ...l, ...patch } : l)));
+    // One phrase at a time, in speaking order: each step waits for the previous one.
+    chain.current = chain.current.then(async () => {
+      try {
+        const form = new FormData();
+        form.append("file", new Blob([wav], { type: "audio/wav" }), "phrase.wav");
+        const heardText = (await request<{ text: string }>("/live/transcribe", { method: "POST", body: form })).text.trim();
+        if (!heardText) {
+          update({ dropped: true });
+          return;
+        }
+        update({ text: heardText });
+        const { engine: eng, lsfOrder: order, nonmanual: face } = options.current;
+        const motion = await request<MotionFile>("/lsf/generate", {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(generateBody(heardText.slice(0, 400), eng, order, face)),
+        });
+        update({ motion });
+      } catch (e) {
+        update({ dropped: true });
+        setError(e instanceof Error ? e.message : "Traitement impossible.");
+      }
+    });
+  }
+
   async function start() {
     setError("");
     let stream: MediaStream;
     try {
-      stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } });
     } catch {
       setError("Micro refusé ou indisponible.");
       return;
     }
-    let active = true;
-    stop.current = () => { active = false; stream.getTracks().forEach((t) => t.stop()); setOn(false); };
+    const context = new AudioContext();
+    const url = URL.createObjectURL(new Blob([CAPTURE_WORKLET], { type: "application/javascript" }));
+    await context.audioWorklet.addModule(url);
+    URL.revokeObjectURL(url);
+    const source = context.createMediaStreamSource(stream);
+    const node = new AudioWorkletNode(context, "signaculture-capture");
+    const rate = context.sampleRate;
+    const vad = new PhraseDetector({ sampleRate: rate }, (samples) => onPhrase(samples, rate));
+    detector.current = vad;
+    node.port.onmessage = (e: MessageEvent<Float32Array>) => vad.push(e.data);
+    source.connect(node);
+    stop.current = () => {
+      vad.flush();
+      node.port.onmessage = null;
+      source.disconnect();
+      stream.getTracks().forEach((t) => t.stop());
+      void context.close();
+      detector.current = null;
+      setOn(false);
+    };
     setOn(true);
-    const windowMs = 5000;
-    while (active) {
-      const recorder = new MediaRecorder(stream);
-      const chunks: Blob[] = [];
-      recorder.ondataavailable = (e) => e.data.size && chunks.push(e.data);
-      const stopped = new Promise<void>((r) => (recorder.onstop = () => r()));
-      recorder.start();
-      await new Promise((r) => setTimeout(r, windowMs));
-      recorder.stop();
-      await stopped;
-      const heard = performance.now();
-      void (async () => {
-        try {
-          const form = new FormData();
-          form.append("file", new Blob(chunks, { type: recorder.mimeType || "audio/webm" }), "micro.webm");
-          const audio = await request<AudioFeatures>(`/analyze-audio?include_emotion=${emotion ? "true" : "false"}&include_transcription=true`, { method: "POST", body: form });
-          const text = audio.transcription?.text.trim();
-          if (!text) return;
-          const scores = voiceScores(audio.emotion_hypothesis);
-          const top = dominantEmotion(scores);
-          const feeling = top && top.label !== "neutral" ? EMOTION_LABEL[top.label] : undefined;
-          const index = await new Promise<number>((resolve) => setLines((prev) => { resolve(prev.length); return [...prev, { text, heard_ms: heard, feeling }]; }));
-          const motion = await request<MotionFile>("/lsf/generate", {
-            method: "POST", headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(generateBody(text.slice(0, 400), engine, lsfOrder, nonmanual, null, scores)),
-          });
-          setLines((prev) => prev.map((l, i) => (i === index ? { ...l, motion } : l)));
-        } catch (e) {
-          setError(e instanceof Error ? e.message : "Traitement impossible.");
-        }
-      })();
-    }
   }
 
   const current = playing ? lines[playing.index] : undefined;
-  const delays = lines.filter((l) => l.shown_ms).map((l) => l.shown_ms! - l.heard_ms + 5000);
+  const shown = lines.filter((l) => l.shown_ms);
+  const lastDelay = shown.length ? shown[shown.length - 1].shown_ms! - shown[shown.length - 1].heard_ms : 0;
+  const level = detector.current ? Math.min(1, detector.current.level * 12) : 0;
+  const label = on ? "Arrêter le direct" : ready === "loading" ? "Préparation de la reconnaissance vocale…"
+    : ready === "ready" ? "Démarrer le direct (micro)" : "Direct indisponible : Whisper non installé";
   return (
     <div className="live-mode">
       <div className="film-setup card">
@@ -444,14 +483,19 @@ function LiveMode({
           </div>
         </div>
         <div className="film-actions">
-          <button className="primary-button" disabled={!transcription} onClick={() => (on ? stop.current() : void start())}>
-            {on ? <MicOff size={16} /> : <Mic size={16} />}
-            {on ? "Arrêter le direct" : transcription ? "Démarrer le direct (micro)" : "Direct indisponible : Whisper non installé"}
+          <button className="primary-button" disabled={ready !== "ready"} onClick={() => (on ? stop.current() : void start())}>
+            {on ? <MicOff size={16} /> : ready === "loading" ? <Loader2 className="spin" size={16} /> : <Mic size={16} />}
+            {label}
           </button>
+          {on && (
+            <span className={`live-level${detector.current?.speaking ? " speaking" : ""}`} aria-label="Niveau du micro">
+              <i style={{ width: `${Math.round(level * 100)}%` }} />
+            </span>
+          )}
         </div>
         <small>
-          Le son est traité par fenêtres de 5 s sur ce serveur local (rien n’est envoyé ailleurs). Retard affiché = fin de la
-          parole → début des signes{delays.length ? ` : dernier ${(delays[delays.length - 1] / 1000).toFixed(1)} s` : ""}.
+          Parlez naturellement : chaque phrase est transcrite dès que vous marquez une pause, puis signée par l’avatar.
+          Tout est traité sur cet ordinateur{lastDelay ? ` · délai fin de phrase → signes : ${(lastDelay / 1000).toFixed(1)} s` : ""}.
         </small>
         {error && <p role="alert" className="research-error">{error}</p>}
       </div>
@@ -462,13 +506,17 @@ function LiveMode({
             motion={current?.motion ?? null}
             currentTimeMs={current?.motion && playing ? Math.min(now - playing.started, current.motion.duration_ms) : 0}
           />
+          {current && <div className="film-subtitle">{current.text}</div>}
           <small className="film-watermark">{WATERMARK}</small>
         </div>
         <ol className="film-cues live">
-          {lines.map((l, i) => (
+          {lines.map((l, i) => l.dropped ? null : (
             <li key={i} className={playing?.index === i ? "current" : ""}>
-              <span className="film-text">{l.text}{l.feeling ? ` · ${l.feeling}` : ""}</span>
-              <span className="film-state">{l.motion ? (l.shown_ms ? `signé après ${((l.shown_ms - l.heard_ms + 5000) / 1000).toFixed(1)} s` : "en file") : "génération…"}</span>
+              <span className="film-text">{l.text}</span>
+              <span className="film-state">
+                {l.motion ? (l.shown_ms ? `signé ${((l.shown_ms - l.heard_ms) / 1000).toFixed(1)} s après la phrase` : "en file")
+                  : l.text === "…" ? "transcription…" : "génération…"}
+              </span>
             </li>
           ))}
         </ol>

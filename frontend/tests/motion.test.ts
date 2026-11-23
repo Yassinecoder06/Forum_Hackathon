@@ -618,3 +618,27 @@ assert.equal(JSON.stringify(libraryClip),libraryRaw,"Preview windows never mutat
   assert.equal(resampleFrame(solid, 20).hand_tracking?.left?.observed, true, "A hand tracked on both sides stays tracked");
   console.log("Prosody checks passed: path scaling keeps location and handshape, nod envelope, word-timed holds, hand-gap resampling.");
 }
+
+// Live mode: phrases cut at pauses, long speech cut, WAV for the transcription endpoint.
+{
+  const { PhraseDetector, encodeWav } = await import("../src/utils/phraseDetector");
+  const rate = 48000;
+  const tone = (s: number, amp: number) => Float32Array.from({ length: Math.round(s * rate) }, (_, i) => amp * Math.sin((2 * Math.PI * 220 * i) / rate));
+  const noise = (s: number) => Float32Array.from({ length: Math.round(s * rate) }, () => (Math.random() - 0.5) * 0.004);
+  const phrases: number[] = [];
+  const vad = new PhraseDetector({ sampleRate: rate }, (p) => phrases.push(p.length / rate));
+  for (const chunk of [noise(1), tone(1.2, 0.2), noise(1), tone(0.5, 0.2), noise(1), tone(0.1, 0.2), noise(1)]) {
+    for (let i = 0; i < chunk.length; i += 128) vad.push(chunk.subarray(i, i + 128));   // AudioWorklet-sized blocks
+  }
+  assert.equal(phrases.length, 2, "two phrases, the 0.1 s click is ignored");
+  assert(phrases[0] > 1.2 && phrases[0] < 1.9, `first phrase keeps its pre-roll and a short tail (${phrases[0].toFixed(2)} s)`);
+  const long: number[] = [];
+  const vad2 = new PhraseDetector({ sampleRate: rate }, (p) => long.push(p.length / rate));
+  for (const chunk of [noise(1), tone(10, 0.2), noise(1)]) for (let i = 0; i < chunk.length; i += 128) vad2.push(chunk.subarray(i, i + 128));
+  assert(long.length === 2 && long[0] <= 8.05, "speech longer than 8 s is cut so the avatar never waits");
+  const wav = new DataView(encodeWav(tone(1, 0.5), rate));
+  assert.equal(String.fromCharCode(wav.getUint8(0), wav.getUint8(1), wav.getUint8(2), wav.getUint8(3)), "RIFF");
+  assert.equal(wav.getUint32(24, true), 16000, "16 kHz");
+  assert.equal(wav.getUint32(40, true), 32000, "1 s of 16-bit mono at 16 kHz");
+  console.log("Live mode checks passed: pause-cut phrases with pre-roll, clicks ignored, 8 s cut, 16 kHz WAV.");
+}

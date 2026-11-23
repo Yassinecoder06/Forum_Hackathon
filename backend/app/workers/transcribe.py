@@ -27,7 +27,8 @@ def _samples(audio: Path):
     return str(audio.resolve())
 
 
-def run(audio: Path, model_path: Path, output: Path) -> dict:
+def load_model(model_path: Path):
+    """-> (WhisperModel, device, compute_type): CUDA when CTranslate2 sees a usable GPU, else CPU int8."""
     import ctranslate2
     from faster_whisper import WhisperModel
 
@@ -42,18 +43,20 @@ def run(audio: Path, model_path: Path, output: Path) -> dict:
     device = "cuda" if ctranslate2.get_cuda_device_count() else "cpu"
     compute_type = "float16" if device == "cuda" else "int8"
     try:
-        model = WhisperModel(
-            str(model_path), device=device, compute_type=compute_type, cpu_threads=4
-        )
+        return WhisperModel(str(model_path), device=device, compute_type=compute_type, cpu_threads=4), device, compute_type
     except (RuntimeError, ValueError):
         if device != "cuda":
             raise
         # Some installations expose CUDA devices without compatible CTranslate2
         # kernels. Fall back to CPU rather than failing the audio analysis.
-        device, compute_type = "cpu", "int8"
-        model = WhisperModel(
-            str(model_path), device=device, compute_type=compute_type, cpu_threads=4
-        )
+        return WhisperModel(str(model_path), device="cpu", compute_type="int8", cpu_threads=4), "cpu", "int8"
+
+
+def run(audio: Path, model_path: Path, output: Path) -> dict:
+    from faster_whisper import WhisperModel
+
+    model, device, compute_type = load_model(model_path)
+    model_path = model_path.resolve()
 
     try:
         segments = _decode(model, audio)

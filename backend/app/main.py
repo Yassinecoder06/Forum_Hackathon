@@ -361,6 +361,59 @@ async def audio(file: UploadFile = File(...), include_emotion: bool = Query(Fals
     except FileNotFoundError: raise HTTPException(503,'FFmpeg est nécessaire pour décoder les médias.')
 
 
+@app.post('/live/warmup')
+async def live_warmup(engine: Literal['c0', 'b2'] = Query('c0')):
+    """Load the persistent Whisper worker AND the signing engine before the first phrase (opening the live mode
+    calls this): loading C0 and its text encoder on first use would otherwise delay the first phrase by minutes."""
+    from starlette.concurrency import run_in_threadpool
+    from .engines import lsf
+    from .services.live_asr import LiveUnavailable, live_asr
+    try:
+        info = await run_in_threadpool(live_asr.warm)
+    except LiveUnavailable as exc:
+        raise HTTPException(503, str(exc))
+    try:
+        await run_in_threadpool(lsf.generate, 'Bonjour.', engine)
+        info['engine_ready'] = engine
+    except lsf.EngineUnavailable:
+        info['engine_ready'] = None
+    return info
+
+
+@app.post('/live/transcribe')
+async def live_transcribe(file: UploadFile = File(...)):
+    """One spoken phrase (the browser cuts on pauses) -> French text, from the persistent Whisper worker."""
+    import wave
+    from starlette.concurrency import run_in_threadpool
+    from .services.live_asr import LiveUnavailable, live_asr
+    raw = await file.read(5 * 1024 * 1024 + 1)
+    if len(raw) > 5 * 1024 * 1024:
+        raise HTTPException(413, 'Phrase limitée à 5 Mo.')
+    if not raw:
+        raise HTTPException(422, 'Le fichier est vide.')
+    with tempfile.TemporaryDirectory(prefix='live-') as tmp:
+        src, wav = Path(tmp) / 'phrase.in', Path(tmp) / 'phrase.wav'
+        src.write_bytes(raw)
+        try:
+            with wave.open(str(src)) as w:
+                ready = w.getframerate() == 16000 and w.getnchannels() == 1 and w.getsampwidth() == 2
+        except (wave.Error, EOFError):
+            ready = False
+        if ready:
+            src.replace(wav)
+        else:
+            done = subprocess.run(['ffmpeg', '-nostdin', '-hide_banner', '-loglevel', 'error', '-y', '-i', str(src), '-vn', '-t', '30',
+                                   '-ac', '1', '-ar', '16000', '-c:a', 'pcm_s16le', str(wav)], capture_output=True, timeout=30)
+            if done.returncode:
+                raise HTTPException(422, 'Audio illisible.')
+        try:
+            return await run_in_threadpool(live_asr.transcribe, wav)
+        except LiveUnavailable as exc:
+            raise HTTPException(503, str(exc))
+        except RuntimeError as exc:
+            raise HTTPException(500, f'Transcription impossible : {exc}')
+
+
 @app.post('/analyze-audio/emotion-segments')
 async def audio_emotion_segments(file: UploadFile = File(...), cues: str = Form(...)):
     """Film mode: emotion2vec scores of the voice for each subtitle line (one model load for all lines).
