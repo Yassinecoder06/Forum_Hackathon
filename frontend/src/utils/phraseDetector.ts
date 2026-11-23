@@ -114,3 +114,9 @@ export function encodeWav(samples: Float32Array, fromRate: number, toRate = 1600
   }
   return out.buffer;
 }
+
+/** Captures raw microphone samples (AudioWorklet), whatever the browser's sample rate (live and conversation modes). */
+export const CAPTURE_WORKLET = `class Capture extends AudioWorkletProcessor {
+  process(inputs) { const c = inputs[0] && inputs[0][0]; if (c) this.port.postMessage(c.slice(0)); return true; }
+}
+registerProcessor("signaculture-capture", Capture);`;

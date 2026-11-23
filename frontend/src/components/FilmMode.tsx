@@ -5,7 +5,7 @@ import type { AudioFeatures, MotionFile } from "../types/contract";
 import { AvatarCanvas } from "./AvatarPlayer/AvatarCanvas";
 import { activeAt, parseSubtitles, placeMotions, type Cue } from "../utils/subtitles";
 import { EMOTION_LABEL, MARKER_LABEL, generateBody, voiceScores, type LsfEngine } from "../utils/lsfRequest";
-import { PhraseDetector, encodeWav } from "../utils/phraseDetector";
+import { CAPTURE_WORKLET, PhraseDetector, encodeWav } from "../utils/phraseDetector";
 import { castOf, defaultCast, type CastEntry } from "../utils/speakers";
 import { FRONTAL, filmSegments, locusSide, roleShiftAt, roleShiftSteps } from "../utils/roleShift";
 import { CastSheet, SpeakerChip, StageDots } from "./FilmSpeakers";
@@ -416,12 +416,6 @@ export function FilmMode({
 }
 
 type LiveLine = { text: string; heard_ms: number; shown_ms?: number; motion?: MotionFile; dropped?: boolean };
-
-/** Captures raw microphone samples (AudioWorklet), whatever the browser's sample rate. */
-const CAPTURE_WORKLET = `class Capture extends AudioWorkletProcessor {
-  process(inputs) { const c = inputs[0] && inputs[0][0]; if (c) this.port.postMessage(c.slice(0)); return true; }
-}
-registerProcessor("signaculture-capture", Capture);`;
 
 /** Microphone -> phrases cut at pauses -> persistent local Whisper -> engine -> avatar, in speaking order. */
 function LiveMode({
