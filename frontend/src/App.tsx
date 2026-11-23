@@ -11,6 +11,7 @@ import {
   Hand,
   Library,
   Loader2,
+  MessagesSquare,
   Pause,
   Play,
   Plus,
@@ -24,6 +25,7 @@ import { request } from "./services/api";
 import { LsfEnginePanel } from "./components/LsfEnginePanel";
 import { generateBody } from "./utils/lsfRequest";
 import { FilmMode } from "./components/FilmMode";
+import { ConversationMode } from "./components/ConversationMode";
 import { AvatarCanvas } from "./components/AvatarPlayer/AvatarCanvas";
 import { stitchAnimationPlan, libraryPreview } from "./utils/planStitcher";
 import { dominantEmotion } from "./utils/emotionFace";
@@ -35,7 +37,7 @@ import type {
 } from "./types/contract";
 import "./studio.css";
 
-type Page = "studio" | "film" | "library" | "capture";
+type Page = "studio" | "film" | "conversation" | "library" | "capture";
 type Capabilities = {
   cv_corrected_count?: number;
   dictasign?: {
@@ -60,6 +62,8 @@ type Capabilities = {
   transcription?: boolean;
   avatar?: "ReadyEva" | "Noa" | "MetaHuman" | null;
   lsf_engines?: { c0: boolean; b2: boolean };
+  brain?: { model: string; running: boolean; available: boolean };
+  sign_recognition?: boolean;
   nlp: string;
   library_count: number;
 };
@@ -594,6 +598,13 @@ export default function App() {
             <span>Film</span>
           </button>
           <button
+            className={page === "conversation" ? "nav-item active" : "nav-item"}
+            onClick={() => setPage("conversation")}
+          >
+            <MessagesSquare />
+            <span>Conversation</span>
+          </button>
+          <button
             className={page === "library" ? "nav-item active" : "nav-item"}
             onClick={() => setPage("library")}
           >
@@ -623,6 +634,8 @@ export default function App() {
                 ? "Nouveau récit"
                 : page === "film"
                   ? "Film signé"
+                  : page === "conversation"
+                  ? "Conversation signée"
                   : page === "capture"
                   ? "Nouvelle capture"
                   : "Mes mouvements"}
@@ -646,6 +659,10 @@ export default function App() {
                   <>
                     Le film, en <em>signes.</em>
                   </>
+                ) : page === "conversation" ? (
+                  <>
+                    Signez, il vous <em>répond.</em>
+                  </>
                 ) : page === "capture" ? (
                   <>
                     Du geste à la <em>matière.</em>
@@ -661,6 +678,8 @@ export default function App() {
                   ? "Composez un récit visuel, enrichissez-le de votre voix et explorez le mouvement."
                   : page === "film"
                     ? "Un film et ses sous-titres français : l’avatar signe chaque réplique, en synchronie, à côté de l’image."
+                    : page === "conversation"
+                    ? "Une vraie conversation en langue des signes : vous signez, l’avatar comprend et vous répond en LSF."
                     : page === "capture"
                     ? "Transformez vos vidéos en mouvements réutilisables, du corps jusqu’aux doigts."
                     : "Retrouvez vos captures et les concepts qui leur donnent un sens."}
@@ -677,6 +696,9 @@ export default function App() {
           )}
           {page === "film" ? (
             <FilmMode avatarCredit={avatarCredit} engines={caps?.lsf_engines} transcription={caps?.transcription} emotion={caps?.emotion} />
+          ) : page === "conversation" ? (
+            <ConversationMode avatarCredit={avatarCredit} transcription={caps?.transcription} signRecognition={caps?.sign_recognition}
+              brainReady={caps?.brain?.available} />
           ) : (
           <div className="studio-layout">
             <section className="editor-column">

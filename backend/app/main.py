@@ -105,7 +105,10 @@ def health(): return {'status': 'ok'}
 def capabilities():
     name, path = local_avatar()
     engines={k:v['available'] for k,v in lsf_engines.status().items()}
-    return {**capture_library.capabilities(), 'nlp': mode(), 'avatar': name if path else None, 'lsf_engines': engines}
+    from .services import sign_recognition
+    from .services.brain import brain
+    return {**capture_library.capabilities(), 'nlp': mode(), 'avatar': name if path else None, 'lsf_engines': engines,
+            'brain': brain.status(), 'sign_recognition': sign_recognition.available()}
 
 @app.get('/library')
 def captured_library():
@@ -671,6 +674,134 @@ def lsf_generate(body: LsfGenerateRequest):
     meta['gloss_analysis'] = analysis
     motion['generation'] = {**meta, 'translation_validated': False, 'linguistic_review': 'pending'}
     return motion
+
+
+# --------------------------------------------------------------------------- brain (one local LLM for every mode)
+class BrainMessage(BaseModel):
+    role: Literal['user', 'assistant']
+    text: str = Field(min_length=1, max_length=2000)
+
+
+class BrainRequest(BaseModel):
+    messages: list[BrainMessage] = Field(min_length=1, max_length=40)
+    image_b64: str | None = Field(default=None, max_length=8_000_000)
+    mode: Literal['conversation', 'companion'] = 'conversation'
+
+
+@app.post('/brain/respond')
+async def brain_respond(body: BrainRequest):
+    """Conversation turns (+ optional camera image) -> a short French reply that signs well (services/brain.py)."""
+    from starlette.concurrency import run_in_threadpool
+    from .services.brain import BrainUnavailable, brain
+    try:
+        return await run_in_threadpool(brain.respond, [m.model_dump() for m in body.messages], body.image_b64, body.mode)
+    except BrainUnavailable as exc:
+        raise HTTPException(503, str(exc))
+    except ValueError as exc:
+        raise HTTPException(422, str(exc))
+
+
+@app.post('/brain/warmup')
+async def brain_warmup():
+    """Load the LLM in VRAM before the first question (the conversation page calls this when it opens)."""
+    from starlette.concurrency import run_in_threadpool
+    from .services.brain import BrainUnavailable, brain
+    try:
+        return await run_in_threadpool(brain.warm)
+    except BrainUnavailable as exc:
+        raise HTTPException(503, str(exc))
+
+
+# --------------------------------------------------------------------------- sign recognition (webcam -> glosses)
+class SignRecognizeRequest(BaseModel):
+    # Either `frames` (T x 157 x 3, null = not seen) or `data_b64` (float32 little-endian, NaN = not seen, T*157*3 values).
+    frames: list[list[list[float | None]]] | None = Field(default=None, max_length=1500)
+    data_b64: str | None = Field(default=None, max_length=12_000_000)
+    n_frames: int | None = Field(default=None, ge=1, le=1500)
+    t_ms: list[float] | None = Field(default=None, max_length=1500)
+    fps: float = Field(default=25.0, gt=1, le=120)
+    top_k: int = Field(default=5, ge=1, le=20)
+    # Restrict the candidates: 'conversation' (everyday words), 'all' (the whole lexicon) or an explicit word list.
+    vocabulary: Literal['conversation', 'all'] | list[str] = 'all'
+
+
+def _take_points(body: SignRecognizeRequest):
+    import base64
+    from .services import sign_recognition as sr
+    if body.data_b64:
+        try:
+            raw = np.frombuffer(base64.b64decode(body.data_b64), dtype='<f4')
+        except Exception:
+            raise HTTPException(422, 'Données de points illisibles.')
+        if raw.size % (sr.TOTAL_POINTS * 3):
+            raise HTTPException(422, f'Le nombre de valeurs doit être un multiple de {sr.TOTAL_POINTS * 3}.')
+        pts = raw.reshape(-1, sr.TOTAL_POINTS, 3).astype('float32')
+    elif body.frames:
+        try:
+            pts = np.array([[[np.nan if v is None else v for v in p] for p in f] for f in body.frames], dtype='float32')
+        except ValueError:
+            raise HTTPException(422, 'Chaque image doit contenir 157 points (x, y, z).')
+    else:
+        raise HTTPException(422, 'Aucun point reçu.')
+    if pts.ndim != 3 or pts.shape[1:] != (sr.TOTAL_POINTS, 3):
+        raise HTTPException(422, f'Points attendus : (images, {sr.TOTAL_POINTS}, 3).')
+    if len(pts) < 6:
+        raise HTTPException(422, 'Prise trop courte : signez au moins une demi-seconde.')
+    if len(pts) > 1500:
+        raise HTTPException(413, 'Prise limitée à 1 500 images (une minute).')
+    t_ms = np.array(body.t_ms, dtype='float64') if body.t_ms and len(body.t_ms) == len(pts) else None
+    return pts, t_ms
+
+
+@app.post('/sign/recognize')
+async def sign_recognize(body: SignRecognizeRequest):
+    """MediaPipe landmarks of a webcam take (corpus layout, 157 points) -> recognised signs: per segment the top-k
+    lexicon words with scores, the best glosses, a French text guess and a confidence (services/sign_recognition.py)."""
+    from starlette.concurrency import run_in_threadpool
+    from .services import sign_recognition as sr
+    pts, t_ms = _take_points(body)
+    vocab = sr.CONVERSATION if body.vocabulary == 'conversation' else None if body.vocabulary == 'all' else [sr.key_of(w) for w in body.vocabulary]
+    try:
+        return await run_in_threadpool(sr.recognizer.recognize, pts, t_ms, body.fps, body.top_k, vocab)
+    except sr.RecognitionUnavailable as exc:
+        raise HTTPException(503, str(exc))
+    except ValueError as exc:
+        raise HTTPException(422, str(exc))
+
+
+@app.get('/sign/vocabulary')
+def sign_vocabulary():
+    """Size of the sign lexicon, the everyday conversation words, and the person's own recorded signs."""
+    from .services import sign_recognition as sr
+    try:
+        return sr.vocabulary_info()
+    except sr.RecognitionUnavailable as exc:
+        raise HTTPException(503, str(exc))
+
+
+class SignLearnRequest(SignRecognizeRequest):
+    gloss: str = Field(min_length=1, max_length=40)
+
+
+@app.post('/sign/templates')
+async def sign_learn(body: SignLearnRequest):
+    """Record the person's own version of a sign (one take, one sign): stored privately on this server and used by
+    the recognition right away (same-signer matching is much more reliable than matching other signers)."""
+    from starlette.concurrency import run_in_threadpool
+    from .services import sign_recognition as sr
+    pts, t_ms = _take_points(body)
+    try:
+        return await run_in_threadpool(sr.recognizer.learn, body.gloss, pts, t_ms, body.fps)
+    except sr.RecognitionUnavailable as exc:
+        raise HTTPException(503, str(exc))
+    except ValueError as exc:
+        raise HTTPException(422, str(exc))
+
+
+@app.delete('/sign/templates/{gloss}')
+def sign_forget(gloss: str):
+    from .services import sign_recognition as sr
+    return {'removed': sr.recognizer.forget(gloss)}
 
 
 @app.get('/captures/{job_id}/landmarks')

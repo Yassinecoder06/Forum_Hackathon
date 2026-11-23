@@ -642,3 +642,75 @@ assert.equal(JSON.stringify(libraryClip),libraryRaw,"Preview windows never mutat
   assert.equal(wav.getUint32(40, true), 32000, "1 s of 16-bit mono at 16 kHz");
   console.log("Live mode checks passed: pause-cut phrases with pre-roll, clicks ignored, 8 s cut, 16 kHz WAV.");
 }
+
+// Conversation mode: webcam landmarks -> corpus layout, take encoding, hand-pause auto-stop, confirmation text.
+{
+  const { FACE_INDEX, N_POINTS, PARTS, assembleFrame, assignHands, connectionVertices, encodeTake, HandPause } = await import("../src/utils/signCapture");
+  const { choiceText, historyMessages } = await import("../src/utils/conversation");
+  const { FaceLandmarker } = await import("@mediapipe/tasks-vision");
+  // the face lists are the corpus extraction's (sorted vertices of MediaPipe's connection sets)
+  assert.deepEqual(FACE_INDEX.lips, connectionVertices(FaceLandmarker.FACE_LANDMARKS_LIPS));
+  assert.deepEqual(FACE_INDEX.left_eyebrow, connectionVertices(FaceLandmarker.FACE_LANDMARKS_LEFT_EYEBROW));
+  assert.deepEqual(FACE_INDEX.right_eyebrow, connectionVertices(FaceLandmarker.FACE_LANDMARKS_RIGHT_EYEBROW));
+  assert.deepEqual(FACE_INDEX.left_eye, connectionVertices(FaceLandmarker.FACE_LANDMARKS_LEFT_EYE));
+  assert.deepEqual(FACE_INDEX.right_eye, connectionVertices(FaceLandmarker.FACE_LANDMARKS_RIGHT_EYE));
+  assert.equal(23 + 21 + 21 + Object.values(FACE_INDEX).reduce((n, l) => n + l.length, 0), N_POINTS);
+  assert.equal(PARTS.right_eye[1], 157);
+
+  const pt = (x: number, y: number) => ({ x, y, z: 0, visibility: 1 });
+  const pose = Array.from({ length: 33 }, (_, i) => pt(0.5 + i * 0.001, 0.5));
+  pose[11] = pt(0.62, 0.45); pose[12] = pt(0.38, 0.45);       // subject's left shoulder on the image right (not mirrored)
+  pose[15] = pt(0.7, 0.6); pose[16] = pt(0.3, 0.3);
+  const hand = (x: number, y: number) => Array.from({ length: 21 }, (_, i) => pt(x + i * 0.002, y - i * 0.002));
+  const { left, right } = assignHands(pose, [hand(0.31, 0.31), hand(0.69, 0.61)]);
+  assert.equal(left?.[0].x, 0.69, "the hand at pose wrist 15 is the left hand");
+  assert.equal(right?.[0].x, 0.31);
+  assert.equal(assignHands(pose, [hand(0.95, 0.05)]).right, null, "a hand far from both wrists is not assigned");
+  const face = Array.from({ length: 478 }, (_, i) => pt(i / 1000, 0.2));
+  const f = assembleFrame(pose, left, right, face, 640, 480);
+  assert.equal(f.length, 157 * 3);
+  assert(Math.abs(f[11 * 3 + 1] - 0.45 * 0.75) < 1e-6, "y in units of the width (true aspect ratio)");
+  assert(Math.abs(f[23 * 3] - 0.69) < 1e-6 && Math.abs(f[44 * 3] - 0.31) < 1e-6);
+  assert(Math.abs(f[65 * 3] - 0 / 1000) < 1e-6 && Math.abs(f[66 * 3] - 13 / 1000) < 1e-6, "lips start with face points 0, 13");
+  assert(Math.abs(f[141 * 3] - 7 / 1000) < 1e-6, "right eye starts at face point 7");
+  const noHands = assembleFrame(pose, null, null, null, 640, 480);
+  assert(Number.isNaN(noHands[23 * 3]) && Number.isNaN(noHands[65 * 3]) && Number.isFinite(noHands[0]));
+
+  const b64 = encodeTake([f, noHands]);
+  const back = new Float32Array(Uint8Array.from(atob(b64), (c) => c.charCodeAt(0)).buffer);
+  assert.equal(back.length, 2 * 157 * 3);
+  assert.equal(back[23 * 3], f[23 * 3]);
+  assert(Number.isNaN(back[157 * 3 + 23 * 3]));
+
+  // auto-stop: hands raised for a while, then lowered for the pause -> stop; lowered from the start -> never
+  const frame = (wristY: number) => {
+    const p = pose.map((q) => ({ ...q }));
+    p[15] = pt(0.7, wristY); p[16] = pt(0.3, wristY);
+    return assembleFrame(p, hand(0.7, wristY), hand(0.3, wristY), null, 640, 480);
+  };
+  const auto = new HandPause();
+  let stopped = -1;
+  for (let i = 0; i < 120 && stopped < 0; i++) {
+    const t = i * 40;
+    if (auto.push(frame(t < 1500 ? 0.5 : 0.95), t)) stopped = t;
+  }
+  assert(stopped >= 2800 && stopped <= 3000, `stops about 1.4 s after the hands are lowered (${stopped})`);
+  const idle = new HandPause();
+  for (let i = 0; i < 120; i++) assert(!idle.push(frame(0.95), i * 40), "no signing yet: the take keeps waiting");
+
+  const result = {
+    glosses: [{ gloss: "bonjour", label: "bonjour", score: 0.6 }], text_guess: "Bonjour", confidence: 0.6, vocabulary: 942, ms: 80,
+    segments: [
+      { start_ms: 0, end_ms: 800, candidates: [{ gloss: "bonjour", label: "bonjour", score: 0.6 }, { gloss: "salut", label: "salut", score: 0.2 }] },
+      { start_ms: 900, end_ms: 1600, candidates: [{ gloss: "ecole", label: "école", score: 0.4 }] },
+    ],
+  };
+  assert.equal(choiceText(result, [0, 0]), "Bonjour école");
+  assert.equal(choiceText(result, [1, 0]), "Salut école");
+  const hist = historyMessages([
+    { id: 1, role: "user", text: "Bonjour" }, { id: 2, role: "assistant", text: "Erreur", failed: true },
+    { id: 3, role: "assistant", text: "", pending: true }, { id: 4, role: "user", text: " Ça va ? " },
+  ]);
+  assert.deepEqual(hist, [{ role: "user", text: "Bonjour" }, { role: "user", text: "Ça va ?" }]);
+  console.log("Conversation checks passed: 157-point layout and face lists, hand sides, take encoding, auto-stop, confirmation text.");
+}
