@@ -45,3 +45,4 @@ site/media/
 
 # Demo media cut from the private dataset (never commit)
 frontend/public/demo-media/
+frontend/public/mediapipe/

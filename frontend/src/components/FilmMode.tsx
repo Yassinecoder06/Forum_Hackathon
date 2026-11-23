@@ -36,7 +36,10 @@ export function FilmMode({
   engines,
   transcription,
   emotion,
+  only,
 }: {
+  /** One entry point of the product: the Film page (subtitled film) or the Direct page (microphone); no tab bar then. */
+  only?: "film" | "live";
   avatarCredit?: string;
   engines?: Partial<Record<LsfEngine, boolean>>;
   transcription?: boolean;
@@ -55,7 +58,7 @@ export function FilmMode({
     [videoMs, setVideoMs] = useState(0),
     [error, setError] = useState(""),
     [exporting, setExporting] = useState(false),
-    [mode, setMode] = useState<"film" | "live">("film"),
+    [mode, setMode] = useState<"film" | "live">(only ?? "film"),
     [videoFile, setVideoFile] = useState<File | null>(null),
     [useEmotion, setUseEmotion] = useState(false),
     [phase, setPhase] = useState(""),
@@ -263,16 +266,18 @@ export function FilmMode({
   const engineReady = engines?.[engine] !== false;
   return (
     <div className="film-mode">
-      <div className="film-tabs" role="tablist">
+      {!only && <div className="film-tabs" role="tablist">
         <button role="tab" aria-selected={mode === "film"} className={mode === "film" ? "active" : ""} onClick={() => setMode("film")}>
           <Clapperboard size={16} /> Film sous-titré
         </button>
         <button role="tab" aria-selected={mode === "live"} className={mode === "live" ? "active" : ""} onClick={() => setMode("live")}>
           <Mic size={16} /> Direct (micro)
         </button>
-      </div>
+      </div>}
       <p className="film-disclaimer">
-        Chaque sous-titre est traduit en LSF et signé par l’avatar, en synchronie avec l’image.
+        {mode === "live"
+          ? "Parlez : chaque phrase, coupée à la pause, est transcrite, traduite en LSF et signée par l’avatar."
+          : "Chaque sous-titre est traduit en LSF et signé par l’avatar, en synchronie avec l’image."}
       </p>
       {error && <p role="alert" className="research-error">{error}</p>}
       {mode === "film" ? (

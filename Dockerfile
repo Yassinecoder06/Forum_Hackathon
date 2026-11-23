@@ -5,7 +5,7 @@ WORKDIR /build
 COPY frontend/package*.json ./
 RUN npm ci
 COPY frontend/ ./
-RUN npm run build
+RUN npm run setup:mediapipe && npm run build
 
 FROM node:22-bookworm-slim AS webcam-build
 WORKDIR /build

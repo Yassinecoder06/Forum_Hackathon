@@ -1,3 +1,13 @@
+/* Local fonts (DM Sans, Playfair Display; SIL Open Font Licence): nothing is loaded from the internet. */
+@font-face { font-family: "DM Sans"; font-style: normal; font-weight: 400; font-display: swap; src: url("fonts/dmsans-400.ttf") format("truetype"); }
+@font-face { font-family: "DM Sans"; font-style: normal; font-weight: 500; font-display: swap; src: url("fonts/dmsans-500.ttf") format("truetype"); }
+@font-face { font-family: "DM Sans"; font-style: normal; font-weight: 600; font-display: swap; src: url("fonts/dmsans-600.ttf") format("truetype"); }
+@font-face { font-family: "DM Sans"; font-style: normal; font-weight: 700; font-display: swap; src: url("fonts/dmsans-700.ttf") format("truetype"); }
+@font-face { font-family: "Playfair Display"; font-style: normal; font-weight: 500; font-display: swap; src: url("fonts/playfair-500.ttf") format("truetype"); }
+@font-face { font-family: "Playfair Display"; font-style: normal; font-weight: 600; font-display: swap; src: url("fonts/playfair-600.ttf") format("truetype"); }
+@font-face { font-family: "Playfair Display"; font-style: italic; font-weight: 500; font-display: swap; src: url("fonts/playfair-italic-500.ttf") format("truetype"); }
+@font-face { font-family: "Playfair Display"; font-style: italic; font-weight: 600; font-display: swap; src: url("fonts/playfair-italic-600.ttf") format("truetype"); }
+
 :root {
   --cream: #fbf6f0;
   --paper: #ffffff;
@@ -148,3 +158,21 @@ dialog .close { float: right; border: 0; background: var(--sand); width: 34px; h
 
 .preview-error { margin:0; padding:12px 18px; color:#fff0d6; background:#422516; font:14px/1.4 system-ui; }
 video { -webkit-tap-highlight-color:transparent; }
+
+/* Five entry points, one chain */
+.entries { list-style: none; padding: 0; margin: 0 auto 36px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; }
+.entry { display: flex; flex-direction: column; gap: 10px; height: 100%; padding: 22px 20px; border-radius: var(--radius); background: var(--paper);
+  border: 1px solid var(--line); text-decoration: none; color: var(--ink); transition: transform .15s, box-shadow .15s, border-color .15s; }
+.entry:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: var(--brass); }
+.entry .num { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--sand); color: var(--terra-dark); font-weight: 700; font-size: 14px; }
+.entry h3 { font-size: 22px; }
+.entry p { margin: 0; color: var(--muted); font-size: 14.5px; line-height: 1.5; }
+.chain { display: grid; grid-template-columns: 1fr auto 1.35fr auto 1fr; gap: 14px; align-items: stretch; }
+.chain-col { display: flex; flex-direction: column; gap: 8px; padding: 18px; border-radius: var(--radius); border: 1px solid var(--line); background: var(--paper); }
+.chain-col.core { background: var(--espresso); color: #fff; border-color: var(--espresso); }
+.chain-col h4 { margin: 0 0 4px; font: 700 12px "DM Sans", sans-serif; letter-spacing: .12em; text-transform: uppercase; color: var(--terra); }
+.chain-col.core h4 { color: var(--brass); }
+.chain-col span { font-size: 14.5px; padding: 6px 10px; border-radius: 10px; background: var(--cream); color: var(--ink); }
+.chain-col.core span { background: rgba(255, 255, 255, .09); color: #fff; }
+.chain-arrow { align-self: center; font-size: 26px; color: var(--brass); }
+@media (max-width: 1000px) { .entries { grid-template-columns: repeat(2, minmax(0, 1fr)); } .chain { grid-template-columns: 1fr; } .chain-arrow { transform: rotate(90deg); justify-self: center; } }

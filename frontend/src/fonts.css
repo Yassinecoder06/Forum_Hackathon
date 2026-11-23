@@ -1,0 +1,9 @@
+/* Local fonts (DM Sans, Playfair Display; SIL Open Font Licence): nothing is loaded from the internet. */
+@font-face { font-family: "DM Sans"; font-style: normal; font-weight: 400; font-display: swap; src: url("./assets/fonts/dmsans-400.ttf") format("truetype"); }
+@font-face { font-family: "DM Sans"; font-style: normal; font-weight: 500; font-display: swap; src: url("./assets/fonts/dmsans-500.ttf") format("truetype"); }
+@font-face { font-family: "DM Sans"; font-style: normal; font-weight: 600; font-display: swap; src: url("./assets/fonts/dmsans-600.ttf") format("truetype"); }
+@font-face { font-family: "DM Sans"; font-style: normal; font-weight: 700; font-display: swap; src: url("./assets/fonts/dmsans-700.ttf") format("truetype"); }
+@font-face { font-family: "Playfair Display"; font-style: normal; font-weight: 500; font-display: swap; src: url("./assets/fonts/playfair-500.ttf") format("truetype"); }
+@font-face { font-family: "Playfair Display"; font-style: normal; font-weight: 600; font-display: swap; src: url("./assets/fonts/playfair-600.ttf") format("truetype"); }
+@font-face { font-family: "Playfair Display"; font-style: italic; font-weight: 500; font-display: swap; src: url("./assets/fonts/playfair-italic-500.ttf") format("truetype"); }
+@font-face { font-family: "Playfair Display"; font-style: italic; font-weight: 600; font-display: swap; src: url("./assets/fonts/playfair-italic-600.ttf") format("truetype"); }

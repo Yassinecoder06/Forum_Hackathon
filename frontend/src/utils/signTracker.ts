@@ -1,18 +1,20 @@
 /**
  * MediaPipe on the webcam, in the browser (camera frames never leave the page): pose + both hands + face, the same
  * three Google landmarkers as the webcam capture module (webcam/src/detector.js, @mediapipe/tasks-vision 0.10.32).
- * Each video frame -> the 157-point corpus layout (utils/signCapture.ts). The models load from the local webcam
- * module when it is set up (/webcam/models, `npm --prefix webcam run setup`), else from Google's pinned model URLs.
+ * Each video frame -> the 157-point corpus layout (utils/signCapture.ts). The models and the WebAssembly
+ * runtime are served by this app (public/mediapipe, `npm run setup:mediapipe`): nothing is fetched from the internet.
  */
 import type { FaceLandmarker, HandLandmarker, PoseLandmarker } from "@mediapipe/tasks-vision";
 import { assembleFrame, assignHands, type Landmark } from "./signCapture";
 
 export const MEDIAPIPE_VERSION = "0.10.32";
-const WASM = `https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MEDIAPIPE_VERSION}/wasm`;
+// Everything MediaPipe needs is served by this app (frontend/public/mediapipe, filled by `npm run setup:mediapipe`).
+const BASE = import.meta.env.BASE_URL;
+const WASM = `${BASE}mediapipe/wasm`;
 const MODELS = {
-  pose: "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task",
-  hands: "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task",
-  face: "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task",
+  pose: `${BASE}mediapipe/models/pose_landmarker_lite.task`,
+  hands: `${BASE}mediapipe/models/hand_landmarker.task`,
+  face: `${BASE}mediapipe/models/face_landmarker.task`,
 };
 
 export type TrackedFrame = {
@@ -23,18 +25,6 @@ export type TrackedFrame = {
   right: Landmark[] | null;
   ms: number;
 };
-
-async function modelUrl(name: keyof typeof MODELS) {
-  const local = `/webcam/models/${name}.task`;
-  try {
-    const r = await fetch(local, { method: "HEAD", signal: AbortSignal.timeout(1500) });
-    const type = r.headers.get("content-type") ?? "";
-    if (r.ok && !type.includes("text/html")) return local;
-  } catch {
-    /* local webcam module not running: use the pinned model */
-  }
-  return MODELS[name];
-}
 
 export class SignTracker {
   private pose?: PoseLandmarker;
@@ -48,7 +38,7 @@ export class SignTracker {
   async init() {
     const vision = await import("@mediapipe/tasks-vision");
     const files = await vision.FilesetResolver.forVisionTasks(WASM);
-    const [pose, hands, face] = await Promise.all([modelUrl("pose"), modelUrl("hands"), modelUrl("face")]);
+    const { pose, hands, face } = MODELS;
     const make = async (delegate: "GPU" | "CPU") => {
       this.pose = await vision.PoseLandmarker.createFromOptions(files, { baseOptions: { modelAssetPath: pose, delegate },
         runningMode: "VIDEO", numPoses: 1, minPoseDetectionConfidence: 0.5, minPosePresenceConfidence: 0.5, minTrackingConfidence: 0.5 });

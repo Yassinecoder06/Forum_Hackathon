@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
+    "setup:mediapipe": "node scripts/setup-mediapipe.mjs",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",

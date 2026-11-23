@@ -12,6 +12,7 @@ import {
   Library,
   Loader2,
   MessagesSquare,
+  Mic,
   Pause,
   Play,
   Plus,
@@ -39,7 +40,14 @@ import type {
 } from "./types/contract";
 import "./studio.css";
 
-type Page = "studio" | "film" | "conversation" | "compagnon" | "library" | "capture";
+type Page = "studio" | "direct" | "film" | "conversation" | "compagnon" | "library" | "capture";
+// The five entry points have their own address (#studio, #direct, #film, #conversation, #compagnon), so the showcase
+// site and a phone can open one directly.
+const PAGE_HASHES: Page[] = ["studio", "direct", "film", "conversation", "compagnon"];
+const pageFromHash = (): Page => {
+  const h = window.location.hash.replace("#", "") as Page;
+  return PAGE_HASHES.includes(h) ? h : "studio";
+};
 type Capabilities = {
   cv_corrected_count?: number;
   dictasign?: {
@@ -118,8 +126,17 @@ const clock = (ms: number) =>
     .padStart(2, "0")}:${((ms % 60000) / 1000).toFixed(1).padStart(4, "0")}`;
 
 export default function App() {
-  // The AR companion has its own address (#compagnon), so a phone can open it directly.
-  const [page, setPage] = useState<Page>(() => (window.location.hash === "#compagnon" ? "compagnon" : "studio"));
+  const [page, setPageState] = useState<Page>(pageFromHash);
+  const setPage = useCallback((next: Page) => {
+    if (PAGE_HASHES.includes(next)) window.history.replaceState(null, "", `#${next}`);
+    else window.history.replaceState(null, "", window.location.pathname + window.location.search);
+    setPageState(next);
+  }, []);
+  useEffect(() => {
+    const onHash = () => setPageState(pageFromHash());
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, []);
   const [connected, setConnected] = useState(false);
   const [caps, setCaps] = useState<Capabilities | null>(null);
   const [glossary, setGlossary] = useState<GlossEntry[]>([]);
@@ -576,12 +593,10 @@ export default function App() {
   }
 
   function openCompanion() {
-    window.history.replaceState(null, "", "#compagnon");
     setPage("compagnon");
   }
 
   function closeCompanion() {
-    window.history.replaceState(null, "", window.location.pathname + window.location.search);
     setPage("studio");
   }
 
@@ -608,6 +623,13 @@ export default function App() {
           >
             <Waves />
             <span>Studio</span>
+          </button>
+          <button
+            className={page === "direct" ? "nav-item active" : "nav-item"}
+            onClick={() => setPage("direct")}
+          >
+            <Mic />
+            <span>Direct</span>
           </button>
           <button
             className={page === "film" ? "nav-item active" : "nav-item"}
@@ -658,7 +680,9 @@ export default function App() {
             <strong>
               {page === "studio"
                 ? "Nouveau récit"
-                : page === "film"
+                : page === "direct"
+                  ? "Voix en direct"
+                  : page === "film"
                   ? "Film signé"
                   : page === "conversation"
                   ? "Conversation signée"
@@ -681,6 +705,10 @@ export default function App() {
                   <>
                     Vos mots prennent <em>vie.</em>
                   </>
+                ) : page === "direct" ? (
+                  <>
+                    Parlez, l’avatar <em>signe.</em>
+                  </>
                 ) : page === "film" ? (
                   <>
                     Le film, en <em>signes.</em>
@@ -702,6 +730,8 @@ export default function App() {
               <p>
                 {page === "studio"
                   ? "Composez un récit visuel, enrichissez-le de votre voix et explorez le mouvement."
+                  : page === "direct"
+                    ? "Votre voix, transcrite par Whisper puis signée en LSF par l’avatar, phrase après phrase."
                   : page === "film"
                     ? "Un film et ses sous-titres français : l’avatar signe chaque réplique, en synchronie, à côté de l’image."
                     : page === "conversation"
@@ -720,8 +750,8 @@ export default function App() {
               </button>
             </div>
           )}
-          {page === "film" ? (
-            <FilmMode avatarCredit={avatarCredit} engines={caps?.lsf_engines} transcription={caps?.transcription} emotion={caps?.emotion} />
+          {page === "film" || page === "direct" ? (
+            <FilmMode key={page} only={page === "direct" ? "live" : "film"} avatarCredit={avatarCredit} engines={caps?.lsf_engines} transcription={caps?.transcription} emotion={caps?.emotion} />
           ) : page === "conversation" ? (
             <ConversationMode avatarCredit={avatarCredit} transcription={caps?.transcription} signRecognition={caps?.sign_recognition}
               brainReady={caps?.brain?.available} />
