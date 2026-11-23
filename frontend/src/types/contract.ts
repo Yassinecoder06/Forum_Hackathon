@@ -168,6 +168,24 @@ export interface GlossClause {
   glosses: string[];
   markers: NonManualType[];
   rules: string[];
+  /** [film-speakers] quoted / reported speech: the clause is signed in the role of this referent. */
+  role_shift?: { referent: string; label: string; kind: "quote" | "reported"; locus?: string | null } | null;
+  /** [film-speakers] referent id of the voice of the clause (speaker of the cue or of the quote). */
+  voice?: string | null;
+  /** [film-speakers] introductions, mentions, pronoun indexes and role shifts, for a later pointing layer. */
+  events?: { type: "introduce" | "mention" | "index" | "role_shift"; referent: string | null; token?: string; gloss_index?: number | null }[];
+}
+/** [film-speakers] One entry of the scene's referent table (lsf_order). Locus in the viewer's frame. */
+export interface Referent {
+  id: string;
+  label: string;
+  kind: "person" | "group" | "place" | "thing" | string;
+  gender: "m" | "f" | null;
+  number: "sg" | "pl";
+  locus: "L" | "C" | "R" | null;
+  speaker: boolean;
+  mentions: number;
+  last_mention: number;
 }
 export interface GlossAnalysis {
   clauses: GlossClause[];
@@ -175,6 +193,7 @@ export interface GlossAnalysis {
   gloss_text: string;
   method: string;
   validated: false;
+  referents?: Referent[];
 }
 
 export interface MotionFile {
@@ -184,6 +203,8 @@ export interface MotionFile {
   face_calibration?: { brow_left: number; brow_right: number; [channel: string]: number };
   /** Grammatical non-manual markers baked into the face channels (nm_*) of each frame. */
   nonmanual?: { start_ms: number; end_ms: number; type: NonManualType }[];
+  /** [film-speakers] Clauses signed in the role of a quoted / reported speaker (times inside this motion). */
+  role_shift?: { start_ms: number; end_ms: number; referent: string; label: string; locus?: string | null; kind: string }[];
   synthetic?: boolean;
   attribution?: MotionAttribution;
   attributions?: MotionAttribution[];

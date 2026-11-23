@@ -6,10 +6,24 @@ import { AvatarCanvas } from "./AvatarPlayer/AvatarCanvas";
 import { activeAt, parseSubtitles, placeMotions, type Cue } from "../utils/subtitles";
 import { EMOTION_LABEL, MARKER_LABEL, generateBody, voiceScores, type LsfEngine } from "../utils/lsfRequest";
 import { PhraseDetector, encodeWav } from "../utils/phraseDetector";
+import { castOf, defaultCast, type CastEntry } from "../utils/speakers";
+import { FRONTAL, filmSegments, locusSide, roleShiftAt, roleShiftSteps } from "../utils/roleShift";
+import { CastSheet, SpeakerChip, StageDots } from "./FilmSpeakers";
+import type { Referent } from "../types/contract";
 
 type Item = { cue: Cue; motion?: MotionFile; error?: string; emotion?: Record<string, number> | null };
 const clock = (ms: number) => `${Math.floor(ms / 60000).toString().padStart(2, "0")}:${((ms % 60000) / 1000).toFixed(1).padStart(4, "0")}`;
 const WATERMARK = "SignaCulture · LSF";
+/** A silence this long between two subtitles starts a new scene (fresh referent table). */
+const SCENE_GAP_MS = 8000;
+const castKey = (name: string) => `signaculture.cast.${name}`;
+function savedCast(name: string): CastEntry[] {
+  try {
+    return JSON.parse(localStorage.getItem(castKey(name)) || "[]");
+  } catch {
+    return [];
+  }
+}
 
 /**
  * Film mode (the pre-processed product of the project notes): a film + its French subtitles -> one LSF motion
@@ -44,7 +58,8 @@ export function FilmMode({
     [mode, setMode] = useState<"film" | "live">("film"),
     [videoFile, setVideoFile] = useState<File | null>(null),
     [useEmotion, setUseEmotion] = useState(false),
-    [phase, setPhase] = useState("");
+    [phase, setPhase] = useState(""),
+    [cast, setCast] = useState<CastEntry[]>([]);
   const video = useRef<HTMLVideoElement>(null),
     avatarCanvas = useRef<HTMLCanvasElement | null>(null),
     cancel = useRef(false);
@@ -68,6 +83,28 @@ export function FilmMode({
   const activeMotion = active ? items[active.index].motion ?? null : null;
   const cueIndex = items.findIndex((i) => i.cue.start_ms <= videoMs && videoMs < i.cue.end_ms);
   const maxDelay = Math.max(0, ...placed.filter((_, i) => ready[i]).map((p) => p.delay_ms));
+  // Role shift: while a speaker's line is signed, the avatar turns toward that speaker's place (cast sheet);
+  // quoted / reported speech inside a line turns toward the quoted person.
+  const shiftSteps = useMemo(() => {
+    const sides = items.map((i) => (i.motion ? locusSide(castOf(cast, i.cue.speaker)?.locus) : null));
+    const inner = items.map((i) => i.motion?.role_shift?.map((r) => ({
+      start_ms: r.start_ms, end_ms: r.end_ms, side: locusSide(castOf(cast, r.label)?.locus ?? r.locus),
+    })));
+    return roleShiftSteps(filmSegments(placed, sides, inner));
+  }, [items, placed, cast]);
+  const roleShift = shiftSteps.length ? roleShiftAt(shiftSteps, videoMs) : FRONTAL;
+  const signing = active && items[active.index]?.motion && videoMs >= placed[active.index].start_ms - 200 ? items[active.index] : undefined;
+  const signer = castOf(cast, signing?.cue.speaker);
+  const firstLine = useMemo(() => new Set(cast.map((c) => items.findIndex((i) => i.cue.speaker === c.id))), [cast, items]);
+  const lines = useMemo(() => items.reduce<Record<string, number>>((n, i) => (i.cue.speaker ? { ...n, [i.cue.speaker]: (n[i.cue.speaker] ?? 0) + 1 } : n), {}), [items]);
+  function editCast(next: CastEntry[]) {
+    setCast(next);
+    try {
+      if (subsName) localStorage.setItem(castKey(subsName), JSON.stringify(next));
+    } catch {
+      /* the cast sheet still works for this session */
+    }
+  }
 
   async function loadSubtitles(file: File) {
     setError("");
@@ -78,6 +115,7 @@ export function FilmMode({
     }
     setSubsName(file.name);
     setItems(cues.map((cue) => ({ cue })));
+    setCast(defaultCast(cues, savedCast(file.name)));
     setDone(0);
     setPrepared(0);
   }
@@ -93,6 +131,7 @@ export function FilmMode({
       if (!cues.length) throw new Error("La transcription n’a trouvé aucune phrase.");
       setSubsName("Transcription automatique");
       setItems(cues.map((cue) => ({ cue })));
+      setCast([]);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Transcription impossible.");
     } finally {
@@ -122,15 +161,28 @@ export function FilmMode({
       }
       setPhase("");
     }
+    // One scene = subtitles without a long silence: they share the referent table (who "il" / "elle" is, loci).
+    let scene: Referent[] = [];
+    let recent: CastEntry[] = [];                     // speakers of the scene, most recent first
     for (let k = 0; k < items.length; k++) {
       if (cancel.current) break;
       const cue = items[k].cue;
+      if (k && cue.start_ms - items[k - 1].cue.end_ms > SCENE_GAP_MS) [scene, recent] = [[], []];
+      const who = castOf(cast, cue.speaker);
+      const other = who && recent.find((c) => c.id !== who.id);   // "tu" = the last other speaker
+      const voice = who ? { speaker: { label: who.label, ...(who.locus !== "N" ? { locus: who.locus } : {}) } } : {};
+      const to = other ? { addressee: { label: other.label, ...(other.locus !== "N" ? { locus: other.locus } : {}) } } : {};
       try {
         const motion = await request<MotionFile>("/lsf/generate", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(generateBody(cue.text.slice(0, 400), engine, lsfOrder, nonmanual, null, feelings[k])),
+          body: JSON.stringify({
+            ...generateBody(cue.text.slice(0, 400), engine, lsfOrder, nonmanual, null, feelings[k]),
+            ...voice, ...to, ...(scene.length ? { referents: scene.slice(-64) } : {}),
+          }),
         });
+        scene = motion.generation?.gloss_analysis?.referents ?? scene;
+        if (who) recent = [who, ...recent.filter((c) => c.id !== who.id)];
         setItems((prev) => prev.map((i, j) => (j === k ? { cue: i.cue, motion, emotion: feelings[k] } : i)));
       } catch (e) {
         const message = e instanceof Error ? e.message : "échec";
@@ -274,6 +326,7 @@ export function FilmMode({
               </label>
             </div>
             {phase && <small className="film-phase">{phase}</small>}
+            <CastSheet cast={cast} onChange={editCast} counts={lines} />
             <div className="film-actions">
               <button className="primary-button" disabled={busy || !items.length || !engineReady} onClick={() => void generateAll()}>
                 {busy ? <Loader2 className="spin" size={16} /> : <Wand2 size={16} />}
@@ -303,13 +356,23 @@ export function FilmMode({
           <div className="film-stage">
             <div className="film-video">
               {videoUrl ? <video ref={video} src={videoUrl} controls playsInline /> : <div className="film-placeholder"><Clapperboard size={36} /><span>Ajoutez un film et ses sous-titres</span></div>}
+              {cueIndex >= 0 && firstLine.has(cueIndex) && (
+                <div className="film-intro" key={cueIndex}><SpeakerChip entry={castOf(cast, items[cueIndex].cue.speaker)} side big /></div>
+              )}
               {cueIndex >= 0 && <div className="film-subtitle">{items[cueIndex].cue.text}</div>}
             </div>
             <div className="film-avatar">
+              {cast.length > 0 && (
+                <div className="film-speaker-badge" data-role-shift={roleShift.torsoYaw.toFixed(3)}>
+                  <StageDots cast={cast} active={signer} />
+                  <SpeakerChip entry={signer} />
+                </div>
+              )}
               <AvatarCanvas
                 avatarCredit={avatarCredit}
                 motion={activeMotion}
                 currentTimeMs={active?.local_ms ?? 0}
+                roleShift={roleShift}
                 prewarm={motions}
                 onPrewarmed={setPrepared}
                 onCanvasReady={(c) => (avatarCanvas.current = c)}
@@ -323,7 +386,10 @@ export function FilmMode({
                 <li key={i} className={i === cueIndex ? "current" : ""}>
                   <button onClick={() => video.current && (video.current.currentTime = item.cue.start_ms / 1000)}>
                     <span className="film-time">{clock(item.cue.start_ms)}</span>
-                    <span className="film-text">{item.cue.text}</span>
+                    <span className="film-text">
+                      {cast.length > 0 && <SpeakerChip entry={castOf(cast, item.cue.speaker)} />}
+                      {item.cue.text}
+                    </span>
                     <span className="film-state">
                       {item.motion
                         ? [

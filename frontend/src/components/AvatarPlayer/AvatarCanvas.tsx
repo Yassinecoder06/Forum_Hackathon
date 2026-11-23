@@ -16,6 +16,7 @@ import { EmotionStyle, emotionFace } from "../../utils/emotionStyle";
 import { createComposer, enableSoftShadows, polishMaterials } from "../../utils/renderPolish";
 import { EMOTION_KEYS, emotionToBlendshapes, sampleEmotion, smoothWeights } from "../../utils/emotionFace";
 import type { EmotionWindow } from "../../types/contract";
+import { applyRoleShift, createRoleShiftRig, type RoleShiftPose, type RoleShiftRig } from "../../utils/roleShift"; // [film-speakers]
 /** Largest head nod on a fully emphasised sign; small, because head movement is LSF grammar. */
 const NOD_MAX_DEG = 6;
 type Props = {
@@ -40,6 +41,8 @@ type Props = {
   prewarm?: MotionFile[];
   /** Called after each prewarmed motion with the number of prewarm motions ready. */
   onPrewarmed?: (ready: number) => void;
+  /** [film-speakers] Role shift toward the current speaker's locus (roleShift.ts), additive after retargeting. */
+  roleShift?: RoleShiftPose | null;
 };
 export function AvatarCanvas(props: Props) {
   const mount = useRef<HTMLDivElement>(null),
@@ -57,7 +60,8 @@ export function AvatarCanvas(props: Props) {
       idle: IdleLife | null = null,
       faceDriver: MetaHumanFaceDriver | null = null,
       performer: PerformanceLayer | null = null,
-      style: EmotionStyle | null = null;
+      style: EmotionStyle | null = null,
+      shiftRig: RoleShiftRig | null = null; // [film-speakers]
     // Interpreter-style layers: wall clock for presentation easing, motion clock for phrase-aware blinks.
     let lastWall = -1, lastMotionTime = -1, emotionLevel = 0, emotionLabel: string | undefined;
     // Channel values in ARKit names; rigs without blendshapes read them via faceDriver.
@@ -71,6 +75,7 @@ export function AvatarCanvas(props: Props) {
     let lastTime = -1;
     let lastFace: Props["faceBlendshapes"];
     let lastHead: Props["headRotation"];
+    let lastShift: Props["roleShift"]; // [film-speakers]
     const scene = new THREE.Scene();
     const backdrop = createCafeBackdrop();
     scene.background = backdrop;
@@ -182,6 +187,7 @@ export function AvatarCanvas(props: Props) {
         // The retargeter's hand limits are re-applied after the springs, so no layer can bend a finger out of range.
         performer = new PerformanceLayer(model, profile, retarget.hands);
         style = new EmotionStyle(model, profile);
+        shiftRig = createRoleShiftRig(model, profile); // [film-speakers]
         const currentStyle = style;
         fetch("/api/avatar/emotion-idles")
           .then((r) => (r.ok ? r.json() : []))
@@ -243,6 +249,7 @@ export function AvatarCanvas(props: Props) {
         emotionIntensity,
         emotionClock,
         renderOnChange,
+        roleShift, // [film-speakers]
       } = latest.current;
       applied.clear();
       // Film mode: derive upcoming motions now, so playback never stalls on a first use.
@@ -256,12 +263,13 @@ export function AvatarCanvas(props: Props) {
         }
       }
       const cameraMoved = controls.update();
-      if (renderOnChange && !redraw && !cameraMoved && lastMotion === motion && lastTime === currentTimeMs && lastFace === faceBlendshapes && lastHead === headRotation) return;
+      if (renderOnChange && !redraw && !cameraMoved && lastMotion === motion && lastTime === currentTimeMs && lastFace === faceBlendshapes && lastHead === headRotation && lastShift === roleShift) return;
       redraw = false;
       lastMotion = motion;
       lastTime = currentTimeMs;
       lastFace = faceBlendshapes;
       lastHead = headRotation;
+      lastShift = roleShift; // [film-speakers]
       // Anatomical neutral stance; old synthetic fixtures use the legacy mirrored X convention.
       if (!motion) {
         const joints = interpolateJointPositions(null, currentTimeMs);
@@ -298,7 +306,7 @@ export function AvatarCanvas(props: Props) {
       const life = renderOnChange ? undefined : idle?.update(nowSec, Boolean(motion));
       morph("eyeBlinkLeft", life?.blink ?? 0);
       morph("eyeBlinkRight", life?.blink ?? 0);
-      const gx = life?.gaze.x ?? 0, gy = life?.gaze.y ?? 0;
+      const gx = (life?.gaze.x ?? 0) + (roleShift?.gazeX ?? 0), gy = life?.gaze.y ?? 0; // [film-speakers] gaze toward the speaker
       morph("eyeLookOutLeft", Math.max(0, gx));
       morph("eyeLookInRight", Math.max(0, gx));
       morph("eyeLookInLeft", Math.max(0, -gx));
@@ -376,6 +384,8 @@ export function AvatarCanvas(props: Props) {
       faceDriver?.apply(faceWeights);
       if (engine && head && (engine.nonmanual.headYaw || engine.nonmanual.headPitch))
         turnHead(head, engine.nonmanual.headYaw, engine.nonmanual.headPitch);
+      // [film-speakers] role shift: torso/head yaw toward the speaker, added on top of the grammatical head motion
+      applyRoleShift(shiftRig, roleShift);
       if (head?.parent && bindHead && headRotation?.length === 9 && headRotation.every(Number.isFinite)) {
         const [xx, xy, xz, yx, yy, yz, zx, zy, zz] = headRotation;
         const rotation = new THREE.Matrix4().set(xx, xy, xz, 0, yx, yy, yz, 0, zx, zy, zz, 0, 0, 0, 0, 1);
