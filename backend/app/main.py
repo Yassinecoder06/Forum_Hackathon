@@ -686,7 +686,7 @@ def lsf_generate(body: LsfGenerateRequest):
         from .services.lsf_order import role_shift_spans  # [film-speakers]
         shifts = role_shift_spans(analysis, meta.get('sign_spans'), len(poses))
         motion = engine_poses_to_motion(poses, engine=body.engine, text=text, face_calibration=meta.pop('face_neutral', None),
-                                        nonmanual=spans)
+                                        nonmanual=spans, hand_depth=bool(meta.get('hand_depth')))
         if shifts:
             motion['role_shift'] = shifts  # [film-speakers] quoted / reported speech: the avatar takes the speaker's role
     except lsf_engines.EngineUnavailable as exc:

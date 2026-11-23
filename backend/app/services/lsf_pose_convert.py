@@ -7,8 +7,9 @@ Engine pose layout (sign-model / signlib), one row per frame at 25 fps:
     65:157  face: lips 40, left eyebrow 10, right eyebrow 10, left eye 16, right eye 16
             (sorted MediaPipe face-mesh indices of each FaceLandmarksConnections set)
 Normalisation: origin at the shoulder midpoint, unit = shoulder width, y up, x towards the
-signer's left. Only x/y are used: the C0 generator outputs z = 0 and engine depth is not
-reliable, so depth is re-estimated here from bone lengths.
+signer's left. Only x/y are used, except the learned finger depth of the C0 hand refiner
+(channel 2 of the hand points, when the engine says so): other engine depth is not reliable,
+so depth is re-estimated here from bone lengths.
 
 MotionFile (frontend/src/types/contract.ts): metres, y up, z towards the camera, named joints
 (`head`, `neck`, `hips`, `left_shoulder`, `left_elbow`, `left_wrist`, `left_thumb_1..4`,
@@ -20,7 +21,9 @@ Depth lifting (an approximation, documented in docs/pipeline/LSF_ENGINES.md):
     z_child = z_parent + sqrt(max(L^2 - d^2, 0)), i.e. the foreshortening is always resolved
     towards the camera. L is the 95th percentile of d over the clip (a segment is seen at its
     full length when it is parallel to the image), never below an anatomical prior for the arm.
-    Wrists are then kept in front of the torso and the face.
+    Wrists are then kept in front of the torso and the face. Fingers: the learned depth when
+    present, else the same lift; then a depth-sign repair against anatomical joint limits
+    (hand_sign_fix). The avatar's runtime joint-limit clamp stays the final safety net.
 """
 from __future__ import annotations
 
@@ -162,10 +165,118 @@ def nonmanual_channels(t_ms: float, spans: list[dict]) -> dict[str, float]:
     return {k: round(v, 5) for k, v in out.items()}
 
 
-def lift_to_3d(x2d: np.ndarray) -> np.ndarray:
+# ----------------------------------------------------------------------------- finger kinematics
+# Port of sign-model/hand_kin.py (joint angles, anatomical limits, depth-sign repair). Hand layout (MediaPipe):
+# 0 wrist; thumb 1-4 (CMC, MCP, IP, tip); index 5-8, middle 9-12, ring 13-16, pinky 17-20 (MCP, PIP, DIP, tip).
+# Flexion = signed angle between parent and child bone around the palm's lateral axis (index MCP -> pinky MCP),
+# positive towards the palm; FLEX_SIGN was fixed on real MediaPipe-3D signing (x towards the signer's left, y up,
+# z towards the camera). Limits in degrees: active range of motion plus a 10-degree tolerance for tracking noise.
+FLEX_SIGN = {"left": 1.0, "right": -1.0}
+FINGER_CHAINS = {"thumb": (1, 2, 3, 4), "index": (5, 6, 7, 8), "middle": (9, 10, 11, 12), "ring": (13, 14, 15, 16),
+                 "pinky": (17, 18, 19, 20)}
+FINGER_LIMITS = {"mcp": (-30, 100), "pip": (-10, 115), "dip": (-15, 95), "thumb_mcp": (-15, 75), "thumb_ip": (-20, 90)}
+SPREAD_MAX = 35.0
+
+
+def _unit(v: np.ndarray) -> np.ndarray:
+    return v / (np.linalg.norm(v, axis=-1, keepdims=True) + 1e-9)
+
+
+def _signed_angle(p: np.ndarray, c: np.ndarray, axis: np.ndarray) -> np.ndarray:
+    """Signed angle (degrees) from bone p to bone c around `axis` (all (..., 3))."""
+    return np.degrees(np.arctan2((np.cross(p, c) * axis).sum(-1), (p * c).sum(-1)))
+
+
+def _excess(v: np.ndarray, lo: float, hi: float) -> np.ndarray:
+    return np.maximum(lo - v, 0) + np.maximum(v - hi, 0)
+
+
+def finger_angles(h: np.ndarray, side: str) -> dict[str, np.ndarray]:
+    """h (T, 21, 3) one hand -> {joint: (T,) degrees}: flexion of every finger joint and spread between neighbours."""
+    h = np.asarray(h, dtype=np.float64)
+    lat = _unit(h[:, 17] - h[:, 5]) * FLEX_SIGN[side]
+    out = {}
+    for f, (a, b, c, d) in FINGER_CHAINS.items():
+        bones = [h[:, a] - h[:, 0], h[:, b] - h[:, a], h[:, c] - h[:, b], h[:, d] - h[:, c]]
+        if f == "thumb":            # the thumb flexes around the palm normal, not the lateral axis
+            ax = _unit(np.cross(h[:, 5] - h[:, 0], h[:, 17] - h[:, 0])) * FLEX_SIGN[side]
+            out["thumb_mcp"] = _signed_angle(bones[1], bones[2], ax)
+            out["thumb_ip"] = _signed_angle(bones[2], bones[3], ax)
+            continue
+        out[f"{f}_mcp"] = _signed_angle(bones[0], bones[1], lat)
+        out[f"{f}_pip"] = _signed_angle(bones[1], bones[2], lat)
+        out[f"{f}_dip"] = _signed_angle(bones[2], bones[3], lat)
+    n = _unit(np.cross(h[:, 5] - h[:, 0], h[:, 17] - h[:, 0]))
+    proj = {}
+    for f in ("index", "middle", "ring", "pinky"):
+        v = h[:, FINGER_CHAINS[f][1]] - h[:, FINGER_CHAINS[f][0]]
+        proj[f] = _unit(v - (v * n).sum(-1, keepdims=True) * n)
+    for f1, f2 in (("index", "middle"), ("middle", "ring"), ("ring", "pinky")):
+        out[f"spread_{f1}_{f2}"] = np.degrees(np.arccos(np.clip((proj[f1] * proj[f2]).sum(-1), -1, 1)))
+    return out
+
+
+def _limit_of(joint: str) -> tuple[float, float]:
+    if joint.startswith("thumb"):
+        return FINGER_LIMITS[joint]
+    if joint.startswith("spread"):
+        return (-1e9, SPREAD_MAX)
+    return FINGER_LIMITS[joint.split("_")[1]]
+
+
+def finger_violations(h: np.ndarray, side: str, margin: float = 0.0) -> float:
+    """Share of joint-frames beyond the anatomical limits (margin: degrees of tolerance; 20 = 'severe')."""
+    bad = tot = 0
+    for k, v in finger_angles(h, side).items():
+        lo, hi = _limit_of(k)
+        m = ((v < lo - margin) | (v > hi + margin)) & np.isfinite(v)
+        bad += int(m.sum())
+        tot += m.size
+    return bad / max(tot, 1)
+
+
+def hand_sign_fix(h: np.ndarray, side: str) -> np.ndarray:
+    """Depth-sign repair of a bone-length lift (sign-model hand_kin.sign_fix). The lift resolves every finger bone's
+    foreshortening towards the camera, which bends curled fingers backwards on a hand seen from the back. For each
+    finger bone after the palm (MCP->PIP, PIP->DIP, DIP->tip; thumb MCP->IP, IP->tip), in order, keep the lift's depth
+    or mirror it, whichever breaks the limits of the two joints it touches less (ties keep the lift). x/y and bone
+    lengths are unchanged. h (T, 21, 3) wrist-relative -> repaired copy."""
+    h = np.asarray(h, dtype=np.float64)
+    lat = _unit(h[:, 17] - h[:, 5]) * FLEX_SIGN[side]
+    tax = _unit(np.cross(h[:, 5] - h[:, 0], h[:, 17] - h[:, 0])) * FLEX_SIGN[side]
+    out = h.copy()
+    with np.errstate(invalid="ignore"):
+        for f, (a, b, c, d) in FINGER_CHAINS.items():
+            chain = [0, a, b, c, d]
+            bones = [h[:, chain[i + 1]] - h[:, chain[i]] for i in range(4)]
+            if f == "thumb":
+                axis, lims, first = tax, [None, None, FINGER_LIMITS["thumb_mcp"], FINGER_LIMITS["thumb_ip"]], 2
+            else:
+                axis, lims, first = lat, [None, FINGER_LIMITS["mcp"], FINGER_LIMITS["pip"], FINGER_LIMITS["dip"]], 1
+            for i in range(first, 4):
+                cand = []
+                for s in (1.0, -1.0):
+                    bi = bones[i].copy()
+                    bi[:, 2] = s * bones[i][:, 2]
+                    e = _excess(_signed_angle(bones[i - 1], bi, axis), *lims[i])
+                    if i < 3:
+                        e = e + _excess(_signed_angle(bi, bones[i + 1], axis), *lims[i + 1])
+                    cand.append((e, bi))
+                flip = cand[1][0] < cand[0][0] - 1e-6
+                bones[i] = np.where(flip[:, None], cand[1][1], cand[0][1])
+            pos = h[:, 0].copy()
+            for i in range(4):
+                pos = pos + bones[i]
+                out[:, chain[i + 1]] = pos
+    return out
+
+
+def lift_to_3d(x2d: np.ndarray, hand_z: np.ndarray | None = None) -> np.ndarray:
     """(T, 157, 2) normalised -> (T, 157, 3) in metres, y up, z towards the camera.
 
-    Body/hand points get depth from bone lengths; face points keep the head depth."""
+    Body points get depth from bone lengths; face points keep the head depth. Fingers: when `hand_z` (T, 157) carries a
+    learned depth for a hand (C0 hand refiner: relative to the wrist, towards the camera, shoulder widths), finger
+    depth = wrist depth + hand_z, else the bone-length lift; then the depth-sign repair (hand_sign_fix) on both."""
     T = len(x2d)
     xy = x2d.astype(np.float64) * SHOULDER_WIDTH_M
     xy[..., 1] += NECK_HEIGHT_M
@@ -191,29 +302,42 @@ def lift_to_3d(x2d: np.ndarray) -> np.ndarray:
         front = np.where(in_face, FACE_FRONT_M, np.where(in_torso, TORSO_FRONT_M, -np.inf))
         z[:, w] = np.maximum(z[:, w], front)
         z[:, hand] = z[:, w]
-        # finger chains: 0 -> 1 -> 2 -> 3 -> 4 for each finger (0 = wrist)
-        for k in range(5):
-            chain = [0] + [1 + 4 * k + i for i in range(4)]
-            for parent, child in zip(chain[:-1], chain[1:]):
-                a, b = xy[:, hand + parent], xy[:, hand + child]
-                length = _segment_length(a, b)
-                z[:, hand + child] = _lift(z[:, hand + parent], a, b, length)
+        fingers = slice(hand + 1, hand + 21)
+        learned = None if hand_z is None else np.asarray(hand_z, dtype=np.float64)[:, fingers]
+        if learned is not None and np.isfinite(learned).all() and np.abs(learned).max() > 1e-6:
+            z[:, fingers] = z[:, [w]] + learned * sw
+        else:
+            # finger chains: 0 -> 1 -> 2 -> 3 -> 4 for each finger (0 = wrist)
+            for k in range(5):
+                chain = [0] + [1 + 4 * k + i for i in range(4)]
+                for parent, child in zip(chain[:-1], chain[1:]):
+                    a, b = xy[:, hand + parent], xy[:, hand + child]
+                    length = _segment_length(a, b)
+                    z[:, hand + child] = _lift(z[:, hand + parent], a, b, length)
+        # depth-sign repair on either depth (measured on C0 + hand refiner: violated joints 9.5 -> 6.9 %)
+        h = np.concatenate([xy[:, hand:hand + 21], z[:, hand:hand + 21, None]], axis=-1)
+        z[:, fingers] = hand_sign_fix(h - h[:, :1], side)[:, 1:, 2] + z[:, [w]]
     out = np.concatenate([xy, z[..., None]], axis=-1)
     return out
 
 
 def engine_poses_to_motion(poses: np.ndarray, *, fps_in: float = ENGINE_FPS, fps_out: float = ENGINE_FPS,
                            engine: str = "", text: str = "", face_calibration: dict[str, float] | None = None,
-                           nonmanual: list[dict] | None = None) -> dict[str, Any]:
+                           nonmanual: list[dict] | None = None, hand_depth: bool = False) -> dict[str, Any]:
     """(T, 157, 2|3) engine poses -> MotionFile dict (signaculture-v1).
 
     nonmanual: [{"start_ms", "end_ms", "type": question_yn | question_wh | negation}] grammatical markers baked into
-    each frame's face channels (nm_*), see nonmanual_channels."""
+    each frame's face channels (nm_*), see nonmanual_channels.
+    hand_depth: channel 2 of the hand points is a learned finger depth (C0 hand refiner, metadata `hand_depth`); any
+    other third channel (lexicon / capture depth in other units) is ignored."""
     x = np.asarray(poses, dtype=np.float64)
     if x.ndim != 3 or x.shape[1] != N_POINTS or x.shape[2] < 2:
         raise ValueError(f"expected (T, {N_POINTS}, 2|3) engine poses, got {x.shape}")
     if len(x) < 2:
         raise ValueError("at least two frames are needed")
+    hand_z = None
+    if hand_depth and x.shape[2] >= 3:
+        hand_z = resample(_interp_nan(x[..., 2]), fps_in, fps_out)
     x2d = x[..., :2]
     hand_seen = {side: np.isfinite(x2d[:, start:start + 21]).all(axis=(1, 2))
                  for side, start in (("left", LEFT_HAND), ("right", RIGHT_HAND))}
@@ -225,7 +349,7 @@ def engine_poses_to_motion(poses: np.ndarray, *, fps_in: float = ENGINE_FPS, fps
     for side in hand_seen:
         idx = np.clip(np.round(np.arange(len(x2d)) * fps_in / fps_out).astype(int), 0, len(hand_seen[side]) - 1)
         hand_seen[side] = hand_seen[side][idx]
-    xyz = lift_to_3d(x2d)
+    xyz = lift_to_3d(x2d, hand_z)
     frames = []
     for i in range(len(xyz)):
         f = xyz[i]
