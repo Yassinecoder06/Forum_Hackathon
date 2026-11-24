@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { SentenceCutter, type Word } from "../presentation/liveStream";
 import { checkSentence } from "../presentation/frenchFilter";
+import { afterWake, findWake, wakeForms } from "../presentation/wakeWord";
 
 // words with 300 ms each, from a start time (ms in the current buffer)
 const words = (text: string, from = 0): Word[] => text.split(" ").map((t, i) => ({ text: t, start_ms: from + i * 300, end_ms: from + i * 300 + 280 }));
@@ -90,4 +91,14 @@ const words = (text: string, from = 0): Word[] => text.split(" ").map((t, i) => 
   assert.deepEqual(c.flush(words("Thank you very much.")).sentences, [], "English never reaches the avatar");
   assert.deepEqual(c.flush(words("Merci beaucoup.")).sentences, ["Merci beaucoup."]);
 }
-console.log("Presentation live-stream checks passed: French filter (noise, unsure, English), two-pass agreement, sentence cut while speaking, seam without loss, pause flush, noise, long sentences.");
+// 7. Wake word: accents, capitals, punctuation ignored; only what follows the word is signed.
+{
+  const f = wakeForms("commencer");
+  assert.equal(findWake("Bon, on va Commencer !", f), 3);
+  assert.equal(findWake("Commencez.", f), 0);
+  assert.equal(findWake("Nous commençons le projet.", f), -1);
+  assert.equal(afterWake("Commencer.", f), "");
+  assert.equal(afterWake("On va commencer, bonjour à tous.", f), "bonjour à tous.");
+  assert.deepEqual(wakeForms(""), []);
+}
+console.log("Presentation live-stream checks passed: wake word, French filter (noise, unsure, English), two-pass agreement, sentence cut while speaking, seam without loss, pause flush, noise, long sentences.");

@@ -125,6 +125,13 @@ export async function openLiveStream(o: Options) {
     void context.close();
     throw e;
   }
+  // Opened without a click (wake-word standby): the browser may hold the audio until the first click or key press.
+  if (context.state === "suspended") {
+    const resume = () => { void context.resume(); window.removeEventListener("pointerdown", resume); window.removeEventListener("keydown", resume); };
+    window.addEventListener("pointerdown", resume);
+    window.addEventListener("keydown", resume);
+    void context.resume();
+  }
   const rate = context.sampleRate, ms = (n: number) => (n * 1000) / rate;
   const cutter = new SentenceCutter();
   const chunks: Float32Array[] = [];
