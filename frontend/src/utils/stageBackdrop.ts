@@ -15,10 +15,10 @@ export function createCafeBackdrop(width = 1320, height = 1000) {
   const rand = () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
 
   const wall = ctx.createLinearGradient(0, 0, 0, height);
-  wall.addColorStop(0, "#5e3a2b");
-  wall.addColorStop(0.45, "#9a5f43");
-  wall.addColorStop(0.7, "#8a5139");
-  wall.addColorStop(1, "#4a2c20");
+  wall.addColorStop(0, "#2d4e5c");
+  wall.addColorStop(0.45, "#467f97");
+  wall.addColorStop(0.7, "#3c7087");
+  wall.addColorStop(1, "#223d48");
   ctx.fillStyle = wall;
   ctx.fillRect(0, 0, width, height);
 
@@ -27,7 +27,7 @@ export function createCafeBackdrop(width = 1320, height = 1000) {
     const x = rand() * width, y = rand() * height * 0.72, r = 40 + rand() * 140;
     const g = ctx.createRadialGradient(x, y, 0, x, y, r);
     const light = rand() > 0.5;
-    g.addColorStop(0, light ? "rgba(255,214,170,.05)" : "rgba(60,30,18,.06)");
+    g.addColorStop(0, light ? "rgba(173, 228, 252,.05)" : "rgba(20, 47, 58,.06)");
     g.addColorStop(1, "rgba(0,0,0,0)");
     ctx.fillStyle = g;
     ctx.fillRect(x - r, y - r, r * 2, r * 2);
@@ -35,8 +35,8 @@ export function createCafeBackdrop(width = 1320, height = 1000) {
 
   // Warm halo behind the head and shoulders separates the silhouette.
   const halo = ctx.createRadialGradient(width / 2, height * 0.36, 20, width / 2, height * 0.4, height * 0.55);
-  halo.addColorStop(0, "rgba(244,180,128,.55)");
-  halo.addColorStop(0.5, "rgba(214,138,95,.22)");
+  halo.addColorStop(0, "rgba(133, 207, 239,.55)");
+  halo.addColorStop(0.5, "rgba(100, 176, 209,.22)");
   halo.addColorStop(1, "rgba(0,0,0,0)");
   ctx.fillStyle = halo;
   ctx.fillRect(0, 0, width, height);
@@ -44,19 +44,19 @@ export function createCafeBackdrop(width = 1320, height = 1000) {
   // Wood wainscot with blurred vertical planks and a brass rail.
   const railY = height * 0.74;
   const wood = ctx.createLinearGradient(0, railY, 0, height);
-  wood.addColorStop(0, "#5a3524");
-  wood.addColorStop(1, "#2f1b13");
+  wood.addColorStop(0, "#264958");
+  wood.addColorStop(1, "#14262e");
   ctx.fillStyle = wood;
   ctx.fillRect(0, railY, width, height - railY);
   ctx.save();
   ctx.filter = "blur(3px)";
   for (let x = 0; x < width; x += 66) {
-    ctx.fillStyle = `rgba(20,10,6,${0.18 + rand() * 0.1})`;
+    ctx.fillStyle = `rgba(7, 16, 19,${0.18 + rand() * 0.1})`;
     ctx.fillRect(x, railY + 8, 3, height - railY);
-    ctx.fillStyle = "rgba(255,200,150,.05)";
+    ctx.fillStyle = "rgba(154, 222, 251,.05)";
     ctx.fillRect(x + 4, railY + 8, 2, height - railY);
   }
-  ctx.fillStyle = "rgba(214,160,92,.55)";
+  ctx.fillStyle = "rgba(97, 175, 209,.55)";
   ctx.fillRect(0, railY - 4, width, 7);
   ctx.restore();
 
@@ -88,7 +88,7 @@ export function createCafeBackdrop(width = 1320, height = 1000) {
   // Vignette.
   const vignette = ctx.createRadialGradient(width / 2, height * 0.45, height * 0.35, width / 2, height * 0.45, height * 0.95);
   vignette.addColorStop(0, "rgba(0,0,0,0)");
-  vignette.addColorStop(1, "rgba(25,12,6,.55)");
+  vignette.addColorStop(1, "rgba(7, 19, 24,.55)");
   ctx.fillStyle = vignette;
   ctx.fillRect(0, 0, width, height);
 

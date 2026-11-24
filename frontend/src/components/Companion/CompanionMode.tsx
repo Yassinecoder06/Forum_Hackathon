@@ -512,12 +512,12 @@ export function CompanionMode({ onExit, transcription, signRecognition, brainRea
   return (
     <div ref={root} className={`companion companion--${view}${signingCam ? " companion--signing" : ""}`}>
       <video ref={video} className="companion-video" playsInline muted aria-label="Ce que voit la caméra" />
-      <div ref={stageHost} className="companion-stage" aria-label="Le compagnon SignaCulture en 3D" />
+      <div ref={stageHost} className="companion-stage" aria-label="Le compagnon SignePourMoi en 3D" />
       <div ref={ui} className="companion-ui">
         <div className="companion-gestures" onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}
           onTouchCancel={onTouchEnd} onWheel={onWheel} aria-hidden="true" />
         <header className="companion-top companion-controls">
-          <span className="companion-brand">signaculture<span>AI</span> · Compagnon</span>
+          <span className="companion-brand">SignePourMoi · Compagnon</span>
           <button className="companion-icon" onClick={leave} aria-label="Quitter le compagnon"><X size={18} /></button>
         </header>
 

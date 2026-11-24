@@ -72,7 +72,7 @@ export function AvatarCanvas(props: Props) {
       return;
     }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setClearColor(plain ?? 0x6b4232);
+    renderer.setClearColor(plain ?? 0x345969);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.0;

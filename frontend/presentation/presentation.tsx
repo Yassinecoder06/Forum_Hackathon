@@ -41,7 +41,7 @@ function Deck() {
   const slide = SLIDES[index];
   return (
     <div className={`deck tone-${slide.tone ?? "light"}`}>
-      <div className="brand">Signa<em>Culture</em></div>
+      <div className="brand">Signe<em>PourMoi</em></div>
       {SLIDES.map((s, i) => (
         <section key={s.id} className={`slide${i === index ? " active" : i < index ? " past" : ""}`} aria-hidden={i !== index}>
           <div className="slide-inner">

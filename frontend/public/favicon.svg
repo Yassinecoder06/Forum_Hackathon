@@ -1,1 +1,20 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="18" fill="#4e2e20"/><path d="M20 40V24m8 18V17m8 25V15m8 25V22M20 33c-9-8-11 0-4 8l8 9h12c9 0 11-8 11-16" stroke="#f5eee4" stroke-width="4" stroke-linecap="round" fill="none"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-3 -6 70 70" role="img" aria-label="SignePourMoi">
+  <defs>
+    <linearGradient id="spm-g" x1="0.15" y1="0" x2="0.85" y2="1">
+      <stop offset="0" stop-color="#86d0dc"/><stop offset="0.45" stop-color="#3a96ad"/><stop offset="1" stop-color="#1f4f6d"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke="url(#spm-g)" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M41 13 C33 8 19 10 18.5 20 C18 29 30 30 32 32 C34 34 46 35 45.5 44 C45 54 31 56 23 51" stroke-width="6.5"/>
+    <path d="M41.9 9.9 L44.8 0.6" stroke-width="3.4"/>
+    <path d="M43.1 10.6 L50.8 1.7" stroke-width="3.4"/>
+    <path d="M43.9 11.6 L53.7 7.1" stroke-width="3.4"/>
+    <path d="M44.2 12.8 L52.0 12.4" stroke-width="3.4"/>
+    <path d="M41.0 13.0 Q46.8 14.5 47.6 19.1" stroke-width="3.4"/>
+    <path d="M22.1 54.1 L19.2 63.4" stroke-width="3.4"/>
+    <path d="M20.9 53.4 L13.2 62.3" stroke-width="3.4"/>
+    <path d="M20.1 52.4 L10.3 56.9" stroke-width="3.4"/>
+    <path d="M19.8 51.2 L12.0 51.6" stroke-width="3.4"/>
+    <path d="M23.0 51.0 Q17.2 49.5 16.4 44.9" stroke-width="3.4"/>
+  </g>
+</svg>

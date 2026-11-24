@@ -16,11 +16,11 @@ export const SLIDES: Slide[] = [
   {
     id: "titre",
     tone: "dark",
-    sign: "Bonjour, bienvenue dans la présentation de SignaCulture.",
+    sign: "Bonjour, bienvenue dans la présentation de SignePourMoi.",
     body: (
       <div className="hero">
         <p className="kicker">Forum · Hackathon 2026</p>
-        <h1>Signa<em>Culture</em></h1>
+        <h1>Signe<em>PourMoi</em></h1>
         <p className="lead">Le français, signé en langue des signes française par un avatar 3D, en direct.</p>
         <p className="hint">Parlez : l’interprète en bas à droite écoute, transcrit et signe.</p>
       </div>
@@ -44,11 +44,11 @@ export const SLIDES: Slide[] = [
   {
     id: "reponse",
     kicker: "Notre réponse",
-    sign: "SignaCulture traduit le français en langue des signes, sur un seul ordinateur.",
+    sign: "SignePourMoi traduit le français en langue des signes, sur un seul ordinateur.",
     body: (
       <>
         <h2>Du français en entrée. De la LSF signée en sortie.</h2>
-        <p className="lead">Texte, voix, film ou personne qui signe : SignaCulture comprend le français et le fait signer par un avatar MetaHuman, avec le texte à côté.</p>
+        <p className="lead">Texte, voix, film ou personne qui signe : SignePourMoi comprend le français et le fait signer par un avatar MetaHuman, avec le texte à côté.</p>
         <ul className="ticks">
           <li>Une seule chaîne de traduction pour tous les usages</li>
           <li>Un générateur de signes appris sur de vrais interprètes</li>

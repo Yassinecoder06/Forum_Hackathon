@@ -10,7 +10,7 @@ import { BODY_EDGES, HAND_EDGES, HandPause, encodeTake, type Landmark } from "..
 import type { SignTracker } from "../utils/signTracker";
 import { choiceText, historyMessages, type Recognition, type Turn, type Via, type Vocabulary } from "../utils/conversation";
 
-const WATERMARK = "SignaCulture · LSF";
+const WATERMARK = "SignePourMoi · LSF";
 const MAX_TAKE_MS = 20000;
 const VIA_LABEL: Record<Via, string> = { signes: "en signes", voix: "à la voix", texte: "par écrit" };
 const json = (body: unknown, timeout = 60000) => ({
@@ -137,7 +137,7 @@ export function ConversationMode({ avatarCredit, transcription, signRecognition,
       g.stroke();
     };
     if (pose) line(pose, BODY_EDGES, "rgba(255,255,255,.75)", 3);
-    hands.forEach((h, k) => h && line(h, HAND_EDGES, recording ? (k ? "#f0a37f" : "#ffd2a6") : "rgba(255,236,220,.9)", 2));
+    hands.forEach((h, k) => h && line(h, HAND_EDGES, recording ? (k ? "#84cceb" : "#aae3fb") : "rgba(221, 244, 254,.9)", 2));
   }
 
   async function openCamera() {

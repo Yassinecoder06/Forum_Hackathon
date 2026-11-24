@@ -548,7 +548,7 @@ export default function App() {
     const chunks: Blob[] = [];
     let frame = 0;
     const draw = () => {
-      ctx.fillStyle = "#f5efe7";
+      ctx.fillStyle = "#e8f1f4";
       ctx.fillRect(0, 0, 1280, 960);
       const ratio = Math.min(1280 / canvas.width, 900 / canvas.height);
       const width = canvas.width * ratio,
@@ -560,11 +560,11 @@ export default function App() {
         width,
         height,
       );
-      ctx.fillStyle = "rgba(48,28,19,.8)";
+      ctx.fillStyle = "rgba(20, 39, 47,.8)";
       ctx.fillRect(0, 884, 1280, 76);
       ctx.fillStyle = "#fff";
       ctx.font = "18px sans-serif";
-      ctx.fillText("SignaCulture · Traduction en LSF", 28, 928, 1224);
+      ctx.fillText("SignePourMoi · Traduction en LSF", 28, 928, 1224);
       frame = requestAnimationFrame(draw);
     };
     recorder.ondataavailable = (e) => {
@@ -612,9 +612,9 @@ export default function App() {
         <a
           className="brand-mark"
           href="#studio"
-          aria-label="SignaCulture accueil"
+          aria-label="SignePourMoi accueil"
         >
-          <Hand size={26} />
+          <img src={`${import.meta.env.BASE_URL}favicon.svg`} alt="" width={36} height={36} />
         </a>
         <nav aria-label="Navigation principale">
           <button
@@ -672,7 +672,7 @@ export default function App() {
       <div className="workspace">
         <header className="topbar">
           <a className="wordmark" href="/" title="Présentation du projet">
-            signaculture<span>AI</span>
+            SignePourMoi
           </a>
           <span className="topbar-divider" />
           <span className="project-name">
@@ -1587,7 +1587,7 @@ export default function App() {
           <footer className="studio-footer">
             <span>La culture se partage. Dans toutes ses langues.</span>
             <span>
-              SignaCulture AI <i />
+              SignePourMoi <i />
               Studio LSF
             </span>
           </footer>

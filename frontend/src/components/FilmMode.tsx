@@ -13,7 +13,7 @@ import type { Referent } from "../types/contract";
 
 type Item = { cue: Cue; motion?: MotionFile; error?: string; emotion?: Record<string, number> | null };
 const clock = (ms: number) => `${Math.floor(ms / 60000).toString().padStart(2, "0")}:${((ms % 60000) / 1000).toFixed(1).padStart(4, "0")}`;
-const WATERMARK = "SignaCulture · LSF";
+const WATERMARK = "SignePourMoi · LSF";
 /** A silence this long between two subtitles starts a new scene (fresh referent table). */
 const SCENE_GAP_MS = 8000;
 const castKey = (name: string) => `signaculture.cast.${name}`;
@@ -220,7 +220,7 @@ export function FilmMode({
       const finished = new Promise<void>((resolve) => (recorder.onstop = () => resolve()));
       let raf = 0;
       const draw = () => {
-        ctx.fillStyle = "#14110f";
+        ctx.fillStyle = "#0f1214";
         ctx.fillRect(0, 0, out.width, out.height);
         const filmW = 880, filmH = Math.round(filmW * (v.videoHeight || 9) / (v.videoWidth || 16));
         ctx.drawImage(v, 0, Math.round((out.height - filmH) / 2), filmW, filmH);
