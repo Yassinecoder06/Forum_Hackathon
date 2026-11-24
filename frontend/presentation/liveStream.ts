@@ -3,12 +3,14 @@
 // A sentence goes to the signing model as soon as its sure text ends with . ? ! (or at a long pause, or when it
 // grows too long); its audio is then cut away (word timestamps) and listening simply goes on.
 import { CAPTURE_WORKLET, PhraseDetector, encodeWav } from "../src/utils/phraseDetector";
-import { checkSentence, isNoise } from "./frenchFilter";
+import { checkSentence, isNoise, type Verdict } from "./frenchFilter";
 
 export type Word = { start_ms: number; end_ms: number; text: string; probability?: number };
-export type LiveText = { sure: string; tentative: string };
+export type LiveText = { sure: string; tentative: string; sureWords?: Word[]; tentativeWords?: Word[] };
 /** A finished sentence with its words (times in the buffer at the moment it closed). */
 export type Closed = { text: string; words: Word[] };
+/** A finished sentence the French filter dropped (shown by the transcription page only). */
+export type Rejected = Closed & { why: NonNullable<Verdict["why"]> };
 
 const norm = (w: string) => w.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^\p{L}\p{N}]/gu, "");
 const endsSentence = (w: string) => /[.?!…]["»)]*$/.test(w);
@@ -21,7 +23,9 @@ export class SentenceCutter {
   private tail: Word[] = [];     // unsure words of the previous pass
   private committedEnd = 0;      // end (ms, in the buffer) of the last sure word
   // minCommitMs: on a very short buffer Whisper guesses (no context yet): confirm nothing before this much audio.
-  constructor(private maxWords = 24, private minCommitMs = 2000) {}
+  // commaWords: also close at a comma once the phrase has this many words (0 = only at . ? !): smaller phrases reach
+  // the avatar sooner.
+  constructor(private maxWords = 24, private minCommitMs = 2000, private commaWords = 0) {}
 
   /** Words after what is already sure, without a repeated overlap at the seam. */
   private fresh(words: Word[]) {
@@ -43,10 +47,11 @@ export class SentenceCutter {
   /** Close sentences in the sure words; returns them and the cut point (ms) after the last closed one. */
   private close(force: boolean) {
     const sentences: string[] = [];
+    const rejected: Rejected[] = [];
     const closed: Closed[] = [];
     let cut = 0;
     for (;;) {
-      let end = this.sentence.findIndex((w) => endsSentence(w.text));
+      let end = this.sentence.findIndex((w, i) => endsSentence(w.text) || (this.commaWords > 0 && i >= this.commaWords - 1 && /,["»)]*$/.test(w.text)));
       if (end < 0 && this.sentence.length > this.maxWords) {
         // too long without punctuation: cut after the last comma, else everything
         const comma = this.sentence.slice(0, this.maxWords).map((w) => w.text.endsWith(",")).lastIndexOf(true);
@@ -57,10 +62,12 @@ export class SentenceCutter {
       const words = this.sentence.slice(0, end + 1), text = words.map((w) => w.text).join(" ");
       cut = this.sentence[end].end_ms;
       this.sentence = this.sentence.slice(end + 1);
-      if (checkSentence(text, words).keep) { sentences.push(text); closed.push({ text, words }); }
+      const verdict = checkSentence(text, words);
+      if (verdict.keep) { sentences.push(text); closed.push({ text, words }); }
+      else if (text.trim()) rejected.push({ text, words, why: verdict.why! });
     }
     if (cut) this.shift(cut);
-    return { sentences, closed, cut };
+    return { sentences, closed, rejected, cut };
   }
 
   private shift(ms: number) {
@@ -73,7 +80,7 @@ export class SentenceCutter {
   /** One more pass over the buffer: commit what two passes agree on, close finished sentences. */
   update(words: Word[], bufferMs = Infinity) {
     const now = this.fresh(words);
-    if (bufferMs < this.minCommitMs) { this.tail = now; return { sentences: [] as string[], closed: [] as Closed[], cut: 0 }; }
+    if (bufferMs < this.minCommitMs) { this.tail = now; return { sentences: [] as string[], closed: [] as Closed[], rejected: [] as Rejected[], cut: 0 }; }
     let agree = 0;
     while (agree < now.length && agree < this.tail.length && norm(now[agree].text) === norm(this.tail[agree].text)) agree++;
     if (agree) {
@@ -96,7 +103,7 @@ export class SentenceCutter {
   }
 
   get live(): LiveText {
-    return { sure: this.sentence.map((w) => w.text).join(" "), tentative: this.tail.map((w) => w.text).join(" ") };
+    return { sure: this.sentence.map((w) => w.text).join(" "), tentative: this.tail.map((w) => w.text).join(" "), sureWords: this.sentence, tentativeWords: this.tail };
   }
 }
 
@@ -105,10 +112,14 @@ type Options = {
   /** A finished sentence, with its own audio and word times (for the voice stress). */
   onSentence: (text: string, voice: { wav: ArrayBuffer; words: Word[] }) => void;
   onLive: (live: LiveText) => void;
+  /** Sentences the French filter dropped (with why). */
+  onRejected?: (r: Rejected) => void;
   onError?: (e: unknown) => void;
   intervalMs?: number;  // time between two passes
   pauseMs?: number;     // silence that closes a sentence without punctuation
   maxBufferMs?: number; // never send more audio than this
+  maxWords?: number;    // a phrase longer than this is cut (at a comma when possible)
+  commaWords?: number;  // close a phrase at a comma once it has this many words (0 = only at . ? !)
 };
 
 /** Open the microphone and stream it through Whisper. Returns the voice detector (level, speaking) and stop(). */
@@ -133,7 +144,7 @@ export async function openLiveStream(o: Options) {
     void context.resume();
   }
   const rate = context.sampleRate, ms = (n: number) => (n * 1000) / rate;
-  const cutter = new SentenceCutter();
+  const cutter = new SentenceCutter(o.maxWords ?? 24, 2000, o.commaWords ?? 0);
   const chunks: Float32Array[] = [];
   let length = 0;
   let heard = false, pause = false, running = true;
@@ -176,12 +187,15 @@ export async function openLiveStream(o: Options) {
       o.onSentence(text, { wav: encodeWav(clip, rate), words: ws.map((w) => ({ ...w, start_ms: w.start_ms - from, end_ms: w.end_ms - from })) });
     };
     if (final) {
-      cutter.flush(words).closed.forEach(send);
+      const done = cutter.flush(words);
+      done.closed.forEach(send);
+      done.rejected.forEach((r) => o.onRejected?.(r));
       drop(audio.length); // what arrived during the request stays
       heard = detector.speaking;
     } else {
-      const { closed, cut } = cutter.update(words, ms(audio.length));
+      const { closed, rejected, cut } = cutter.update(words, ms(audio.length));
       closed.forEach(send);
+      rejected.forEach((r) => o.onRejected?.(r));
       if (cut) drop(Math.round((cut * rate) / 1000));
     }
     o.onLive(cutter.live);

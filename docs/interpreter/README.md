@@ -5,6 +5,7 @@ Two ways to show it:
 
 | Page | What it shows |
 |---|---|
+| `/transcription/` | Whisper alone: what the interpreter hears (confirmed words, current guess, low-confidence words, sentences kept or dropped by the French filter). |
 | `/interprete/` | The interpreter alone, filling the window: avatar, subtitle strip, mic button. Made to sit next to (or inside) a slide deck. |
 | `/presentation/` | 13 French slides about SignaCulture with the same interpreter in the bottom-right corner. |
 
@@ -35,20 +36,19 @@ mic ──► live transcription (Whisper large-v3-turbo, GPU, every ~0.7 s) ─
     server and the face and posture on the avatar. No emotion under 1.5 s of speech (unreliable on short clips).
   - These are model hypotheses about the voice, not a measure of the speaker's state.
 - **Signing** (`/lsf/generate`, engine C0 + finger/face refiners).
-  - Long sentences are split into pieces of ≤ 16 words (C0 writes at most 96 tokens). A piece that hits the limit is
+  - Long sentences are split into chunks of ≤ 16 words (C0 writes at most 96 tokens). A chunk that hits the limit is
+    cut in two. A piece that hits the limit is
     cut in two.
   - Each request carries the stressed words, the emotion, and the referent table of the previous sentences, so a
     pronoun ("Elle…") points to who was named before ("Marie…"). The table is forgotten after 90 s of silence.
 - **Avatar.** Motions are prepared a few ms per frame ahead of time, so there is no stall at a sentence start.
-  Between sentences the avatar fades back to rest (minimum-jerk), and pieces of one sentence follow each other with a
-  short link. The arms are kept out of the torso (torso measured on the avatar's own meshes).
+  Signing runs at ×1.5. Between sentences and chunks there is about 0.1 s, with a short fade (0.3 s) toward rest. The arms are kept out of the torso (torso measured on the avatar's own meshes).
 
 ## Controls
 
 | | |
 |---|---|
-| **Wake word** | When the page is ready the mic opens in standby: it listens, nothing is signed. Saying **« commencer »** wakes the interpreter as soon as two transcription passes agree on the word (sentences close in speaking order, so those said before the word are dropped); only what follows the word is signed. |
-| `M` / button | Active ↔ standby (mic off → on the first time) |
+| `M` / button | Mic on / off |
 | `F` | Full screen (`/interprete/`) |
 | `S`, `←` `→`, `Z`, `H` | Slides page only: sign the slide's sentence, change slide, box size, hide the box |
 
@@ -56,8 +56,7 @@ Address options:
 
 | Option | Effect |
 |---|---|
-| `?mot=bonjour` | Another wake word (`?mot=aucun`: no standby, the mic opens on `M`) |
-| `?vitesse=1.4` | Signing speed, 0.5–2 (default 1.25). When sentences are waiting the avatar also catches up: ×1.1 with one waiting, ×1.2 with two or more. |
+| `?vitesse=1.2` | Signing speed, 0.5–3 (default 1.5) |
 | `?ecoute=pauses` | Earlier listening mode: one transcription per phrase, cut at pauses |
 
 ## Running it
@@ -88,7 +87,10 @@ SIGNACULTURE_API_TARGET=http://<api-host>:8040 npx vite --host 0.0.0.0 --port 52
   at the cuts. Last word → sent to signing: 1.4–4.1 s (median 2.3 s).
 - Same 15 s of speech, signed until the end:
   - normal speed: 4 sentences in 45 s, still behind;
-  - default (×1.25 + catch-up): 6 sentences, all done, 4–8 s each;
+  - ×1.25 + catch-up: 6 sentences, all done by 45 s, 4–8 s each;
+  - ×2: 6 sentences, all done by 33 s, 3–5 s each;
+- Current setting (full sentences in chunks, ×1.5, 0.1 s gaps): every sentence signed, 0.0–0.1 s between them,
+  everything signed by 39.9 s.
   - worst frame 34 ms.
 - Arms inside the torso, on 13 test sentences, before → after the torso guard:
   - before: 1–89 % of frames (up to 18 cm);
@@ -97,17 +99,15 @@ SIGNACULTURE_API_TARGET=http://<api-host>:8040 npx vite --host 0.0.0.0 --port 52
 
 ## Limits
 
-- The avatar signs more slowly than people speak. On long continuous speech it falls behind, even with the catch-up;
-  sentences wait in order and none is dropped.
+- The avatar signs more slowly than people speak. On long continuous speech it falls behind; sentences wait in order
+  and none is dropped.
 - The English filter is checked with unit tests only (no English recording was available).
-- A wake word that is also an ordinary word wakes the interpreter whenever it is said. That is harmless once it is
-  active.
 
 ## Tests
 
 `frontend/tests/presentationStream.test.ts` checks:
 - sentence cutting (two-pass agreement, seams, pauses, noise, long sentences);
 - the French filter;
-- the wake word.
+- (the wake-word helpers in `presentation/wakeWord.ts`, not used by the page now).
 
 `frontend/tests/motion.test.ts` checks that the sliced motion preparation gives exactly the one-shot result.

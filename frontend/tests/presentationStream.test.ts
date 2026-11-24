@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { SentenceCutter, type Word } from "../presentation/liveStream";
 import { checkSentence } from "../presentation/frenchFilter";
-import { afterWake, findWake, wakeForms } from "../presentation/wakeWord";
+import { afterWake, beforeWord, findWake, wakeForms } from "../presentation/wakeWord";
 
 // words with 300 ms each, from a start time (ms in the current buffer)
 const words = (text: string, from = 0): Word[] => text.split(" ").map((t, i) => ({ text: t, start_ms: from + i * 300, end_ms: from + i * 300 + 280 }));
@@ -60,6 +60,14 @@ const words = (text: string, from = 0): Word[] => text.split(" ").map((t, i) => 
   assert.deepEqual(r.sentences, ["un deux trois quatre cinq six,"]);
   assert.equal(c.live.sure, "sept huit neuf dix onze douze treize");
 }
+// 4a. Short phrases: closed at a comma once they have 5 words, not before.
+{
+  const c = new SentenceCutter(12, 2000, 5);
+  const w = words("Bonjour, nous présentons notre projet, un avatar qui signe");
+  c.update(w);
+  assert.deepEqual(c.update(w).sentences, ["Bonjour, nous présentons notre projet,"]);
+  assert.equal(c.live.sure, "un avatar qui signe");
+}
 // 4b. French spacing: a lone "!" from Whisper still ends the sentence.
 {
   const c = new SentenceCutter();
@@ -100,5 +108,9 @@ const words = (text: string, from = 0): Word[] => text.split(" ").map((t, i) => 
   assert.equal(afterWake("Commencer.", f), "");
   assert.equal(afterWake("On va commencer, bonjour à tous.", f), "bonjour à tous.");
   assert.deepEqual(wakeForms(""), []);
+  const p = wakeForms("pause");
+  assert.equal(beforeWord("Merci à tous, pause.", p), "Merci à tous");
+  assert.equal(beforeWord("Pause !", p), "");
+  assert.equal(findWake("On fait une PAUSE", p), 3);
 }
-console.log("Presentation live-stream checks passed: wake word, French filter (noise, unsure, English), two-pass agreement, sentence cut while speaking, seam without loss, pause flush, noise, long sentences.");
+console.log("Presentation live-stream checks passed: short phrases, wake and pause words, French filter (noise, unsure, English), two-pass agreement, sentence cut while speaking, seam without loss, pause flush, noise, long sentences.");

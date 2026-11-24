@@ -8,7 +8,6 @@ import { generateBody } from "../src/utils/lsfRequest";
 import { encodeWav, openPhraseMic, type PhraseDetector } from "../src/utils/phraseDetector";
 import { openLiveStream, type Word } from "./liveStream";
 import { checkSentence } from "./frenchFilter";
-import { afterWake, findWake, wakeForms } from "./wakeWord";
 import { analyseProsody, sliceProsody, type Frame, type Prosody } from "./prosody";
 import type { EmotionWindow, MotionFile } from "../src/types/contract";
 import "./interpreter.css";
@@ -19,23 +18,14 @@ type Part = { text: string; motion?: MotionFile; emotion?: Scores | null; timeli
 type Scores = Record<string, number>;
 type Line = { text: string; parts: Part[]; done?: boolean; dropped?: boolean; shown?: boolean };
 type Ready = "loading" | "ready" | "off";
-// Between sentences the avatar returns to its rest pose: fade in from rest holding the first frame (lead), sign, fade
-// back to rest (REST_MS) before the next sentence. BLEND_MS = length of each fade. Pieces of one sentence follow each
-// other with only a short link (no rest). When sentences are waiting, the avatar catches up: shorter lead and rest and
-// a slightly faster signing (x1.1 with one waiting, x1.2 with two or more) on top of the base speed.
-// Base speed of the signing: x1.25 (user choice), or the address ?vitesse=1.4 (0.5-2).
-const BLEND_MS = 600, LEAD_MS = 500, REST_MS = 650;
-const LINK_LEAD_MS = 150, LINK_REST_MS = 100, CATCH_UP_LEAD_MS = 300, CATCH_UP_REST_MS = 450;
+// Between sentences / chunks: about 0.1 s (REST_MS) with a short fade (BLEND_MS) toward the rest pose, then the next one
+// starts at once (LEAD_MS). User choice: short gaps, faster signing.
+const BLEND_MS = 300, LEAD_MS = 0, REST_MS = 100;
+// Signing speed: x1.5 (user choice), or the address ?vitesse=1.2 (0.5-3).
 const SIGN_SPEED = (() => {
   const v = parseFloat(new URLSearchParams(location.search).get("vitesse") ?? "");
-  return Number.isFinite(v) ? Math.min(2, Math.max(0.5, v)) : 1.25;
+  return Number.isFinite(v) ? Math.min(3, Math.max(0.5, v)) : 1.5;
 })();
-const pace = (waiting: number) => SIGN_SPEED * (waiting >= 2 ? 1.2 : waiting === 1 ? 1.1 : 1);
-// Wake word (address ?mot=..., default "commencer"; ?mot=aucun = no standby): the mic opens in standby when the page is
-// ready, nothing is signed until the word is heard; M / the button switch between active and standby.
-const WAKE_WORD = (() => { const m = new URLSearchParams(location.search).get("mot"); return m === null ? "commencer" : m === "aucun" ? "" : m; })();
-const WAKE = wakeForms(WAKE_WORD);
-type Play = { index: number; part: number; started: number; rate: number; lead: number };
 // Motions are derived for the avatar a few ms per frame (never a stall), signing or not.
 const PREP_BUDGET_SIGNING_MS = 5, PREP_BUDGET_IDLE_MS = 12;
 // C0 writes at most 96 tokens (about 15 s of signing): a longer text loses its end. Parts stay well below that.
@@ -147,14 +137,9 @@ async function openPausePhrases(sign: (text: string) => void) {
 export function Interpreter({ signRequest = null, standalone = false }: { signRequest?: { text: string; n: number } | null; standalone?: boolean }) {
   const [ready, setReady] = useState<Ready>("loading");
   const [on, setOn] = useState(false);
-  const [awake, setAwake] = useState(!WAKE.length);
-  // pendingWake: woken by the confirmed partial text; the sentence holding the word is still to come (signed from after
-  // the word). Sentences close in speaking order, so those said before the word were already dropped in standby.
-  const awakeRef = useRef(!WAKE.length), pendingWake = useRef(false);
-  const wake = useCallback((v: boolean) => { awakeRef.current = v; setAwake(v); if (!v) pendingWake.current = false; }, []);
   const [busy, setBusy] = useState(0);       // phrases in the sign generator
   const [lines, setLines] = useState<Line[]>([]);
-  const [playing, setPlaying] = useState<Play | null>(null);
+  const [playing, setPlaying] = useState<{ index: number; part: number; started: number } | null>(null);
   const [now, setNow] = useState(() => performance.now());
   // Motions the avatar has derived (sliced prewarm): a part starts only once ready, so nothing is skipped.
   const prepared = useRef(new WeakSet<MotionFile>());
@@ -189,26 +174,19 @@ export function Interpreter({ signRequest = null, standalone = false }: { signRe
   useEffect(() => {
     const line = playing ? lines[playing.index] : undefined;
     const part = line?.parts[playing!.part];
-    // sentences heard after the one at `from` (being generated or ready): the backlog sets the pace
-    const waiting = (from: number) => lines.slice(from + 1).filter((l) => !(l.dropped && !l.parts.length)).length;
-    const signedAt = part?.motion ? playing!.started + playing!.lead + part.motion.duration_ms / playing!.rate : 0;
-    if (playing && line && part?.motion) {
+    const finished = !part?.motion || now - playing!.started > LEAD_MS + part.motion.duration_ms / SIGN_SPEED + REST_MS;
+    if (!finished) return;
+    if (playing && line) {
       const following = line.parts[playing.part + 1]?.motion;
-      if (following) { // next piece of the same sentence: short link, no rest
-        if (now >= signedAt + LINK_REST_MS && prepared.current.has(following))
-          setPlaying({ ...playing, part: playing.part + 1, started: now, lead: LINK_LEAD_MS, rate: pace(waiting(playing.index)) });
-        return;
-      }
+      if (following) { if (prepared.current.has(following)) setPlaying({ ...playing, part: playing.part + 1, started: now }); return; }
       if (!line.done && !line.dropped) return;
-      if (now < signedAt + (waiting(playing.index) ? CATCH_UP_REST_MS : REST_MS)) return;
     }
     let next = playing ? playing.index + 1 : 0;
     while (next < lines.length && lines[next].dropped && !lines[next].parts.length) next++; // noise, errors
     const first = lines[next]?.parts[0]?.motion;
     if (!first || !prepared.current.has(first)) return; // not transcribed / generated / derived yet: wait at rest
 
-    const behind = waiting(next);
-    setPlaying({ index: next, part: 0, started: now, rate: pace(behind), lead: behind ? CATCH_UP_LEAD_MS : LEAD_MS });
+    setPlaying({ index: next, part: 0, started: now });
     // played phrases give their motions back (a long talk keeps memory flat)
     setLines((prev) => prev.map((l, i) => (i === next ? { ...l, shown: true } : i < next && l.parts.length ? { ...l, parts: l.parts.map((x) => ({ text: x.text })) } : l)));
   }, [now, lines, playing]);
@@ -252,44 +230,19 @@ export function Interpreter({ signRequest = null, standalone = false }: { signRe
     if (signRequest) enqueue(signRequest.text);
   }, [signRequest, enqueue]);
 
-  /** A heard sentence: signed when awake; in standby only the wake word counts (what follows it is signed). */
-  const heard = useCallback((text: string, voice?: { wav: ArrayBuffer; words: Word[] }) => {
-    const at = findWake(text, WAKE);
-    let waking = false; // the sentence that holds the wake word: only what follows the word is signed
-    if (!awakeRef.current) {
-      if (at < 0) return;
-      wake(true);
-      waking = true;
-    } else if (pendingWake.current) {
-      pendingWake.current = false;
-      waking = at >= 0;
-    }
-    if (waking) {
-      text = afterWake(text, WAKE);
-      if (!text) return;
-      voice = voice && { ...voice, words: voice.words.slice(at + 1) };
-    }
-    enqueue(text, voice);
-  }, [enqueue, wake]);
-  /** Partial text (~every 0.7 s): wake up as soon as the word is confirmed (two passes agree), before the sentence ends.
-   * Not on a first guess: the sentences said before the word must be closed (and dropped) first. */
-  const onLive = useCallback((live: { sure: string; tentative: string }) => {
-    if (!awakeRef.current && findWake(live.sure, WAKE) >= 0) { wake(true); pendingWake.current = true; }
-  }, [wake]);
-
-  const start = useCallback(async (quiet = false) => {
+  const start = useCallback(async () => {
     setError("");
     try {
       // Fallback (address ?ecoute=pauses): the earlier mode, one phrase per pause, transcribed once.
-      const mic = new URLSearchParams(location.search).get("ecoute") === "pauses" ? await openPausePhrases(heard) : await openLiveStream({
+      const mic = new URLSearchParams(location.search).get("ecoute") === "pauses" ? await openPausePhrases(enqueue) : await openLiveStream({
         transcribe: async (wav) => {
           const form = new FormData();
           form.append("file", new Blob([wav], { type: "audio/wav" }), "live.wav");
           const r = await request<{ segments?: { words?: Word[] }[] }>("/live/transcribe", { method: "POST", body: form });
           return (r.segments ?? []).flatMap((x) => x.words ?? []);
         },
-        onSentence: heard,
-        onLive, // heard text stays in the background (nothing is drawn over the avatar); only the wake word is looked for
+        onSentence: enqueue,
+        onLive: () => {}, // heard text stays in the background: nothing is drawn over the avatar
         onError: (e) => setError(e instanceof Error ? e.message : "Transcription impossible."),
       });
       detector.current = mic.detector;
@@ -301,22 +254,11 @@ export function Interpreter({ signRequest = null, standalone = false }: { signRe
       };
       setOn(true);
     } catch {
-      if (!quiet) setError("Micro refusé ou indisponible.");
+      setError("Micro refusé ou indisponible.");
     }
-  }, [heard, onLive]);
+  }, [enqueue]);
 
-  // With a wake word the mic opens by itself in standby once the models are ready (the button stays as fallback).
-  const autoStarted = useRef(false);
-  useEffect(() => {
-    if (ready === "ready" && WAKE.length && !autoStarted.current) { autoStarted.current = true; void start(true); }
-  }, [ready, start]);
-
-  // M / button: mic off -> on and active; with a wake word: active <-> standby (the mic stays open); without: mic off.
-  const toggle = useCallback(() => {
-    if (!on) { if (ready === "ready") { wake(true); void start(); } }
-    else if (WAKE.length) wake(!awakeRef.current);
-    else stop.current();
-  }, [on, ready, start, wake]);
+  const toggle = useCallback(() => (on ? stop.current() : ready === "ready" ? void start() : undefined), [on, ready, start]);
 
   // Keyboard: M = micro, H = hide/show the box, Z = box size.
   useEffect(() => {
@@ -334,8 +276,8 @@ export function Interpreter({ signRequest = null, standalone = false }: { signRe
 
   const current = playing ? lines[playing.index]?.parts[playing.part] : undefined;
   const elapsed = playing ? now - playing.started : 0;
-  const signing = !!current?.motion && elapsed < playing!.lead + current.motion.duration_ms / playing!.rate;
-  const t = signing ? Math.max(0, elapsed - playing!.lead) * playing!.rate : 0;
+  const signing = !!current?.motion && elapsed < LEAD_MS + current.motion.duration_ms / SIGN_SPEED;
+  const t = signing ? Math.max(0, elapsed - LEAD_MS) * SIGN_SPEED : 0;
   const speaking = !!detector.current?.speaking;
   const level = detector.current ? Math.min(1, detector.current.level * 12) : 0;
   // What the avatar must derive next, in playing order (the current part first while it is not ready).
@@ -350,8 +292,7 @@ export function Interpreter({ signRequest = null, standalone = false }: { signRe
   const both = [hand, ear].filter(Boolean).join(" · ");
   const status = ready === "loading" ? "Préparation…"
     : ready === "off" ? "Reconnaissance vocale indisponible"
-    : both && (awake || signing || busy) ? both.charAt(0).toUpperCase() + both.slice(1)
-    : on && !awake ? `En veille · dites « ${WAKE_WORD} »`
+    : both ? both.charAt(0).toUpperCase() + both.slice(1)
     : on ? "À l’écoute" : "Micro coupé";
 
   return (
@@ -371,7 +312,7 @@ export function Interpreter({ signRequest = null, standalone = false }: { signRe
       <div className="interp-caption" aria-live="polite">{signing && current ? current.text : ""}</div>
       <footer>
         <button className={`mic${on ? " on" : ""}`} disabled={ready !== "ready"} onClick={toggle} title="Micro (M)">
-          {ready === "loading" ? "Chargement…" : !on ? "Activer le micro" : !awake ? "Activer l’interprète" : WAKE.length ? "Mettre en veille" : "Couper le micro"}
+          {ready === "loading" ? "Chargement…" : on ? "Couper le micro" : "Activer le micro"}
         </button>
         {on && <span className="level" aria-hidden><i style={{ width: `${Math.round(level * 100)}%` }} /></span>}
       </footer>

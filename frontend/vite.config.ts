@@ -17,9 +17,11 @@ export default defineConfig(({ command }) => ({
     name: "presentation-host",
     configureServer(server) {
       server.middlewares.use((req, res, next) => {
-        if (/^(presentation|interprete)\./.test(req.headers.host ?? "") && (req.url === "/" || req.url === "/index.html")) {
+        // SIGNACULTURE_HOME_PAGE: a server that shows one page only (e.g. the transcription page on its own port)
+        const home = env.SIGNACULTURE_HOME_PAGE || (/^(presentation|interprete)\./.test(req.headers.host ?? "") ? "/interprete/" : "");
+        if (home && (req.url === "/" || req.url === "/index.html")) {
           res.statusCode = 302;
-          res.setHeader("Location", "/interprete/");
+          res.setHeader("Location", home);
           res.end();
         } else next();
       });
