@@ -49,8 +49,9 @@ mic ──► live transcription (Whisper large-v3-turbo, GPU, every ~0.7 s) ─
 | | |
 |---|---|
 | `M` / button | Mic on / off |
+| `S` | Stop everything at once (`/interprete/`): the mic, the signing in progress and the phrases waiting; the avatar goes back to rest. `M` listens again. |
 | `F` | Full screen (`/interprete/`) |
-| `S`, `←` `→`, `Z`, `H` | Slides page only: sign the slide's sentence, change slide, box size, hide the box |
+| `S`, `←` `→`, `Z`, `H` | Slides page: `S` signs the slide's sentence; change slide, box size, hide the box |
 
 Address options:
 

@@ -150,6 +150,8 @@ export function Interpreter({ signRequest = null, standalone = false }: { signRe
   const [hidden, setHidden] = useState(false);
   // Two independent queues: Whisper never waits for the signing, the signing never waits for Whisper.
   const signChain = useRef(Promise.resolve());
+  const epoch = useRef(0);
+  const muted = useRef(false); // after S: the mic's last flush is thrown away
   const count = useRef(0);
   const detector = useRef<PhraseDetector | null>(null);
   const stop = useRef<() => void>(() => {});
@@ -195,10 +197,13 @@ export function Interpreter({ signRequest = null, standalone = false }: { signRe
    * With the sentence's audio, its stressed words (loudness, pitch, lengthening) make those signs bigger, held, nodded. */
   const enqueue = useCallback((text: string, voice?: { wav: ArrayBuffer; words: Word[] }) => {
     const index = count.current++;
+    // after a stop (key S) the epoch changes: work queued before it is skipped and its results are thrown away
+    const e = epoch.current, live = () => epoch.current === e;
     setLines((prev) => [...prev, { text, parts: [] }]);
-    const update = (patch: (l: Line) => Partial<Line>) => setLines((prev) => prev.map((l, i) => (i === index ? { ...l, ...patch(l) } : l)));
+    const update = (patch: (l: Line) => Partial<Line>) => { if (live()) setLines((prev) => prev.map((l, i) => (i === index ? { ...l, ...patch(l) } : l))); };
     setBusy((b) => b + 1);
     signChain.current = signChain.current.then(async () => {
+      if (!live()) return;
       try {
         const heard = voice ? await analyseVoice(voice) : { prosody: null, emotion: null, timeline: null };
         const { prosody } = heard;
@@ -207,6 +212,7 @@ export function Interpreter({ signRequest = null, standalone = false }: { signRe
         const aligned = prosody && pieces.reduce((n, x) => n + words(x).length, 0) === prosody.words.length;
         let at = 0;
         for (const piece of pieces) {
+          if (!live()) return; // stopped (key S) between two pieces
           const n = words(piece).length;
           const span = aligned ? [prosody.words[at].start_ms, prosody.words[at + n - 1].end_ms] : voice?.words.length
             ? [voice.words[0].start_ms, voice.words[voice.words.length - 1].end_ms] : null;
@@ -217,13 +223,25 @@ export function Interpreter({ signRequest = null, standalone = false }: { signRe
         }
         update(() => ({ done: true }));
         setError("");
-      } catch (e) {
+      } catch (err) {
         update(() => ({ dropped: true }));
-        setError(e instanceof Error ? e.message : "Traitement impossible.");
+        if (live()) setError(err instanceof Error ? err.message : "Traitement impossible.");
       } finally {
-        setBusy((b) => b - 1);
+        if (live()) setBusy((b) => b - 1);
       }
     });
+  }, []);
+
+  /** Key S (interpreter page): stop everything at once: the mic, the signing in progress and every phrase waiting;
+   * the avatar goes back to rest. M starts listening again. */
+  const stopAll = useCallback(() => {
+    muted.current = true;
+    epoch.current++;
+    stop.current();
+    count.current = 0;
+    setLines([]);
+    setPlaying(null);
+    setBusy(0);
   }, []);
 
   useEffect(() => {
@@ -231,17 +249,18 @@ export function Interpreter({ signRequest = null, standalone = false }: { signRe
   }, [signRequest, enqueue]);
 
   const start = useCallback(async () => {
+    muted.current = false;
     setError("");
     try {
       // Fallback (address ?ecoute=pauses): the earlier mode, one phrase per pause, transcribed once.
-      const mic = new URLSearchParams(location.search).get("ecoute") === "pauses" ? await openPausePhrases(enqueue) : await openLiveStream({
+      const mic = new URLSearchParams(location.search).get("ecoute") === "pauses" ? await openPausePhrases((text) => { if (!muted.current) enqueue(text); }) : await openLiveStream({
         transcribe: async (wav) => {
           const form = new FormData();
           form.append("file", new Blob([wav], { type: "audio/wav" }), "live.wav");
           const r = await request<{ segments?: { words?: Word[] }[] }>("/live/transcribe", { method: "POST", body: form });
           return (r.segments ?? []).flatMap((x) => x.words ?? []);
         },
-        onSentence: enqueue,
+        onSentence: (text, voice) => { if (!muted.current) enqueue(text, voice); },
         onLive: () => {}, // heard text stays in the background: nothing is drawn over the avatar
         onError: (e) => setError(e instanceof Error ? e.message : "Transcription impossible."),
       });
@@ -260,19 +279,22 @@ export function Interpreter({ signRequest = null, standalone = false }: { signRe
 
   const toggle = useCallback(() => (on ? stop.current() : ready === "ready" ? void start() : undefined), [on, ready, start]);
 
-  // Keyboard: M = micro, H = hide/show the box, Z = box size.
+  // Keyboard: M = micro, H = hide/show the box, Z = box size; interpreter page: S = stop mic + signing, F = full screen.
   useEffect(() => {
     const key = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.ctrlKey || e.metaKey || e.altKey) return;
       const k = e.key.toLowerCase();
       if (k === "m") toggle();
-      else if (standalone) { if (k === "f") void (document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen()); }
+      else if (standalone) {
+        if (k === "s") stopAll();
+        else if (k === "f") void (document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen());
+      }
       else if (k === "h") setHidden((h) => !h);
       else if (k === "z") setSize((s) => (s === "s" ? "m" : s === "m" ? "l" : "s"));
     };
     window.addEventListener("keydown", key);
     return () => window.removeEventListener("keydown", key);
-  }, [toggle, standalone]);
+  }, [toggle, standalone, stopAll]);
 
   const current = playing ? lines[playing.index]?.parts[playing.part] : undefined;
   const elapsed = playing ? now - playing.started : 0;
