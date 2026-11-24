@@ -59,7 +59,8 @@ export function enableSoftShadows(renderer: THREE.WebGLRenderer, key: THREE.Dire
 
 export type Polished = { composer: EffectComposer; setSize: (w: number, h: number) => void; dispose: () => void };
 
-export function createComposer(renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera): Polished {
+/** bloom: false on a plain bright background (the background would glow over the avatar). */
+export function createComposer(renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, { bloom = true } = {}): Polished {
   const size = renderer.getSize(new THREE.Vector2());
   const composer = new EffectComposer(renderer);
   composer.addPass(new RenderPass(scene, camera));
@@ -67,7 +68,7 @@ export function createComposer(renderer: THREE.WebGLRenderer, scene: THREE.Scene
   ao.updateGtaoMaterial({ radius: 0.12, distanceExponent: 1.4, thickness: 1, scale: 1 });
   ao.blendIntensity = 0.75;
   composer.addPass(ao);
-  composer.addPass(new UnrealBloomPass(new THREE.Vector2(size.x, size.y), 0.12, 0.4, 0.92));
+  if (bloom) composer.addPass(new UnrealBloomPass(new THREE.Vector2(size.x, size.y), 0.12, 0.4, 0.92));
   composer.addPass(new OutputPass());
   const smaa = new SMAAPass(size.x * renderer.getPixelRatio(), size.y * renderer.getPixelRatio());
   composer.addPass(smaa);

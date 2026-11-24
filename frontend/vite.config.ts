@@ -13,13 +13,13 @@ export default defineConfig(({ command }) => ({
   // The built Studio is served under /studio/; the showcase site owns /.
   base: command === "build" ? "/studio/" : "/",
   plugins: [react(), {
-    // presentation.yassinejemmali.me opens the presentation, not the Studio.
+    // presentation.* / interprete.* open the live interpreter alone, not the Studio.
     name: "presentation-host",
     configureServer(server) {
       server.middlewares.use((req, res, next) => {
-        if (req.headers.host?.startsWith("presentation.") && (req.url === "/" || req.url === "/index.html")) {
+        if (/^(presentation|interprete)\./.test(req.headers.host ?? "") && (req.url === "/" || req.url === "/index.html")) {
           res.statusCode = 302;
-          res.setHeader("Location", "/presentation/");
+          res.setHeader("Location", "/interprete/");
           res.end();
         } else next();
       });

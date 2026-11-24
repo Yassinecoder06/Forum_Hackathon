@@ -3,17 +3,17 @@
 // A sentence goes to the signing model as soon as its sure text ends with . ? ! (or at a long pause, or when it
 // grows too long); its audio is then cut away (word timestamps) and listening simply goes on.
 import { CAPTURE_WORKLET, PhraseDetector, encodeWav } from "../src/utils/phraseDetector";
+import { checkSentence, isNoise } from "./frenchFilter";
 
-export type Word = { start_ms: number; end_ms: number; text: string };
+export type Word = { start_ms: number; end_ms: number; text: string; probability?: number };
 export type LiveText = { sure: string; tentative: string };
 /** A finished sentence with its words (times in the buffer at the moment it closed). */
 export type Closed = { text: string; words: Word[] };
 
 const norm = (w: string) => w.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^\p{L}\p{N}]/gu, "");
 const endsSentence = (w: string) => /[.?!…]["»)]*$/.test(w);
-// Whisper's usual inventions on silence or noise (subtitle credits): never signed.
-// Whisper joins its words with spaces ("Sous -titrage ST' 501"), so spaces around "-" and "." are allowed.
-export const isNoise = (t: string) => !t.trim() || /sous\s*-?\s*titr|amara\s*\.?\s*org|merci d.avoir regard|abonnez\s*-?\s*vous|\bST\s*'?\s*501\b/i.test(t);
+// Only French speech is signed: Whisper's inventions on noise/music, unsure guesses and other languages are dropped.
+export { isNoise };
 
 /** Pure sentence cutter over successive hypotheses of the same, growing audio buffer (times relative to it). */
 export class SentenceCutter {
@@ -57,7 +57,7 @@ export class SentenceCutter {
       const words = this.sentence.slice(0, end + 1), text = words.map((w) => w.text).join(" ");
       cut = this.sentence[end].end_ms;
       this.sentence = this.sentence.slice(end + 1);
-      if (!isNoise(text)) { sentences.push(text); closed.push({ text, words }); }
+      if (checkSentence(text, words).keep) { sentences.push(text); closed.push({ text, words }); }
     }
     if (cut) this.shift(cut);
     return { sentences, closed, cut };

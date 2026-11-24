@@ -37,6 +37,8 @@ type Props = {
   onPrepared?: (motion: MotionFile) => void;
   /** Cross-fade (ms) from the shown pose whenever the motion changes; 0 = cut (default). */
   blendMs?: number;
+  /** Plain background colour (CSS, e.g. "#ffffff") instead of the café stage; read once at mount. */
+  background?: string;
 };
 export function AvatarCanvas(props: Props) {
   const mount = useRef<HTMLDivElement>(null),
@@ -53,7 +55,10 @@ export function AvatarCanvas(props: Props) {
     let redraw = true;
     const scene = new THREE.Scene();
     const backdrop = createCafeBackdrop();
-    scene.background = backdrop;
+    const plain = latest.current.background;
+    // The output pass tone-maps everything (ACES): an HDR value is needed for the colour to come out as given (white stays
+    // white). Tone mapping is per pixel, so the avatar is unchanged; bloom is off then (it would spread the bright background).
+    scene.background = plain ? new THREE.Color(plain).multiplyScalar(8) : backdrop;
     let renderer: THREE.WebGLRenderer;
     try {
       renderer = new THREE.WebGLRenderer({
@@ -67,7 +72,7 @@ export function AvatarCanvas(props: Props) {
       return;
     }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setClearColor(0x6b4232);
+    renderer.setClearColor(plain ?? 0x6b4232);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.0;
@@ -100,7 +105,7 @@ export function AvatarCanvas(props: Props) {
     }
     // Rendering polish: soft key-light shadows, ambient occlusion, light bloom, SMAA (renderPolish.ts).
     enableSoftShadows(renderer, keyLight!);
-    const polished = createComposer(renderer, scene, camera);
+    const polished = createComposer(renderer, scene, camera, { bloom: !plain });
     const resize = () => {
       if (!host.clientWidth || !host.clientHeight) return;
       renderer.setSize(host.clientWidth, host.clientHeight);

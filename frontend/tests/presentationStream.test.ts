@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { SentenceCutter, type Word } from "../presentation/liveStream";
+import { checkSentence } from "../presentation/frenchFilter";
 
 // words with 300 ms each, from a start time (ms in the current buffer)
 const words = (text: string, from = 0): Word[] => text.split(" ").map((t, i) => ({ text: t, start_ms: from + i * 300, end_ms: from + i * 300 + 280 }));
@@ -71,4 +72,22 @@ const words = (text: string, from = 0): Word[] => text.split(" ").map((t, i) => 
   c.update(words("Ca va bien"));
   assert.deepEqual(c.update(words("Ça va, bien.")).sentences, ["Ça va, bien."]);
 }
-console.log("Presentation live-stream checks passed: two-pass agreement, sentence cut while speaking, seam without loss, pause flush, noise, long sentences.");
+// 6. French filter: sound labels, unsure guesses and English are not signed; French (with loanwords) is.
+{
+  const why = (t: string, p?: number) => checkSentence(t, p === undefined ? [] : t.split(" ").map((x) => ({ text: x, probability: p }))).why;
+  assert.equal(why("Musique"), "noise");
+  assert.equal(why("(Applaudissements)"), "noise");
+  assert.equal(why("[Rires]"), "noise");
+  assert.equal(why("♪ La la la ♪"), "noise");
+  assert.equal(why("Bonjour à tous, voici notre projet.", 0.3), "unsure");
+  assert.equal(why("Thank you so much for coming tonight."), "not-french");
+  assert.equal(why("What is this?"), "not-french");
+  assert.equal(why("Hello"), "not-french");
+  for (const ok of ["Bonjour à tous, voici notre projet.", "Le but du projet est simple.", "Merci.", "On utilise le design thinking.",
+    "C'est un prototype open source.", "Marie présente le projet.", "SignaCulture traduit le français parlé."])
+    assert.equal(checkSentence(ok, ok.split(" ").map((x) => ({ text: x, probability: 0.9 }))).keep, true, ok);
+  const c = new SentenceCutter();
+  assert.deepEqual(c.flush(words("Thank you very much.")).sentences, [], "English never reaches the avatar");
+  assert.deepEqual(c.flush(words("Merci beaucoup.")).sentences, ["Merci beaucoup."]);
+}
+console.log("Presentation live-stream checks passed: French filter (noise, unsure, English), two-pass agreement, sentence cut while speaking, seam without loss, pause flush, noise, long sentences.");

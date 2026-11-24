@@ -1,0 +1,60 @@
+:root {
+  --cream: #fbf6f0;
+  --paper: #ffffff;
+  --sand: #efe2d3;
+  --line: #e6d6c5;
+  --ink: #3a2318;
+  --muted: #8a6a58;
+  --terra: #b3603d;
+  --terra-dark: #8f4529;
+  --brass: #c09157;
+  --espresso: #2a170f;
+  --box-w: clamp(240px, 21vw, 360px);
+}
+
+/* ---------- interpreter box (bottom-right) ---------- */
+.interp { position: fixed; right: 1.8vw; bottom: 2.4vh; width: var(--box-w); z-index: 10; display: flex; flex-direction: column;
+  background: var(--espresso); color: var(--cream); border-radius: 20px; overflow: hidden;
+  box-shadow: 0 24px 60px -20px rgba(20, 10, 5, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.06); transition: width 0.3s ease, opacity 0.3s, transform 0.3s; }
+.interp.size-s { --box-w: clamp(190px, 15vw, 260px); width: var(--box-w); }
+.interp.size-l { --box-w: clamp(320px, 30vw, 520px); width: var(--box-w); }
+.interp.hidden { opacity: 0; transform: translateY(20px); pointer-events: none; }
+.interp header { display: flex; align-items: center; gap: 8px; padding: 9px 12px; font-size: 12px; background: rgba(255, 255, 255, 0.04); }
+.interp header strong { font-weight: 600; letter-spacing: 0.02em; }
+.interp .status { margin-left: auto; color: #d6bba7; white-space: nowrap; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: #6d5649; flex: none; }
+.dot.on { background: #6fc28a; }
+.dot.speaking { background: #f0a37f; box-shadow: 0 0 0 4px rgba(240, 163, 127, 0.25); }
+
+.interp-avatar { position: relative; aspect-ratio: 4 / 5; background: linear-gradient(#f4ece3, #e9dccd); }
+.interp-avatar .avatar-stage, .interp-avatar .avatar-stage > div { position: absolute; inset: 0; width: 100%; height: 100%; }
+.interp-avatar canvas { width: 100%; height: 100%; display: block; outline: 0; }
+.interp-avatar .avatar-loading { position: absolute; z-index: 2; left: 10px; right: 10px; top: 10px; font-size: 11px; line-height: 1.5;
+  color: #594136; background: #f8faf4e8; padding: 8px 10px; border-radius: 10px; }
+.interp-avatar .hand-tracking-note, .interp-avatar .avatar-view-note { display: none; }
+/* Subtitle strip under the avatar: fixed height (3 lines), so the box never jumps and nothing covers the signing. */
+.interp-caption { box-sizing: content-box; height: 3.9em; padding: 7px 12px; text-align: center; font-size: clamp(12px, 0.95vw, 16px);
+  line-height: 1.3; color: #fcf9f4; background: rgba(255, 255, 255, 0.04);
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden; }
+
+.interp footer { display: flex; align-items: center; gap: 10px; padding: 9px 12px; }
+.interp .mic { border: 0; border-radius: 999px; padding: 7px 14px; font-size: 12px; font-weight: 600; background: var(--terra); color: #fff; }
+.interp .mic.on { background: #4b3428; color: var(--cream); box-shadow: inset 0 0 0 1px #f0a37f; }
+.interp .mic:disabled { opacity: 0.5; cursor: default; }
+.level { flex: 1; height: 6px; border-radius: 3px; background: rgba(255, 255, 255, 0.1); overflow: hidden; }
+.level i { display: block; height: 100%; background: #f0a37f; transition: width 0.08s linear; }
+.interp-error { margin: 0; padding: 0 12px 10px; font-size: 11px; color: #f0a37f; }
+
+
+/* ---------- interpreter alone (/interprete/): the box is the whole window ---------- */
+.interp.standalone { inset: 0; width: auto; border-radius: 0; box-shadow: none; background: #fff; color: var(--ink); }
+.interp.standalone .interp-avatar { flex: 1; min-height: 0; aspect-ratio: auto; background: #fff; }
+.interp.standalone header, .interp.standalone .interp-caption { background: #fff; color: var(--ink); }
+.interp.standalone .status { color: var(--muted); }
+.interp.standalone .mic.on { background: #f3e9df; color: var(--ink); box-shadow: inset 0 0 0 1px var(--terra); }
+.interp.standalone .level { background: #efe2d3; }
+.interp.standalone .level i { background: var(--terra); }
+.interp.standalone .interp-error { color: var(--terra-dark); }
+.interp.standalone header { font-size: clamp(12px, 1.6vh, 16px); }
+.interp.standalone .interp-caption { font-size: clamp(14px, 2.6vh, 26px); }
+.interp.standalone .mic { font-size: clamp(12px, 1.5vh, 15px); }
