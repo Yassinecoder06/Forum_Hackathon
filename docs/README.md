@@ -14,6 +14,7 @@ their results live in [`research/`](../research/README.md).
 | [test-sites/](test-sites/README.md) | The comparison sites on ports 8094–8105 (code in the sibling `Forum_Tests` folder) |
 | [deployment/](deployment/) | Windows restore notes (Docker guide: [../deployment/DOCKER.md](../deployment/DOCKER.md)) |
 | [presentation/](presentation/) | Slides, demo narration, pipeline PDF |
+| [interpreter/](interpreter/README.md) | Live LSF interpreter page (`/interprete/`): mic → Whisper → French filter → C0 → avatar, wake word, speed, running it, measures |
 | [planning/](planning/) | Original development plan, orchestration, team worktree organization |
 | [project-log/](project-log/) | Progress snapshots and conversation handoff context |
 | [pipeline/LSF_ENGINES.md](pipeline/LSF_ENGINES.md) | Experimental LSF engines C0/B2 (`POST /lsf/generate`): model paths, pose conversion, limits |
