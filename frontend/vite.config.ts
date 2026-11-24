@@ -12,11 +12,23 @@ const devCert = env.SIGNACULTURE_DEV_CERT, devKey = env.SIGNACULTURE_DEV_KEY;
 export default defineConfig(({ command }) => ({
   // The built Studio is served under /studio/; the showcase site owns /.
   base: command === "build" ? "/studio/" : "/",
-  plugins: [react()],
+  plugins: [react(), {
+    // presentation.yassinejemmali.me opens the presentation, not the Studio.
+    name: "presentation-host",
+    configureServer(server) {
+      server.middlewares.use((req, res, next) => {
+        if (req.headers.host?.startsWith("presentation.") && (req.url === "/" || req.url === "/index.html")) {
+          res.statusCode = 302;
+          res.setHeader("Location", "/presentation/");
+          res.end();
+        } else next();
+      });
+    },
+  }],
   server: {
     port: 5173,
     host: "127.0.0.1",
-    allowedHosts: [".ts.net"],
+    allowedHosts: [".ts.net", ".trycloudflare.com", ".yassinejemmali.me", ".sc", ".local"],
     https: devCert && devKey ? { cert: readFileSync(devCert), key: readFileSync(devKey) } : undefined,
     proxy: {
       "/webcam": {

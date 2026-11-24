@@ -413,14 +413,30 @@ export class HumanoidRetargeter {
     }
   }
 
+  /** Offline derivation of a motion, all at once (blocks for about 0.15-0.25 s per second of motion). */
   private prepare(motion: MotionFile) {
+    const steps = this.prepareSteps(motion);
+    for (;;) {
+      const r = steps.next();
+      if (r.done) return r.value;
+    }
+  }
+
+  /**
+   * The same derivation cut into small steps: it pauses (yield) only at the top of a frame's iteration, where the
+   * iteration sets every pose it reads, so the rig may be posed and drawn between steps (sliced prewarm).
+   */
+  private *prepareSteps(motion: MotionFile) {
     const start = performance.now(), names = [...this.binds.keys()];
-    this.bodyRef = followsBody(motion) ? bodyReference(motion) : null;
-    const all = motion.frames.map((frame) => {
+    const ref = followsBody(motion) ? bodyReference(motion) : null;
+    const all: { time: number; rotations: THREE.Quaternion[] }[] = [];
+    for (const frame of motion.frames) {
+      yield;
+      this.bodyRef = ref;
       this.apply(frame.joints);
-      return { time: frame.time_ms, rotations: names.map((n) => this.binds.get(n)!.bone.quaternion.clone()) };
-    });
-    this.bodyRef = null;
+      this.bodyRef = null;
+      all.push({ time: frame.time_ms, rotations: names.map((n) => this.binds.get(n)!.bone.quaternion.clone()) });
+    }
     let rejected = 0;
     const states: Record<string, HandState[]> = {};
     for (const side of ["Left", "Right"]) {
@@ -436,13 +452,16 @@ export class HumanoidRetargeter {
     }
     // Hand realism: anatomical limits and zero-phase finger smoothing on the keyframe track, BEFORE contacts are
     // resolved, so the contact pass sees the final hand shapes. Local rotations only; a pure function of the motion.
+    yield;
     const handLimited = this.hands ? this.hands.constrainTrack(all, names) : 0;
+    yield;
     // Resolve contacts AFTER rotation filtering. Densify to 100 Hz so a collision
     // between source keyframes is also checked; runtime only samples this cache.
     const dense = [], denseStates: Record<string, HandState[]> = { Left: [], Right: [] };
     const geometry: { capsules: (side: string) => Capsule[]; original: Record<string, THREE.Vector3> }[] = [];
     let correctedFrames = 0, contactFrames = 0, maxCorrection = 0, maxPenetration = 0;
     for (let time = 0; all.length && time <= motion.duration_ms; time = Math.min(motion.duration_ms, time + 10)) {
+      yield;
       const interval = frameInterval(motion.frames, time);
       names.forEach((n, i) => this.binds.get(n)!.bone.quaternion.slerpQuaternions(all[interval.lo].rotations[i], all[interval.next].rotations[i], interval.alpha));
       this.root.updateMatrixWorld(true);
@@ -549,13 +568,15 @@ export class HumanoidRetargeter {
     };
     const wrists = () => Object.fromEntries(["Left", "Right"].map(side =>
       [side, this.bone(side + "Hand")!.getWorldPosition(new THREE.Vector3())]));
-    const baselineWrists = dense.map(frame => { setPose(frame.rotations); return wrists(); });
+    const baselineWrists: Record<string, THREE.Vector3>[] = [];
+    for (const frame of dense) { yield; setPose(frame.rotations); baselineWrists.push(wrists()); }
     const acceptedWrists = [...baselineWrists];
     let trajectoryRefinedFrames = 0;
     // Offline, deterministic pass: require both adjacent wrist steps to remain
     // within the existing trajectory's lengths. The next frame's fallback pose
     // is always feasible, so an improvement cannot force a later teleport.
     for (let i = 1; i < dense.length - 1; i++) {
+      yield;
       const frame = dense[i], { capsules, original } = geometry[i];
       setPose(frame.rotations);
       let best = handContact(capsules("Left"), capsules("Right")).maxRawPenetration;
@@ -584,13 +605,15 @@ export class HumanoidRetargeter {
       setPose(frame.rotations); acceptedWrists[i]=wrists();
     }
     // Contacts move the arms with the palm kept in place, which changes the wrist angle: limit the wrists again.
+    yield;
     if (this.hands) this.hands.constrainTrack(dense.map((f) => ({ time: f.time_ms, rotations: f.rotations })), names, null, ["wrist"]);
     maxPenetration=0;
-    dense.forEach((frame,i) => {
-      setPose(frame.rotations);
+    for (let i = 0; i < dense.length; i++) {
+      yield;
+      setPose(dense[i].rotations);
       maxPenetration=Math.max(maxPenetration,handContact(geometry[i].capsules("Left"),geometry[i].capsules("Right")).maxPenetration);
       for (const side of ["Left", "Right"]) maxCorrection=Math.max(maxCorrection,this.bone(side+"Hand")!.getWorldPosition(new THREE.Vector3()).distanceTo(geometry[i].original[side]));
-    });
+    }
     const diagnostics = { preparedMs: performance.now() - start, rejectedSpikes: rejected, correctedFrames, contactFrames, maxCorrection, maxPenetration, trajectoryRefinedFrames, handLimited };
     return { all: dense, names, states: denseStates, diagnostics };
   }
@@ -603,6 +626,24 @@ export class HumanoidRetargeter {
    * rig in an arbitrary pose: the caller re-applies the current motion afterwards. */
   prime(motion: MotionFile) {
     if (!this.tracks.has(motion)) this.tracks.set(motion, this.prepare(motion));
+  }
+  private slicing = new WeakMap<MotionFile, ReturnType<HumanoidRetargeter["prepareSteps"]>>();
+  /** Derive a motion a few milliseconds at a time (`budgetMs` per call), so drawing never stalls. True once cached.
+   * Like prime(), leaves the rig in an arbitrary pose: the caller poses it again before drawing. */
+  primeSlice(motion: MotionFile, budgetMs: number) {
+    if (this.tracks.has(motion)) return true;
+    let steps = this.slicing.get(motion);
+    if (!steps) this.slicing.set(motion, (steps = this.prepareSteps(motion)));
+    const until = performance.now() + budgetMs;
+    do {
+      const r = steps.next();
+      if (r.done) {
+        this.tracks.set(motion, r.value);
+        this.slicing.delete(motion);
+        return true;
+      }
+    } while (performance.now() < until);
+    return false;
   }
   /** Cached offline derivation; seeking never depends on past render calls. */
   applyMotion(motion: MotionFile, time: number) {

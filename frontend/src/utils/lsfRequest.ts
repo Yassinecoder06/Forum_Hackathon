@@ -1,4 +1,4 @@
-import type { NonManualType } from "../types/contract";
+import type { AudioFeatures, NonManualType } from "../types/contract";
 
 export type LsfEngine = "b2" | "c0";
 
@@ -6,6 +6,7 @@ export const MARKER_LABEL: Record<NonManualType, string> = {
   question_yn: "Question oui/non · sourcils levés",
   question_wh: "Question ouverte · sourcils froncés",
   negation: "Négation · hochement de tête",
+  emphasis: "Mot accentué · geste appuyé, hochement",
 };
 
 export const EMOTION_LABEL: Record<string, string> = {
@@ -29,7 +30,8 @@ export function dominantEmotion(scores?: Record<string, number> | null) {
 
 /** Body of POST /lsf/generate for the current choices (Studio panel, film and live modes). */
 export function generateBody(text: string, engine: LsfEngine, lsfOrder: boolean, nonmanual: boolean, edited?: string[][] | null,
-  emotion?: Record<string, number> | null) {
+  emotion?: Record<string, number> | null, voice?: Pick<AudioFeatures, "prosody" | "emotion_timeline"> | null,
+  focus?: "left" | "centre" | "right" | null) {
   return {
     text,
     engine,
@@ -37,5 +39,10 @@ export function generateBody(text: string, engine: LsfEngine, lsfOrder: boolean,
     nonmanual,
     ...(engine === "b2" && lsfOrder && edited ? { glosses: edited } : {}),
     ...(emotion ? { emotion } : {}),
+    // Words the speaker stressed (and the emotion over time): the same step also reads "!", capitals and "très" in the text.
+    ...(voice?.prosody ? { prosody: voice.prosody } : {}),
+    ...(voice?.emotion_timeline?.length ? { emotion_timeline: voice.emotion_timeline.slice(0, 64) } : {}),
+    // [pointing] companion: where the thing talked about is in the picture; demonstratives and pronouns point there
+    ...(focus ? { focus } : {}),
   };
 }

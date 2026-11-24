@@ -157,12 +157,14 @@ export interface MotionGeneration {
   gloss_analysis?: GlossAnalysis;
   /** Voice emotion applied to the speed and size of the manual signing (never the face). Heuristic. */
   emotion?: { label: string; confidence: number; speed: number; amplitude: number };
+  /** Stressed words (voice or written cues): larger movement, a short hold and a head nod on their signs. */
+  prosody?: { stressed: { word: string; cue: string; emphasis: number; start_ms: number; end_ms: number }[] };
   translation_validated: false;
   linguistic_review: string;
 }
 
 /** Rule-based LSF word order (POST /lsf/order): simplified rules, not checked by an LSF reader. */
-export type NonManualType = "question_yn" | "question_wh" | "negation";
+export type NonManualType = "question_yn" | "question_wh" | "negation" | "emphasis";
 export interface GlossClause {
   text: string;
   glosses: string[];
@@ -202,9 +204,11 @@ export interface MotionFile {
   /** Neutral face channels (brows; engines also give mouth_width, mouth_corner, eye_open_left/right). */
   face_calibration?: { brow_left: number; brow_right: number; [channel: string]: number };
   /** Grammatical non-manual markers baked into the face channels (nm_*) of each frame. */
-  nonmanual?: { start_ms: number; end_ms: number; type: NonManualType }[];
+  nonmanual?: { start_ms: number; end_ms: number; type: NonManualType; strength?: number }[];
   /** [film-speakers] Clauses signed in the role of a quoted / reported speaker (times inside this motion). */
   role_shift?: { start_ms: number; end_ms: number; referent: string; label: string; locus?: string | null; kind: string }[];
+  /** [pointing] Index-finger points toward the locus (L / C / R, viewer's frame) of a person / thing the text refers to (times inside this motion). */
+  pointing?: { start_ms: number; end_ms: number; locus: "L" | "C" | "R"; referent?: string | null; label?: string | null; kind?: "pronoun" | "addressee" | "mention" | "deictic"; token?: string | null; clause?: number; gloss_index?: number | null }[];
   synthetic?: boolean;
   attribution?: MotionAttribution;
   attributions?: MotionAttribution[];

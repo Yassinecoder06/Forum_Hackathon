@@ -12,6 +12,7 @@ import { PerformanceLayer } from "../../utils/performanceLayer";
 import { EmotionStyle, emotionFace } from "../../utils/emotionStyle";
 import { polishMaterials } from "../../utils/renderPolish";
 import { EMOTION_KEYS, emotionToBlendshapes, sampleEmotion, smoothWeights } from "../../utils/emotionFace";
+import { addLook, createPointingRig, pointAt, pointingAt, pointLook, type PointCommand, type PointingRig } from "../../utils/pointing";
 import { applyRoleShift, createRoleShiftRig, type RoleShiftPose, type RoleShiftRig } from "../../utils/roleShift";
 
 /** Largest head nod on a fully emphasised sign; small, because head movement is LSF grammar. */
@@ -34,6 +35,14 @@ export type AvatarFrame = {
   onPrewarmed?: (ready: number) => void;
   /** Turn of torso / head / gaze toward a side (film speakers, the companion looking at an object). */
   roleShift?: RoleShiftPose | null;
+  /** [pointing] Explicit point (AR companion: a world position, or a locus side). Without it, motion.pointing is played. */
+  point?: PointCommand | PointCommand[] | null;
+  /** With prewarm: derive at most this many ms per frame (sliced, no stall) instead of one whole motion per frame. */
+  prewarmBudgetMs?: number;
+  /** Called with each motion whose derivation is cached (it will start without any stall). */
+  onPrepared?: (motion: MotionFile) => void;
+  /** Cross-fade (ms) from the shown pose whenever the motion changes (sentence -> rest -> next sentence). 0 = cut. */
+  blendMs?: number;
 };
 
 export class AvatarLoadError extends Error {
@@ -96,6 +105,7 @@ export class AvatarRig {
   private performer: PerformanceLayer;
   private style: EmotionStyle;
   private shiftRig: RoleShiftRig | null;
+  private pointRig: PointingRig | null;
   private faceDriver: MetaHumanFaceDriver | null;
   private morphGain: Record<string, number> | undefined;
   private morphs: THREE.Mesh[] = [];
@@ -113,6 +123,9 @@ export class AvatarRig {
   private emotionWeights: Record<string, number> = {};
   private lastEmotionAt: number | undefined;
   private nodRestore: THREE.Quaternion | undefined;
+  // Cross-fade between motions (frame.blendMs): the pose shown last frame, and the pose the fade starts from.
+  private fade: { bones: THREE.Object3D[]; shown: { q: THREE.Quaternion[]; p: THREE.Vector3[]; m: number[][] };
+    from: { q: THREE.Quaternion[]; p: THREE.Vector3[]; m: number[][] } | null; start: number; key: MotionFile | null | undefined } | null = null;
   // renderOnChange bookkeeping
   private last: Partial<AvatarFrame> & { set?: boolean } = {};
 
@@ -130,6 +143,7 @@ export class AvatarRig {
     this.performer = new PerformanceLayer(model, profile, this.retarget.hands);
     this.style = new EmotionStyle(model, profile);
     this.shiftRig = createRoleShiftRig(model, profile);
+    this.pointRig = createPointingRig(model, profile, this.retarget.hands);
     const style = this.style;
     fetch("/api/avatar/emotion-idles")
       .then((r) => (r.ok ? r.json() : []))
@@ -168,7 +182,12 @@ export class AvatarRig {
     if (!queue?.length) return false;
     const pending = queue.find((m) => !this.retarget.isPrepared(m));
     if (!pending) return false;
+    if (frame.prewarmBudgetMs) {
+      if (this.retarget.primeSlice(pending, frame.prewarmBudgetMs)) frame.onPrepared?.(pending);
+      return true;
+    }
     this.retarget.prime(pending);
+    frame.onPrepared?.(pending);
     frame.onPrewarmed?.(queue.filter((m) => this.retarget.isPrepared(m)).length);
     return true;
   }
@@ -179,11 +198,11 @@ export class AvatarRig {
    */
   pose(frame: AvatarFrame, dirty = true, debugHost?: HTMLElement): boolean {
     const { motion, currentTimeMs, expressiveModulation, faceBlendshapes, headRotation, emotion, emotionTimeline,
-      emotionIntensity, emotionClock, renderOnChange, roleShift } = frame;
+      emotionIntensity, emotionClock, renderOnChange } = frame;
     const last = this.last;
     if (renderOnChange && !dirty && last.set && last.motion === motion && last.currentTimeMs === currentTimeMs &&
-      last.faceBlendshapes === faceBlendshapes && last.headRotation === headRotation && last.roleShift === roleShift) return false;
-    this.last = { set: true, motion, currentTimeMs, faceBlendshapes, headRotation, roleShift };
+      last.faceBlendshapes === faceBlendshapes && last.headRotation === headRotation && last.roleShift === frame.roleShift && last.point === frame.point) return false;
+    this.last = { set: true, motion, currentTimeMs, faceBlendshapes, headRotation, roleShift: frame.roleShift, point: frame.point };
     const { retarget, head, bindHead } = this;
     const morph = this.morph.bind(this);
     this.applied.clear();
@@ -223,6 +242,9 @@ export class AvatarRig {
     const life = renderOnChange ? undefined : this.idle.update(nowSec, Boolean(motion));
     morph("eyeBlinkLeft", life?.blink ?? 0);
     morph("eyeBlinkRight", life?.blink ?? 0);
+    // Pointing (index): the frame's explicit point, else the motion's scheduled points. Head and eyes turn toward it too.
+    const point = frame.point ?? (motion?.pointing ? pointingAt(motion.pointing, currentTimeMs) : null);
+    const roleShift = addLook(frame.roleShift, pointLook(this.pointRig, point));
     const gx = (life?.gaze.x ?? 0) + (roleShift?.gazeX ?? 0), gy = life?.gaze.y ?? 0; // gaze toward the speaker / object
     morph("eyeLookOutLeft", Math.max(0, gx));
     morph("eyeLookInRight", Math.max(0, gx));
@@ -298,6 +320,7 @@ export class AvatarRig {
       turnHead(head, engine.nonmanual.headYaw, engine.nonmanual.headPitch);
     // Role shift: torso/head yaw toward the speaker (or the object), added on top of the grammatical head motion.
     applyRoleShift(this.shiftRig, roleShift);
+    pointAt(this.pointRig, point);
     if (head?.parent && bindHead && headRotation?.length === 9 && headRotation.every(Number.isFinite)) {
       const [xx, xy, xz, yx, yy, yz, zx, zy, zz] = headRotation;
       const rotation = new THREE.Matrix4().set(xx, xy, xz, 0, yx, yy, yz, 0, zx, zy, zz, 0, 0, 0, 0, 1);
@@ -306,6 +329,7 @@ export class AvatarRig {
       head.quaternion.copy(bindHead).premultiply(delta);
       head.updateWorldMatrix(false, true);
     }
+    this.crossFade(motion, frame.blendMs ?? 0);
     // Emphasis nod: additive head pitch on stressed signs (<= NOD_MAX_DEG), undone by afterDraw() so it never
     // accumulates into the retargeted pose.
     this.nodRestore = undefined;
@@ -321,6 +345,41 @@ export class AvatarRig {
       }
     }
     return true;
+  }
+
+  /** Ease from the last shown pose into this frame's pose for `ms` after each change of motion (null = rest). */
+  private crossFade(motion: MotionFile | null, ms: number) {
+    if (ms <= 0) { this.fade = null; return; }
+    if (!this.fade) {
+      const bones: THREE.Object3D[] = [];
+      this.model.traverse((o) => { if ((o as THREE.Bone).isBone) bones.push(o); });
+      this.fade = { bones, shown: { q: [], p: [], m: [] }, from: null, start: 0, key: motion };
+    }
+    const f = this.fade, now = performance.now();
+    if (motion !== f.key && f.shown.q.length) {
+      f.from = { q: f.shown.q.map((q) => q.clone()), p: f.shown.p.map((v) => v.clone()), m: f.shown.m.map((a) => a.slice()) };
+      f.start = now;
+    }
+    f.key = motion;
+    if (f.from) {
+      const t = (now - f.start) / ms;
+      if (t >= 1) f.from = null;
+      else {
+        const e = t * t * t * (10 - 15 * t + 6 * t * t); // minimum-jerk (human reaching): no jump in speed or acceleration
+        const target = new THREE.Quaternion();
+        f.bones.forEach((b, i) => {
+          b.quaternion.copy(f.from!.q[i].clone().slerp(target.copy(b.quaternion), e));
+          b.position.lerpVectors(f.from!.p[i], b.position.clone(), e);
+        });
+        this.morphs.forEach((mesh, i) => {
+          const inf = mesh.morphTargetInfluences, a = f.from!.m[i];
+          if (inf && a) for (let k = 0; k < inf.length; k++) inf[k] = a[k] + (inf[k] - a[k]) * e;
+        });
+        this.model.updateMatrixWorld(true);
+      }
+    }
+    f.bones.forEach((b, i) => { (f.shown.q[i] ??= new THREE.Quaternion()).copy(b.quaternion); (f.shown.p[i] ??= new THREE.Vector3()).copy(b.position); });
+    this.morphs.forEach((mesh, i) => { f.shown.m[i] = Array.from(mesh.morphTargetInfluences ?? []); });
   }
 
   /** Undo the display-only emphasis nod after the draw. */

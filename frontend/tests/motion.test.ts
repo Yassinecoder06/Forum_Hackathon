@@ -225,6 +225,21 @@ retarget.applyMotion(seekClip, 80);
 retarget.applyMotion(seekClip, 20);
 assert.deepEqual(bones.map((b) => b.quaternion.toArray()), seekPose);
 assert.deepEqual(bones.map((b) => b.position.length()), lengths);
+// Sliced derivation (presentation prewarm, a few ms per frame) gives exactly the one-shot result, even when the
+// rig is posed for another motion between two steps.
+const wave = (i: number, k: number) => [k * (.05 + .1 * Math.abs(Math.sin(i / 4))), 1.4 + .05 * Math.cos(i / 3), .3] as [number, number, number];
+const sliceClip = { ...a, duration_ms: 1200, frames: Array.from({ length: 31 }, (_, i) => ({ time_ms: i * 40, joints: { ...joints, left_wrist: wave(i, 1), right_wrist: wave(i + 2, -1) } })) };
+const slicedClip = { ...sliceClip };
+retarget.prime(sliceClip);
+let sliceCalls = 0;
+while (!retarget.primeSlice(slicedClip, 0)) { sliceCalls++; retarget.applyMotion(seekClip, 40); }
+assert(sliceCalls > 31, "the derivation is cut into many steps");
+for (const time of [0, 333, 700, 1200]) {
+  retarget.applyMotion(sliceClip, time);
+  const whole = bones.map((b) => b.quaternion.toArray());
+  retarget.applyMotion(slicedClip, time);
+  assert.deepEqual(bones.map((b) => b.quaternion.toArray()), whole, `sliced == one-shot at ${time} ms`);
+}
 const calibrated = stitchAnimationPlan(plan, new Map([
   ["a", { ...a, face_calibration: { brow_left: .4, brow_right: .41 }, frames: a.frames.map((f) => ({ ...f, face: { brow_left: .4, brow_right: .41 } })) }],
   ["b", b],

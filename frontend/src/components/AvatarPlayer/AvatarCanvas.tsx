@@ -31,6 +31,12 @@ type Props = {
   onPrewarmed?: (ready: number) => void;
   /** [film-speakers] Role shift toward the current speaker's locus (roleShift.ts), additive after retargeting. */
   roleShift?: RoleShiftPose | null;
+  /** With prewarm: derive at most this many ms per frame (sliced, no stall). */
+  prewarmBudgetMs?: number;
+  /** Called with each prewarmed motion once it is ready to start without a stall. */
+  onPrepared?: (motion: MotionFile) => void;
+  /** Cross-fade (ms) from the shown pose whenever the motion changes; 0 = cut (default). */
+  blendMs?: number;
 };
 export function AvatarCanvas(props: Props) {
   const mount = useRef<HTMLDivElement>(null),
