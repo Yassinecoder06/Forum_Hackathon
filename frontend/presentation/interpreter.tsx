@@ -34,7 +34,7 @@ const pace = (waiting: number) => SIGN_SPEED * (waiting >= 2 ? 1.2 : waiting ===
 // Wake word (address ?mot=..., default "commencer"; ?mot=aucun = no standby): the mic opens in standby when the page is
 // ready, nothing is signed until the word is heard; M / the button switch between active and standby.
 const WAKE_WORD = (() => { const m = new URLSearchParams(location.search).get("mot"); return m === null ? "commencer" : m === "aucun" ? "" : m; })();
-const WAKE = wakeForms(WAKE_WORD), WAKE_WAIT_MS = 8000;
+const WAKE = wakeForms(WAKE_WORD);
 type Play = { index: number; part: number; started: number; rate: number; lead: number };
 // Motions are derived for the avatar a few ms per frame (never a stall), signing or not.
 const PREP_BUDGET_SIGNING_MS = 5, PREP_BUDGET_IDLE_MS = 12;
@@ -148,10 +148,10 @@ export function Interpreter({ signRequest = null, standalone = false }: { signRe
   const [ready, setReady] = useState<Ready>("loading");
   const [on, setOn] = useState(false);
   const [awake, setAwake] = useState(!WAKE.length);
-  // pendingWake: woken by the partial text at this time (ms): sentences said before the word are still closing; they are
-  // dropped until the sentence with the word arrives (at most WAKE_WAIT_MS).
-  const awakeRef = useRef(!WAKE.length), pendingWake = useRef(0);
-  const wake = useCallback((v: boolean) => { awakeRef.current = v; setAwake(v); if (!v) pendingWake.current = 0; }, []);
+  // pendingWake: woken by the confirmed partial text; the sentence holding the word is still to come (signed from after
+  // the word). Sentences close in speaking order, so those said before the word were already dropped in standby.
+  const awakeRef = useRef(!WAKE.length), pendingWake = useRef(false);
+  const wake = useCallback((v: boolean) => { awakeRef.current = v; setAwake(v); if (!v) pendingWake.current = false; }, []);
   const [busy, setBusy] = useState(0);       // phrases in the sign generator
   const [lines, setLines] = useState<Line[]>([]);
   const [playing, setPlaying] = useState<Play | null>(null);
@@ -261,9 +261,8 @@ export function Interpreter({ signRequest = null, standalone = false }: { signRe
       wake(true);
       waking = true;
     } else if (pendingWake.current) {
-      if (at >= 0) { waking = true; pendingWake.current = 0; }
-      else if (performance.now() - pendingWake.current < WAKE_WAIT_MS) return; // said before the word
-      else pendingWake.current = 0;
+      pendingWake.current = false;
+      waking = at >= 0;
     }
     if (waking) {
       text = afterWake(text, WAKE);
@@ -272,9 +271,10 @@ export function Interpreter({ signRequest = null, standalone = false }: { signRe
     }
     enqueue(text, voice);
   }, [enqueue, wake]);
-  /** Partial text (~every 0.7 s): wake up as soon as the word is heard, before the sentence ends. */
+  /** Partial text (~every 0.7 s): wake up as soon as the word is confirmed (two passes agree), before the sentence ends.
+   * Not on a first guess: the sentences said before the word must be closed (and dropped) first. */
   const onLive = useCallback((live: { sure: string; tentative: string }) => {
-    if (!awakeRef.current && findWake(`${live.sure} ${live.tentative}`, WAKE) >= 0) { wake(true); pendingWake.current = performance.now(); }
+    if (!awakeRef.current && findWake(live.sure, WAKE) >= 0) { wake(true); pendingWake.current = true; }
   }, [wake]);
 
   const start = useCallback(async (quiet = false) => {

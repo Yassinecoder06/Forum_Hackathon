@@ -47,7 +47,7 @@ mic ──► live transcription (Whisper large-v3-turbo, GPU, every ~0.7 s) ─
 
 | | |
 |---|---|
-| **Wake word** | When the page is ready the mic opens in standby: it listens, nothing is signed. Saying **« commencer »** wakes the interpreter; only what follows the word is signed. Sentences said before the word are dropped. |
+| **Wake word** | When the page is ready the mic opens in standby: it listens, nothing is signed. Saying **« commencer »** wakes the interpreter as soon as two transcription passes agree on the word (sentences close in speaking order, so those said before the word are dropped); only what follows the word is signed. |
 | `M` / button | Active ↔ standby (mic off → on the first time) |
 | `F` | Full screen (`/interprete/`) |
 | `S`, `←` `→`, `Z`, `H` | Slides page only: sign the slide's sentence, change slide, box size, hide the box |
