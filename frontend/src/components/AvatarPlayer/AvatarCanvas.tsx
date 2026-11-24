@@ -123,6 +123,8 @@ export function AvatarCanvas(props: Props) {
       .then((loaded) => {
         if (!loaded) return;
         rig = loaded;
+        // Measurement hook for tests only (address with ?rigdebug): the page's rig, to sample poses offline.
+        if (new URLSearchParams(location.search).has("rigdebug")) (window as unknown as { __scRig?: unknown }).__scRig = loaded;
         scene.add(rig.model);
         setReady(true);
         redraw = true;

@@ -53,12 +53,65 @@ function basis(
 }
 /** Arm IK and calibrated local finger articulation: bind translations never stretch.
  * Every call starts from bind transforms, so seeking is deterministic. */
+/**
+ * Torso volume measured on the avatar's own meshes (body + clothes) in the rest pose: the vertices skinned mostly to
+ * the pelvis / spine bones, cut in 2 cm horizontal slices; each slice keeps its centre and, per direction around it,
+ * the farthest vertex (a star-shaped outline: chest, breasts, belly, back). Arm points are tested in the chest bone's
+ * frame, so the volume follows the body when it leans or turns.
+ */
+type Torso = { chest: THREE.Object3D; restChest: THREE.Matrix4; y0: number; step: number; slices: ({ cx: number; cz: number; r: Float32Array } | null)[] };
+const TORSO_BONE = /(^|[^a-z])(pelvis|hips|spine|chest)/i, TORSO_BINS = 48;
+function measureTorso(root: THREE.Object3D, chest: THREE.Object3D | undefined): Torso | null {
+  if (!chest) return null;
+  root.updateMatrixWorld(true);
+  const points: THREE.Vector3[] = [];
+  root.traverse((o) => {
+    const mesh = o as THREE.SkinnedMesh;
+    if (!mesh.isSkinnedMesh || !mesh.geometry?.attributes.skinIndex) return;
+    mesh.skeleton.update();
+    const index = mesh.geometry.attributes.skinIndex, weight = mesh.geometry.attributes.skinWeight;
+    const count = mesh.geometry.attributes.position.count, every = Math.max(1, Math.floor(count / 40000));
+    for (let i = 0; i < count; i += every) {
+      let best = -1, bw = 0;
+      for (let k = 0; k < 4; k++) { const w = weight.getComponent(i, k); if (w > bw) { bw = w; best = index.getComponent(i, k); } }
+      const bone = mesh.skeleton.bones[best];
+      if (!bone || !TORSO_BONE.test(bone.name)) continue;
+      points.push(mesh.getVertexPosition(i, new THREE.Vector3()).applyMatrix4(mesh.matrixWorld));
+    }
+  });
+  if (points.length < 200) return null;
+  const step = 0.02, y0 = Math.min(...points.map((p) => p.y)), n = Math.ceil((Math.max(...points.map((p) => p.y)) - y0) / step) + 1;
+  const groups: THREE.Vector3[][] = Array.from({ length: n }, () => []);
+  for (const p of points) groups[Math.floor((p.y - y0) / step)].push(p);
+  const slices = groups.map((g) => {
+    if (g.length < 20) return null;
+    const xs = g.map((p) => p.x), zs = g.map((p) => p.z);
+    const cx = (Math.min(...xs) + Math.max(...xs)) / 2, cz = (Math.min(...zs) + Math.max(...zs)) / 2;
+    const r = new Float32Array(TORSO_BINS);
+    for (const p of g) {
+      const b = Math.floor(((Math.atan2(p.z - cz, p.x - cx) + Math.PI) / (2 * Math.PI)) * TORSO_BINS) % TORSO_BINS;
+      r[b] = Math.max(r[b], Math.hypot(p.x - cx, p.z - cz));
+    }
+    for (let pass = 0; pass < TORSO_BINS && r.some((v) => !v); pass++) // empty directions take their neighbours' outline
+      r.forEach((v, b) => { if (!v) r[b] = Math.max(r[(b + 1) % TORSO_BINS], r[(b + TORSO_BINS - 1) % TORSO_BINS]); });
+    return { cx, cz, r };
+  });
+  return { chest, restChest: chest.matrixWorld.clone(), y0, step, slices };
+}
+
 export class HumanoidRetargeter {
   private binds = new Map<string, Bind>();
   private palms = new Map<string, THREE.Quaternion>();
   /** Elbow hinge axis per side, in the upper arm's local frame (from the bind pose). */
   private hinges = new Map<string, THREE.Vector3>();
   private neckOrigin = new THREE.Vector3();
+  private torso: Torso | null = null;
+  private toRest = new THREE.Matrix4();
+  private fromRest = new THREE.Quaternion();
+  /** Keep the arms out of the torso (measured on the avatar's meshes). Off only for comparisons. */
+  torsoGuard = true;
+  private torsoFixed = 0;
+  private torsoMaxDepth = 0;
   private shoulderWidth = 0.36;
   private tracks = new WeakMap<MotionFile, ReturnType<HumanoidRetargeter["prepare"]>>();
   /** Set while preparing an engine motion; null = arms/hands only (original behaviour). */
@@ -155,6 +208,68 @@ export class HumanoidRetargeter {
           this.hinges.set(side, hinge.normalize().applyQuaternion(upperBone.getWorldQuaternion(new THREE.Quaternion()).invert()));
       }
     }
+    this.torso = measureTorso(this.root, this.bone("Spine2") ?? this.bone("Spine1"));
+  }
+
+  /** How deep a world point is inside the torso (with `margin` of clearance), and the way out, or null. */
+  private torsoDepth(p: THREE.Vector3, margin: number) {
+    const t = this.torso!, q = p.clone().applyMatrix4(this.toRest);
+    const slice = t.slices[Math.floor((q.y - t.y0) / t.step)];
+    if (!slice) return null;
+    const dx = q.x - slice.cx, dz = q.z - slice.cz, r = Math.hypot(dx, dz);
+    const a = ((Math.atan2(dz, dx) + Math.PI) / (2 * Math.PI)) * TORSO_BINS, b = Math.floor(a) % TORSO_BINS, f = a - Math.floor(a);
+    const outline = slice.r[b] * (1 - f) + slice.r[(b + 1) % TORSO_BINS] * f;
+    const depth = outline + margin - r;
+    if (depth <= 0) return null;
+    // The way out is always toward the front (signers keep their arms in front of the body), never through the back:
+    // the outward direction around the torso, tilted forward.
+    const out = (r > 1e-4 ? new THREE.Vector3(dx / r, 0, dz / r) : new THREE.Vector3()).add(new THREE.Vector3(0, 0, 1)).normalize();
+    const forward = new THREE.Vector3(0, 0, 1).applyQuaternion(this.fromRest);
+    return { depth, dir: out.applyQuaternion(this.fromRest), forward };
+  }
+
+  /**
+   * After an arm is placed: if the upper arm, elbow, forearm or hand is inside the torso (monocular depth can put a
+   * forearm through the chest when the hand reaches the other side), move the elbow out (forward / sideways) or the
+   * wrist out, and place the arm again. A pure function of the pose, so seeking and sliced preparation agree.
+   */
+  private keepArmOutOfTorso(side: string, target: THREE.Vector3, elbowHint: THREE.Vector3, preservePalm = false) {
+    if (!this.torso) return;
+    this.torso.chest.updateWorldMatrix(true, false);
+    this.toRest.copy(this.torso.restChest).multiply(this.torso.chest.matrixWorld.clone().invert());
+    this.fromRest.setFromRotationMatrix(this.toRest).invert();
+    const upper = this.bone(side + "Arm")!, lower = this.bone(side + "ForeArm")!, hand = this.bone(side + "Hand")!, mid = this.bone(side + "HandMiddle1");
+    let last = Infinity;
+    for (let pass = 0; pass < 6; pass++) {
+      const s = upper.getWorldPosition(new THREE.Vector3()), e = lower.getWorldPosition(new THREE.Vector3()), w = hand.getWorldPosition(new THREE.Vector3());
+      const m = mid ? mid.getWorldPosition(new THREE.Vector3()) : w.clone();
+      const samples: [THREE.Vector3, number, boolean][] = [   // point, clearance (m), is it the hand
+        [s.clone().lerp(e, .75), .03, false], [e, .035, false],
+        ...[.25, .5, .75].map((k): [THREE.Vector3, number, boolean] => [e.clone().lerp(w, k), .03, false]),
+        [w, .025, true], [w.clone().lerp(m, .6), .015, true]];
+      let worst: { depth: number; dir: THREE.Vector3; forward: THREE.Vector3; isHand: boolean } | null = null;
+      for (const [p, margin, isHand] of samples) {
+        const hit = this.torsoDepth(p, margin);
+        if (hit && (!worst || hit.depth > worst.depth)) worst = { ...hit, isHand };
+      }
+      if (!worst) return;
+      if (pass === 0) { this.torsoFixed++; this.torsoMaxDepth = Math.max(this.torsoMaxDepth, worst.depth); }
+      if (worst.isHand) target.addScaledVector(worst.dir, worst.depth + .005);
+      else {
+        elbowHint.addScaledVector(worst.dir, worst.depth * 2 + .03);
+        // a nearly straight arm across the body cannot bend its way out: bring the hand forward too
+        if (worst.depth > last * 0.7) target.addScaledVector(worst.forward, Math.min(.06, worst.depth + .01));
+      }
+      last = worst.depth;
+      this.placeArm(side, target, elbowHint, preservePalm);
+    }
+  }
+
+  /** placeArm, then the torso check (every arm placement of the derivation goes through here). */
+  private placeArmOutside(side: string, target: THREE.Vector3, elbow: THREE.Vector3, preservePalm = false) {
+    target = target.clone(); elbow = elbow.clone();
+    this.placeArm(side, target, elbow, preservePalm);
+    if (this.torsoGuard) this.keepArmOutOfTorso(side, target, elbow, preservePalm);
   }
   private bone(name: string) {
     return this.binds.get(name)?.bone;
@@ -327,7 +442,7 @@ export class HumanoidRetargeter {
         if (distance > .001 && distance < .13)
           target.addScaledVector(delta.normalize(), Math.min(.03, .13 - distance));
       }
-      this.placeArm(side, target, map(elbow));
+      this.placeArmOutside(side, target, map(elbow));
       const points = ["wrist", "index_1", "middle_1", "pinky_1"].map(
         (n) => joints[prefix + "_" + n],
       );
@@ -429,6 +544,7 @@ export class HumanoidRetargeter {
   private *prepareSteps(motion: MotionFile) {
     const start = performance.now(), names = [...this.binds.keys()];
     const ref = followsBody(motion) ? bodyReference(motion) : null;
+    this.torsoFixed = 0; this.torsoMaxDepth = 0;
     const all: { time: number; rotations: THREE.Quaternion[] }[] = [];
     for (const frame of motion.frames) {
       yield;
@@ -516,7 +632,7 @@ export class HumanoidRetargeter {
           }
           target.z += Math.min(.04, bodyPush);
           const offset = target.clone().sub(original[side]).clampLength(0, .06);
-          this.placeArm(side, original[side].clone().add(offset), elbow.getWorldPosition(new THREE.Vector3()), true);
+          this.placeArmOutside(side, original[side].clone().add(offset), elbow.getWorldPosition(new THREE.Vector3()), true);
         }
         remember();
         corrected = true;
@@ -541,7 +657,7 @@ export class HumanoidRetargeter {
         }
         if (chosen) for (const side of ["Left", "Right"] as const) {
           const target = current[side].clone().add(chosen[side]);
-          this.placeArm(side, target, this.bone(side + "ForeArm")!.getWorldPosition(new THREE.Vector3()), true);
+          this.placeArmOutside(side, target, this.bone(side + "ForeArm")!.getWorldPosition(new THREE.Vector3()), true);
           remember();
         corrected = true;
         }
@@ -592,7 +708,7 @@ export class HumanoidRetargeter {
         const target = seedWrists[side].clone().addScaledVector(axis, amount);
         target.sub(original[side]).clampLength(0,.06).add(original[side]);
         if (target.z < seedWrists[side].z - .0001) continue;
-        this.placeArm(side,target,elbows[side],true);
+        this.placeArmOutside(side,target,elbows[side],true);
         const actual = this.bone(side + "Hand")!.getWorldPosition(new THREE.Vector3());
         const previousLimit = seedWrists[side].distanceTo(baselineWrists[i-1][side]);
         const nextLimit = seedWrists[side].distanceTo(baselineWrists[i+1][side]);
@@ -614,7 +730,8 @@ export class HumanoidRetargeter {
       maxPenetration=Math.max(maxPenetration,handContact(geometry[i].capsules("Left"),geometry[i].capsules("Right")).maxPenetration);
       for (const side of ["Left", "Right"]) maxCorrection=Math.max(maxCorrection,this.bone(side+"Hand")!.getWorldPosition(new THREE.Vector3()).distanceTo(geometry[i].original[side]));
     }
-    const diagnostics = { preparedMs: performance.now() - start, rejectedSpikes: rejected, correctedFrames, contactFrames, maxCorrection, maxPenetration, trajectoryRefinedFrames, handLimited };
+    const diagnostics = { preparedMs: performance.now() - start, rejectedSpikes: rejected, correctedFrames, contactFrames, maxCorrection, maxPenetration, trajectoryRefinedFrames, handLimited,
+      torsoFixedKeyframes: this.torsoFixed, torsoMaxDepth: this.torsoMaxDepth };
     return { all: dense, names, states: denseStates, diagnostics };
   }
 

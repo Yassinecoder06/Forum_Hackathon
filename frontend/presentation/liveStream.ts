@@ -25,7 +25,15 @@ export class SentenceCutter {
 
   /** Words after what is already sure, without a repeated overlap at the seam. */
   private fresh(words: Word[]) {
-    let out = words.filter((w) => w.start_ms >= this.committedEnd - 80 && norm(w.text));
+    // French spacing: Whisper may give "!" / "?" / "." as a word of its own ("équipe !"): glue it to the word before,
+    // so the sentence still ends there (a lone punctuation mark has no letters and would be dropped).
+    const glued: Word[] = [];
+    for (const w of words) {
+      const t = w.text.trim();
+      if (!norm(t) && glued.length) glued[glued.length - 1] = { ...glued[glued.length - 1], text: glued[glued.length - 1].text + t, end_ms: w.end_ms };
+      else glued.push({ ...w, text: t });
+    }
+    let out = glued.filter((w) => w.start_ms >= this.committedEnd - 80 && norm(w.text));
     const done = this.sentence.slice(-3).map((w) => norm(w.text));
     for (let k = Math.min(done.length, out.length); k > 0; k--)
       if (out.slice(0, k).every((w, i) => norm(w.text) === done[done.length - k + i])) { out = out.slice(k); break; }

@@ -50,10 +50,22 @@ function splitText(text: string): string[] {
 
 // C0 + refiners (server), LSF order, grammatical face, pointing spans, and the stressed words (voice and written cues).
 // No voice emotion here on purpose.
-const generate = (text: string, prosody?: Prosody | null) => request<MotionFile>("/lsf/generate", {
-  method: "POST", headers: { "Content-Type": "application/json" },
-  body: JSON.stringify(generateBody(text, "c0", true, true, null, null, prosody ? { prosody } : null)),
-});
+// Who / what was named in the previous sentences (the server's referent table), so a pronoun in a later sentence
+// ("Marie présente le projet." ... "Elle est fière") still points to its referent. Same as the Film mode's scene.
+// Forgotten after a long silence. The signing queue is serial, so the order is the speaking order.
+const SCENE_GAP_MS = 90000;
+const scene: { referents: unknown[]; last: number } = { referents: [], last: 0 };
+async function generate(text: string, prosody?: Prosody | null) {
+  if (performance.now() - scene.last > SCENE_GAP_MS) scene.referents = [];
+  const motion = await request<MotionFile>("/lsf/generate", {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ ...generateBody(text, "c0", true, true, null, null, prosody ? { prosody } : null),
+      ...(scene.referents.length ? { referents: scene.referents.slice(-64) } : {}) }),
+  });
+  scene.referents = (motion.generation as { gloss_analysis?: { referents?: unknown[] } } | undefined)?.gloss_analysis?.referents ?? scene.referents;
+  scene.last = performance.now();
+  return motion;
+}
 /** Generate one part; if C0 used all its tokens (the end may be missing), sign it as two halves instead. */
 async function generateWhole(text: string, add: (part: Part) => void, prosody?: Prosody | null): Promise<void> {
   const motion = await generate(text, prosody);
@@ -264,8 +276,9 @@ function Interpreter({ signRequest }: { signRequest: { text: string; n: number }
         <AvatarCanvas avatarCredit="" motion={signing ? current!.motion! : null} currentTimeMs={t} blendMs={BLEND_MS} expressiveModulation
           prewarm={upcoming} prewarmBudgetMs={signing ? PREP_BUDGET_SIGNING_MS : PREP_BUDGET_IDLE_MS} onPrepared={onPrepared} />
         {/* Transcribed phrases wait in the background: a phrase appears only when the avatar signs it. */}
-        {current && <div className="interp-subs"><div className="interp-sub">{current.text}</div></div>}
       </div>
+      {/* Subtitle under the avatar, never over it; only while that sentence is signed (empty strip at rest). */}
+      <div className="interp-caption" aria-live="polite">{signing && current ? current.text : ""}</div>
       <footer>
         <button className={`mic${on ? " on" : ""}`} disabled={ready !== "ready"} onClick={toggle} title="Micro (M)">
           {ready === "loading" ? "Chargement…" : on ? "Couper le micro" : "Activer le micro"}

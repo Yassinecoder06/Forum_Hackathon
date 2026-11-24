@@ -58,6 +58,13 @@ const words = (text: string, from = 0): Word[] => text.split(" ").map((t, i) => 
   assert.deepEqual(r.sentences, ["un deux trois quatre cinq six,"]);
   assert.equal(c.live.sure, "sept huit neuf dix onze douze treize");
 }
+// 4b. French spacing: a lone "!" from Whisper still ends the sentence.
+{
+  const c = new SentenceCutter();
+  const w = words("Elle est très fière de son équipe !");
+  c.update(w);
+  assert.deepEqual(c.update(w).sentences, ["Elle est très fière de son équipe!"]);
+}
 // 5. Accents and punctuation differences between passes still agree (the newer spelling is kept).
 {
   const c = new SentenceCutter();
