@@ -107,6 +107,24 @@ export class SentenceCutter {
   }
 }
 
+/** Open a microphone: the chosen one if it is still plugged in, else the default, else any input that works (the
+ * browser's default may point to a microphone that is gone). Each try gives up after 5 s (some browsers never answer). */
+export async function openMic(deviceId?: string) {
+  const clean = { echoCancellation: true, noiseSuppression: true, autoGainControl: true };
+  const attempt = (audio: MediaTrackConstraints) => Promise.race([
+    navigator.mediaDevices.getUserMedia({ audio }),
+    new Promise<never>((_, reject) => setTimeout(() => reject(Object.assign(new Error("timeout"), { name: "NotReadableError" })), 5000)),
+  ]);
+  const inputs = async () => (await navigator.mediaDevices.enumerateDevices().catch(() => [] as MediaDeviceInfo[]))
+    .filter((x) => x.kind === "audioinput" && x.deviceId && x.deviceId !== "default" && x.deviceId !== "communications");
+  const known = deviceId && (await inputs()).some((d) => d.deviceId === deviceId);
+  const tries: MediaTrackConstraints[] = [...(known ? [{ ...clean, deviceId: { exact: deviceId } }] : []), clean];
+  let last: unknown;
+  for (const audio of tries) { try { return await attempt(audio); } catch (e) { last = e; if ((e as Error).name === "NotAllowedError") throw e; } }
+  for (const d of await inputs()) { try { return await attempt({ ...clean, deviceId: { exact: d.deviceId } }); } catch (e) { last = e; } }
+  throw last;
+}
+
 type Options = {
   transcribe: (wav: ArrayBuffer) => Promise<Word[]>;
   /** A finished sentence, with its own audio and word times (for the voice stress). */
@@ -118,6 +136,7 @@ type Options = {
   intervalMs?: number;  // time between two passes
   pauseMs?: number;     // silence that closes a sentence without punctuation
   maxBufferMs?: number; // never send more audio than this
+  deviceId?: string;    // microphone to use (else the default, else any that works)
   maxWords?: number;    // a phrase longer than this is cut (at a comma when possible)
   commaWords?: number;  // close a phrase at a comma once it has this many words (0 = only at . ? !)
 };
@@ -125,7 +144,7 @@ type Options = {
 /** Open the microphone and stream it through Whisper. Returns the voice detector (level, speaking) and stop(). */
 export async function openLiveStream(o: Options) {
   const intervalMs = o.intervalMs ?? 700, maxBufferMs = o.maxBufferMs ?? 15000;
-  const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } });
+  const stream = await openMic(o.deviceId);
   const context = new AudioContext();
   try {
     const url = URL.createObjectURL(new Blob([CAPTURE_WORKLET], { type: "application/javascript" }));

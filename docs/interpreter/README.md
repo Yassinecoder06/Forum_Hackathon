@@ -60,6 +60,19 @@ Address options:
 | `?vitesse=1.2` | Signing speed, 0.5–3 (default 1.5) |
 | `?ecoute=pauses` | Earlier listening mode: one transcription per phrase, cut at pauses |
 
+## Fast mode (`?rapide=1`, test endpoint :5207)
+
+Why the signing ends after the speaker: not the models (Whisper 0.85 s for 35 s of audio, C0 0.1 s per sentence) but the
+length of what C0 writes: about 5-6 s for any sentence, even one word (its stop head learned clip lengths), and about a
+third of its steps are holds. Spoken 18.9 s -> signed 70.8 s on a dense film dialogue (x3.7).
+
+- Grouping: sentences heard while the avatar is busy wait and go to C0 as ONE text when she has 1.5 s left (one call
+  for three short sentences: 35-65 % shorter than three calls). A single sentence keeps its own word stress; a group
+  keeps the mean voice emotion.
+- Held parts faster: frames where the wrists move slower than 0.35 m/s play up to x3; real signing keeps the base speed.
+- Measured (36 s of dense dialogue as mic): the avatar finishes 8 s after the speaker instead of 21 s; signing time
+  36 s instead of 50 s; every word signed. What is left is mostly Whisper confirming the last sentence (~4 s).
+
 ## Running it
 
 The page is a Vite page of the frontend; `/api` must reach the SignaCulture API (Whisper worker, C0 + refiners,

@@ -58,3 +58,7 @@
 .interp.standalone header { font-size: clamp(12px, 1.6vh, 16px); }
 .interp.standalone .interp-caption { font-size: clamp(14px, 2.6vh, 26px); }
 .interp.standalone .mic { font-size: clamp(12px, 1.5vh, 15px); }
+
+.interp .mic-pick { flex: 1; min-width: 0; max-width: 260px; font: inherit; font-size: 12px; padding: 6px 8px; border-radius: 999px;
+  border: 1px solid rgba(66, 142, 174, 0.45); background: transparent; color: inherit; }
+.interp.standalone .mic-pick { color: var(--ink); background: #fff; }

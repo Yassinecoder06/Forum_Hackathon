@@ -22,6 +22,60 @@ type Ready = "loading" | "ready" | "off";
 // starts at once (LEAD_MS). User choice: short gaps, faster signing.
 const BLEND_MS = 300, LEAD_MS = 0, REST_MS = 100;
 // Signing speed: x1.5 (user choice), or the address ?vitesse=1.2 (0.5-3).
+// Fast mode (address ?rapide=1, the :5207 endpoint): the signing keeps up with the speaker.
+//  1. Grouping: sentences heard while the avatar is busy wait, then go to C0 together in ONE call (C0 writes about 5 s
+//     for any sentence, even one word: one call for three short sentences is 35-65 % shorter than three calls).
+//  2. Held parts faster: frames where the hands barely move (C0 marks about a third of its steps as holds) play up to
+//     x3; real signing keeps the base speed.
+const RAPIDE = new URLSearchParams(location.search).get("rapide") === "1";
+const WARP_REF = 0.35, WARP_MAX = 3; // wrist speed (m/s) under which a part is played faster; at most x3
+const FLUSH_MS = 1500;               // grouping: generate the waiting sentences when the avatar has this much left
+const GROUP_WORDS = 16;              // grouped text is cut in pieces of at most this many words (C0 token limit)
+type Warp = { at: Float32Array; dt: number; total: number };
+const warps = new WeakMap<MotionFile, Warp>();
+/** Display time of each frame: base speed, and with ?rapide the slow (held) frames up to x3 faster. */
+function warpOf(m: MotionFile): Warp {
+  const cached = warps.get(m);
+  if (cached) return cached;
+  const n = m.frames.length, dt = 1000 / (m.fps || 25), at = new Float32Array(n + 1);
+  const speed = new Float32Array(n);
+  for (let i = 1; i < n; i++) {
+    const a = m.frames[i - 1].joints, b = m.frames[i].joints;
+    let v = 0;
+    for (const k of ["left_wrist", "right_wrist"]) {
+      const p = a[k], q = b[k];
+      if (p && q) v = Math.max(v, Math.hypot(q[0] - p[0], q[1] - p[1], q[2] - p[2]) / (dt / 1000));
+    }
+    speed[i] = v;
+  }
+  for (let i = 0; i < n; i++) {
+    let sum = 0, k = 0; // 5-frame average: no jitter in the rate
+    for (let j = Math.max(1, i - 2); j <= Math.min(n - 1, i + 2); j++) { sum += speed[j]; k++; }
+    const v = k ? sum / k : WARP_REF;
+    const rate = RAPIDE ? Math.min(WARP_MAX, Math.max(1, WARP_REF / Math.max(v, 1e-3))) : 1;
+    at[i + 1] = at[i] + dt / (SIGN_SPEED * rate);
+  }
+  const w = { at, dt, total: at[n] };
+  warps.set(m, w);
+  return w;
+}
+/** Motion time (ms) to show after `elapsed` ms of display. */
+function motionTime(m: MotionFile, elapsed: number) {
+  const { at, dt } = warpOf(m);
+  if (elapsed <= 0) return 0;
+  let lo = 0, hi = at.length - 2;
+  while (lo < hi) { const mid = (lo + hi + 1) >> 1; if (at[mid] <= elapsed) lo = mid; else hi = mid - 1; }
+  const f = Math.min(1, (elapsed - at[lo]) / Math.max(1e-6, at[lo + 1] - at[lo]));
+  return (lo + f) * dt;
+}
+/** Cut a grouped text in balanced pieces of at most GROUP_WORDS words (sentence ends are not cut points here). */
+function chunkWords(text: string) {
+  const w = words(text), n = Math.ceil(w.length / GROUP_WORDS), size = Math.ceil(w.length / Math.max(1, n));
+  const out: string[] = [];
+  for (let i = 0; i < w.length; i += size) out.push(w.slice(i, i + size).join(" "));
+  return out;
+}
+
 const SIGN_SPEED = (() => {
   const v = parseFloat(new URLSearchParams(location.search).get("vitesse") ?? "");
   return Number.isFinite(v) ? Math.min(3, Math.max(0.5, v)) : 1.5;
@@ -99,7 +153,12 @@ function sliceTimeline(timeline: EmotionWindow[] | null, from: number, to: numbe
 
 /** The voice of a sentence, one /analyze-audio call (no transcription): stressed words (acoustic frames + the stream's
  * word times) and emotion2vec (scores for the sentence + ~2 s windows). Model hypotheses about the voice, not a measure. */
-const MIN_EMOTION_SPEECH_MS = 1500;
+// Under this much speech emotion2vec guesses (a 1 s fragment once came out "angry 97 %"): no emotion. Address
+// ?emotion_min=1000 lowers it (e.g. to show a short, clearly emotional line).
+const MIN_EMOTION_SPEECH_MS = (() => { const v = parseInt(new URLSearchParams(location.search).get("emotion_min") ?? "", 10); return Number.isFinite(v) ? Math.max(500, v) : 1500; })();
+// Manual emotion (address ?emotion=happy|sad|angry|surprised|fearful|neutral, for demos): replaces the voice's emotion
+// for every sentence (signing speed / size and face). Without it, the emotion comes from the voice (emotion2vec).
+const FORCED_EMOTION = (() => { const e = new URLSearchParams(location.search).get("emotion"); return e ? { [e]: 1 } as Scores : null; })();
 type VoiceInfo = { prosody: Prosody | null; emotion: Scores | null; timeline: EmotionWindow[] | null };
 async function analyseVoice(voice: { wav: ArrayBuffer; words: Word[] }): Promise<VoiceInfo> {
   try {
@@ -133,6 +192,18 @@ async function openPausePhrases(sign: (text: string) => void) {
   return { detector: mic.detector, stop: async () => mic.stop() };
 }
 
+/** Why the microphone did not open, in words the presenter can act on. */
+function micProblem(e: unknown) {
+  if (!window.isSecureContext || !navigator.mediaDevices?.getUserMedia)
+    return `Micro bloqué : le navigateur n’autorise le micro qu’en https. Ouvrez https://${location.hostname}:5206/interprete/ (ou localhost sur ce PC).`;
+  const name = (e as { name?: string })?.name;
+  if (name === "NotAllowedError" || name === "SecurityError")
+    return "Micro refusé : autorisez le micro pour ce site (icône du cadenas à gauche de l’adresse), puis réessayez.";
+  if (name === "NotFoundError" || name === "OverconstrainedError") return "Aucun micro détecté sur cet appareil.";
+  if (name === "NotReadableError") return "Le micro est déjà utilisé par une autre application.";
+  return "Micro indisponible.";
+}
+
 /** Live interpreter box: listens, transcribes, signs each phrase in speaking order. */
 export function Interpreter({ signRequest = null, standalone = false }: { signRequest?: { text: string; n: number } | null; standalone?: boolean }) {
   const [ready, setReady] = useState<Ready>("loading");
@@ -146,6 +217,17 @@ export function Interpreter({ signRequest = null, standalone = false }: { signRe
   const [, setPreparedTick] = useState(0);
   const onPrepared = useCallback((m: MotionFile) => { prepared.current.add(m); setPreparedTick((n) => n + 1); }, []);
   const [error, setError] = useState("");
+  // Microphone choice (remembered): the browser's default may be a microphone that is not plugged in.
+  const [mics, setMics] = useState<MediaDeviceInfo[]>([]);
+  const [micId, setMicId] = useState(() => localStorage.getItem("spm-mic") ?? "");
+  const listMics = useCallback(async () => {
+    try { setMics((await navigator.mediaDevices.enumerateDevices()).filter((d) => d.kind === "audioinput" && d.deviceId && d.deviceId !== "default" && d.deviceId !== "communications")); } catch { /* no device list */ }
+  }, []);
+  useEffect(() => {
+    void listMics();
+    navigator.mediaDevices?.addEventListener?.("devicechange", listMics);
+    return () => navigator.mediaDevices?.removeEventListener?.("devicechange", listMics);
+  }, [listMics]);
   const [size, setSize] = useState<"s" | "m" | "l">("m");
   const [hidden, setHidden] = useState(false);
   // Two independent queues: Whisper never waits for the signing, the signing never waits for Whisper.
@@ -176,7 +258,7 @@ export function Interpreter({ signRequest = null, standalone = false }: { signRe
   useEffect(() => {
     const line = playing ? lines[playing.index] : undefined;
     const part = line?.parts[playing!.part];
-    const finished = !part?.motion || now - playing!.started > LEAD_MS + part.motion.duration_ms / SIGN_SPEED + REST_MS;
+    const finished = !part?.motion || now - playing!.started > LEAD_MS + warpOf(part.motion).total + REST_MS;
     if (!finished) return;
     if (playing && line) {
       const following = line.parts[playing.part + 1]?.motion;
@@ -195,7 +277,9 @@ export function Interpreter({ signRequest = null, standalone = false }: { signRe
 
   /** Signing queue: one heard (or slide) sentence -> parts -> C0, each part playable as soon as it is generated.
    * With the sentence's audio, its stressed words (loudness, pitch, lengthening) make those signs bigger, held, nodded. */
-  const enqueue = useCallback((text: string, voice?: { wav: ArrayBuffer; words: Word[] }) => {
+  type Voice = { wav: ArrayBuffer; words: Word[] };
+  /** One heard sentence (voice) or, in fast mode, a group of sentences (voices) -> pieces -> C0. */
+  const enqueue = useCallback((text: string, voice?: Voice, group?: Voice[]) => {
     const index = count.current++;
     // after a stop (key S) the epoch changes: work queued before it is skipped and its results are thrown away
     const e = epoch.current, live = () => epoch.current === e;
@@ -205,9 +289,17 @@ export function Interpreter({ signRequest = null, standalone = false }: { signRe
     signChain.current = signChain.current.then(async () => {
       if (!live()) return;
       try {
-        const heard = voice ? await analyseVoice(voice) : { prosody: null, emotion: null, timeline: null };
+        let heard: VoiceInfo = voice ? await analyseVoice(voice) : { prosody: null, emotion: null, timeline: null };
+        if (group) { // grouped sentences: their voices' emotions are averaged; word stress is not aligned across them
+          const all = await Promise.all(group.map(analyseVoice));
+          const scores = all.flatMap((x) => (x.emotion ? [x.emotion] : []));
+          const mean: Record<string, number> = {};
+          for (const sc of scores) for (const [k, v] of Object.entries(sc)) mean[k] = (mean[k] ?? 0) + v / scores.length;
+          heard = { prosody: null, emotion: scores.length ? mean : null, timeline: null };
+        }
+        if (FORCED_EMOTION) heard = { ...heard, emotion: FORCED_EMOTION, timeline: null };
         const { prosody } = heard;
-        const pieces = splitText(text);
+        const pieces = group ? chunkWords(text) : splitText(text);
         // pieces are consecutive words of the sentence: each gets its own words (and emotion windows) of the voice analysis
         const aligned = prosody && pieces.reduce((n, x) => n + words(x).length, 0) === prosody.words.length;
         let at = 0;
@@ -232,10 +324,39 @@ export function Interpreter({ signRequest = null, standalone = false }: { signRe
     });
   }, []);
 
+  // Fast mode: sentences heard while the avatar is busy wait here and are generated together.
+  const waiting = useRef<{ text: string; voice: Voice }[]>([]);
+  const [waitingCount, setWaitingCount] = useState(0);
+  const heardSentence = useCallback((text: string, voice: Voice) => {
+    if (muted.current) return;
+    if (!RAPIDE) { enqueue(text, voice); return; }
+    waiting.current.push({ text, voice });
+    setWaitingCount(waiting.current.length);
+  }, [enqueue]);
+
+  // Fast mode: when the avatar has FLUSH_MS or less left to sign (or is idle) and the generator is free, everything
+  // heard meanwhile goes to C0 as one text (a single sentence keeps its own word stress).
+  useEffect(() => {
+    if (!RAPIDE || !waiting.current.length || busy > 0) return;
+    let left = 0;
+    lines.forEach((l, i) => l.parts.forEach((x, j) => {
+      if (!x.motion) return;
+      if (playing && i === playing.index && j === playing.part) left += Math.max(0, LEAD_MS + warpOf(x.motion).total - (now - playing.started));
+      else if (!playing || i > playing.index || (i === playing.index && j > playing.part)) left += warpOf(x.motion).total + REST_MS;
+    }));
+    if (left > FLUSH_MS) return;
+    const items = waiting.current.splice(0);
+    setWaitingCount(0);
+    if (items.length === 1) enqueue(items[0].text, items[0].voice);
+    else enqueue(items.map((x) => x.text).join(" "), undefined, items.map((x) => x.voice));
+  }, [now, busy, playing, lines, enqueue]);
+
   /** Key S (interpreter page): stop everything at once: the mic, the signing in progress and every phrase waiting;
    * the avatar goes back to rest. M starts listening again. */
   const stopAll = useCallback(() => {
     muted.current = true;
+    waiting.current = [];
+    setWaitingCount(0);
     epoch.current++;
     stop.current();
     count.current = 0;
@@ -260,7 +381,8 @@ export function Interpreter({ signRequest = null, standalone = false }: { signRe
           const r = await request<{ segments?: { words?: Word[] }[] }>("/live/transcribe", { method: "POST", body: form });
           return (r.segments ?? []).flatMap((x) => x.words ?? []);
         },
-        onSentence: (text, voice) => { if (!muted.current) enqueue(text, voice); },
+        deviceId: micId || undefined,
+        onSentence: heardSentence,
         onLive: () => {}, // heard text stays in the background: nothing is drawn over the avatar
         onError: (e) => setError(e instanceof Error ? e.message : "Transcription impossible."),
       });
@@ -272,10 +394,12 @@ export function Interpreter({ signRequest = null, standalone = false }: { signRe
         setOn(false);
       };
       setOn(true);
-    } catch {
-      setError("Micro refusé ou indisponible.");
+      void listMics(); // names are known once the mic is allowed
+    } catch (e) {
+      setError(micProblem(e));
+      void listMics();
     }
-  }, [enqueue]);
+  }, [enqueue, heardSentence, micId, listMics]);
 
   const toggle = useCallback(() => (on ? stop.current() : ready === "ready" ? void start() : undefined), [on, ready, start]);
 
@@ -298,8 +422,8 @@ export function Interpreter({ signRequest = null, standalone = false }: { signRe
 
   const current = playing ? lines[playing.index]?.parts[playing.part] : undefined;
   const elapsed = playing ? now - playing.started : 0;
-  const signing = !!current?.motion && elapsed < LEAD_MS + current.motion.duration_ms / SIGN_SPEED;
-  const t = signing ? Math.max(0, elapsed - LEAD_MS) * SIGN_SPEED : 0;
+  const signing = !!current?.motion && elapsed < LEAD_MS + warpOf(current.motion).total;
+  const t = signing ? motionTime(current!.motion!, elapsed - LEAD_MS) : 0;
   const speaking = !!detector.current?.speaking;
   const level = detector.current ? Math.min(1, detector.current.level * 12) : 0;
   // What the avatar must derive next, in playing order (the current part first while it is not ready).
@@ -309,7 +433,7 @@ export function Interpreter({ signRequest = null, standalone = false }: { signRe
     l.parts.forEach((x, j) => { if (x.motion && (!playing || i > playing.index || j >= playing.part)) upcoming.push(x.motion); });
   });
   // Both sides at once: what the avatar does, and what the ear does.
-  const hand = signing ? "Je signe" : busy ? "Traduction…" : "";
+  const hand = (signing ? "Je signe" : busy ? "Traduction…" : "") + (waitingCount ? ` (${waitingCount} en attente)` : "");
   const ear = speaking ? "j’écoute" : "";
   const both = [hand, ear].filter(Boolean).join(" · ");
   const status = ready === "loading" ? "Préparation…"
@@ -337,6 +461,13 @@ export function Interpreter({ signRequest = null, standalone = false }: { signRe
           {ready === "loading" ? "Chargement…" : on ? "Couper le micro" : "Activer le micro"}
         </button>
         {on && <span className="level" aria-hidden><i style={{ width: `${Math.round(level * 100)}%` }} /></span>}
+        {!on && mics.length > 1 && (
+          <select className="mic-pick" value={micId} title="Micro" aria-label="Micro"
+            onChange={(e) => { setMicId(e.target.value); localStorage.setItem("spm-mic", e.target.value); }}>
+            <option value="">Micro par défaut</option>
+            {mics.map((m, i) => <option key={m.deviceId} value={m.deviceId}>{m.label || `Micro ${i + 1}`}</option>)}
+          </select>
+        )}
       </footer>
       {error && <p role="alert" className="interp-error">{error}</p>}
     </aside>

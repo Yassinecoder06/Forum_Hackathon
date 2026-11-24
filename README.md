@@ -2,7 +2,7 @@
 
 Studio local de recherche pour explorer du texte français, des mouvements LSF capturés et un avatar 3D. Le lecteur fonctionne avec des vidéos réelles ; la traduction générale français → LSF n’est pas résolue.
 
-**[Premier prototype en ligne — en cours de développement](https://forum.yassinejemmali.me/)** : cette version n’est pas encore finalisée ; certaines fonctionnalités restent expérimentales.
+**[Prototype Link](https://forum.yassinejemmali.me/)** : cette version n’est pas encore finalisée ; certaines fonctionnalités restent expérimentales.
 
 ### Démonstration vidéo
 
