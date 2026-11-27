@@ -4,7 +4,7 @@ from transformers import AutoTokenizer
 from .codec import GraphCodec
 
 def main():
- root=Path('/home/jmal/Dataset/geoquery-lsfb-graph-feasibility-v1');out=Path('.runtime/geoquery-graph-codec-v1');out.mkdir(exist_ok=False);meta=json.loads((root/'MANIFEST.json').read_text());data={}
+ root=Path('/home/jmal/Projects/Active/Forum_Hackathon/datasets/geoquery-lsfb-graph-feasibility-v1');out=Path('.runtime/geoquery-graph-codec-v1');out.mkdir(exist_ok=False);meta=json.loads((root/'MANIFEST.json').read_text());data={}
  for split in ['train','val']:
   path=root/f'{split}.jsonl';assert hashlib.sha256(path.read_bytes()).hexdigest()==meta['files'][path.name];data[split]=[json.loads(x) for x in path.read_text().splitlines()]
  codec=GraphCodec.fit([r['lsfb_graph'] for r in data['train']]);tok=AutoTokenizer.from_pretrained('.runtime/lsfb-cont-local-v3/tokenizer',local_files_only=True);report={'language':'LSFB','codebook_fit':'train only','input_source':'DeepL French','target':'full author graph, not flat gloss','counts':{},'tokenizer':'T5-base existing local','dictionary_entries':len(codec.hns),'no_local_linguistic_approval':True}

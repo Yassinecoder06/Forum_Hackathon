@@ -8,11 +8,11 @@ interpreter-only view. Coverage filtering uses the same candidate flag as
 the extraction output. Collection and alignment are documented in
 [research/code/training/lsf_youtube/README.md](../../research/code/training/lsf_youtube/README.md).
 
-Code: `~/Projects/Active/Forum_Tests/broadcast_viewer/`. Data:
+Code: `~/Projects/Active/Forum_Hackathon/apps/forum-tests/broadcast_viewer/`. Data:
 `.runtime/youtube-lsf/` in this repository.
 
 ```bash
-cd ~/Projects/Active/Forum_Tests
+cd ~/Projects/Active/Forum_Hackathon/apps/forum-tests
 python3 -m broadcast_viewer.server --wait-for-results --port 8100
 ```
 

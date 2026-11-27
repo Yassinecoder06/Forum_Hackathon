@@ -4,7 +4,7 @@ from pathlib import Path
 from .audit_baseline import validate_graph,PREPARED
 
 def main():
- out=Path('/home/jmal/Dataset/geoquery-lsfb-graph-feasibility-v1');out.mkdir(exist_ok=False);manifest={'language':'LSFB','input_provenance':'DeepL machine translated French','target_provenance':'original author transcription of human signing; no local approval','label_type':'multilinear graph with HamNoSys; not flat gloss','synthetic_augmentation_used':False,'source_commit':'879731568a5cd93177d11bf742740b187176c99a','license':'GPL-2.0 per original release','counts':{},'files':{},'no_automatic_repairs':True};quarantine=[];review=[]
+ out=Path('/home/jmal/Projects/Active/Forum_Hackathon/datasets/geoquery-lsfb-graph-feasibility-v1');out.mkdir(exist_ok=False);manifest={'language':'LSFB','input_provenance':'DeepL machine translated French','target_provenance':'original author transcription of human signing; no local approval','label_type':'multilinear graph with HamNoSys; not flat gloss','synthetic_augmentation_used':False,'source_commit':'879731568a5cd93177d11bf742740b187176c99a','license':'GPL-2.0 per original release','counts':{},'files':{},'no_automatic_repairs':True};quarantine=[];review=[]
  for split in ['train','val']:
   rows=[]
   for r in map(json.loads,(PREPARED/f'human_{split}.jsonl').read_text().splitlines()):

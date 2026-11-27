@@ -29,7 +29,7 @@ The prior atomic-token T5 run is a negative baseline, not an initialization chec
 
 ## Data state and interpretation
 
-The prepared package is `.runtime/lsfb-cont-task-v3/`, built from local `/home/jmal/Dataset/lsfb-cont` at source revision `64b0c112f59d3710367fb736ef1808f37ff15e28`.
+The prepared package is `.runtime/lsfb-cont-task-v3/`, built from local `/home/jmal/Projects/Active/Forum_Hackathon/datasets/lsfb-cont` at source revision `64b0c112f59d3710367fb736ef1808f37ff15e28`.
 
 - 5,354 candidate French segments were found in seven verified annotation shards.
 - 3,866 rows are technically eligible for exploratory training and 679 for validation.

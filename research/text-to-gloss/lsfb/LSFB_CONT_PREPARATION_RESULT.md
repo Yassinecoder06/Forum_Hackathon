@@ -1,6 +1,6 @@
 # Local LSFB-CONT task preparation result
 
-Prepared 15 November 2026 from `/home/jmal/Dataset/lsfb-cont`.
+Prepared 15 November 2026 from `/home/jmal/Projects/Active/Forum_Hackathon/datasets/lsfb-cont`.
 
 The current prepared dataset is `.runtime/lsfb-cont-task-v3/`. Implementation and
 reproduction instructions: [`research/code/training/lsfb_cont/README.md`](../../code/training/lsfb_cont/README.md).

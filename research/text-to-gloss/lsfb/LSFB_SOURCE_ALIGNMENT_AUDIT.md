@@ -31,7 +31,7 @@ Use a fresh audit/review output directory if these already exist:
 
 ```bash
 python3 -m training.lsfb_cont.alignment_audit
-python3 -m training.lsfb_cont.review --root /home/jmal/Dataset/lsfb-cont --candidates research/private/lsfb-alignment-audit/review_candidates.jsonl --output research/private/lsfb-alignment-audit/video-review --limit 55
+python3 -m training.lsfb_cont.review --root /home/jmal/Projects/Active/Forum_Hackathon/datasets/lsfb-cont --candidates research/private/lsfb-alignment-audit/review_candidates.jsonl --output research/private/lsfb-alignment-audit/video-review --limit 55
 .runtime/t5-local-venv/bin/python -m pytest research/code/training/lsfb_cont/test_alignment_audit.py research/code/training/lsfb_cont/test_prepare.py -q
 cd e2e
 node lsfb-review.mjs

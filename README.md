@@ -4,6 +4,8 @@ Studio local de recherche pour explorer du texte français, des mouvements LSF c
 
 **[Prototype Link](https://forum.yassinejemmali.me/)** : cette version n’est pas encore finalisée ; certaines fonctionnalités restent expérimentales.
 
+Organisation du dépôt (code suivi, dossiers locaux ignorés) : [STRUCTURE.md](STRUCTURE.md).
+
 ### Démonstration vidéo
 
 La vidéo ci-dessous montre la vidéo source et le squelette suivi. Cliquez sur l’aperçu pour ouvrir la vidéo MP4 complète.

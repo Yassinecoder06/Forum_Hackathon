@@ -1,10 +1,10 @@
 # Belgian LSFB-only extraction and training
 
-The active run uses only `/home/jmal/Dataset/lsfb-cont-usable-v1`. No France-LSF application assets, dictionary clips, or annotation IDs are used by the scanner or trainer. Language in every research/code/training/evaluation row is asserted to be LSFB.
+The active run uses only `/home/jmal/Projects/Active/Forum_Hackathon/datasets/lsfb-cont-usable-v1`. No France-LSF application assets, dictionary clips, or annotation IDs are used by the scanner or trainer. Language in every research/code/training/evaluation row is asserted to be LSFB.
 
 ## Full local scan
 
-Source: `/home/jmal/Dataset/lsfb-cont`, pinned revision `64b0c112f59d3710367fb736ef1808f37ff15e28`.
+Source: `/home/jmal/Projects/Active/Forum_Hackathon/datasets/lsfb-cont`, pinned revision `64b0c112f59d3710367fb736ef1808f37ff15e28`.
 
 All24 listed source files were size-checked and SHA256 hashed; all available pinned LFS digests matched. This includes20 pose TARs and the31.5GB video TAR. Video content was hashed, not decoded frame by frame. Numpy pose arrays were read with pickle disabled and inspected for dimensions, finiteness and zero frames. There are1,619 unique recordings and16,190 indexed body-part arrays. The recorded arrays and all extracted crops are finite with no wholly zero frames. These checks establish technical integrity, not tracking accuracy or linguistic correctness. Official test labels remain unopened; test file integrity/pose structure was inspected only.
 
@@ -12,7 +12,7 @@ An extraction-stage bug concerning cached source-role metadata was fixed after t
 
 ## Separate extracted package
 
-Folder: `/home/jmal/Dataset/lsfb-cont-usable-v1/`
+Folder: `/home/jmal/Projects/Active/Forum_Hackathon/datasets/lsfb-cont-usable-v1/`
 
 - `train.jsonl`:2,146 technically eligible, unreviewed French-context→LSFB lexical pairs.
 - `val.jsonl`:385 pairs, with no shared conversations, signers or normalized current French phrases with training.
@@ -37,9 +37,9 @@ Run folder:`.runtime/lsfb-extracted-train-v1/`; progress is `progress.json`, che
 
 ## Additional accessible Belgian resource
 
-GeoQuery-LSFB was found at https://zenodo.org/records/19220833 and https://gitlab.unamur.be/beehaif/GeoQuery-LSFB . Source README, license and both JSON releases were downloaded into `/home/jmal/Dataset/geoquery-lsfb-source-v1/`, with exact upstream commit and file hashes in `PROVENANCE.json`. No1.6GB recording ZIP was downloaded.
+GeoQuery-LSFB was found at https://zenodo.org/records/19220833 and https://gitlab.unamur.be/beehaif/GeoQuery-LSFB . Source README, license and both JSON releases were downloaded into `/home/jmal/Projects/Active/Forum_Hackathon/datasets/geoquery-lsfb-source-v1/`, with exact upstream commit and file hashes in `PROVENANCE.json`. No1.6GB recording ZIP was downloaded.
 
-The source describes250 human-recorded/annotated geographic questions and a4,519-row augmented release. A separate candidate package at `/home/jmal/Dataset/geoquery-lsfb-usable-v1/` contains203 original training rows,47 original validation rows grouped by template type, and3,081 synthetic training candidates excluding held-out types and French strings in the original set. This does not establish full semantic independence between templates; further alignment checks are necessary before benchmarking. Human provenance refers to the authors' release, not local linguistic approval.
+The source describes250 human-recorded/annotated geographic questions and a4,519-row augmented release. A separate candidate package at `/home/jmal/Projects/Active/Forum_Hackathon/datasets/geoquery-lsfb-usable-v1/` contains203 original training rows,47 original validation rows grouped by template type, and3,081 synthetic training candidates excluding held-out types and French strings in the original set. This does not establish full semantic independence between templates; further alignment checks are necessary before benchmarking. Human provenance refers to the authors' release, not local linguistic approval.
 
 These graphs preserve hand roles, sign-occurrence IDs, HamNoSys and temporal relations. They are not silently mixed with LSFB-CONT author lemmas. A graph-target/tokenizer compatibility check is required before any training on that new task. The current local run uses LSFB-CONT only.
 
@@ -53,4 +53,4 @@ Training completed807 optimizer steps and all385 validation examples in765.8 sec
 
 Additional direct verification compared every extracted crop with the original annotated source:25,310 body-part comparisons across2,531 segments, zero mismatches. Evidence:`PAIRED_POSE_VERIFICATION.json` in the dataset folder. All21 targeted tests passed.
 
-A local data-and-model backup is available at `/home/jmal/Dataset/lsfb-cont-usable-v1/training-run-v1/`, including the selected LoRA adapter, tokenizer, exact configuration, metrics, predictions and file hashes. Its adapter config pins the same pretrained base revision used throughout the run. The base model remains in the verified local HF cache. No Colab connection was available and no France-LSF assets were used. The trained model remains unsuitable for reliable translation; corpus file integrity and correct pose extraction have not resolved lexical supervision ambiguity, sparse label coverage or generation failure.
+A local data-and-model backup is available at `/home/jmal/Projects/Active/Forum_Hackathon/datasets/lsfb-cont-usable-v1/training-run-v1/`, including the selected LoRA adapter, tokenizer, exact configuration, metrics, predictions and file hashes. Its adapter config pins the same pretrained base revision used throughout the run. The base model remains in the verified local HF cache. No Colab connection was available and no France-LSF assets were used. The trained model remains unsuitable for reliable translation; corpus file integrity and correct pose extraction have not resolved lexical supervision ambiguity, sparse label coverage or generation failure.

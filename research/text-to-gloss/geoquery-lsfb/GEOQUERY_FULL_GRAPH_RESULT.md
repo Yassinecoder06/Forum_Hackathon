@@ -26,7 +26,7 @@ Training fit does not transfer to this structure-heldout dataset under these set
 
 Runtime:.runtime/geoquery-full-graph-v1/{MANIFEST,BEST,history,RESULT,ERROR_ANALYSIS}.json;adapter/,tokenizer/,hns_dictionary.json;development_predictions.json;last-state.pt. Model/optimizer/Python/Torch/CUDA RNGstate saved everyepoch. Epoch4state loaded successfully withweights_only=TrueonCPU;full resumed-training equivalence untested. Completed runs now refuse resume rather than silently re-evaluating. Seven codec/scorer tests passed;compilecheckpassed. All source IDs remain private for attribution/removal.
 
-Backup:/home/jmal/Dataset/geoquery-lsfb-graph-feasibility-v1/full-graph-v1/with file hashes. All originalsourcegraph inconsistencies remain quarantined;no guessed repairs. NoDriveupload claim.
+Backup:/home/jmal/Projects/Active/Forum_Hackathon/datasets/geoquery-lsfb-graph-feasibility-v1/full-graph-v1/with file hashes. All originalsourcegraph inconsistencies remain quarantined;no guessed repairs. NoDriveupload claim.
 
 ## Reproduction
 

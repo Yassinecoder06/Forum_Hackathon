@@ -32,7 +32,7 @@ At300updates:2/8exact,6/8valid,0caps,277.68seconds. Gatefailed against7/8exact+8
 
 Version2now runs at `.runtime/geoquery-graph-fit-v2`,same seed/configuration/training rows,only maximum updates extended to600. It reruns from identical initialization becausev1failedweights were not saved;this is an optimization-budget diagnostic,not a new independent experiment. Log:reports/geoquery_graph_fit_v2.log. No full186rowtraining launched before the declared fit criterion passes.
 
-Lossless codec/dictionary/paired files and hashes copied into /home/jmal/Dataset/geoquery-lsfb-graph-feasibility-v1/codec;v1fitresult backed up under fit-v1. Source graphs and invalid records remain unchanged.
+Lossless codec/dictionary/paired files and hashes copied into /home/jmal/Projects/Active/Forum_Hackathon/datasets/geoquery-lsfb-graph-feasibility-v1/codec;v1fitresult backed up under fit-v1. Source graphs and invalid records remain unchanged.
 
 ## Extended gate passed
 

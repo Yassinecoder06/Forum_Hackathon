@@ -5,7 +5,7 @@ from urllib.parse import quote, unquote
 
 def digest(p): return hashlib.sha256(p.read_bytes()).hexdigest()
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('--source',type=Path,default=Path('/home/jmal/Dataset/lsfb-cont-usable-v1'));ap.add_argument('--output',type=Path,required=True);a=ap.parse_args()
+    ap=argparse.ArgumentParser();ap.add_argument('--source',type=Path,default=Path('/home/jmal/Projects/Active/Forum_Hackathon/datasets/lsfb-cont-usable-v1'));ap.add_argument('--output',type=Path,required=True);a=ap.parse_args()
     a.output.mkdir(parents=True,exist_ok=False)
     rows={s:[json.loads(x) for x in (a.source/f'{s}.jsonl').read_text().splitlines()] for s in ('train','val')}
     norm=lambda s:' '.join(re.findall(r'\w+',s.casefold()))

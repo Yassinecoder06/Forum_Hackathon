@@ -26,7 +26,7 @@ def measure(rows,texts):
                 by_length={k:dict(exact=a/max(1,b),examples=b) for k,(a,b) in by_length.items()})
 
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('--data',type=Path,default=Path('/home/jmal/Dataset/lsfb-cont-usable-v1'))
+    ap=argparse.ArgumentParser();ap.add_argument('--data',type=Path,default=Path('/home/jmal/Projects/Active/Forum_Hackathon/datasets/lsfb-cont-usable-v1'))
     ap.add_argument('--output',type=Path,default=Path('.runtime/lsfb-extracted-train-v1'));ap.add_argument('--epochs',type=int,default=3);args=ap.parse_args()
     if args.output.exists():raise ValueError('Output exists')
     args.output.mkdir();out=args.output;started=time.monotonic();set_seed(84);torch.set_num_threads(2)

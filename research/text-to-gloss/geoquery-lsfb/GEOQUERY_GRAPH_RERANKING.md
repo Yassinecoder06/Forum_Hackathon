@@ -14,7 +14,7 @@ The candidate bank cannot produce novel graph structures. This diagnostic theref
 
 The run took 14.26 seconds on the local GPU. It retained all 37 predictions and used no additional training, official test labels, synthetic expansion or human approval. The small development set has already been inspected. French inputs remain DeepL translations; source graphs remain authored LSFB transcriptions.
 
-Evidence: `research/text-to-gloss/geoquery-lsfb/GEOQUERY_RERANK_RESULT.json` and `.runtime/geoquery-rerank-v1/{RESULT,predictions}.json`. A local backup with hashes is at `/home/jmal/Dataset/geoquery-lsfb-graph-feasibility-v1/rerank-v1/`.
+Evidence: `research/text-to-gloss/geoquery-lsfb/GEOQUERY_RERANK_RESULT.json` and `.runtime/geoquery-rerank-v1/{RESULT,predictions}.json`. A local backup with hashes is at `/home/jmal/Projects/Active/Forum_Hackathon/datasets/geoquery-lsfb-graph-feasibility-v1/rerank-v1/`.
 
 ```bash
 .runtime/t5-local-venv/bin/python -m training.geoquery_lsfb.rerank_graphs

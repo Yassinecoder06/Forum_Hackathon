@@ -29,7 +29,7 @@ Run commands and settings: [frozen protocol](LSFB_SEED_REPLICATION_PLAN.md). Mac
 .runtime/t5-local-venv/bin/python -m training.lsfb_cont.summarize_seed_replication --runs .runtime/lsfb-narrow-current-run-v1 .runtime/lsfb-narrow-current-seed85-v1 .runtime/lsfb-narrow-current-seed86-v1
 ```
 
-Both new adapters, tokenizer files, manifests, histories and raw predictions have hash-verified backups under `/home/jmal/Dataset/lsfb-narrow-context-v1/seed-replication/`. Raw source text and per-example evidence stay private. The existing trainer saves selected checkpoints but cannot resume optimizer state mid-run; interrupted reproductions must restart in a new output directory.
+Both new adapters, tokenizer files, manifests, histories and raw predictions have hash-verified backups under `/home/jmal/Projects/Active/Forum_Hackathon/datasets/lsfb-narrow-context-v1/seed-replication/`. Raw source text and per-example evidence stay private. The existing trainer saves selected checkpoints but cannot resume optimizer state mid-run; interrupted reproductions must restart in a new output directory.
 
 ## Next best step and limits
 

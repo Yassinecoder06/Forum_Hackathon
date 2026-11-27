@@ -5,7 +5,7 @@ ROOT=Path(__file__).resolve().parents[3]
 RUNS=[
  ('lsfb-narrow-context-v1','sfb','lexical_projection','.runtime/lsfb-narrow-context-run-v1','.runtime/lsfb-narrow-context-data-v1/SCAN_REPORT.json'),
  ('lsfb-narrow-current-v1','sfb','lexical_projection','.runtime/lsfb-narrow-current-run-v1','.runtime/lsfb-narrow-context-data-v1/SCAN_REPORT.json'),
- ('lsfb-extracted-v1','sfb','lexical_projection','.runtime/lsfb-extracted-train-v1','/home/jmal/Dataset/lsfb-cont-usable-v1/SCAN_REPORT.json'),
+ ('lsfb-extracted-v1','sfb','lexical_projection','.runtime/lsfb-extracted-train-v1','/home/jmal/Projects/Active/Forum_Hackathon/datasets/lsfb-cont-usable-v1/SCAN_REPORT.json'),
  ('geoquery-full-graph-v1','sfb','temporal_graph','.runtime/geoquery-full-graph-v1','.runtime/geoquery-graph-codec-v1/AUDIT.json'),
  ('fsl-mt5-small-comparison-v1','fsl','source_annotated_gloss','research/private/fsl-mt5-small-comparison-v1','data/parallel/manifest.json'),
  ('fsl-t5-base-comparison-v3','fsl','source_annotated_gloss','research/private/fsl-t5-base-comparison-v3','data/parallel/manifest.json'),

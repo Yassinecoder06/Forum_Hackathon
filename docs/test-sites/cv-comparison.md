@@ -13,10 +13,10 @@ The top-down models use the full frame as a single-person region. They run at a 
 
 ## Run locally
 
-The code lives in the sibling folder `~/Projects/Active/Forum_Tests/cv_comparison/`. The shared Sapiens, MMPose and HaMeR loaders it uses live in this repo under `motion_worker/` (the Studio capture worker uses them too). Run the commands below from `Forum_Tests`, with `R=../Forum_Hackathon` pointing at this repo. Normally the servers run as systemd units (`make -C ../Forum_Tests status`).
+The code lives in the sibling folder `~/Projects/Active/Forum_Hackathon/apps/forum-tests/cv_comparison/`. The shared Sapiens, MMPose and HaMeR loaders it uses live in this repo under `motion_worker/` (the Studio capture worker uses them too). Run the commands below from `Forum_Tests`, with `R=../Forum_Hackathon` pointing at this repo. Normally the servers run as systemd units (`make -C ../Forum_Tests status`).
 
 ```bash
-cd ~/Projects/Active/Forum_Tests && R=../Forum_Hackathon
+cd ~/Projects/Active/Forum_Hackathon/apps/forum-tests && R=../Forum_Hackathon
 $R/.venv/bin/python -m cv_comparison.server
 ```
 

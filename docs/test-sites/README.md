@@ -4,7 +4,7 @@ These local sites compare computer-vision trackers, transition methods and
 research outputs. They are review tools, not part of the Studio.
 
 **Code** lives outside this repository in the sibling folder
-`~/Projects/Active/Forum_Tests/`. **Documentation** (this folder), data,
+`~/Projects/Active/Forum_Hackathon/apps/forum-tests/`. **Documentation** (this folder), data,
 caches (`.runtime/`) and models (`.models/`) stay here. The viewers find this
 repository through `Forum_Tests/forum_paths.py` (override with
 `SIGNACULTURE_ROOT`). The shared Sapiens / MMPose / HaMeR / transition-model
@@ -26,7 +26,7 @@ Studio's GPU capture worker needs it too.
 ## Operating them
 
 ```bash
-cd ~/Projects/Active/Forum_Tests
+cd ~/Projects/Active/Forum_Hackathon/apps/forum-tests
 make status    # state + HTTP check of every port
 make up        # start all
 make down      # stop all (takes the public 8095 site offline)

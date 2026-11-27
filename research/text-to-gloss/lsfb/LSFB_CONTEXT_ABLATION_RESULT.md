@@ -12,4 +12,4 @@ Current-only is the better aggregate developmental model in this experiment. Ret
 
 Paired exact outcomes: {"both_correct": 10, "context_only_correct": 0, "current_only_correct": 2, "both_wrong": 11}
 
-Evidence:research/text-to-gloss/lsfb/LSFB_CONTEXT_ABLATION_RESULT.json and private paired predictions. Current-only adapter copied and hashed under /home/jmal/Dataset/lsfb-narrow-context-v1/current-only-run/. Run command and limitations:LSFB_CONTEXT_ABLATION_PLAN.md. Next: reviewed multi-sign data and train-only multi-sign learnability checks before broader translation claims.
+Evidence:research/text-to-gloss/lsfb/LSFB_CONTEXT_ABLATION_RESULT.json and private paired predictions. Current-only adapter copied and hashed under /home/jmal/Projects/Active/Forum_Hackathon/datasets/lsfb-narrow-context-v1/current-only-run/. Run command and limitations:LSFB_CONTEXT_ABLATION_PLAN.md. Next: reviewed multi-sign data and train-only multi-sign learnability checks before broader translation claims.

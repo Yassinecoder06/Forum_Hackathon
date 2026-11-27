@@ -430,7 +430,7 @@ Source: `research/runs/pretrained-concept-planner/metrics.json`.
 
 The model beats retrieval on aggregate development WER by6.67percentage points and exact by3examples, but its multi-signWER is WORSE than current-French retrieval. This is a narrow single-sign-dominated improvement, not established sequence-composition progress. All10exact cases are single-sign. No unfinished or empty outputs. No significance or fresh-test superiority claim;23rows,6multi-sign,previously inspected conversations and checkpoint selection on those rows limit inference. Context's causal benefit is unproven without a matched current-only T5ablation. No vocabulary expansion or deployment justified by this result.
 
-Seven targeted checks passed (five existing scorer tests,two new tests for train-only repetition/context/split separation and empty/repeated-token scoring). Compilation passed. Local copied data/model/history/predictions and SHA256receipt: `/home/jmal/Dataset/lsfb-narrow-context-v1/`. Selected adapter requires the pinned T5-base checkpoint. Source poses remain in the original usableLSFBfolder;the new package references them rather than duplicating them.
+Seven targeted checks passed (five existing scorer tests,two new tests for train-only repetition/context/split separation and empty/repeated-token scoring). Compilation passed. Local copied data/model/history/predictions and SHA256receipt: `/home/jmal/Projects/Active/Forum_Hackathon/datasets/lsfb-narrow-context-v1/`. Selected adapter requires the pinned T5-base checkpoint. Source poses remain in the original usableLSFBfolder;the new package references them rather than duplicating them.
 
 Next best step: acquire/review more context-aligned multi-sign examples for these labels, reserve a genuinely fresh conversation holdout, and test a matched context/current-only ablation. Keep retrieval as the multi-sign benchmark. No automatic label correction or new human approval was invented.
 
@@ -443,7 +443,7 @@ Same145train/23development examples,seed84,T5-base rank16LoRA,25epochs/475steps,
 |context|10/23|56.67%|0/6|76.92%|
 |current|12/23|46.67%|0/6|69.23%|
 
-Paired exact counts:{"both_correct": 10, "context_only_correct": 0, "current_only_correct": 2, "both_wrong": 11}. Small repeatedly inspected development set,one seed and six multi-sign examples prevent claims of robust or statistically established context benefit. Input lengths change padding and dropout random draws,so identical seed is a control rather than bitwise-identical optimization. Full paired predictions are private in research/private/lsfb-context-ablation-v1; no human semantic approval. Current-only adapter and result backup saved alongside previous context run under /home/jmal/Dataset/lsfb-narrow-context-v1/.
+Paired exact counts:{"both_correct": 10, "context_only_correct": 0, "current_only_correct": 2, "both_wrong": 11}. Small repeatedly inspected development set,one seed and six multi-sign examples prevent claims of robust or statistically established context benefit. Input lengths change padding and dropout random draws,so identical seed is a control rather than bitwise-identical optimization. Full paired predictions are private in research/private/lsfb-context-ablation-v1; no human semantic approval. Current-only adapter and result backup saved alongside previous context run under /home/jmal/Projects/Active/Forum_Hackathon/datasets/lsfb-narrow-context-v1/.
 
 Interpretation: current-only selected epoch11,12/23exact52.17%,WER46.67%,no empty/unfinished outputs;context selected epoch14,10/23exact43.48%,WER56.67%. Current-only reduces WER by10percentage points versus context and16.67points versus current-text retrieval. All12exact outputs remain single-sign. Multi-signWER69.23%current-only versus76.92%context and61.54%retrieval. Do not claim sentence-composition improvement or universally reject dialogue context. Five targeted tests passed; the input-length audit found mean173.19context tokens versus30.68current-only tokens.
 
@@ -455,7 +455,7 @@ Warm-started the selected current-only narrowT5adapter,trained only the49multi-s
 
 A separate one-shot developmental evaluation after freezing that checkpoint scored4/23exact17.39%,WER143.33%,multi-sign0/6exact and107.69%WER,zero unfinished outputs. This failed variant is not promoted. Uniform multi-sign-only adaptation with these settings caused loss of aggregate performance despite excellent fit. Original current-only12/23exact46.67%WERcheckpoint retained. The experiment changes learning rate/dropout/distribution together,so it does not isolate which caused degradation.
 
-Runtime evidence and source:research/code/training/lsfb_cont/multisign_fit_gate.py,evaluate_multisign_fit.py;.runtime/lsfb-multisign-fit-v1/RESULT.json and DEVELOPMENT_RESULT.json. Copied data/adapter/predictions with hashes to /home/jmal/Dataset/lsfb-narrow-context-v1/multisign-fit-diagnostic/.
+Runtime evidence and source:research/code/training/lsfb_cont/multisign_fit_gate.py,evaluate_multisign_fit.py;.runtime/lsfb-multisign-fit-v1/RESULT.json and DEVELOPMENT_RESULT.json. Copied data/adapter/predictions with hashes to /home/jmal/Projects/Active/Forum_Hackathon/datasets/lsfb-narrow-context-v1/multisign-fit-diagnostic/.
 
 Application recheck:frontend production build and motion/avatar tests passed;22backend API/capture tests passed. Existing installed Chrome used after Playwright's bundled binary was absent. Real browser checks passed composition,seeking,WebMdownload,actualWAV/pause-aware timing,JSONcapture/provenance/persistent lookup,unknown handling,mobile layout and offline errors. New browser WebM341,196bytes at research/private/pipeline-browser-recheck/preview.webm. This verifies software behavior,not sign-language comprehension.
 
@@ -471,7 +471,7 @@ Original203train/47valsplit has disjoint type IDs andzeroentity-normalizedFunQLs
 
 Original47reference graph retrieval:characterTFIDF0/47exact,22.50%tripleF1,36.66%articulationF1;word/bigramTFIDF0/47exact,22.67%tripleF1,35.35%articulationF1. All47references retained,including10structural failures. Predictions include3and2invalid sourcegraphs respectively. These are graph-annotation overlap metrics,not glossWERor human comprehension.
 
-Four new graph tests passed. Local graph review tool created with dangling-edge highlighting and notes export;no approvals fabricated. Prepared dataset /home/jmal/Dataset/geoquery-lsfb-graph-feasibility-v1/. Details and commands:reports/GEOQUERY_LSFB_ASSESSMENT.md. No graphT5training or3Davatar integration claimed.
+Four new graph tests passed. Local graph review tool created with dangling-edge highlighting and notes export;no approvals fabricated. Prepared dataset /home/jmal/Projects/Active/Forum_Hackathon/datasets/geoquery-lsfb-graph-feasibility-v1/. Details and commands:reports/GEOQUERY_LSFB_ASSESSMENT.md. No graphT5training or3Davatar integration claimed.
 
 ## GeoQuery graph codec and generation gate
 
@@ -481,7 +481,7 @@ First freshT5-base rank16LoRA,BF16,seed92,LR5e-4,8training examples,max300update
 
 ## GeoQuery graph fit passed and full-data experiment launched
 
-Extended same-seed gate passed at400updates:8/8exactgraph,8/8structurallyvalid,0capfailures,370.91seconds. A new process reloaded the adapter and exactly reproduced one selected original training graph. This verifies serialization/weight reload/training-set learnability,not generalization. Gate adapter/tokenizer/HNSdictionary and hashes backed up under /home/jmal/Dataset/geoquery-lsfb-graph-feasibility-v1/fit-v2/.
+Extended same-seed gate passed at400updates:8/8exactgraph,8/8structurallyvalid,0capfailures,370.91seconds. A new process reloaded the adapter and exactly reproduced one selected original training graph. This verifies serialization/weight reload/training-set learnability,not generalization. Gate adapter/tokenizer/HNSdictionary and hashes backed up under /home/jmal/Projects/Active/Forum_Hackathon/datasets/geoquery-lsfb-graph-feasibility-v1/fit-v2/.
 
 Full-data feasibility run launched:186train/37development,DeepL French input,full authored LSFBgraphs,no synthetic expansion,no gold-gloss conflation. Warmstart from passed8TRAINexampleadapter;seed93,BF16,effectivebatch4,LR2e-4,max8epochs,developmenttoken-loss earlystop,explicit1,280targettokenbudget coversallreferences. Model/optimizer/RNGresume andsourcehash checks implemented. Full37graphdecoding andsame-splitretrievalbaselines remain pending. Outputs remain unvalidated candidates.
 
@@ -493,7 +493,7 @@ EightTRAINexamplegraphgate passed400updates8/8exact+valid;freshprocessinferencev
 
 T5:0/37exactgraphs,1/37valid,2.49%stricttripleF1. Sameclean-splitcharacterretrieval:0/37exact,37/37valid,22.96%F1;word/bigramretrieval22.04%F1.15repeatedIDand21danglingedgefailures,no generationcaps. Everymalformedoutputretained;separateserializedsubtokenerror75.20%(notglossWER). Validationlossworsened2.1156→2.2346;earlystoppedafter4epochs. Adapterretainedasfailedfeasibility,noavatarintegrationorlinguisticapproval.
 
-Loadableresumestateandverifiedlocalbackup:/home/jmal/Dataset/geoquery-lsfb-graph-feasibility-v1/full-graph-v1/. Seven codec/metric tests passed;fullresumeequivalenceuntested. Detail:reports/GEOQUERY_FULL_GRAPH_RESULT.md. Nextapproachmustaddressstructuralconsistencywithoutconfusingvalidsyntaxwithmeaning.
+Loadableresumestateandverifiedlocalbackup:/home/jmal/Projects/Active/Forum_Hackathon/datasets/geoquery-lsfb-graph-feasibility-v1/full-graph-v1/. Seven codec/metric tests passed;fullresumeequivalenceuntested. Detail:reports/GEOQUERY_FULL_GRAPH_RESULT.md. Nextapproachmustaddressstructuralconsistencywithoutconfusingvalidsyntaxwithmeaning.
 
 ## Frozen graph reranking and centralized run metadata
 

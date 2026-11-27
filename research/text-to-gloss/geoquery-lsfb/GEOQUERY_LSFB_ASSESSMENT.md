@@ -1,6 +1,6 @@
 # GeoQuery-LSFB source audit and baseline
 
-Source downloaded in an earlier Colab-backed resource audit;reused locally in this continuation without new downloads. Pinned commit879731568a5cd93177d11bf742740b187176c99a,https://gitlab.unamur.be/beehaif/GeoQuery-LSFB . Original source hashes and GPL2license retained under /home/jmal/Dataset/geoquery-lsfb-source-v1. No raw video download. Scope:BelgianLSFB only,separate from CONT andFrance-LSF.
+Source downloaded in an earlier Colab-backed resource audit;reused locally in this continuation without new downloads. Pinned commit879731568a5cd93177d11bf742740b187176c99a,https://gitlab.unamur.be/beehaif/GeoQuery-LSFB . Original source hashes and GPL2license retained under /home/jmal/Projects/Active/Forum_Hackathon/datasets/geoquery-lsfb-source-v1. No raw video download. Scope:BelgianLSFB only,separate from CONT andFrance-LSF.
 
 ## Provenance correction
 
@@ -25,7 +25,7 @@ Metrics retain every original reference,including10with structural problems;thos
 
 ## Prepared separate graph feasibility package
 
-/home/jmal/Dataset/geoquery-lsfb-graph-feasibility-v1 contains186structurally valid training records,37valid development records and27quarantined originals. It preserves original split/ELANreference/hand roles/HamNoSys/temporal edges and explicit machine-translated input provenance. Normalized French overlap across clean train/val is zero;original disjoint query structures retained. No excluded examples were silently repaired,no temporal graph flattened into sequential glosses. SHA256manifest retained. These are feasibility data,not approved translations. Full record IDs and graph predictions remain private.
+/home/jmal/Projects/Active/Forum_Hackathon/datasets/geoquery-lsfb-graph-feasibility-v1 contains186structurally valid training records,37valid development records and27quarantined originals. It preserves original split/ELANreference/hand roles/HamNoSys/temporal edges and explicit machine-translated input provenance. Normalized French overlap across clean train/val is zero;original disjoint query structures retained. No excluded examples were silently repaired,no temporal graph flattened into sequential glosses. SHA256manifest retained. These are feasibility data,not approved translations. Full record IDs and graph predictions remain private.
 
 Local review tool:research/private/geoquery_graph_review.html. Shows all250original graphs,marks dangling relation rows,and exports notes. Exported status is notes_only_not_approved;tool does not manufacture reviewer identity or acceptance. Reviewer must assess source alignments and any corrections against original recordings/annotations before training a linguistically validated system.
 

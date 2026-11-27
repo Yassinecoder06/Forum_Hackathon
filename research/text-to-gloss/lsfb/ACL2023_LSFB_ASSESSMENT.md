@@ -12,7 +12,7 @@ The [companion repository](https://github.com/DFKI-SignLanguage/text-to-gloss-si
 
 ## Our data compatibility
 
-Source: `/home/jmal/Dataset/lsfb-cont-usable-v1`. Prepared: `/home/jmal/Dataset/lsfb-acl2023-v1`.
+Source: `/home/jmal/Projects/Active/Forum_Hackathon/datasets/lsfb-cont-usable-v1`. Prepared: `/home/jmal/Projects/Active/Forum_Hackathon/datasets/lsfb-acl2023-v1`.
 
 - 2,146 training / 385 development pairs, including 1,869 / 328 multi-sign rows.
 - 1,756 training lexical labels; 601 occur once. 307/2,054 development operations are unseen labels.

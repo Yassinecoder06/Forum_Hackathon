@@ -8,7 +8,7 @@ The prepared local dataset is currently:
 
 `/home/jmal/Projects/Active/Forum_Hackathon/.runtime/lsfb-cont-task-v3/`
 
-Its source is `/home/jmal/Dataset/lsfb-cont`, pinned to revision
+Its source is `/home/jmal/Projects/Active/Forum_Hackathon/datasets/lsfb-cont`, pinned to revision
 `64b0c112f59d3710367fb736ef1808f37ff15e28`. The seven train/validation TARs
 were SHA-256 verified against their local HF tree metadata. The official test
 TAR, pose-only shards and 30 GB video archive are not copied into the training
@@ -76,7 +76,7 @@ No datasets or model weights are uploaded by these commands.
 
 ```bash
 uv run --no-project --with tokenizers==0.22.2 python research/code/training/lsfb_cont/prepare.py \
-  --root /home/jmal/Dataset/lsfb-cont \
+  --root /home/jmal/Projects/Active/Forum_Hackathon/datasets/lsfb-cont \
   --tokenizer .runtime/lsfb-cont-tokenizer/tokenizer.json \
   --output .runtime/lsfb-cont-task-next
 ```
@@ -112,7 +112,7 @@ Generate a different review pack from any candidate JSONL with:
 
 ```bash
 python3 research/code/training/lsfb_cont/review.py \
-  --root /home/jmal/Dataset/lsfb-cont \
+  --root /home/jmal/Projects/Active/Forum_Hackathon/datasets/lsfb-cont \
   --candidates .runtime/lsfb-cont-task-v3/review_sample.jsonl \
   --output .runtime/lsfb-cont-task-v3/another-review --limit 50
 ```

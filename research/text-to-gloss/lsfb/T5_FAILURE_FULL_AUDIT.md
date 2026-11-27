@@ -101,7 +101,7 @@ Choose a target language for each experiment and preserve it through lexical IDs
 | Signsuisse / WMT-SLT | Lexical clips plus example sentences for Swiss French Sign Language | Different variety (LSF-CH), sentence video does not imply gold sentence glosses; access/use restrictions apply |
 | New project-specific pairs | Self-contained French, reviewed target IDs and complete signed example using the same inventory | Needs qualified signing review; pair count alone does not establish quality |
 
-The old `/home/jmal/Downloads/mediapi-skel` and `/home/jmal/Downloads/dicta-sign-lsf-v2` paths were absent at audit time. Only `/home/jmal/Dataset/lsfb-cont` was found in the stated dataset directory. This does not prove no other copies exist elsewhere.
+The old `/home/jmal/Downloads/mediapi-skel` and `/home/jmal/Downloads/dicta-sign-lsf-v2` paths were absent at audit time. Only `/home/jmal/Projects/Active/Forum_Hackathon/datasets/lsfb-cont` was found in the stated dataset directory. This does not prove no other copies exist elsewhere.
 
 Pose extraction from more videos creates motion observations, not automatic semantic sentence labels. Likewise LLM-generated gloss pairs can augment reviewed examples, but cannot certify themselves or serve as an independent test set. Synthetic translation into a desired annotation scheme may simply teach the model that scheme's errors.
 

@@ -3,8 +3,8 @@ import json,re,collections,math,hashlib
 from pathlib import Path
 import numpy as np
 
-SOURCE=Path('/home/jmal/Dataset/geoquery-lsfb-source-v1')
-PREPARED=Path('/home/jmal/Dataset/geoquery-lsfb-usable-v1')
+SOURCE=Path('/home/jmal/Projects/Active/Forum_Hackathon/datasets/geoquery-lsfb-source-v1')
+PREPARED=Path('/home/jmal/Projects/Active/Forum_Hackathon/datasets/geoquery-lsfb-usable-v1')
 RELATIONS={'adjacent','start-coincides','end-coincides','during'}
 ARTICULATIONS={'left-hand-articulation','right-hand-articulation','two-hand-articulation'}
 

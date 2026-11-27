@@ -7,8 +7,8 @@ from .prepare import lexical_projection_events,make_rows,render_input,conversati
 from .experiments import normalize
 
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('--root',type=Path,default=Path('/home/jmal/Dataset/lsfb-cont'))
-    ap.add_argument('--output',type=Path,default=Path('/home/jmal/Dataset/lsfb-cont-usable-v1'))
+    ap=argparse.ArgumentParser();ap.add_argument('--root',type=Path,default=Path('/home/jmal/Projects/Active/Forum_Hackathon/datasets/lsfb-cont'))
+    ap.add_argument('--output',type=Path,default=Path('/home/jmal/Projects/Active/Forum_Hackathon/datasets/lsfb-cont-usable-v1'))
     ap.add_argument('--resume-verified-scan',action='store_true');args=ap.parse_args()
     root,out=args.root,args.output
     if out.exists() and not args.resume_verified_scan:raise ValueError('Output exists; choose a new frozen directory')

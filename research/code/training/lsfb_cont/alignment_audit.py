@@ -46,7 +46,7 @@ def row_evidence(row, source):
 def main():
     ap=argparse.ArgumentParser()
     ap.add_argument('--source',type=Path,default=Path('.runtime/lsfb-cont-task-v3/candidates.jsonl'))
-    ap.add_argument('--data',type=Path,default=Path('/home/jmal/Dataset/lsfb-cont-usable-v1'))
+    ap.add_argument('--data',type=Path,default=Path('/home/jmal/Projects/Active/Forum_Hackathon/datasets/lsfb-cont-usable-v1'))
     ap.add_argument('--narrow',type=Path,default=Path('.runtime/lsfb-narrow-context-data-v1'))
     ap.add_argument('--output',type=Path,default=Path('research/private/lsfb-alignment-audit'))
     args=ap.parse_args();args.output.mkdir(parents=True,exist_ok=False)

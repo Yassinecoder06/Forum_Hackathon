@@ -18,7 +18,7 @@ def measure(rows,texts):
     return {'examples':len(rows),'exact':sum(r['target']==p for r,p in zip(rows,preds))/max(1,len(rows)),'operation_wer':edits/max(1,total),'raw_token_wer':edits/max(1,total),'invalid':sum(not p for p in preds)/max(1,len(rows)),'by_length':by}
 
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('--data',type=Path,default=Path('/home/jmal/Dataset/lsfb-cont-usable-v1'))
+    ap=argparse.ArgumentParser();ap.add_argument('--data',type=Path,default=Path('/home/jmal/Projects/Active/Forum_Hackathon/datasets/lsfb-cont-usable-v1'))
     ap.add_argument('--output',type=Path,default=Path('.runtime/lsfb-extracted-train-v1'));ap.add_argument('--epochs',type=int,default=3);ap.add_argument('--input-mode',choices=['context','current'],default='context');ap.add_argument('--seed',type=int,default=84);args=ap.parse_args()
     if args.output.exists():raise ValueError('Output exists')
     args.output.mkdir();out=args.output;started=time.monotonic();set_seed(args.seed);torch.set_num_threads(2)

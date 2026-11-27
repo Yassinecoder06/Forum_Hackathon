@@ -4,7 +4,7 @@ from pathlib import Path
 from urllib.parse import quote
 
 def prepare():
- source=Path('/home/jmal/Dataset/lsfb-cont-usable-v1');out=Path('.runtime/lsfb-narrow-context-data-v1');out.mkdir(exist_ok=False)
+ source=Path('/home/jmal/Projects/Active/Forum_Hackathon/datasets/lsfb-cont-usable-v1');out=Path('.runtime/lsfb-narrow-context-data-v1');out.mkdir(exist_ok=False)
  rows={s:[json.loads(x) for x in (source/f'{s}.jsonl').read_text().splitlines()] for s in ['train','val']}
  tr=rows['train'];v={t for t,n in collections.Counter(t for r in tr for t in r['target']).most_common(128)}
  for _ in range(100):
